@@ -16,3 +16,5 @@ export { RegisterForm } from "@/modules/auth/components/register-form";
 export { RegisterPageView } from "@/modules/auth/components/register-page-view";
 export { ResetPasswordForm } from "@/modules/auth/components/reset-password-form";
 export { ResetPasswordPageView } from "@/modules/auth/components/reset-password-page-view";
+export { VerifyEmailForm } from "@/modules/auth/components/verify-email-form";
+export { VerifyEmailPageView } from "@/modules/auth/components/verify-email-page-view";

@@ -19,6 +19,38 @@ import { zodResolver } from "@/shared/lib/validation";
 import { Button } from "@/shared/ui/button";
 import { Form } from "@/shared/ui/form";
 
+function PasswordToggle({
+  visible,
+  onClick,
+  label,
+}: {
+  visible: boolean;
+  onClick: () => void;
+  label: string;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="rounded-full p-0.5 text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none"
+      aria-label={label}
+    >
+      {visible ? (
+        <Image
+          src="/auth/icons/view-off.svg"
+          alt=""
+          aria-hidden="true"
+          width={13}
+          height={13}
+          className="size-[13px]"
+        />
+      ) : (
+        <Eye className="size-[13px]" />
+      )}
+    </button>
+  );
+}
+
 export function ResetPasswordForm() {
   const t = useTranslations("auth.resetPassword");
   const router = useRouter();
@@ -34,38 +66,6 @@ export function ResetPasswordForm() {
   async function onSubmit() {
     setIsSubmitting(true);
     router.push(ROUTES.login);
-  }
-
-  function PasswordToggle({
-    visible,
-    onClick,
-    label,
-  }: {
-    visible: boolean;
-    onClick: () => void;
-    label: string;
-  }) {
-    return (
-      <button
-        type="button"
-        onClick={onClick}
-        className="rounded-full p-0.5 text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none"
-        aria-label={label}
-      >
-        {visible ? (
-          <Image
-            src="/auth/icons/view-off.svg"
-            alt=""
-            aria-hidden="true"
-            width={13}
-            height={13}
-            className="size-[13px]"
-          />
-        ) : (
-          <Eye className="size-[13px]" />
-        )}
-      </button>
-    );
   }
 
   return (

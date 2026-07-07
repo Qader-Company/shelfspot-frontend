@@ -203,6 +203,21 @@
         "confirmPasswordRequired": "تأكيد كلمة المرور مطلوب",
         "passwordsMismatch": "كلمتا المرور غير متطابقتين"
       }
+    },
+    "verifyEmail": {
+      "title": "تحقق من بريدك الإلكتروني",
+      "description": "تم إرسال رسالة من shelfspot@gmail.com إلى alfcompany@gmail.com. يرجى الضغط على الرابط الموجود داخل الرسالة لتفعيل حسابك.",
+      "visualAlt": "رسم توضيحي للتحقق من البريد الإلكتروني في شيلف سبوت",
+      "actions": {
+        "submit": "تم",
+        "submitting": "جارٍ التحقق...",
+        "resendCode": "إعادة إرسال رمز التحقق",
+        "back": "العودة إلى إنشاء الحساب"
+      },
+      "validation": {
+        "codeRequired": "رمز التحقق مطلوب",
+        "codeInvalid": "أدخل رمز التحقق المكون من 6 أرقام"
+      }
     }
   },
   "home": {

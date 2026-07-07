@@ -203,6 +203,21 @@
         "confirmPasswordRequired": "Confirm password is required",
         "passwordsMismatch": "Passwords must match"
       }
+    },
+    "verifyEmail": {
+      "title": "Verify your email",
+      "description": "An email from shelfspot@gmail.com has been sent to alfcompany@gmail.com. Please click on the link inside to verify your account.",
+      "visualAlt": "ShelfSpot verify email illustration",
+      "actions": {
+        "submit": "Done",
+        "submitting": "Verifying...",
+        "resendCode": "Resend verification code",
+        "back": "Back to register"
+      },
+      "validation": {
+        "codeRequired": "Verification code is required",
+        "codeInvalid": "Enter the 6-digit verification code"
+      }
     }
   },
   "home": {
