@@ -154,6 +154,55 @@
         "emailNotFound": "No account was found for this email address.",
         "validation": "Please review the highlighted field and try again."
       }
+    },
+    "otpVerification": {
+      "title": "OTP Verification",
+      "description": "Enter the verification code we just sent on your email address.",
+      "visualAlt": "ShelfSpot OTP verification illustration",
+      "actions": {
+        "submit": "Verify code",
+        "submitting": "Verifying...",
+        "back": "Back to forgot password"
+      },
+      "validation": {
+        "codeRequired": "Verification code is required",
+        "codeInvalid": "Enter the 6-digit verification code"
+      }
+    },
+    "resetPassword": {
+      "title": "Reset password",
+      "description": "Your new password must be unique from those previously used.",
+      "visualAlt": "ShelfSpot reset password illustration",
+      "fields": {
+        "password": {
+          "label": "New Password",
+          "placeholder": "enter your password"
+        },
+        "confirmPassword": {
+          "label": "Confirm Password",
+          "placeholder": "enter your password"
+        }
+      },
+      "actions": {
+        "submit": "Confirm Password",
+        "submitting": "Saving...",
+        "showPassword": "Show password",
+        "hidePassword": "Hide password",
+        "showConfirmPassword": "Show confirm password",
+        "hideConfirmPassword": "Hide confirm password",
+        "back": "Back to OTP verification"
+      },
+      "states": {
+        "passwordRules": "Your password must be :",
+        "passwordMin": "Contain at least 8 characters",
+        "passwordMatch": "password must match"
+      },
+      "validation": {
+        "passwordRequired": "Password is required",
+        "passwordMin": "Password must be at least 8 characters",
+        "confirmPasswordRequired": "Confirm password is required",
+        "passwordsMismatch": "Passwords must match"
+      }
     }
   },
   "home": {

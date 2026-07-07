@@ -4,6 +4,8 @@ import { useTranslations } from "next-intl";
 import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 
+import { ROUTES } from "@/config/routes";
+import { useRouter } from "@/i18n/navigation";
 import { AuthEmailIcon } from "@/modules/auth/components/auth-field-icons";
 import { AuthInputField } from "@/modules/auth/components/auth-input-field";
 import { useForgotPasswordMutation } from "@/modules/auth/hooks/use-forgot-password-mutation";
@@ -19,6 +21,7 @@ import { Form } from "@/shared/ui/form";
 
 export function ForgotPasswordForm() {
   const t = useTranslations("auth.forgotPassword");
+  const router = useRouter();
   const forgotPasswordSchema = useMemo(
     () => createForgotPasswordSchema(t),
     [t],
@@ -35,8 +38,9 @@ export function ForgotPasswordForm() {
     setSuccessMessage("");
 
     try {
-      const response = await forgotPasswordMutation.mutateAsync(values);
-      setSuccessMessage(response.message || t("states.success"));
+      await forgotPasswordMutation.mutateAsync(values);
+      setSuccessMessage(t("states.success"));
+      router.push(ROUTES.otpVerification);
     } catch (error) {
       const apiError = normalizeApiError(error);
 

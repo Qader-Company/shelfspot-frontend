@@ -1,6 +1,7 @@
 export { AuthCenteredShell } from "@/modules/auth/components/auth-centered-shell";
 export { AuthInputField } from "@/modules/auth/components/auth-input-field";
 export { AuthModeSwitch } from "@/modules/auth/components/auth-mode-switch";
+export { AuthOtpField } from "@/modules/auth/components/auth-otp-field";
 export { AuthSelectField } from "@/modules/auth/components/auth-select-field";
 export { AuthSocialButtons } from "@/modules/auth/components/auth-social-buttons";
 export { AuthSplitShell } from "@/modules/auth/components/auth-split-shell";
@@ -9,5 +10,9 @@ export { ForgotPasswordForm } from "@/modules/auth/components/forgot-password-fo
 export { ForgotPasswordPageView } from "@/modules/auth/components/forgot-password-page-view";
 export { LoginForm } from "@/modules/auth/components/login-form";
 export { LoginPageView } from "@/modules/auth/components/login-page-view";
+export { OtpVerificationForm } from "@/modules/auth/components/otp-verification-form";
+export { OtpVerificationPageView } from "@/modules/auth/components/otp-verification-page-view";
 export { RegisterForm } from "@/modules/auth/components/register-form";
 export { RegisterPageView } from "@/modules/auth/components/register-page-view";
+export { ResetPasswordForm } from "@/modules/auth/components/reset-password-form";
+export { ResetPasswordPageView } from "@/modules/auth/components/reset-password-page-view";
