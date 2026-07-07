@@ -178,9 +178,12 @@ export function LoginForm({ showRegistrationSuccess = false }: LoginFormProps) {
               <span>{t("actions.rememberMe")}</span>
             </label>
 
-            <span className="text-sm font-medium text-primary">
+            <Link
+              href={ROUTES.forgotPassword}
+              className="text-sm font-medium text-primary"
+            >
               {t("actions.forgotPassword")}
-            </span>
+            </Link>
           </div>
 
           {form.formState.errors.root?.message ? (

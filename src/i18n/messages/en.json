@@ -124,6 +124,36 @@
         "duplicateAccount": "An account with these details already exists.",
         "validation": "Please review the highlighted fields and try again."
       }
+    },
+    "forgotPassword": {
+      "title": "Forgot password",
+      "description": "Don't worry! It occurs. Please enter the email address linked with your account.",
+      "visualAlt": "ShelfSpot forgot password illustration",
+      "fields": {
+        "email": {
+          "label": "Work Email",
+          "placeholder": "name@company.com"
+        }
+      },
+      "actions": {
+        "submit": "Reset password",
+        "submitting": "Sending request...",
+        "back": "Back to sign in"
+      },
+      "states": {
+        "success": "If an account exists for this email, the next recovery step has been sent."
+      },
+      "validation": {
+        "emailRequired": "Work email is required",
+        "emailInvalid": "Enter a valid work email address"
+      },
+      "errors": {
+        "generic": "Unable to process your request right now. Please try again.",
+        "invalidApiKey": "The application API key is invalid.",
+        "unauthorized": "You are not authorized to perform this action.",
+        "emailNotFound": "No account was found for this email address.",
+        "validation": "Please review the highlighted field and try again."
+      }
     }
   },
   "home": {

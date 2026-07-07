@@ -1,9 +1,12 @@
+export { AuthCenteredShell } from "@/modules/auth/components/auth-centered-shell";
 export { AuthInputField } from "@/modules/auth/components/auth-input-field";
 export { AuthModeSwitch } from "@/modules/auth/components/auth-mode-switch";
 export { AuthSelectField } from "@/modules/auth/components/auth-select-field";
 export { AuthSocialButtons } from "@/modules/auth/components/auth-social-buttons";
 export { AuthSplitShell } from "@/modules/auth/components/auth-split-shell";
 export { AuthWordmark } from "@/modules/auth/components/auth-wordmark";
+export { ForgotPasswordForm } from "@/modules/auth/components/forgot-password-form";
+export { ForgotPasswordPageView } from "@/modules/auth/components/forgot-password-page-view";
 export { LoginForm } from "@/modules/auth/components/login-form";
 export { LoginPageView } from "@/modules/auth/components/login-page-view";
 export { RegisterForm } from "@/modules/auth/components/register-form";
