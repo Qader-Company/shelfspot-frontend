@@ -46,7 +46,10 @@
         "passwordRequired": "Password is required"
       },
       "errors": {
-        "generic": "Unable to sign in right now. Please try again."
+        "generic": "Unable to sign in right now. Please try again.",
+        "invalidCredentials": "The email or password is incorrect.",
+        "invalidApiKey": "The application API key is invalid.",
+        "validation": "Please review the highlighted fields and try again."
       }
     }
   },

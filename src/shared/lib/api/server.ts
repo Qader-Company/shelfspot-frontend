@@ -16,6 +16,7 @@ export async function createServerApiClient() {
     timeout: API_CONFIG.timeoutMs,
     headers: {
       Accept: "application/json",
+      "X-Authorization": API_CONFIG.serverApiKey,
       Cookie: cookieStore.toString(),
       "Accept-Language": requestHeaders.get("accept-language") ?? undefined,
     },

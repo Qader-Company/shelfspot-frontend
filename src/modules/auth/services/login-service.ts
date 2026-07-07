@@ -1,3 +1,4 @@
+import type { AuthTokens } from "@/shared/lib/auth/types";
 import { apiClient } from "@/shared/lib/api/client";
 
 export interface LoginPayload {
@@ -7,14 +8,33 @@ export interface LoginPayload {
 }
 
 export interface LoginResponse {
-  message?: string;
-  user?: unknown | null;
+  message: string;
+  tokens: AuthTokens;
 }
 
-const LOGIN_ENDPOINT = "/auth/login";
+interface CompanyLoginResponse {
+  message: string;
+  data: {
+    access_token: string;
+    refresh_token: string;
+    token_type: string;
+  };
+}
+
+const LOGIN_ENDPOINT = "/auth/company/login";
 
 export async function loginService(payload: LoginPayload) {
-  const response = await apiClient.post<LoginResponse>(LOGIN_ENDPOINT, payload);
+  const response = await apiClient.post<CompanyLoginResponse>(LOGIN_ENDPOINT, {
+    email: payload.email,
+    password: payload.password,
+  });
 
-  return response.data;
+  return {
+    message: response.data.message,
+    tokens: {
+      accessToken: response.data.data.access_token,
+      refreshToken: response.data.data.refresh_token,
+      tokenType: response.data.data.token_type,
+    },
+  } satisfies LoginResponse;
 }

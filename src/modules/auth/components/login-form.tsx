@@ -56,8 +56,17 @@ export function LoginForm() {
         }
       });
 
+      const authErrorMessage =
+        apiError.status === 401
+          ? apiError.message.toLowerCase().includes("api key")
+            ? t("errors.invalidApiKey")
+            : t("errors.invalidCredentials")
+          : apiError.status === 422
+            ? t("errors.validation")
+            : t("errors.generic");
+
       form.setError("root", {
-        message: t("errors.generic"),
+        message: authErrorMessage,
       });
     }
   }
