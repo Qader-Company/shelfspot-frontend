@@ -10,31 +10,30 @@ import {
   FormLabel,
   FormMessage,
 } from "@/shared/ui/form";
-import { Input } from "@/shared/ui/input";
+import { cn } from "@/shared/lib/utils";
 
-interface AuthInputFieldProps<TFieldValues extends FieldValues> {
-  autoComplete?: string;
-  control: Control<TFieldValues>;
-  endAdornment?: ReactNode;
-  icon?: ReactNode;
-  inputMode?: React.HTMLAttributes<HTMLInputElement>["inputMode"];
+interface AuthSelectOption {
   label: string;
-  name: FieldPath<TFieldValues>;
-  placeholder: string;
-  type?: React.HTMLInputTypeAttribute;
+  value: string;
 }
 
-export function AuthInputField<TFieldValues extends FieldValues>({
-  autoComplete,
+interface AuthSelectFieldProps<TFieldValues extends FieldValues> {
+  control: Control<TFieldValues>;
+  icon?: ReactNode;
+  label: string;
+  name: FieldPath<TFieldValues>;
+  options: AuthSelectOption[];
+  placeholder: string;
+}
+
+export function AuthSelectField<TFieldValues extends FieldValues>({
   control,
-  endAdornment,
   icon,
-  inputMode,
   label,
   name,
+  options,
   placeholder,
-  type = "text",
-}: AuthInputFieldProps<TFieldValues>) {
+}: AuthSelectFieldProps<TFieldValues>) {
   return (
     <FormField
       control={control}
@@ -49,21 +48,24 @@ export function AuthInputField<TFieldValues extends FieldValues>({
               <span className="shrink-0 text-muted-foreground">{icon}</span>
             ) : null}
             <FormControl>
-              <Input
+              <select
                 {...field}
                 value={typeof field.value === "string" ? field.value : ""}
-                autoComplete={autoComplete}
-                inputMode={inputMode}
-                type={type}
-                placeholder={placeholder}
-                className="h-auto border-0 bg-transparent px-0 py-0 text-sm shadow-none focus-visible:ring-0"
-              />
+                className={cn(
+                  "h-full w-full appearance-none border-0 bg-transparent px-0 py-0 text-sm text-foreground outline-none",
+                  !field.value && "text-muted-foreground",
+                )}
+              >
+                <option value="" disabled>
+                  {placeholder}
+                </option>
+                {options.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
             </FormControl>
-            {endAdornment ? (
-              <div className="shrink-0 text-muted-foreground">
-                {endAdornment}
-              </div>
-            ) : null}
           </div>
           <FormMessage className="text-xs leading-5" />
         </FormItem>

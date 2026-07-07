@@ -33,7 +33,8 @@
       },
       "states": {
         "or": "أو",
-        "noAccount": "ليس لديك حساب؟"
+        "noAccount": "ليس لديك حساب؟",
+        "registerSuccess": "تم إنشاء الحساب بنجاح. يمكنك الآن تسجيل الدخول."
       },
       "social": {
         "google": "جوجل",
@@ -49,6 +50,78 @@
         "generic": "تعذر تسجيل الدخول الآن. حاول مرة أخرى.",
         "invalidCredentials": "البريد الإلكتروني أو كلمة المرور غير صحيحة.",
         "invalidApiKey": "مفتاح API التطبيق غير صحيح.",
+        "validation": "يرجى مراجعة الحقول الموضحة والمحاولة مرة أخرى."
+      }
+    },
+    "register": {
+      "title": "ابدأ الآن",
+      "description": "أنشئ حسابك لبدء إدارة العمليات الميدانية",
+      "visualAlt": "رسم توضيحي لتسجيل حساب جديد في شيلف سبوت",
+      "tabs": {
+        "signIn": "تسجيل الدخول",
+        "signUp": "إنشاء حساب"
+      },
+      "fields": {
+        "companyName": {
+          "label": "اسم الشركة",
+          "placeholder": "مثال: ShelfSpot Logistics"
+        },
+        "crNumber": {
+          "label": "رقم السجل التجاري",
+          "placeholder": "أدخل رقم السجل التجاري المكون من 10 أرقام"
+        },
+        "email": {
+          "label": "البريد الإلكتروني للعمل",
+          "placeholder": "name@company.com"
+        },
+        "phoneNumber": {
+          "label": "رقم الهاتف",
+          "placeholder": "+966 XX XXX XXXX"
+        },
+        "password": {
+          "label": "كلمة المرور",
+          "placeholder": "أنشئ كلمة مرور قوية"
+        },
+        "industry": {
+          "label": "القطاع",
+          "placeholder": "مثال: الخدمات اللوجستية، التجزئة، التقنية"
+        }
+      },
+      "industryOptions": {
+        "logistics": "الخدمات اللوجستية",
+        "retail": "التجزئة",
+        "tech": "التقنية"
+      },
+      "actions": {
+        "submit": "إنشاء حساب",
+        "submitting": "جارٍ إنشاء الحساب...",
+        "showPassword": "إظهار كلمة المرور",
+        "hidePassword": "إخفاء كلمة المرور"
+      },
+      "states": {
+        "success": "تم إنشاء الحساب بنجاح. جارٍ تحويلك إلى تسجيل الدخول...",
+        "termsPrefix": "بالتسجيل فإنك توافق على",
+        "termsOfService": "شروط الخدمة",
+        "and": "و",
+        "privacyPolicy": "سياسة الخصوصية"
+      },
+      "validation": {
+        "companyNameRequired": "اسم الشركة مطلوب",
+        "crNumberRequired": "رقم السجل التجاري مطلوب",
+        "crNumberInvalid": "يجب أن يتكون رقم السجل التجاري من 10 أرقام",
+        "emailRequired": "البريد الإلكتروني للعمل مطلوب",
+        "emailInvalid": "أدخل بريدًا إلكترونيًا صالحًا للعمل",
+        "phoneNumberRequired": "رقم الهاتف مطلوب",
+        "phoneNumberInvalid": "أدخل رقم هاتف صالحًا",
+        "passwordRequired": "كلمة المرور مطلوبة",
+        "passwordMin": "يجب ألا تقل كلمة المرور عن 8 أحرف",
+        "industryRequired": "القطاع مطلوب"
+      },
+      "errors": {
+        "generic": "تعذر إنشاء الحساب الآن. حاول مرة أخرى.",
+        "invalidApiKey": "مفتاح API التطبيق غير صحيح.",
+        "unauthorized": "غير مصرح لك بتنفيذ هذا الإجراء.",
+        "duplicateAccount": "يوجد حساب بهذه البيانات بالفعل.",
         "validation": "يرجى مراجعة الحقول الموضحة والمحاولة مرة أخرى."
       }
     }

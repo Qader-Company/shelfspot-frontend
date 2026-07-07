@@ -3,7 +3,13 @@ import { getTranslations } from "next-intl/server";
 import { AuthSplitShell } from "@/modules/auth/components/auth-split-shell";
 import { LoginForm } from "@/modules/auth/components/login-form";
 
-export async function LoginPageView() {
+interface LoginPageViewProps {
+  showRegistrationSuccess?: boolean;
+}
+
+export async function LoginPageView({
+  showRegistrationSuccess = false,
+}: LoginPageViewProps) {
   const t = await getTranslations("auth.login");
 
   return (
@@ -11,7 +17,7 @@ export async function LoginPageView() {
       visualAlt={t("visualAlt")}
       visualSrc="/auth/screens/login-screen.png"
     >
-      <LoginForm />
+      <LoginForm showRegistrationSuccess={showRegistrationSuccess} />
     </AuthSplitShell>
   );
 }

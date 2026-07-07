@@ -33,7 +33,8 @@
       },
       "states": {
         "or": "or",
-        "noAccount": "Don't have an account?"
+        "noAccount": "Don't have an account?",
+        "registerSuccess": "Your account was created successfully. Please sign in."
       },
       "social": {
         "google": "Google",
@@ -49,6 +50,78 @@
         "generic": "Unable to sign in right now. Please try again.",
         "invalidCredentials": "The email or password is incorrect.",
         "invalidApiKey": "The application API key is invalid.",
+        "validation": "Please review the highlighted fields and try again."
+      }
+    },
+    "register": {
+      "title": "Get started",
+      "description": "Create your account to start managing field operations",
+      "visualAlt": "ShelfSpot authentication sign up illustration",
+      "tabs": {
+        "signIn": "Sign In",
+        "signUp": "Sign Up"
+      },
+      "fields": {
+        "companyName": {
+          "label": "Company Name",
+          "placeholder": "e.g., ShelfSpot Logistics"
+        },
+        "crNumber": {
+          "label": "CR Number",
+          "placeholder": "Enter your 10-digit CR number"
+        },
+        "email": {
+          "label": "Work Email",
+          "placeholder": "name@company.com"
+        },
+        "phoneNumber": {
+          "label": "Phone Number",
+          "placeholder": "+966 XX XXX XXXX"
+        },
+        "password": {
+          "label": "Password",
+          "placeholder": "create a strong password"
+        },
+        "industry": {
+          "label": "Industry",
+          "placeholder": "e.g., Logistics, Retail, Tech"
+        }
+      },
+      "industryOptions": {
+        "logistics": "Logistics",
+        "retail": "Retail",
+        "tech": "Tech"
+      },
+      "actions": {
+        "submit": "Create Account",
+        "submitting": "Creating Account...",
+        "showPassword": "Show password",
+        "hidePassword": "Hide password"
+      },
+      "states": {
+        "success": "Your account was created successfully. Redirecting to sign in...",
+        "termsPrefix": "By signing up, you agree to our",
+        "termsOfService": "Terms of services",
+        "and": "and",
+        "privacyPolicy": "Privacy Policy"
+      },
+      "validation": {
+        "companyNameRequired": "Company name is required",
+        "crNumberRequired": "CR number is required",
+        "crNumberInvalid": "CR number must contain exactly 10 digits",
+        "emailRequired": "Work email is required",
+        "emailInvalid": "Enter a valid work email address",
+        "phoneNumberRequired": "Phone number is required",
+        "phoneNumberInvalid": "Enter a valid phone number",
+        "passwordRequired": "Password is required",
+        "passwordMin": "Password must be at least 8 characters",
+        "industryRequired": "Industry is required"
+      },
+      "errors": {
+        "generic": "Unable to create your account right now. Please try again.",
+        "invalidApiKey": "The application API key is invalid.",
+        "unauthorized": "You are not authorized to perform this action.",
+        "duplicateAccount": "An account with these details already exists.",
         "validation": "Please review the highlighted fields and try again."
       }
     }

@@ -15,6 +15,8 @@ import { AuthInputField } from "@/modules/auth/components/auth-input-field";
 import { AuthModeSwitch } from "@/modules/auth/components/auth-mode-switch";
 import { AuthSocialButtons } from "@/modules/auth/components/auth-social-buttons";
 import { useLoginMutation } from "@/modules/auth/hooks/use-login-mutation";
+import { Link } from "@/i18n/navigation";
+import { ROUTES } from "@/config/routes";
 import {
   createLoginSchema,
   loginDefaultValues,
@@ -26,7 +28,11 @@ import { cn } from "@/shared/lib/utils";
 import { Button } from "@/shared/ui/button";
 import { Form } from "@/shared/ui/form";
 
-export function LoginForm() {
+interface LoginFormProps {
+  showRegistrationSuccess?: boolean;
+}
+
+export function LoginForm({ showRegistrationSuccess = false }: LoginFormProps) {
   const t = useTranslations("auth.login");
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const loginSchema = useMemo(() => createLoginSchema(t), [t]);
@@ -85,10 +91,18 @@ export function LoginForm() {
       <div>
         <AuthModeSwitch
           active="sign-in"
+          signInHref={ROUTES.login}
           signInLabel={t("tabs.signIn")}
+          signUpHref={ROUTES.register}
           signUpLabel={t("tabs.signUp")}
         />
       </div>
+
+      {showRegistrationSuccess ? (
+        <p className="rounded-[18px] border border-success/20 bg-success/10 px-4 py-3 text-sm text-success">
+          {t("states.registerSuccess")}
+        </p>
+      ) : null}
 
       <Form {...form}>
         <form
@@ -155,7 +169,7 @@ export function LoginForm() {
                 className={cn(
                   "flex size-4 items-center justify-center rounded-[4px] border transition-colors focus-visible:outline-none",
                   rememberMe
-                    ? "border-primary bg-[#E7F8FD] text-primary"
+                    ? "border-primary bg-accent text-primary"
                     : "border-border bg-card text-transparent",
                 )}
               >
@@ -205,9 +219,12 @@ export function LoginForm() {
 
         <p className="text-center text-sm leading-6 text-muted-foreground">
           {t("states.noAccount")}{" "}
-          <span className={cn("font-semibold text-primary")}>
+          <Link
+            href={ROUTES.register}
+            className={cn("font-semibold text-primary")}
+          >
             {t("actions.createAccount")}
-          </span>
+          </Link>
         </p>
       </div>
     </div>
