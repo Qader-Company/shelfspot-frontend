@@ -3,6 +3,53 @@
     "title": "ShelfSpot",
     "description": "ShelfSpot"
   },
+  "auth": {
+    "login": {
+      "title": "Welcome Back",
+      "description": "Enter your credentials to access your account",
+      "visualAlt": "ShelfSpot authentication welcome illustration",
+      "tabs": {
+        "signIn": "Sign In",
+        "signUp": "Sign Up"
+      },
+      "fields": {
+        "email": {
+          "label": "Email",
+          "placeholder": "name@company.com"
+        },
+        "password": {
+          "label": "Password",
+          "placeholder": "enter your password"
+        }
+      },
+      "actions": {
+        "rememberMe": "Remember me",
+        "forgotPassword": "Forget Password?",
+        "submit": "Sign In",
+        "submitting": "Signing In...",
+        "createAccount": "Create Account",
+        "showPassword": "Show password",
+        "hidePassword": "Hide password"
+      },
+      "states": {
+        "or": "or",
+        "noAccount": "Don't have an account?"
+      },
+      "social": {
+        "google": "Google",
+        "facebook": "Facebook",
+        "apple": "Apple"
+      },
+      "validation": {
+        "emailRequired": "Email is required",
+        "emailInvalid": "Enter a valid email address",
+        "passwordRequired": "Password is required"
+      },
+      "errors": {
+        "generic": "Unable to sign in right now. Please try again."
+      }
+    }
+  },
   "home": {
     "title": "ShelfSpot"
   }

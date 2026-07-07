@@ -3,6 +3,53 @@
     "title": "شيلف سبوت",
     "description": "شيلف سبوت"
   },
+  "auth": {
+    "login": {
+      "title": "مرحبًا بعودتك",
+      "description": "أدخل بياناتك للوصول إلى حسابك",
+      "visualAlt": "رسم ترحيبي لتسجيل الدخول في شيلف سبوت",
+      "tabs": {
+        "signIn": "تسجيل الدخول",
+        "signUp": "إنشاء حساب"
+      },
+      "fields": {
+        "email": {
+          "label": "البريد الإلكتروني",
+          "placeholder": "name@company.com"
+        },
+        "password": {
+          "label": "كلمة المرور",
+          "placeholder": "أدخل كلمة المرور"
+        }
+      },
+      "actions": {
+        "rememberMe": "تذكرني",
+        "forgotPassword": "هل نسيت كلمة المرور؟",
+        "submit": "تسجيل الدخول",
+        "submitting": "جارٍ تسجيل الدخول...",
+        "createAccount": "إنشاء حساب",
+        "showPassword": "إظهار كلمة المرور",
+        "hidePassword": "إخفاء كلمة المرور"
+      },
+      "states": {
+        "or": "أو",
+        "noAccount": "ليس لديك حساب؟"
+      },
+      "social": {
+        "google": "جوجل",
+        "facebook": "فيسبوك",
+        "apple": "أبل"
+      },
+      "validation": {
+        "emailRequired": "البريد الإلكتروني مطلوب",
+        "emailInvalid": "أدخل بريدًا إلكترونيًا صالحًا",
+        "passwordRequired": "كلمة المرور مطلوبة"
+      },
+      "errors": {
+        "generic": "تعذر تسجيل الدخول الآن. حاول مرة أخرى."
+      }
+    }
+  },
   "home": {
     "title": "شيلف سبوت"
   }

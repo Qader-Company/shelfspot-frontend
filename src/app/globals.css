@@ -24,6 +24,9 @@
   --color-warning-foreground: var(--warning-foreground);
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
+  --color-auth-visual: var(--auth-visual-background);
+  --color-auth-visual-blur: var(--auth-visual-blur);
+  --color-auth-visual-foreground: var(--auth-visual-foreground);
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
@@ -53,6 +56,8 @@
   --text-sm--line-height: var(--line-height-default);
   --text-xs: var(--font-size-text-xs);
   --text-xs--line-height: var(--line-height-default);
+  --text-brand-mark: var(--font-size-brand-mark);
+  --text-brand-mark--line-height: 1;
   --font-weight-light: var(--font-weight-light-token);
   --font-weight-regular: var(--font-weight-regular-token);
   --font-weight-normal: var(--font-weight-regular-token);
@@ -66,6 +71,7 @@
   --radius-xl: calc(var(--radius) + 4px);
   --font-arabic: var(--font-ibm-plex-sans-arabic);
   --font-english: var(--font-poppins);
+  --font-brand: var(--font-doner);
   --font-sans: var(--font-app-sans);
 }
 
@@ -151,12 +157,14 @@
   --font-size-text-md: 1rem;
   --font-size-text-sm: 0.875rem;
   --font-size-text-xs: 0.75rem;
+  --font-size-brand-mark: 1.5rem;
   --line-height-default: 1.5;
   --font-weight-light-token: 300;
   --font-weight-regular-token: 400;
   --font-weight-medium-token: 500;
   --font-weight-semibold-token: 600;
   --font-weight-bold-token: 700;
+  --font-doner: Doner;
 
   /* Light semantic theme */
   --radius: 0.625rem;
@@ -183,6 +191,9 @@
   --border: var(--neutral-200);
   --input: var(--neutral-300);
   --ring: var(--brand-600);
+  --auth-visual-background: var(--brand-800);
+  --auth-visual-blur: var(--brand-700);
+  --auth-visual-foreground: var(--base-white);
 }
 
 html[dir="rtl"] {
