@@ -18,7 +18,7 @@ export function normalizeApiError(error: unknown): ApiError {
 
   return {
     code: "UNKNOWN_ERROR",
-    message: error instanceof Error ? error.message : "Unknown error",
+    message: error instanceof Error ? error.message : "",
     status: 0,
   };
 }

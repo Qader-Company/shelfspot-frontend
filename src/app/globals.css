@@ -1,9 +1,9 @@
 @import "tailwindcss";
-@import "../shared/theme/tokens.css";
 
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
+  /* Semantic colors: components consume these utilities only. */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -18,15 +18,205 @@
   --color-muted-foreground: var(--muted-foreground);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
   --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+
+  /* Figma typography scale. Each utility includes the 150% line height. */
+  --text-display-2xl: var(--font-size-display-2xl);
+  --text-display-2xl--line-height: var(--line-height-default);
+  --text-display-xl: var(--font-size-display-xl);
+  --text-display-xl--line-height: var(--line-height-default);
+  --text-display-lg: var(--font-size-display-lg);
+  --text-display-lg--line-height: var(--line-height-default);
+  --text-display-md: var(--font-size-display-md);
+  --text-display-md--line-height: var(--line-height-default);
+  --text-display-sm: var(--font-size-display-sm);
+  --text-display-sm--line-height: var(--line-height-default);
+  --text-display-xs: var(--font-size-display-xs);
+  --text-display-xs--line-height: var(--line-height-default);
+  --text-xl: var(--font-size-text-xl);
+  --text-xl--line-height: var(--line-height-default);
+  --text-lg: var(--font-size-text-lg);
+  --text-lg--line-height: var(--line-height-default);
+  --text-md: var(--font-size-text-md);
+  --text-md--line-height: var(--line-height-default);
+  --text-base: var(--font-size-text-md);
+  --text-base--line-height: var(--line-height-default);
+  --text-sm: var(--font-size-text-sm);
+  --text-sm--line-height: var(--line-height-default);
+  --text-xs: var(--font-size-text-xs);
+  --text-xs--line-height: var(--line-height-default);
+  --font-weight-light: var(--font-weight-light-token);
+  --font-weight-regular: var(--font-weight-regular-token);
+  --font-weight-normal: var(--font-weight-regular-token);
+  --font-weight-medium: var(--font-weight-medium-token);
+  --font-weight-semibold: var(--font-weight-semibold-token);
+  --font-weight-bold: var(--font-weight-bold-token);
+
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  --font-arabic: var(--font-ibm-plex-sans-arabic);
+  --font-english: var(--font-poppins);
   --font-sans: var(--font-app-sans);
+}
+
+:root {
+  /* Base */
+  --base-white: #ffffff;
+  --base-black: #040202;
+
+  /* Brand */
+  --brand-50: #e7f8fd;
+  --brand-100: #d0f0fb;
+  --brand-200: #a0e2f8;
+  --brand-300: #71d3f4;
+  --brand-400: #42c5f0;
+  --brand-500: #56cbf2;
+  --brand-600: #0f92bd;
+  --brand-700: #0b6d8e;
+  --brand-800: #07495f;
+  --brand-900: #04242f;
+  --brand-950: #021218;
+
+  /* Neutral */
+  --neutral-50: #fafafa;
+  --neutral-100: #f5f5f5;
+  --neutral-200: #e5e5e5;
+  --neutral-300: #d4d4d4;
+  --neutral-400: #a3a3a3;
+  --neutral-500: #737373;
+  --neutral-600: #525252;
+  --neutral-700: #404040;
+  --neutral-800: #262626;
+  --neutral-900: #171717;
+  --neutral-950: #0a0a0a;
+
+  /* Success */
+  --success-50: #f0fdf4;
+  --success-100: #dcfce7;
+  --success-200: #bbf7d0;
+  --success-300: #86efac;
+  --success-400: #4ade80;
+  --success-500: #22c55e;
+  --success-600: #16a34a;
+  --success-700: #15803d;
+  --success-800: #166534;
+  --success-900: #14532d;
+  --success-950: #052e16;
+
+  /* Warning */
+  --warning-50: #fff7ed;
+  --warning-100: #ffedd5;
+  --warning-200: #fed7aa;
+  --warning-300: #fdba74;
+  --warning-400: #fb923c;
+  --warning-500: #f97316;
+  --warning-600: #ea580c;
+  --warning-700: #c2410c;
+  --warning-800: #9a3412;
+  --warning-900: #7c2d12;
+  --warning-950: #431407;
+
+  /* Error */
+  --error-50: #fef2f2;
+  --error-100: #fee2e2;
+  --error-200: #fecaca;
+  --error-300: #fca5a5;
+  --error-400: #f87171;
+  --error-500: #ef4444;
+  --error-600: #dc2626;
+  --error-700: #b91c1c;
+  --error-800: #991b1b;
+  --error-900: #7f1d1d;
+  --error-950: #450a0a;
+
+  /* Typography */
+  --font-size-display-2xl: 4rem;
+  --font-size-display-xl: 3.75rem;
+  --font-size-display-lg: 3rem;
+  --font-size-display-md: 2rem;
+  --font-size-display-sm: 1.75rem;
+  --font-size-display-xs: 1.5rem;
+  --font-size-text-xl: 1.25rem;
+  --font-size-text-lg: 1.125rem;
+  --font-size-text-md: 1rem;
+  --font-size-text-sm: 0.875rem;
+  --font-size-text-xs: 0.75rem;
+  --line-height-default: 1.5;
+  --font-weight-light-token: 300;
+  --font-weight-regular-token: 400;
+  --font-weight-medium-token: 500;
+  --font-weight-semibold-token: 600;
+  --font-weight-bold-token: 700;
+
+  /* Light semantic theme */
+  --radius: 0.625rem;
+  --background: var(--neutral-50);
+  --foreground: var(--neutral-950);
+  --card: var(--base-white);
+  --card-foreground: var(--neutral-950);
+  --popover: var(--base-white);
+  --popover-foreground: var(--neutral-950);
+  --primary: var(--brand-500);
+  --primary-foreground: var(--base-black);
+  --secondary: var(--neutral-100);
+  --secondary-foreground: var(--neutral-900);
+  --muted: var(--neutral-100);
+  --muted-foreground: var(--neutral-500);
+  --accent: var(--brand-50);
+  --accent-foreground: var(--brand-900);
+  --success: var(--success-500);
+  --success-foreground: var(--base-black);
+  --warning: var(--warning-500);
+  --warning-foreground: var(--base-black);
+  --destructive: var(--error-500);
+  --destructive-foreground: var(--base-black);
+  --border: var(--neutral-200);
+  --input: var(--neutral-300);
+  --ring: var(--brand-600);
+}
+
+html[dir="rtl"] {
+  --font-app-sans: var(--font-arabic);
+}
+
+html[dir="ltr"] {
+  --font-app-sans: var(--font-english);
+}
+
+.dark {
+  --background: var(--neutral-950);
+  --foreground: var(--neutral-50);
+  --card: var(--neutral-900);
+  --card-foreground: var(--neutral-50);
+  --popover: var(--neutral-900);
+  --popover-foreground: var(--neutral-50);
+  --primary: var(--brand-400);
+  --primary-foreground: var(--base-black);
+  --secondary: var(--neutral-800);
+  --secondary-foreground: var(--neutral-50);
+  --muted: var(--neutral-800);
+  --muted-foreground: var(--neutral-400);
+  --accent: var(--brand-900);
+  --accent-foreground: var(--brand-50);
+  --success: var(--success-400);
+  --success-foreground: var(--base-black);
+  --warning: var(--warning-400);
+  --warning-foreground: var(--base-black);
+  --destructive: var(--error-400);
+  --destructive-foreground: var(--base-black);
+  --border: var(--neutral-700);
+  --input: var(--neutral-700);
+  --ring: var(--brand-400);
 }
 
 @layer base {
@@ -39,6 +229,6 @@
   }
 
   body {
-    @apply min-h-dvh bg-background text-foreground antialiased;
+    @apply min-h-dvh bg-background font-sans text-foreground antialiased;
   }
 }

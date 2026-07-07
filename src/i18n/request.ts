@@ -9,13 +9,7 @@ export default getRequestConfig(async ({ requestLocale }) => {
     ? requested
     : routing.defaultLocale;
 
-  let messages = {};
-
-  try {
-    messages = (await import(`./messages/${locale}.json`)).default;
-  } catch {
-    // Message catalogs are added after the supported locales are configured.
-  }
+  const messages = (await import(`./messages/${locale}.json`)).default;
 
   return { locale, messages };
 });
