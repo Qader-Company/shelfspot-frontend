@@ -31,6 +31,14 @@
         "clarity": "Instant Tracking",
         "execution": "Smart Management"
       }
+    },
+    "about": {
+      "eyebrow": "Our Platform",
+      "title": "What is ShelfSpot?",
+      "subtitle": "ShelfSpot is a specialized digital platform designed to manage and execute in-store merchandising tasks efficiently.",
+      "paragraphOne": "We connect companies with trained field merchandisers to ensure promotions and shelf displays are executed accurately, on time, and with full transparency.",
+      "paragraphTwo": "Our mission is to improve in-store execution quality across the Saudi market through technology that delivers speed, reliability, and visibility.",
+      "visualPlaceholder": "Dashboard preview placeholder"
     }
   }
 }

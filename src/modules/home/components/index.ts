@@ -1,3 +1,5 @@
+export { AboutSection } from "@/modules/home/components/about-section";
+export { AboutVisual } from "@/modules/home/components/about-visual";
 export { HeroSection } from "@/modules/home/components/hero-section";
 export { HomePageView } from "@/modules/home/components/home-page-view";
 export { LandingContainer } from "@/modules/home/components/landing-container";

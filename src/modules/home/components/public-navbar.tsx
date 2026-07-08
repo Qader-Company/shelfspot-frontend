@@ -17,7 +17,6 @@ export async function PublicNavbar({ locale }: PublicNavbarProps) {
   const t = await getTranslations("home.navbar");
   const nextLocale = locale === "ar" ? "en" : "ar";
   const isRtl = locale === "ar";
-  const currentLocaleLabel = isRtl ? "AR" : "EN";
 
   const links = [
     { href: ROUTES.home, label: t("links.home"), isActive: true },
@@ -42,7 +41,7 @@ export async function PublicNavbar({ locale }: PublicNavbarProps) {
       className="inline-flex items-center gap-1.5 text-xl font-medium text-foreground transition-colors hover:text-primary lg:text-[20px]"
     >
       <ChevronDown className="size-4" />
-      <span>{currentLocaleLabel}</span>
+      <span>{t("actions.localeSwitch")}</span>
     </Link>
   );
 
