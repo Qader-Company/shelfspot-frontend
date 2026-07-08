@@ -3,7 +3,261 @@
     "title": "ShelfSpot",
     "description": "ShelfSpot"
   },
+  "auth": {
+    "login": {
+      "title": "Welcome Back",
+      "description": "Enter your credentials to access your account",
+      "visualAlt": "ShelfSpot authentication welcome illustration",
+      "tabs": {
+        "signIn": "Sign In",
+        "signUp": "Sign Up"
+      },
+      "fields": {
+        "email": {
+          "label": "Email",
+          "placeholder": "name@company.com"
+        },
+        "password": {
+          "label": "Password",
+          "placeholder": "enter your password"
+        }
+      },
+      "actions": {
+        "rememberMe": "Remember me",
+        "forgotPassword": "Forget Password?",
+        "submit": "Sign In",
+        "submitting": "Signing In...",
+        "createAccount": "Create Account",
+        "showPassword": "Show password",
+        "hidePassword": "Hide password"
+      },
+      "states": {
+        "or": "or",
+        "noAccount": "Don't have an account?",
+        "registerSuccess": "Your account was created successfully. Please sign in."
+      },
+      "social": {
+        "google": "Google",
+        "facebook": "Facebook",
+        "apple": "Apple"
+      },
+      "validation": {
+        "emailRequired": "Email is required",
+        "emailInvalid": "Enter a valid email address",
+        "passwordRequired": "Password is required"
+      },
+      "errors": {
+        "generic": "Unable to sign in right now. Please try again.",
+        "invalidCredentials": "The email or password is incorrect.",
+        "invalidApiKey": "The application API key is invalid.",
+        "validation": "Please review the highlighted fields and try again."
+      }
+    },
+    "register": {
+      "title": "Get started",
+      "description": "Create your account to start managing field operations",
+      "visualAlt": "ShelfSpot authentication sign up illustration",
+      "tabs": {
+        "signIn": "Sign In",
+        "signUp": "Sign Up"
+      },
+      "fields": {
+        "companyName": {
+          "label": "Company Name",
+          "placeholder": "e.g., ShelfSpot Logistics"
+        },
+        "crNumber": {
+          "label": "CR Number",
+          "placeholder": "Enter your 10-digit CR number"
+        },
+        "email": {
+          "label": "Work Email",
+          "placeholder": "name@company.com"
+        },
+        "phoneNumber": {
+          "label": "Phone Number",
+          "placeholder": "+966 XX XXX XXXX"
+        },
+        "password": {
+          "label": "Password",
+          "placeholder": "create a strong password"
+        },
+        "passwordConfirmation": {
+          "label": "Confirm Password",
+          "placeholder": "confirm your password"
+        },
+        "industry": {
+          "label": "Industry",
+          "placeholder": "e.g., Logistics, Retail, Tech"
+        }
+      },
+      "industryOptions": {
+        "logistics": "Logistics",
+        "retail": "Retail",
+        "tech": "Tech"
+      },
+      "actions": {
+        "submit": "Create Account",
+        "submitting": "Creating Account...",
+        "showPassword": "Show password",
+        "hidePassword": "Hide password"
+      },
+      "states": {
+        "success": "Your account was created successfully. Redirecting to email verification...",
+        "termsPrefix": "By signing up, you agree to our",
+        "termsOfService": "Terms of services",
+        "and": "and",
+        "privacyPolicy": "Privacy Policy"
+      },
+      "validation": {
+        "companyNameRequired": "Company name is required",
+        "crNumberRequired": "CR number is required",
+        "crNumberInvalid": "CR number must contain exactly 10 digits",
+        "emailRequired": "Work email is required",
+        "emailInvalid": "Enter a valid work email address",
+        "phoneNumberRequired": "Phone number is required",
+        "phoneNumberInvalid": "Enter a valid phone number",
+        "passwordRequired": "Password is required",
+        "passwordMin": "Password must be at least 8 characters",
+        "passwordConfirmationRequired": "Confirm password is required",
+        "passwordConfirmationMismatch": "Passwords must match",
+        "industryRequired": "Industry is required"
+      },
+      "errors": {
+        "generic": "Unable to create your account right now. Please try again.",
+        "invalidApiKey": "The application API key is invalid.",
+        "unauthorized": "You are not authorized to perform this action.",
+        "duplicateAccount": "An account with these details already exists.",
+        "validation": "Please review the highlighted fields and try again."
+      }
+    },
+    "forgotPassword": {
+      "title": "Forgot password",
+      "description": "Don't worry! It occurs. Please enter the email address linked with your account.",
+      "visualAlt": "ShelfSpot forgot password illustration",
+      "fields": {
+        "email": {
+          "label": "Work Email",
+          "placeholder": "name@company.com"
+        }
+      },
+      "actions": {
+        "submit": "Reset password",
+        "submitting": "Sending request...",
+        "back": "Back to sign in"
+      },
+      "states": {
+        "success": "If an account exists for this email, the next recovery step has been sent."
+      },
+      "validation": {
+        "emailRequired": "Work email is required",
+        "emailInvalid": "Enter a valid work email address"
+      },
+      "errors": {
+        "generic": "Unable to process your request right now. Please try again.",
+        "invalidApiKey": "The application API key is invalid.",
+        "unauthorized": "You are not authorized to perform this action.",
+        "emailNotFound": "No account was found for this email address.",
+        "validation": "Please review the highlighted field and try again."
+      }
+    },
+    "otpVerification": {
+      "title": "OTP Verification",
+      "description": "Enter the verification code we just sent on your email address.",
+      "visualAlt": "ShelfSpot OTP verification illustration",
+      "actions": {
+        "submit": "Verify code",
+        "submitting": "Verifying...",
+        "back": "Back to forgot password"
+      },
+      "validation": {
+        "codeRequired": "Verification code is required",
+        "codeInvalid": "Enter the 6-digit verification code"
+      }
+    },
+    "resetPassword": {
+      "title": "Reset password",
+      "description": "Your new password must be unique from those previously used.",
+      "visualAlt": "ShelfSpot reset password illustration",
+      "fields": {
+        "password": {
+          "label": "New Password",
+          "placeholder": "enter your password"
+        },
+        "confirmPassword": {
+          "label": "Confirm Password",
+          "placeholder": "enter your password"
+        }
+      },
+      "actions": {
+        "submit": "Confirm Password",
+        "submitting": "Saving...",
+        "showPassword": "Show password",
+        "hidePassword": "Hide password",
+        "showConfirmPassword": "Show confirm password",
+        "hideConfirmPassword": "Hide confirm password",
+        "back": "Back to OTP verification"
+      },
+      "states": {
+        "passwordRules": "Your password must be :",
+        "passwordMin": "Contain at least 8 characters",
+        "passwordMatch": "password must match"
+      },
+      "validation": {
+        "passwordRequired": "Password is required",
+        "passwordMin": "Password must be at least 8 characters",
+        "confirmPasswordRequired": "Confirm password is required",
+        "passwordsMismatch": "Passwords must match"
+      }
+    },
+    "verifyEmail": {
+      "title": "Verify your email",
+      "description": "An email from shelfspot@gmail.com has been sent to alfcompany@gmail.com. Please click on the link inside to verify your account.",
+      "visualAlt": "ShelfSpot verify email illustration",
+      "actions": {
+        "submit": "Done",
+        "submitting": "Verifying...",
+        "resending": "Resending...",
+        "resendCode": "Resend verification code",
+        "back": "Back to register"
+      },
+      "validation": {
+        "codeRequired": "Verification code is required",
+        "codeInvalid": "Enter the 6-digit verification code"
+      },
+      "errors": {
+        "generic": "Unable to verify your email right now. Please try again.",
+        "missingToken": "Verification token is missing. Please register again."
+      }
+    }
+  },
   "home": {
-    "title": "ShelfSpot"
+    "title": "ShelfSpot",
+    "navbar": {
+      "brandLabel": "ShelfSpot home",
+      "links": {
+        "about": "About",
+        "features": "Features",
+        "howItWorks": "How it works",
+        "contact": "Contact"
+      },
+      "actions": {
+        "login": "Login",
+        "localeSwitch": "AR"
+      }
+    },
+    "hero": {
+      "eyebrow": "Retail execution management platform",
+      "titleAccent": "Boost execution efficiency",
+      "titleRest": "inside your stores",
+      "description": "ShelfSpot helps your teams manage field execution, store follow-ups, and operational visibility from one clear workflow.",
+      "primaryCta": "Start now",
+      "visualAlt": "ShelfSpot home hero visual",
+      "floatingCards": {
+        "speed": "Fast follow-up",
+        "clarity": "Clear visibility",
+        "execution": "Better execution"
+      }
+    }
   }
 }
