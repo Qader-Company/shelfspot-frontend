@@ -39,6 +39,114 @@
       "paragraphOne": "We connect companies with trained field merchandisers to ensure promotions and shelf displays are executed accurately, on time, and with full transparency.",
       "paragraphTwo": "Our mission is to improve in-store execution quality across the Saudi market through technology that delivers speed, reliability, and visibility.",
       "visualPlaceholder": "Dashboard preview placeholder"
+    },
+    "whyShelfSpot": {
+      "eyebrowPrefix": "Why",
+      "eyebrowSuffix": "?",
+      "titlePrefix": "What Makes",
+      "titleSuffix": "Different?",
+      "items": {
+        "visibility": {
+          "title": "Full Visibility",
+          "description": "Real-time tracking and photo verification for every task.",
+          "iconAlt": "Full visibility icon"
+        },
+        "centralized": {
+          "title": "Centralized Control",
+          "description": "Manage all your requests from one powerful dashboard.",
+          "iconAlt": "Centralized control icon"
+        },
+        "flexible": {
+          "title": "Flexible Execution",
+          "description": "Create tasks across multiple locations with ease.",
+          "iconAlt": "Flexible execution icon"
+        },
+        "secure": {
+          "title": "Secure Payments",
+          "description": "Payments are released only after task approval.",
+          "iconAlt": "Secure payments icon"
+        }
+      }
+    },
+    "statistics": {
+      "eyebrow": "Trusted by results",
+      "title": "Numbers That Speak",
+      "items": {
+        "merchandisers": {
+          "value": "+800",
+          "label": "Verified Field Merchandisers"
+        },
+        "approvalRate": {
+          "value": "98%",
+          "label": "First-Time Approval Rate"
+        },
+        "companies": {
+          "value": "+120",
+          "label": "Companies Using ShelfSpot"
+        },
+        "tasks": {
+          "value": "+5000",
+          "label": "Tasks Successfully Completed"
+        }
+      }
+    },
+    "howItWorksSection": {
+      "eyebrow": "How ShelfSpot Works",
+      "title": "Simple Steps",
+      "steps": {
+        "request": {
+          "title": "Create a Request",
+          "description": "Choose locations, products, execution date, and upload planograms or BDA documents."
+        },
+        "assignment": {
+          "title": "Task Assignment",
+          "description": "We assign the best-matched merchandiser based on location and task type."
+        },
+        "execution": {
+          "title": "Execution & Verification",
+          "description": "The merchandiser completes the task and uploads real-time photos as proof."
+        },
+        "review": {
+          "title": "Review & Approval",
+          "description": "You review the results and approve the task. Payment is released automatically."
+        }
+      },
+      "ctaLabel": "What are you waiting for?",
+      "ctaAction": "Start Now"
+    },
+    "footer": {
+      "brandLabel": "ShelfSpot footer logo",
+      "description": "A digital platform for managing and executing in-store field tasks, providing companies with clear operational visibility and a reliable execution mechanism across various regions of the Kingdom.",
+      "navigation": {
+        "quickLinks": {
+          "title": "Quick Links",
+          "links": {
+            "home": "Home",
+            "services": "Services",
+            "workMechanism": "Work Mechanism",
+            "successPartners": "Success Partners",
+            "aboutUs": "About Us"
+          }
+        },
+        "support": {
+          "title": "Support & Contact",
+          "links": {
+            "privacyPolicy": "Privacy Policy",
+            "contactUs": "Contact Us",
+            "termsConditions": "Terms & Conditions",
+            "faqs": "FAQs"
+          }
+        }
+      },
+      "contact": {
+        "title": "Contact Us",
+        "location": "Kingdom of Saudi Arabia",
+        "phone": "+966xxxxxxxxxx",
+        "email": "info@shelfspot.com"
+      },
+      "bottom": {
+        "copy": "© 2025 ShelfSpot. All rights reserved"
+      }
     }
   }
 }
