@@ -5,3 +5,8 @@ export interface ApiError {
   fieldErrors?: Record<string, string[]>;
   requestId?: string;
 }
+
+export interface ApiValidationErrorResponse {
+  errors?: Record<string, string[]>;
+  message?: string;
+}
