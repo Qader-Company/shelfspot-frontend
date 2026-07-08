@@ -4,6 +4,33 @@
     "description": "ShelfSpot"
   },
   "home": {
-    "title": "ShelfSpot"
+    "title": "ShelfSpot",
+    "navbar": {
+      "brandLabel": "ShelfSpot home",
+      "links": {
+        "home": "Home",
+        "about": "About Us",
+        "whyShelfSpot": "Why ShelfSpot",
+        "howItWorks": "How It Works",
+        "contact": "Contact Us"
+      },
+      "actions": {
+        "login": "Sign In",
+        "localeSwitch": "EN"
+      }
+    },
+    "hero": {
+      "titleAccent": "Elevate",
+      "titlePrefix": "In-Store",
+      "titleRest": "Execution",
+      "description": "A complete digital platform to manage merchandising and field execution inside stores with real-time tracking, verified proof of execution, and a secure payment system that protects all parties.",
+      "primaryCta": "Get Started",
+      "visualAlt": "ShelfSpot in-store execution visual",
+      "floatingCards": {
+        "speed": "Verified Execution",
+        "clarity": "Instant Tracking",
+        "execution": "Smart Management"
+      }
+    }
   }
 }

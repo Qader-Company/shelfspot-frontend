@@ -4,6 +4,33 @@
     "description": "شيلف سبوت"
   },
   "home": {
-    "title": "شيلف سبوت"
+    "title": "شيلف سبوت",
+    "navbar": {
+      "brandLabel": "الصفحة الرئيسية لشيلف سبوت",
+      "links": {
+        "home": "الرئيسية",
+        "about": "من نحن",
+        "whyShelfSpot": "الميزات",
+        "howItWorks": "كيف نعمل",
+        "contact": "تواصل معنا"
+      },
+      "actions": {
+        "login": "تسجيل جديد",
+        "localeSwitch": "EN"
+      }
+    },
+    "hero": {
+      "titlePrefix": "نرفع",
+      "titleAccent": "كفاءة التنفيذ",
+      "titleRest": "داخل المتاجر",
+      "description": "منصة رقمية متكاملة لإدارة مهام العرض والتنفيذ الميداني، مع متابعة لحظية، إثبات موثق، ونظام دفع يضمن حقوق جميع الأطراف.",
+      "primaryCta": "ابدأ الآن",
+      "visualAlt": "واجهة تنفيذ العمليات داخل المتاجر",
+      "floatingCards": {
+        "speed": "تنفيذ سريع",
+        "clarity": "استجابة فورية",
+        "execution": "استجابة فورية"
+      }
+    }
   }
 }

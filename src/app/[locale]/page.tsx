@@ -1,11 +1,12 @@
-import { getTranslations } from "next-intl/server";
+import type { Locale } from "@/i18n/locale";
+import { HomePageView } from "@/modules/home/components";
 
-export default async function HomePage() {
-  const t = await getTranslations("home");
+export default async function HomePage({
+  params,
+}: {
+  params: Promise<{ locale: Locale }>;
+}) {
+  const { locale } = await params;
 
-  return (
-    <main className="mx-auto flex min-h-dvh max-w-7xl items-center justify-center px-4">
-      <h1 className="text-3xl font-semibold tracking-tight">{t("title")}</h1>
-    </main>
-  );
+  return <HomePageView locale={locale} />;
 }
