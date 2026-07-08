@@ -7,7 +7,7 @@ import { getStoredAccessToken } from "@/shared/lib/auth/token-storage";
 import { useAuthStore } from "@/shared/stores/auth-store";
 
 export const apiClient = axios.create({
-  baseURL: API_CONFIG.browserBaseUrl || undefined,
+  baseURL: undefined,
   timeout: API_CONFIG.timeoutMs,
   withCredentials: true,
   headers: {
@@ -31,7 +31,13 @@ function isRefreshRequest(url?: string) {
 }
 
 function isPublicAuthRequest(url?: string) {
-  return url?.includes("/auth/company/login");
+  return (
+    url?.includes("/auth/company/login") ||
+    url?.includes("/auth/company/register") ||
+    url?.includes("/auth/company/forgot-password") ||
+    url?.includes("/auth/company/email-verification") ||
+    url?.includes("/auth/company/email-verification/send-otp")
+  );
 }
 
 export function setupApiClient() {
@@ -41,7 +47,6 @@ export function setupApiClient() {
 
   apiClient.interceptors.request.use((config: AuthRequestConfig) => {
     config.headers.set("Accept", "application/json");
-    config.headers.set("X-Authorization", API_CONFIG.browserApiKey);
 
     if (!isPublicAuthRequest(config.url)) {
       const accessToken = getStoredAccessToken();

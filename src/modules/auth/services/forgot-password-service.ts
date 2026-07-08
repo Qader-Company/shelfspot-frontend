@@ -12,7 +12,7 @@ interface CompanyForgotPasswordResponse {
   message: string;
 }
 
-const FORGOT_PASSWORD_ENDPOINT = "/auth/company/forgot-password";
+const FORGOT_PASSWORD_ENDPOINT = "/api/auth/company/forgot-password";
 
 export async function forgotPasswordService(payload: ForgotPasswordPayload) {
   const response = await apiClient.post<CompanyForgotPasswordResponse>(

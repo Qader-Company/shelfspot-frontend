@@ -21,7 +21,7 @@ interface CompanyLoginResponse {
   };
 }
 
-const LOGIN_ENDPOINT = "/auth/company/login";
+const LOGIN_ENDPOINT = "/api/auth/company/login";
 
 export async function loginService(payload: LoginPayload) {
   const response = await apiClient.post<CompanyLoginResponse>(LOGIN_ENDPOINT, {

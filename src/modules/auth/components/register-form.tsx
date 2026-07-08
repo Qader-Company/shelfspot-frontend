@@ -26,6 +26,7 @@ import {
   registerDefaultValues,
   type RegisterFormValues,
 } from "@/modules/auth/schemas/register-schema";
+import { setStoredVerificationToken } from "@/shared/lib/auth/verification-storage";
 import { normalizeApiError } from "@/shared/lib/api/errors";
 import { zodResolver } from "@/shared/lib/validation";
 import { Button } from "@/shared/ui/button";
@@ -60,6 +61,10 @@ export function RegisterForm() {
 
     try {
       const response = await registerMutation.mutateAsync(values);
+
+      if (response.verificationToken) {
+        setStoredVerificationToken(response.verificationToken);
+      }
 
       setSuccessMessage(response.message || t("states.success"));
 

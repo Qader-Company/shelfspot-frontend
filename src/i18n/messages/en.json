@@ -217,16 +217,47 @@
       "actions": {
         "submit": "Done",
         "submitting": "Verifying...",
+        "resending": "Resending...",
         "resendCode": "Resend verification code",
         "back": "Back to register"
       },
       "validation": {
         "codeRequired": "Verification code is required",
         "codeInvalid": "Enter the 6-digit verification code"
+      },
+      "errors": {
+        "generic": "Unable to verify your email right now. Please try again.",
+        "missingToken": "Verification token is missing. Please register again."
       }
     }
   },
   "home": {
-    "title": "ShelfSpot"
+    "title": "ShelfSpot",
+    "navbar": {
+      "brandLabel": "ShelfSpot home",
+      "links": {
+        "about": "About",
+        "features": "Features",
+        "howItWorks": "How it works",
+        "contact": "Contact"
+      },
+      "actions": {
+        "login": "Login",
+        "localeSwitch": "AR"
+      }
+    },
+    "hero": {
+      "eyebrow": "Retail execution management platform",
+      "titleAccent": "Boost execution efficiency",
+      "titleRest": "inside your stores",
+      "description": "ShelfSpot helps your teams manage field execution, store follow-ups, and operational visibility from one clear workflow.",
+      "primaryCta": "Start now",
+      "visualAlt": "ShelfSpot home hero visual",
+      "floatingCards": {
+        "speed": "Fast follow-up",
+        "clarity": "Clear visibility",
+        "execution": "Better execution"
+      }
+    }
   }
 }

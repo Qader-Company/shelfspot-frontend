@@ -1,6 +1,5 @@
 import axios from "axios";
 
-import { API_CONFIG } from "@/config/api";
 import type { AuthTokens } from "@/shared/lib/auth/types";
 import {
   getStoredRefreshToken,
@@ -16,7 +15,7 @@ interface RefreshTokenResponse {
   message: string;
 }
 
-const REFRESH_ENDPOINT = "/auth/company/refresh";
+const REFRESH_ENDPOINT = "/api/auth/company/refresh";
 
 export async function refreshCompanyTokens() {
   const refreshToken = getStoredRefreshToken();
@@ -26,14 +25,12 @@ export async function refreshCompanyTokens() {
   }
 
   const response = await axios.post<RefreshTokenResponse>(
-    `${API_CONFIG.browserBaseUrl}${REFRESH_ENDPOINT}`,
+    REFRESH_ENDPOINT,
     undefined,
     {
-      timeout: API_CONFIG.timeoutMs,
       headers: {
         Accept: "application/json",
         Authorization: `Bearer ${refreshToken}`,
-        "X-Authorization": API_CONFIG.browserApiKey,
       },
     },
   );

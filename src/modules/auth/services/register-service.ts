@@ -12,13 +12,20 @@ export interface RegisterPayload {
 
 export interface RegisterResponse {
   message: string;
+  verificationToken: string | null;
 }
 
 interface CompanyRegisterResponse {
   message: string;
+  data?: {
+    verification_token?: {
+      token: string;
+      ttl: number;
+    };
+  };
 }
 
-const REGISTER_ENDPOINT = "/auth/company/register";
+const REGISTER_ENDPOINT = "/api/auth/company/register";
 
 export async function registerService(payload: RegisterPayload) {
   const response = await apiClient.post<CompanyRegisterResponse>(
@@ -36,5 +43,6 @@ export async function registerService(payload: RegisterPayload) {
 
   return {
     message: response.data.message,
+    verificationToken: response.data.data?.verification_token?.token ?? null,
   } satisfies RegisterResponse;
 }
