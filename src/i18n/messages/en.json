@@ -148,5 +148,223 @@
         "copy": "© 2025 ShelfSpot. All rights reserved"
       }
     }
+  },
+  "auth": {
+    "login": {
+      "visualAlt": "ShelfSpot login visual",
+      "title": "Welcome Back",
+      "description": "Enter your credentials to access your account",
+      "tabs": {
+        "signIn": "Sign In",
+        "signUp": "Sign Up"
+      },
+      "fields": {
+        "email": {
+          "label": "Email",
+          "placeholder": "name@company.com"
+        },
+        "password": {
+          "label": "Password",
+          "placeholder": "enter your password"
+        }
+      },
+      "actions": {
+        "showPassword": "Show password",
+        "hidePassword": "Hide password",
+        "rememberMe": "Remember me",
+        "forgotPassword": "Forget Password?",
+        "submit": "Sign In",
+        "submitting": "Signing In...",
+        "createAccount": "Create Account"
+      },
+      "errors": {
+        "invalidApiKey": "Invalid API key.",
+        "invalidCredentials": "Invalid email or password.",
+        "validation": "Please check the highlighted fields.",
+        "generic": "Unable to sign in right now. Please try again."
+      },
+      "states": {
+        "registerSuccess": "Your account was created successfully. Please verify your email to continue.",
+        "noAccount": "Don't have an account?"
+      },
+      "validation": {
+        "emailRequired": "Email is required.",
+        "emailInvalid": "Please enter a valid email address.",
+        "passwordRequired": "Password is required."
+      }
+    },
+    "register": {
+      "visualAlt": "ShelfSpot registration visual",
+      "title": "Get started",
+      "description": "Create your account to start managing field operations",
+      "tabs": {
+        "signIn": "Sign In",
+        "signUp": "Sign Up"
+      },
+      "fields": {
+        "companyName": {
+          "label": "Company Name",
+          "placeholder": "e.g., ShelfSpot Logistics"
+        },
+        "crNumber": {
+          "label": "CR Number",
+          "placeholder": "Enter your 10-digit CR number"
+        },
+        "email": {
+          "label": "Work Email",
+          "placeholder": "name@company.com"
+        },
+        "phoneNumber": {
+          "label": "Phone Number",
+          "placeholder": "+966 XX XXX XXXX"
+        },
+        "password": {
+          "label": "Password",
+          "placeholder": "create a strong password"
+        },
+        "passwordConfirmation": {
+          "label": "Confirm Password",
+          "placeholder": "re-enter your password"
+        },
+        "industry": {
+          "label": "Industry",
+          "placeholder": "e.g., Logistics, Retail, Tech"
+        }
+      },
+      "actions": {
+        "showPassword": "Show password",
+        "hidePassword": "Hide password",
+        "submit": "Create Account",
+        "submitting": "Creating Account..."
+      },
+      "errors": {
+        "invalidApiKey": "Invalid API key.",
+        "unauthorized": "You are not authorized to complete this action.",
+        "duplicateAccount": "An account with these details already exists.",
+        "validation": "Please check the highlighted fields.",
+        "generic": "Unable to create your account right now. Please try again."
+      },
+      "states": {
+        "success": "Your account was created successfully. Redirecting to email verification..."
+      },
+      "industryOptions": {
+        "logistics": "Logistics",
+        "retail": "Retail",
+        "tech": "Tech"
+      },
+      "validation": {
+        "companyNameRequired": "Company name is required.",
+        "crNumberRequired": "CR number is required.",
+        "crNumberInvalid": "CR number must be exactly 10 digits.",
+        "emailRequired": "Work email is required.",
+        "emailInvalid": "Please enter a valid work email address.",
+        "phoneNumberRequired": "Phone number is required.",
+        "phoneNumberInvalid": "Please enter a valid phone number.",
+        "passwordRequired": "Password is required.",
+        "passwordMin": "Password must be at least 8 characters.",
+        "passwordConfirmationRequired": "Password confirmation is required.",
+        "passwordConfirmationMismatch": "Passwords must match.",
+        "industryRequired": "Industry is required."
+      }
+    },
+    "forgotPassword": {
+      "visualAlt": "Forgot password visual",
+      "title": "Forgot password",
+      "description": "Don't worry! It occurs. Please enter the email address linked with your account.",
+      "fields": {
+        "email": {
+          "label": "Work Email",
+          "placeholder": "name@company.com"
+        }
+      },
+      "actions": {
+        "back": "Back",
+        "submit": "Reset password",
+        "submitting": "Sending..."
+      },
+      "errors": {
+        "invalidApiKey": "Invalid API key.",
+        "unauthorized": "You are not authorized to complete this action.",
+        "emailNotFound": "No account was found with this email address.",
+        "validation": "Please check the highlighted fields.",
+        "generic": "Unable to send a reset link right now. Please try again."
+      },
+      "states": {
+        "success": "Reset instructions were sent successfully."
+      },
+      "validation": {
+        "emailRequired": "Email is required.",
+        "emailInvalid": "Please enter a valid email address."
+      }
+    },
+    "otpVerification": {
+      "visualAlt": "OTP verification visual",
+      "title": "OTP Verification",
+      "description": "Enter the verification code we just sent on your email address.",
+      "actions": {
+        "back": "Back",
+        "submit": "Verify code",
+        "submitting": "Verifying..."
+      },
+      "validation": {
+        "codeRequired": "Verification code is required.",
+        "codeInvalid": "Verification code must be 6 digits."
+      }
+    },
+    "resetPassword": {
+      "visualAlt": "Reset password visual",
+      "title": "Reset password",
+      "description": "Your new password must be unique from those previously used.",
+      "fields": {
+        "password": {
+          "label": "New Password",
+          "placeholder": "enter your password"
+        },
+        "confirmPassword": {
+          "label": "Confirm Password",
+          "placeholder": "enter your password"
+        }
+      },
+      "actions": {
+        "back": "Back",
+        "showPassword": "Show password",
+        "hidePassword": "Hide password",
+        "showConfirmPassword": "Show confirm password",
+        "hideConfirmPassword": "Hide confirm password",
+        "submit": "Confirm Password",
+        "submitting": "Saving..."
+      },
+      "states": {
+        "passwordRules": "Your password must be :",
+        "passwordMin": "Contain at least 8 characters",
+        "passwordMatch": "password must match"
+      },
+      "validation": {
+        "passwordRequired": "Password is required.",
+        "passwordMin": "Password must be at least 8 characters.",
+        "confirmPasswordRequired": "Confirm password is required.",
+        "passwordsMismatch": "Passwords must match."
+      }
+    },
+    "verifyEmail": {
+      "visualAlt": "Verify email visual",
+      "title": "Verify your email",
+      "description": "An email from shelfspot@gmail.com has been sent to your inbox. Please enter the verification code to verify your account.",
+      "actions": {
+        "back": "Back",
+        "submit": "Done",
+        "submitting": "Verifying...",
+        "resendCode": "Resend verification code",
+        "resending": "Resending..."
+      },
+      "errors": {
+        "missingToken": "Verification token is missing. Please register again.",
+        "generic": "Unable to verify your email right now. Please try again."
+      },
+      "validation": {
+        "codeRequired": "Verification code is required.",
+        "codeInvalid": "Verification code must be 6 digits."
+      }
+    }
   }
 }
