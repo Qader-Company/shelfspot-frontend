@@ -82,6 +82,10 @@
           "label": "كلمة المرور",
           "placeholder": "أنشئ كلمة مرور قوية"
         },
+        "passwordConfirmation": {
+          "label": "تأكيد كلمة المرور",
+          "placeholder": "أكد كلمة المرور"
+        },
         "industry": {
           "label": "القطاع",
           "placeholder": "مثال: الخدمات اللوجستية، التجزئة، التقنية"
@@ -99,7 +103,7 @@
         "hidePassword": "إخفاء كلمة المرور"
       },
       "states": {
-        "success": "تم إنشاء الحساب بنجاح. جارٍ تحويلك إلى تسجيل الدخول...",
+        "success": "تم إنشاء الحساب بنجاح. جارٍ تحويلك إلى التحقق من البريد الإلكتروني...",
         "termsPrefix": "بالتسجيل فإنك توافق على",
         "termsOfService": "شروط الخدمة",
         "and": "و",
@@ -115,6 +119,8 @@
         "phoneNumberInvalid": "أدخل رقم هاتف صالحًا",
         "passwordRequired": "كلمة المرور مطلوبة",
         "passwordMin": "يجب ألا تقل كلمة المرور عن 8 أحرف",
+        "passwordConfirmationRequired": "تأكيد كلمة المرور مطلوب",
+        "passwordConfirmationMismatch": "كلمتا المرور غير متطابقتين",
         "industryRequired": "القطاع مطلوب"
       },
       "errors": {

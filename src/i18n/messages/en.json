@@ -82,6 +82,10 @@
           "label": "Password",
           "placeholder": "create a strong password"
         },
+        "passwordConfirmation": {
+          "label": "Confirm Password",
+          "placeholder": "confirm your password"
+        },
         "industry": {
           "label": "Industry",
           "placeholder": "e.g., Logistics, Retail, Tech"
@@ -99,7 +103,7 @@
         "hidePassword": "Hide password"
       },
       "states": {
-        "success": "Your account was created successfully. Redirecting to sign in...",
+        "success": "Your account was created successfully. Redirecting to email verification...",
         "termsPrefix": "By signing up, you agree to our",
         "termsOfService": "Terms of services",
         "and": "and",
@@ -115,6 +119,8 @@
         "phoneNumberInvalid": "Enter a valid phone number",
         "passwordRequired": "Password is required",
         "passwordMin": "Password must be at least 8 characters",
+        "passwordConfirmationRequired": "Confirm password is required",
+        "passwordConfirmationMismatch": "Passwords must match",
         "industryRequired": "Industry is required"
       },
       "errors": {

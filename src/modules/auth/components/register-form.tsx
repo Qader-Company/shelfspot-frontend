@@ -28,7 +28,6 @@ import {
 } from "@/modules/auth/schemas/register-schema";
 import { normalizeApiError } from "@/shared/lib/api/errors";
 import { zodResolver } from "@/shared/lib/validation";
-import { cn } from "@/shared/lib/utils";
 import { Button } from "@/shared/ui/button";
 import { Form } from "@/shared/ui/form";
 
@@ -36,6 +35,8 @@ export function RegisterForm() {
   const t = useTranslations("auth.register");
   const router = useRouter();
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [isPasswordConfirmationVisible, setIsPasswordConfirmationVisible] =
+    useState(false);
   const registerSchema = useMemo(() => createRegisterSchema(t), [t]);
   const registerMutation = useRegisterMutation();
   const [successMessage, setSuccessMessage] = useState("");
@@ -46,9 +47,9 @@ export function RegisterForm() {
 
   const industryOptions = useMemo(
     () => [
-      { label: t("industryOptions.logistics"), value: "logistics" },
-      { label: t("industryOptions.retail"), value: "retail" },
-      { label: t("industryOptions.tech"), value: "tech" },
+      { label: t("industryOptions.logistics"), value: "industry_one" },
+      { label: t("industryOptions.retail"), value: "industry_two" },
+      { label: t("industryOptions.tech"), value: "industry_three" },
     ],
     [t],
   );
@@ -63,18 +64,19 @@ export function RegisterForm() {
       setSuccessMessage(response.message || t("states.success"));
 
       window.setTimeout(() => {
-        router.replace(`${ROUTES.login}?registered=1`);
+        router.replace(ROUTES.verifyEmail);
       }, 800);
     } catch (error) {
       const apiError = normalizeApiError(error);
 
       Object.entries(apiError.fieldErrors ?? {}).forEach(([key, messages]) => {
         const fieldMap: Partial<Record<string, keyof RegisterFormValues>> = {
-          company_name: "companyName",
+          name: "companyName",
           cr_number: "crNumber",
           email: "email",
-          phone_number: "phoneNumber",
+          phone: "phoneNumber",
           password: "password",
+          password_confirmation: "passwordConfirmation",
           industry: "industry",
         };
 
@@ -94,8 +96,8 @@ export function RegisterForm() {
             : t("errors.unauthorized")
           : apiError.status === 409
             ? t("errors.duplicateAccount")
-            : apiError.status === 422
-              ? t("errors.validation")
+          : apiError.status === 422
+              ? apiError.message || t("errors.validation")
               : t("errors.generic");
 
       form.setError("root", {
@@ -205,6 +207,43 @@ export function RegisterForm() {
             }
           />
 
+          <AuthInputField
+            control={form.control}
+            name="passwordConfirmation"
+            type={isPasswordConfirmationVisible ? "text" : "password"}
+            autoComplete="new-password"
+            label={t("fields.passwordConfirmation.label")}
+            placeholder={t("fields.passwordConfirmation.placeholder")}
+            icon={<AuthPasswordIcon />}
+            endAdornment={
+              <button
+                type="button"
+                onClick={() =>
+                  setIsPasswordConfirmationVisible((value) => !value)
+                }
+                className="rounded-full p-0.5 text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none"
+                aria-label={t(
+                  isPasswordConfirmationVisible
+                    ? "actions.hidePassword"
+                    : "actions.showPassword",
+                )}
+              >
+                {isPasswordConfirmationVisible ? (
+                  <Image
+                    src="/auth/icons/view-off.svg"
+                    alt=""
+                    aria-hidden="true"
+                    width={13}
+                    height={13}
+                    className="size-[13px]"
+                  />
+                ) : (
+                  <Eye className="size-[13px]" />
+                )}
+              </button>
+            }
+          />
+
           <div className="relative">
             <AuthSelectField
               control={form.control}
@@ -244,16 +283,6 @@ export function RegisterForm() {
         </form>
       </Form>
 
-      <p className="text-center text-sm leading-6 text-muted-foreground">
-        {t("states.termsPrefix")}{" "}
-        <span className={cn("font-medium text-primary")}>
-          {t("states.termsOfService")}
-        </span>{" "}
-        {t("states.and")}{" "}
-        <span className={cn("font-medium text-primary")}>
-          {t("states.privacyPolicy")}
-        </span>
-      </p>
     </div>
   );
 }

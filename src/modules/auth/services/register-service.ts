@@ -6,6 +6,7 @@ export interface RegisterPayload {
   email: string;
   phoneNumber: string;
   password: string;
+  passwordConfirmation: string;
   industry: string;
 }
 
@@ -23,11 +24,12 @@ export async function registerService(payload: RegisterPayload) {
   const response = await apiClient.post<CompanyRegisterResponse>(
     REGISTER_ENDPOINT,
     {
-      company_name: payload.companyName,
+      name: payload.companyName,
       cr_number: payload.crNumber,
       email: payload.email,
-      phone_number: payload.phoneNumber,
+      phone: payload.phoneNumber,
       password: payload.password,
+      password_confirmation: payload.passwordConfirmation,
       industry: payload.industry,
     },
   );

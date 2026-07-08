@@ -13,7 +13,6 @@ import {
 } from "@/modules/auth/components/auth-field-icons";
 import { AuthInputField } from "@/modules/auth/components/auth-input-field";
 import { AuthModeSwitch } from "@/modules/auth/components/auth-mode-switch";
-import { AuthSocialButtons } from "@/modules/auth/components/auth-social-buttons";
 import { useLoginMutation } from "@/modules/auth/hooks/use-login-mutation";
 import { Link } from "@/i18n/navigation";
 import { ROUTES } from "@/config/routes";
@@ -205,21 +204,7 @@ export function LoginForm({ showRegistrationSuccess = false }: LoginFormProps) {
         </form>
       </Form>
 
-      <div className="flex flex-col gap-4 sm:gap-5">
-        <div className="flex items-center gap-4">
-          <div className="h-px flex-1 bg-border" />
-          <span className="text-xs text-muted-foreground">{t("states.or")}</span>
-          <div className="h-px flex-1 bg-border" />
-        </div>
-
-        <div>
-          <AuthSocialButtons
-            googleLabel={t("social.google")}
-            facebookLabel={t("social.facebook")}
-            appleLabel={t("social.apple")}
-          />
-        </div>
-
+      <div>
         <p className="text-center text-sm leading-6 text-muted-foreground">
           {t("states.noAccount")}{" "}
           <Link

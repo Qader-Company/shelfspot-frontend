@@ -20,14 +20,14 @@ export function AuthSplitShell({
   return (
     <main className="min-h-dvh bg-background lg:h-dvh lg:overflow-hidden">
       <div className="flex min-h-dvh w-full lg:h-full">
-        <section className="relative hidden h-full w-[708px] flex-none overflow-hidden rounded-br-[70px] bg-auth-visual lg:block">
+        <section className="relative hidden h-full overflow-hidden rounded-br-[70px] bg-auth-visual lg:flex lg:min-w-0 lg:flex-1">
           <div className="absolute inset-0">
             <Image
               src={visualSrc}
               alt={visualAlt}
               fill
               priority
-              sizes="708px"
+              sizes="50vw"
               className="object-cover object-center"
             />
           </div>
@@ -40,10 +40,10 @@ export function AuthSplitShell({
           </div>
         </section>
 
-        <section className="flex min-h-dvh min-w-0 flex-1 items-center justify-center bg-card px-4 py-6 sm:px-6 sm:py-8 lg:h-full lg:min-h-0 lg:overflow-y-auto lg:px-10 lg:py-6 xl:px-12">
+        <section className="flex min-h-dvh min-w-0 flex-1 items-center justify-center bg-card px-4 py-6 sm:px-6 sm:py-8 lg:h-full lg:min-h-0 lg:flex-1 lg:items-start lg:justify-start lg:overflow-y-auto lg:px-10 lg:py-8 xl:px-12 xl:py-10">
           <div
             className={cn(
-              "w-full max-w-[580px] lg:min-h-[676px]",
+              "w-full max-w-[580px] lg:mx-auto",
               className,
             )}
           >
