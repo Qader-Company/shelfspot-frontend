@@ -3,6 +3,149 @@
     "title": "شيلف سبوت",
     "description": "شيلف سبوت"
   },
+  "home": {
+    "title": "شيلف سبوت",
+    "navbar": {
+      "brandLabel": "الصفحة الرئيسية لشيلف سبوت",
+      "links": {
+        "home": "الرئيسية",
+        "about": "من نحن",
+        "whyShelfSpot": "الميزات",
+        "howItWorks": "كيف نعمل",
+        "contact": "تواصل معنا"
+      },
+      "actions": {
+        "login": "تسجيل جديد",
+        "localeSwitch": "AR"
+      }
+    },
+    "hero": {
+      "titlePrefix": "نرفع",
+      "titleAccent": "كفاءة التنفيذ",
+      "titleRest": "داخل المتاجر",
+      "description": "منصة رقمية متكاملة لإدارة مهام العرض والتنفيذ الميداني، مع متابعة لحظية، إثبات موثق، ونظام دفع يضمن حقوق جميع الأطراف.",
+      "primaryCta": "ابدأ الآن",
+      "visualAlt": "واجهة تنفيذ العمليات داخل المتاجر",
+      "floatingCards": {
+        "speed": "تنفيذ سريع",
+        "clarity": "استجابة فورية",
+        "execution": "استجابة فورية"
+      }
+    },
+    "about": {
+      "eyebrow": "منصتنا الرقمية",
+      "title": "ما هي ShelfSpot؟",
+      "subtitle": "هي منصة رقمية متخصصة في إدارة وتنفيذ المهام الميدانية داخل المتاجر.",
+      "paragraphOne": "نعمل كحل وسيط بين الشركات والمنفذين الميدانيين، لضمان تنفيذ العروض والامتثال وفق المعايير المحددة، مع نظام متابعة لحظي، وإثبات موثق، وآلية دفع آمنة.",
+      "paragraphTwo": "نهدف إلى رفع كفاءة التنفيذ الميداني في السوق السعودي، من خلال حلول تقنية ترتكز على الدقة، السرعة، والشفافية.",
+      "visualPlaceholder": "معاينة لوحة التحكم المؤقتة"
+    },
+    "whyShelfSpot": {
+      "eyebrowPrefix": "لماذا",
+      "eyebrowSuffix": "؟",
+      "titlePrefix": "ما يميز",
+      "titleSuffix": "؟",
+      "items": {
+        "visibility": {
+          "title": "رؤية كاملة",
+          "description": "متابعة لحظية وتحقق بالصور لكل مهمة.",
+          "iconAlt": "أيقونة الرؤية الكاملة"
+        },
+        "centralized": {
+          "title": "تحكم مركزي",
+          "description": "إدارة جميع طلباتك من لوحة تحكم واحدة قوية.",
+          "iconAlt": "أيقونة التحكم المركزي"
+        },
+        "flexible": {
+          "title": "تنفيذ مرن",
+          "description": "إنشاء مهام عبر مواقع متعددة بسهولة.",
+          "iconAlt": "أيقونة التنفيذ المرن"
+        },
+        "secure": {
+          "title": "مدفوعات آمنة",
+          "description": "لا يتم صرف المدفوعات إلا بعد اعتماد المهمة.",
+          "iconAlt": "أيقونة المدفوعات الآمنة"
+        }
+      }
+    },
+    "statistics": {
+      "eyebrow": "موثوق بنتائجه",
+      "title": "أرقامنا تتحدث",
+      "items": {
+        "merchandisers": {
+          "value": "+800",
+          "label": "منفذ ميداني موثق"
+        },
+        "approvalRate": {
+          "value": "98%",
+          "label": "نسبة اعتماد من أول مرة"
+        },
+        "companies": {
+          "value": "+120",
+          "label": "شركة تستخدم ShelfSpot"
+        },
+        "tasks": {
+          "value": "+5000",
+          "label": "مهمة مكتملة بنجاح"
+        }
+      }
+    },
+    "howItWorksSection": {
+      "eyebrow": "كيف يعمل ShelfSpot؟",
+      "title": "خطوات بسيطة",
+      "steps": {
+        "request": {
+          "title": "إنشاء الطلب",
+          "description": "تقوم الشركة بتحديد الموقع، المنتج، نوع الخدمة، وأرفاق البلانوجرام أو مستندات BDA أو بجد."
+        },
+        "assignment": {
+          "title": "توجيه المهمة",
+          "description": "يتم إشعار أقرب منفذ ميداني معتمد حسب الموقع ونوع النشاط."
+        },
+        "execution": {
+          "title": "التنفيذ والتوثيق",
+          "description": "يقوم المنفذ بتنفيذ المهمة وفق التعليمات المحددة ورفع الصور وإثبات التنفيذ."
+        },
+        "review": {
+          "title": "المراجعة واعتماد التنفيذ",
+          "description": "تقوم الشركة بمراجعة النتائج، وعند الاعتماد يتم تحويل المستحقات تلقائيًا."
+        }
+      },
+      "ctaLabel": "ماذا تنتظر؟",
+      "ctaAction": "ابدأ الآن"
+    },
+    "footer": {
+      "brandLabel": "شعار شيلف سبوت في التذييل",
+      "description": "منصة رقمية لإدارة وتنفيذ المهام الميدانية داخل المتاجر، تزوّد الشركات برؤية تشغيلية واضحة وآلية تنفيذ موثوقة عبر مختلف مناطق المملكة.",
+      "navigation": {
+        "quickLinks": {
+          "title": "روابط سريعة",
+          "links": {
+            "home": "الرئيسية",
+            "services": "الخدمات",
+            "workMechanism": "آلية العمل",
+            "successPartners": "شركاء النجاح",
+            "aboutUs": "من نحن"
+          }
+        },
+        "support": {
+          "title": "الدعم والتواصل",
+          "links": {
+            "privacyPolicy": "سياسة الخصوصية",
+            "contactUs": "تواصل معنا",
+            "termsConditions": "الشروط والأحكام",
+            "faqs": "الأسئلة الشائعة"
+          }
+        }
+      },
+      "contact": {
+        "title": "تواصل معنا",
+        "location": "المملكة العربية السعودية",
+        "phone": "+966xxxxxxxxxx",
+        "email": "info@shelfspot.com"
+      },
+      "bottom": {
+        "copy": "© 2025 ShelfSpot. جميع الحقوق محفوظة"
   "dashboard": {
     "navigation": {
       "label": "تنقل لوحة التحكم",
@@ -34,9 +177,9 @@
   },
   "auth": {
     "login": {
+      "visualAlt": "واجهة تسجيل الدخول",
       "title": "مرحبًا بعودتك",
       "description": "أدخل بياناتك للوصول إلى حسابك",
-      "visualAlt": "رسم ترحيبي لتسجيل الدخول في شيلف سبوت",
       "tabs": {
         "signIn": "تسجيل الدخول",
         "signUp": "إنشاء حساب"
@@ -52,40 +195,34 @@
         }
       },
       "actions": {
+        "showPassword": "إظهار كلمة المرور",
+        "hidePassword": "إخفاء كلمة المرور",
         "rememberMe": "تذكرني",
         "forgotPassword": "هل نسيت كلمة المرور؟",
         "submit": "تسجيل الدخول",
         "submitting": "جارٍ تسجيل الدخول...",
-        "createAccount": "إنشاء حساب",
-        "showPassword": "إظهار كلمة المرور",
-        "hidePassword": "إخفاء كلمة المرور"
-      },
-      "states": {
-        "or": "أو",
-        "noAccount": "ليس لديك حساب؟",
-        "registerSuccess": "تم إنشاء الحساب بنجاح. يمكنك الآن تسجيل الدخول."
-      },
-      "social": {
-        "google": "جوجل",
-        "facebook": "فيسبوك",
-        "apple": "أبل"
-      },
-      "validation": {
-        "emailRequired": "البريد الإلكتروني مطلوب",
-        "emailInvalid": "أدخل بريدًا إلكترونيًا صالحًا",
-        "passwordRequired": "كلمة المرور مطلوبة"
+        "createAccount": "إنشاء حساب"
       },
       "errors": {
-        "generic": "تعذر تسجيل الدخول الآن. حاول مرة أخرى.",
+        "invalidApiKey": "مفتاح API غير صالح.",
         "invalidCredentials": "البريد الإلكتروني أو كلمة المرور غير صحيحة.",
-        "invalidApiKey": "مفتاح API التطبيق غير صحيح.",
-        "validation": "يرجى مراجعة الحقول الموضحة والمحاولة مرة أخرى."
+        "validation": "يرجى التحقق من الحقول المظللة.",
+        "generic": "تعذر تسجيل الدخول الآن. حاول مرة أخرى."
+      },
+      "states": {
+        "registerSuccess": "تم إنشاء حسابك بنجاح. يرجى التحقق من بريدك الإلكتروني للمتابعة.",
+        "noAccount": "ليس لديك حساب؟"
+      },
+      "validation": {
+        "emailRequired": "البريد الإلكتروني مطلوب.",
+        "emailInvalid": "يرجى إدخال بريد إلكتروني صالح.",
+        "passwordRequired": "كلمة المرور مطلوبة."
       }
     },
     "register": {
+      "visualAlt": "واجهة إنشاء الحساب",
       "title": "ابدأ الآن",
       "description": "أنشئ حسابك لبدء إدارة العمليات الميدانية",
-      "visualAlt": "رسم توضيحي لتسجيل حساب جديد في شيلف سبوت",
       "tabs": {
         "signIn": "تسجيل الدخول",
         "signUp": "إنشاء حساب"
@@ -104,7 +241,7 @@
           "placeholder": "name@company.com"
         },
         "phoneNumber": {
-          "label": "رقم الهاتف",
+          "label": "رقم الجوال",
           "placeholder": "+966 XX XXX XXXX"
         },
         "password": {
@@ -113,57 +250,53 @@
         },
         "passwordConfirmation": {
           "label": "تأكيد كلمة المرور",
-          "placeholder": "أكد كلمة المرور"
+          "placeholder": "أعد إدخال كلمة المرور"
         },
         "industry": {
           "label": "القطاع",
-          "placeholder": "مثال: الخدمات اللوجستية، التجزئة، التقنية"
+          "placeholder": "مثال: لوجستيات، تجزئة، تقنية"
         }
       },
+      "actions": {
+        "showPassword": "إظهار كلمة المرور",
+        "hidePassword": "إخفاء كلمة المرور",
+        "submit": "إنشاء الحساب",
+        "submitting": "جارٍ إنشاء الحساب..."
+      },
+      "errors": {
+        "invalidApiKey": "مفتاح API غير صالح.",
+        "unauthorized": "غير مصرح لك بتنفيذ هذا الإجراء.",
+        "duplicateAccount": "يوجد حساب بهذه البيانات بالفعل.",
+        "validation": "يرجى التحقق من الحقول المظللة.",
+        "generic": "تعذر إنشاء الحساب الآن. حاول مرة أخرى."
+      },
+      "states": {
+        "success": "تم إنشاء حسابك بنجاح. سيتم تحويلك إلى صفحة التحقق من البريد الإلكتروني..."
+      },
       "industryOptions": {
-        "logistics": "الخدمات اللوجستية",
+        "logistics": "اللوجستيات",
         "retail": "التجزئة",
         "tech": "التقنية"
       },
-      "actions": {
-        "submit": "إنشاء حساب",
-        "submitting": "جارٍ إنشاء الحساب...",
-        "showPassword": "إظهار كلمة المرور",
-        "hidePassword": "إخفاء كلمة المرور"
-      },
-      "states": {
-        "success": "تم إنشاء الحساب بنجاح. جارٍ تحويلك إلى التحقق من البريد الإلكتروني...",
-        "termsPrefix": "بالتسجيل فإنك توافق على",
-        "termsOfService": "شروط الخدمة",
-        "and": "و",
-        "privacyPolicy": "سياسة الخصوصية"
-      },
       "validation": {
-        "companyNameRequired": "اسم الشركة مطلوب",
-        "crNumberRequired": "رقم السجل التجاري مطلوب",
-        "crNumberInvalid": "يجب أن يتكون رقم السجل التجاري من 10 أرقام",
-        "emailRequired": "البريد الإلكتروني للعمل مطلوب",
-        "emailInvalid": "أدخل بريدًا إلكترونيًا صالحًا للعمل",
-        "phoneNumberRequired": "رقم الهاتف مطلوب",
-        "phoneNumberInvalid": "أدخل رقم هاتف صالحًا",
-        "passwordRequired": "كلمة المرور مطلوبة",
-        "passwordMin": "يجب ألا تقل كلمة المرور عن 8 أحرف",
-        "passwordConfirmationRequired": "تأكيد كلمة المرور مطلوب",
-        "passwordConfirmationMismatch": "كلمتا المرور غير متطابقتين",
-        "industryRequired": "القطاع مطلوب"
-      },
-      "errors": {
-        "generic": "تعذر إنشاء الحساب الآن. حاول مرة أخرى.",
-        "invalidApiKey": "مفتاح API التطبيق غير صحيح.",
-        "unauthorized": "غير مصرح لك بتنفيذ هذا الإجراء.",
-        "duplicateAccount": "يوجد حساب بهذه البيانات بالفعل.",
-        "validation": "يرجى مراجعة الحقول الموضحة والمحاولة مرة أخرى."
+        "companyNameRequired": "اسم الشركة مطلوب.",
+        "crNumberRequired": "رقم السجل التجاري مطلوب.",
+        "crNumberInvalid": "يجب أن يتكون رقم السجل التجاري من 10 أرقام.",
+        "emailRequired": "البريد الإلكتروني للعمل مطلوب.",
+        "emailInvalid": "يرجى إدخال بريد إلكتروني صالح.",
+        "phoneNumberRequired": "رقم الجوال مطلوب.",
+        "phoneNumberInvalid": "يرجى إدخال رقم جوال صالح.",
+        "passwordRequired": "كلمة المرور مطلوبة.",
+        "passwordMin": "يجب ألا تقل كلمة المرور عن 8 أحرف.",
+        "passwordConfirmationRequired": "تأكيد كلمة المرور مطلوب.",
+        "passwordConfirmationMismatch": "كلمتا المرور غير متطابقتين.",
+        "industryRequired": "القطاع مطلوب."
       }
     },
     "forgotPassword": {
+      "visualAlt": "واجهة نسيت كلمة المرور",
       "title": "نسيت كلمة المرور",
-      "description": "لا تقلق! يحدث ذلك. يرجى إدخال البريد الإلكتروني المرتبط بحسابك.",
-      "visualAlt": "رسم توضيحي لاستعادة كلمة المرور في شيلف سبوت",
+      "description": "لا تقلق! أدخل البريد الإلكتروني المرتبط بحسابك.",
       "fields": {
         "email": {
           "label": "البريد الإلكتروني للعمل",
@@ -171,43 +304,43 @@
         }
       },
       "actions": {
+        "back": "رجوع",
         "submit": "إعادة تعيين كلمة المرور",
-        "submitting": "جارٍ إرسال الطلب...",
-        "back": "العودة إلى تسجيل الدخول"
-      },
-      "states": {
-        "success": "إذا كان هذا البريد مرتبطًا بحساب، فسيتم إرسال الخطوة التالية لاستعادة الحساب."
-      },
-      "validation": {
-        "emailRequired": "البريد الإلكتروني للعمل مطلوب",
-        "emailInvalid": "أدخل بريدًا إلكترونيًا صالحًا للعمل"
+        "submitting": "جارٍ الإرسال..."
       },
       "errors": {
-        "generic": "تعذر معالجة طلبك الآن. حاول مرة أخرى.",
-        "invalidApiKey": "مفتاح API التطبيق غير صحيح.",
+        "invalidApiKey": "مفتاح API غير صالح.",
         "unauthorized": "غير مصرح لك بتنفيذ هذا الإجراء.",
-        "emailNotFound": "لم يتم العثور على حساب مرتبط بهذا البريد الإلكتروني.",
-        "validation": "يرجى مراجعة الحقل الموضح والمحاولة مرة أخرى."
+        "emailNotFound": "لم يتم العثور على حساب بهذا البريد الإلكتروني.",
+        "validation": "يرجى التحقق من الحقول المظللة.",
+        "generic": "تعذر إرسال طلب إعادة التعيين الآن. حاول مرة أخرى."
+      },
+      "states": {
+        "success": "تم إرسال تعليمات إعادة التعيين بنجاح."
+      },
+      "validation": {
+        "emailRequired": "البريد الإلكتروني مطلوب.",
+        "emailInvalid": "يرجى إدخال بريد إلكتروني صالح."
       }
     },
     "otpVerification": {
-      "title": "التحقق من الرمز",
+      "visualAlt": "واجهة التحقق برمز OTP",
+      "title": "التحقق برمز OTP",
       "description": "أدخل رمز التحقق الذي أرسلناه للتو إلى بريدك الإلكتروني.",
-      "visualAlt": "رسم توضيحي للتحقق من الرمز في شيلف سبوت",
       "actions": {
+        "back": "رجوع",
         "submit": "تحقق من الرمز",
-        "submitting": "جارٍ التحقق...",
-        "back": "العودة إلى نسيت كلمة المرور"
+        "submitting": "جارٍ التحقق..."
       },
       "validation": {
-        "codeRequired": "رمز التحقق مطلوب",
-        "codeInvalid": "أدخل رمز التحقق المكون من 6 أرقام"
+        "codeRequired": "رمز التحقق مطلوب.",
+        "codeInvalid": "يجب أن يتكون رمز التحقق من 6 أرقام."
       }
     },
     "resetPassword": {
+      "visualAlt": "واجهة إعادة تعيين كلمة المرور",
       "title": "إعادة تعيين كلمة المرور",
       "description": "يجب أن تكون كلمة المرور الجديدة مختلفة عن كلمات المرور المستخدمة سابقًا.",
-      "visualAlt": "رسم توضيحي لإعادة تعيين كلمة المرور في شيلف سبوت",
       "fields": {
         "password": {
           "label": "كلمة المرور الجديدة",
@@ -219,73 +352,44 @@
         }
       },
       "actions": {
-        "submit": "تأكيد كلمة المرور",
-        "submitting": "جارٍ الحفظ...",
+        "back": "رجوع",
         "showPassword": "إظهار كلمة المرور",
         "hidePassword": "إخفاء كلمة المرور",
         "showConfirmPassword": "إظهار تأكيد كلمة المرور",
         "hideConfirmPassword": "إخفاء تأكيد كلمة المرور",
-        "back": "العودة إلى التحقق من الرمز"
+        "submit": "تأكيد كلمة المرور",
+        "submitting": "جارٍ الحفظ..."
       },
       "states": {
         "passwordRules": "يجب أن تكون كلمة المرور:",
         "passwordMin": "تحتوي على 8 أحرف على الأقل",
-        "passwordMatch": "كلمتا المرور يجب أن تتطابقا"
+        "passwordMatch": "يجب أن تتطابق كلمتا المرور"
       },
       "validation": {
-        "passwordRequired": "كلمة المرور مطلوبة",
-        "passwordMin": "يجب ألا تقل كلمة المرور عن 8 أحرف",
-        "confirmPasswordRequired": "تأكيد كلمة المرور مطلوب",
-        "passwordsMismatch": "كلمتا المرور غير متطابقتين"
+        "passwordRequired": "كلمة المرور مطلوبة.",
+        "passwordMin": "يجب ألا تقل كلمة المرور عن 8 أحرف.",
+        "confirmPasswordRequired": "تأكيد كلمة المرور مطلوب.",
+        "passwordsMismatch": "كلمتا المرور غير متطابقتين."
       }
     },
     "verifyEmail": {
+      "visualAlt": "واجهة التحقق من البريد الإلكتروني",
       "title": "تحقق من بريدك الإلكتروني",
-      "description": "تم إرسال رسالة من shelfspot@gmail.com إلى alfcompany@gmail.com. يرجى الضغط على الرابط الموجود داخل الرسالة لتفعيل حسابك.",
-      "visualAlt": "رسم توضيحي للتحقق من البريد الإلكتروني في شيلف سبوت",
+      "description": "تم إرسال رسالة من shelfspot@gmail.com إلى بريدك الإلكتروني. أدخل رمز التحقق لتأكيد حسابك.",
       "actions": {
+        "back": "رجوع",
         "submit": "تم",
         "submitting": "جارٍ التحقق...",
-        "resending": "جارٍ إعادة الإرسال...",
         "resendCode": "إعادة إرسال رمز التحقق",
-        "back": "العودة إلى إنشاء الحساب"
-      },
-      "validation": {
-        "codeRequired": "رمز التحقق مطلوب",
-        "codeInvalid": "أدخل رمز التحقق المكون من 6 أرقام"
+        "resending": "جارٍ إعادة الإرسال..."
       },
       "errors": {
-        "generic": "تعذر التحقق من البريد الإلكتروني الآن. حاول مرة أخرى.",
-        "missingToken": "رمز التحقق مفقود. يرجى إنشاء الحساب مرة أخرى."
-      }
-    }
-  },
-  "home": {
-    "title": "شيلف سبوت",
-    "navbar": {
-      "brandLabel": "الصفحة الرئيسية لشيلف سبوت",
-      "links": {
-        "about": "من نحن",
-        "features": "المميزات",
-        "howItWorks": "كيف يعمل",
-        "contact": "تواصل معنا"
+        "missingToken": "رمز التحقق مفقود. يرجى التسجيل مرة أخرى.",
+        "generic": "تعذر التحقق من البريد الإلكتروني الآن. حاول مرة أخرى."
       },
-      "actions": {
-        "login": "تسجيل الدخول",
-        "localeSwitch": "EN"
-      }
-    },
-    "hero": {
-      "eyebrow": "منصة لإدارة تنفيذ العمليات داخل المتاجر",
-      "titleAccent": "رفع كفاءة التنفيذ",
-      "titleRest": "داخل المتاجر",
-      "description": "تساعدك ShelfSpot على إدارة التنفيذ الميداني ومتابعة المتاجر ورفع مستوى الوضوح التشغيلي من خلال تجربة واحدة واضحة ومنظمة.",
-      "primaryCta": "ابدأ الآن",
-      "visualAlt": "الواجهة الرئيسية لموقع شيلف سبوت",
-      "floatingCards": {
-        "speed": "سهولة المتابعة",
-        "clarity": "وضوح أعلى",
-        "execution": "تنفيذ أفضل"
+      "validation": {
+        "codeRequired": "رمز التحقق مطلوب.",
+        "codeInvalid": "يجب أن يتكون رمز التحقق من 6 أرقام."
       }
     }
   }

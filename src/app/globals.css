@@ -56,6 +56,8 @@
   --text-sm--line-height: var(--line-height-default);
   --text-xs: var(--font-size-text-xs);
   --text-xs--line-height: var(--line-height-default);
+  --text-section-label: var(--font-size-section-label);
+  --text-section-label--line-height: var(--line-height-section-label);
   --text-brand-mark: var(--font-size-brand-mark);
   --text-brand-mark--line-height: 1;
   --font-weight-light: var(--font-weight-light-token);
@@ -157,8 +159,10 @@
   --font-size-text-md: 1rem;
   --font-size-text-sm: 0.875rem;
   --font-size-text-xs: 0.75rem;
+  --font-size-section-label: 1.5rem;
   --font-size-brand-mark: 1.5rem;
   --line-height-default: 1.5;
+  --line-height-section-label: 2rem;
   --font-weight-light-token: 300;
   --font-weight-regular-token: 400;
   --font-weight-medium-token: 500;
@@ -241,5 +245,23 @@ html[dir="ltr"] {
 
   body {
     @apply min-h-dvh bg-background font-sans text-foreground antialiased;
+  }
+}
+
+@layer components {
+  .section-label {
+    @apply text-section-label font-regular text-foreground;
+  }
+
+  .section-heading {
+    @apply text-display-lg font-medium text-foreground;
+  }
+
+  .section-subheading {
+    @apply text-display-sm font-medium text-foreground;
+  }
+
+  .section-body {
+    @apply text-base font-regular text-foreground/80;
   }
 }
