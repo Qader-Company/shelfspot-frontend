@@ -15,67 +15,88 @@ interface PublicNavbarProps {
 
 export async function PublicNavbar({ locale }: PublicNavbarProps) {
   const t = await getTranslations("home.navbar");
-  const isRtl = locale === "ar";
   const nextLocale = locale === "ar" ? "en" : "ar";
-  const navLinks = [
-    { href: `${ROUTES.home}#about`, label: t("links.about") },
-    { href: `${ROUTES.home}#features`, label: t("links.features") },
-    { href: `${ROUTES.home}#how-it-works`, label: t("links.howItWorks") },
-    { href: `${ROUTES.home}#contact`, label: t("links.contact") },
+  const isRtl = locale === "ar";
+
+  const links = [
+    { href: ROUTES.home, label: t("links.home"), isActive: true },
+    { href: "#about", label: t("links.about") },
+    { href: "#features", label: t("links.whyShelfSpot") },
+    { href: "#how-it-works", label: t("links.howItWorks") },
+    { href: "#contact", label: t("links.contact") },
   ];
 
+  const logoSlot = (
+    <div className="flex shrink-0 items-center">
+      <Link href={ROUTES.home} aria-label={t("brandLabel")} className="shrink-0">
+        <Logo className="h-[68px] w-[182px]" width={182} height={68} />
+      </Link>
+    </div>
+  );
+
+  const localeSwitcher = (
+    <Link
+      href={ROUTES.home}
+      locale={nextLocale}
+      className="inline-flex items-center gap-1.5 text-xl font-medium text-foreground transition-colors hover:text-primary lg:text-[20px]"
+    >
+      <ChevronDown className="size-4" />
+      <span>{t("actions.localeSwitch")}</span>
+    </Link>
+  );
+
+  const ctaButton = (
+    <Button
+      asChild
+      className="h-14 w-[118px] rounded-[10px] border border-primary bg-primary px-[18px] py-[10px] text-xl font-semibold text-white shadow-none hover:bg-primary/90 hover:text-white lg:text-[20px] [&_*]:text-white"
+    >
+      <Link href={ROUTES.login}>{t("actions.login")}</Link>
+    </Button>
+  );
+
+  const actionSlot = isRtl ? (
+    <div className="flex shrink-0 items-center gap-3">
+      {ctaButton}
+      {localeSwitcher}
+    </div>
+  ) : (
+    <div className="flex shrink-0 items-center gap-3">
+      {localeSwitcher}
+      {ctaButton}
+    </div>
+  );
+
   return (
-    <header className="pt-5 sm:pt-7">
+    <header className="pt-6 sm:pt-8 lg:pt-16">
       <LandingContainer>
         <div
-          className={cn(
-            "flex items-center justify-between gap-4 rounded-full border border-border/70 bg-card/90 px-4 py-3 shadow-[0_12px_40px_-24px_rgba(4,2,2,0.18)] backdrop-blur",
-            isRtl ? "lg:flex-row-reverse" : "lg:flex-row",
-          )}
+          dir="ltr"
+          className="flex h-[68px] items-center justify-between gap-6"
         >
-          <Link
-            href={ROUTES.home}
-            className="shrink-0 transition-opacity hover:opacity-85"
-            aria-label={t("brandLabel")}
-          >
-            <Logo className="h-7 w-auto sm:h-8" width={120} height={44} />
-          </Link>
+          {isRtl ? actionSlot : logoSlot}
 
-          <nav className="hidden items-center gap-8 lg:flex">
-            {navLinks.map((link) => (
+          <nav
+            dir={isRtl ? "rtl" : "ltr"}
+            className="hidden flex-1 items-center justify-center gap-8 lg:flex"
+          >
+            {links.map((link) => (
               <Link
                 key={link.href}
-                href={link.href}
-                className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+                href={link.href.startsWith("#") ? `${ROUTES.home}${link.href}` : link.href}
+                className={cn(
+                  "text-xl font-medium transition-colors hover:text-primary",
+                  "lg:text-[20px]",
+                  "isActive" in link && link.isActive
+                    ? "text-primary"
+                    : "text-foreground",
+                )}
               >
                 {link.label}
               </Link>
             ))}
           </nav>
 
-          <div
-            className={cn(
-              "flex items-center gap-2 sm:gap-3",
-              isRtl ? "flex-row-reverse" : "flex-row",
-            )}
-          >
-            <Link
-              href={ROUTES.home}
-              locale={nextLocale}
-              className="inline-flex h-10 items-center gap-1 rounded-full border border-transparent px-3 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-            >
-              <span>{t("actions.localeSwitch")}</span>
-              <ChevronDown className="size-4" />
-            </Link>
-
-            <Button
-              asChild
-              size="sm"
-              className="h-10 rounded-full px-5 text-sm font-medium text-primary-foreground shadow-none"
-            >
-              <Link href={ROUTES.login}>{t("actions.login")}</Link>
-            </Button>
-          </div>
+          {isRtl ? logoSlot : actionSlot}
         </div>
       </LandingContainer>
     </header>

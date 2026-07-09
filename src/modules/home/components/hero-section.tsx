@@ -1,11 +1,10 @@
 import { getTranslations } from "next-intl/server";
+import Image from "next/image";
 
 import { ROUTES } from "@/config/routes";
 import type { Locale } from "@/i18n/locale";
 import { Link } from "@/i18n/navigation";
-import { HeroVisual } from "@/modules/home/components/hero-visual";
 import { LandingContainer } from "@/modules/home/components/landing-container";
-import { LandingSectionBadge } from "@/modules/home/components/landing-section-badge";
 import { cn } from "@/shared/lib/utils";
 import { Button } from "@/shared/ui/button";
 
@@ -17,48 +16,91 @@ export async function HeroSection({ locale }: HeroSectionProps) {
   const t = await getTranslations("home.hero");
   const isRtl = locale === "ar";
 
+  const imageSlot = (
+    <div className="flex-1">
+      <div className="relative mx-auto h-[320px] w-full max-w-[540px] sm:h-[420px] lg:h-[520px]">
+        <div className="absolute inset-x-[12%] top-8 h-[62%] rounded-full bg-accent" />
+        <div className="absolute start-0 top-28 rounded-full bg-accent px-4 py-2 text-sm font-medium text-primary shadow-sm">
+          {t("floatingCards.speed")}
+        </div>
+        <div className="absolute end-[6%] top-10 rounded-full bg-accent px-4 py-2 text-sm font-medium text-primary shadow-sm">
+          {t("floatingCards.clarity")}
+        </div>
+        <div className="absolute start-1/2 top-[58%] -translate-x-1/2 rounded-full bg-accent px-4 py-2 text-sm font-medium text-primary shadow-sm">
+          {t("floatingCards.execution")}
+        </div>
+        <div className="absolute inset-x-[18%] bottom-0 top-14 rounded-[40px] bg-gradient-to-b from-primary/10 via-primary/5 to-transparent" />
+        <Image
+          src="/auth/screens/login-screen.png"
+          alt={t("visualAlt")}
+          fill
+          className={cn(
+            "object-contain object-bottom",
+            isRtl ? "scale-x-100" : "-scale-x-100",
+          )}
+          sizes="(max-width: 1024px) 100vw, 46vw"
+          priority
+        />
+      </div>
+    </div>
+  );
+
+  const textSlot = (
+    <div
+      className={cn(
+        "flex w-full flex-col gap-6 text-center lg:max-w-[686px]",
+        isRtl
+          ? "items-center lg:items-end lg:text-right"
+          : "items-center lg:items-start lg:text-left",
+      )}
+    >
+      <h1 className="max-w-[686px] text-display-lg leading-[1.4] font-semibold text-foreground lg:text-display-2xl">
+        {isRtl ? (
+          <>
+            <span>{t("titlePrefix")}</span>{" "}
+            <span className="text-primary">{t("titleAccent")}</span>
+            <span className="block">{t("titleRest")}</span>
+          </>
+        ) : (
+          <>
+            <span className="text-primary">{t("titleAccent")}</span>{" "}
+            <span>{t("titlePrefix")}</span>
+            <span className="block">{t("titleRest")}</span>
+          </>
+        )}
+      </h1>
+
+      <p className="max-w-[686px] text-display-xs leading-[1.5] font-light text-foreground/80">
+        {t("description")}
+      </p>
+
+      <Button
+        asChild
+        className="h-14 min-w-[118px] w-fit rounded-[10px] border border-primary bg-primary px-[18px] py-[10px] text-xl font-semibold text-white shadow-none hover:bg-primary/90 hover:text-white lg:text-[20px] [&_*]:text-white"
+      >
+        <Link href={ROUTES.register}>{t("primaryCta")}</Link>
+      </Button>
+    </div>
+  );
+
   return (
-    <section className="overflow-hidden pb-16 pt-10 sm:pb-20 sm:pt-14 lg:pb-24 lg:pt-16">
+    <section className="pb-16 pt-8 sm:pb-20 sm:pt-10 lg:pb-24 lg:pt-14">
       <LandingContainer>
-        <div className="grid items-center gap-10 lg:grid-cols-[1.02fr_0.98fr] lg:gap-14">
-          <div className={cn("order-2", isRtl ? "lg:order-1" : "lg:order-2")}>
-            <HeroVisual locale={locale} />
-          </div>
-
-          <div
-            className={cn(
-              "order-1 flex flex-col items-center text-center",
-              isRtl
-                ? "lg:order-2 lg:items-end lg:text-right"
-                : "lg:order-1 lg:items-start lg:text-left",
-            )}
-          >
-            <LandingSectionBadge>{t("eyebrow")}</LandingSectionBadge>
-
-            <h1 className="mt-6 max-w-[12ch] text-display-sm font-semibold tracking-tight text-foreground sm:text-display-lg lg:text-[3.5rem]">
-              <span className="text-primary">{t("titleAccent")}</span>
-              <span className="block text-foreground">{t("titleRest")}</span>
-            </h1>
-
-            <p className="mt-5 max-w-[560px] text-base font-regular text-muted-foreground sm:text-lg lg:text-xl">
-              {t("description")}
-            </p>
-
-            <div
-              className={cn(
-                "mt-8 flex w-full justify-center",
-                isRtl ? "lg:justify-end" : "lg:justify-start",
-              )}
-            >
-              <Button
-                asChild
-                size="lg"
-                className="h-12 rounded-full px-8 text-base font-medium text-primary-foreground sm:h-14 sm:px-10 sm:text-lg"
-              >
-                <Link href={ROUTES.register}>{t("primaryCta")}</Link>
-              </Button>
-            </div>
-          </div>
+        <div
+          dir="ltr"
+          className="flex flex-col gap-10 lg:flex-row lg:items-center lg:justify-between lg:gap-12"
+        >
+          {isRtl ? (
+            <>
+              {imageSlot}
+              {textSlot}
+            </>
+          ) : (
+            <>
+              {textSlot}
+              {imageSlot}
+            </>
+          )}
         </div>
       </LandingContainer>
     </section>

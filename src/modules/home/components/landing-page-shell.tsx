@@ -12,7 +12,7 @@ export function LandingPageShell({
   className,
 }: LandingPageShellProps) {
   return (
-    <main className={cn("min-h-dvh bg-background text-foreground", className)}>
+    <main className={cn("min-h-dvh bg-card text-foreground", className)}>
       {children}
     </main>
   );
