@@ -3,6 +3,35 @@
     "title": "شيلف سبوت",
     "description": "شيلف سبوت"
   },
+  "dashboard": {
+    "navigation": {
+      "label": "تنقل لوحة التحكم",
+      "dashboard": "لوحة التحكم",
+      "requests": "الطلبات",
+      "payment": "الدفع",
+      "catalog": "الكتالوج",
+      "admins": "المشرفون",
+      "trash": "المهملات",
+      "logout": "تسجيل الخروج"
+    },
+    "topbar": {
+      "searchLabel": "البحث",
+      "searchPlaceholder": "بحث",
+      "menu": "فتح تنقل لوحة التحكم",
+      "notification": "الإشعارات",
+      "userMenu": "فتح قائمة الملف الشخصي"
+    },
+    "user": {
+      "name": "شركة ألف",
+      "description": "محمد"
+    },
+    "home": {
+      "empty": {
+        "title": "ابدأ بإنشاء أول طلب خدمة لإدارة التنفيذ الميداني.",
+        "action": "إنشاء أول طلب"
+      }
+    }
+  },
   "auth": {
     "login": {
       "title": "مرحبًا بعودتك",
