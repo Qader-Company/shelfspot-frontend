@@ -146,9 +146,13 @@
       },
       "bottom": {
         "copy": "© 2025 ShelfSpot. جميع الحقوق محفوظة"
+      }
+    }
+  },
   "dashboard": {
     "navigation": {
       "label": "تنقل لوحة التحكم",
+      "logo": "الانتقال إلى الصفحة الرئيسية",
       "dashboard": "لوحة التحكم",
       "requests": "الطلبات",
       "payment": "الدفع",

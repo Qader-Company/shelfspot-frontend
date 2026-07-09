@@ -1,3 +1,5 @@
+import { ROUTES } from "@/config/routes";
+import { Link } from "@/i18n/navigation";
 import { Logo } from "@/shared/ui/logo";
 
 import { SidebarItem } from "./sidebar-item";
@@ -6,12 +8,14 @@ import type { DashboardSidebarItem } from "./types";
 interface DashboardSidebarProps {
   items: DashboardSidebarItem[];
   navigationLabel: string;
+  logoLabel: string;
   activeItemKey?: string;
 }
 
 export function DashboardSidebar({
   items,
   navigationLabel,
+  logoLabel,
   activeItemKey,
 }: DashboardSidebarProps) {
   const primaryItems = items.slice(0, 4);
@@ -20,7 +24,9 @@ export function DashboardSidebar({
   return (
     <aside className="hidden min-h-dvh w-60 shrink-0 border-e border-border bg-card lg:flex lg:flex-col">
       <div className="flex h-24 items-center px-12">
-        <Logo className="h-auto w-36" width={292} height={108} />
+        <Link href={ROUTES.home} aria-label={logoLabel} className="block">
+          <Logo className="h-auto w-36" width={292} height={108} />
+        </Link>
       </div>
       <nav className="flex flex-1 flex-col" aria-label={navigationLabel}>
         <div className="space-y-3 px-2">

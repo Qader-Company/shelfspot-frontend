@@ -146,9 +146,13 @@
       },
       "bottom": {
         "copy": "© 2025 ShelfSpot. All rights reserved"
+      }
+    }
+  },
   "dashboard": {
     "navigation": {
       "label": "Dashboard navigation",
+      "logo": "Go to home page",
       "dashboard": "Dashboard",
       "requests": "Requests",
       "payment": "Payment",

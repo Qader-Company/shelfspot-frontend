@@ -15,7 +15,7 @@ export function NotificationButton({ label }: NotificationButtonProps) {
       variant="ghost"
       size="icon"
     >
-      <Bell className="size-5" />
+      <Bell className="size-5 stroke-[1.8]" />
     </Button>
   );
 }

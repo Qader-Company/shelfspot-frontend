@@ -21,7 +21,7 @@ export function SidebarItem({ item, isActive = false }: SidebarItemProps) {
       className={cn(
         "flex h-14 items-center gap-3 rounded-lg px-5 text-sm font-medium transition-colors",
         "text-muted-foreground hover:bg-muted hover:text-foreground",
-        isActive && "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground",
+        isActive && "bg-primary text-white hover:bg-primary hover:text-white",
         item.disabled && "pointer-events-none opacity-60",
       )}
     >

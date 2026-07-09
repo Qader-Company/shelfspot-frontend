@@ -11,6 +11,7 @@ interface DashboardLayoutProps {
   user: DashboardUser;
   labels: {
     navigation: string;
+    logo: string;
     search: string;
     searchPlaceholder: string;
     menu: string;
@@ -31,6 +32,7 @@ export function DashboardLayout({
       <DashboardSidebar
         items={sidebarItems}
         navigationLabel={labels.navigation}
+        logoLabel={labels.logo}
         activeItemKey={activeSidebarItemKey}
       />
       <div className="flex min-w-0 flex-1 flex-col">

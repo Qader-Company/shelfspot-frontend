@@ -179,7 +179,7 @@
   --popover: var(--base-white);
   --popover-foreground: var(--neutral-950);
   --primary: var(--brand-500);
-  --primary-foreground: var(--base-black);
+  --primary-foreground: var(--base-white);
   --secondary: var(--neutral-100);
   --secondary-foreground: var(--neutral-900);
   --muted: var(--neutral-100);
@@ -198,6 +198,8 @@
   --auth-visual-background: var(--brand-800);
   --auth-visual-blur: var(--brand-700);
   --auth-visual-foreground: var(--base-white);
+  --dashboard-avatar-background: #f3e8ff;
+  --dashboard-avatar-foreground: #7c3aed;
 }
 
 html[dir="rtl"] {
@@ -216,7 +218,7 @@ html[dir="ltr"] {
   --popover: var(--neutral-900);
   --popover-foreground: var(--neutral-50);
   --primary: var(--brand-400);
-  --primary-foreground: var(--base-black);
+  --primary-foreground: var(--base-white);
   --secondary: var(--neutral-800);
   --secondary-foreground: var(--neutral-50);
   --muted: var(--neutral-800);
@@ -232,6 +234,8 @@ html[dir="ltr"] {
   --border: var(--neutral-700);
   --input: var(--neutral-700);
   --ring: var(--brand-400);
+  --dashboard-avatar-background: #3b2460;
+  --dashboard-avatar-foreground: #a78bfa;
 }
 
 @layer base {

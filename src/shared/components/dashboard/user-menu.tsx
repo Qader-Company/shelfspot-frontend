@@ -15,8 +15,8 @@ export function UserMenu({ user, label }: UserMenuProps) {
       type="button"
       variant="ghost"
     >
-      <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-accent text-sm font-semibold text-accent-foreground">
-        <span className="flex size-5 rotate-12 rounded-sm bg-primary" />
+      <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-[var(--dashboard-avatar-background)]">
+        <span className="size-5 rotate-12 rounded-[4px] bg-[var(--dashboard-avatar-foreground)]" />
       </span>
       <span className="hidden min-w-0 flex-col md:flex">
         <span className="truncate text-sm font-semibold leading-5 text-foreground">
