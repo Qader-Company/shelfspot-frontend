@@ -1,11 +1,18 @@
 export {
   Bell as NotificationIcon,
   Boxes as BoxIcon,
+  CheckCircle2 as CheckCircleIcon,
   ChevronDown as SidebarChevronIcon,
+  CornerDownRight as HiringRequestIcon,
   CreditCard as PaymentIcon,
+  Edit3 as EditIcon,
+  OctagonAlert as ErrorTriangleIcon,
   LayoutGrid as DashboardGridIcon,
   LogOut as LogoutIcon,
   NotebookTabs as CatalogIcon,
+  Star as StarIcon,
   Trash2 as TrashIcon,
+  UserRound as AssignedUserIcon,
   UsersRound as AdminsIcon,
+  WalletCards as WalletIcon,
 } from "lucide-react";

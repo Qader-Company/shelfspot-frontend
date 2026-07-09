@@ -172,10 +172,107 @@
       "name": "شركة ألف",
       "description": "محمد"
     },
+    "notifications": {
+      "title": "الإشعارات",
+      "newBadge": "2 جديد",
+      "closeOverlay": "إغلاق الإشعارات",
+      "items": {
+        "newHiringRequest": {
+          "title": "طلب توظيف جديد",
+          "description": "طلبت TechCorp مصمم واجهات.",
+          "time": "منذ دقيقتين"
+        },
+        "assignmentRejected": {
+          "title": "تم رفض التكليف",
+          "description": "رفض عمر علي المشروع.",
+          "time": "منذ دقيقتين"
+        },
+        "freelancerAssigned": {
+          "title": "تم تعيين مستقل",
+          "description": "قبل عمر علي الطلب.",
+          "time": "منذ 15 دقيقة"
+        },
+        "walletCredited": {
+          "title": "تم شحن المحفظة",
+          "description": "أضافت TechCorp مبلغ 2,000$ إلى المحفظة.",
+          "time": "منذ ساعتين"
+        }
+      }
+    },
     "home": {
       "empty": {
         "title": "ابدأ بإنشاء أول طلب خدمة لإدارة التنفيذ الميداني.",
         "action": "إنشاء أول طلب"
+      }
+    },
+    "overview": {
+      "title": "لوحة التحكم",
+      "subtitle": "مرحبًا بعودتك، إليك ما يحدث اليوم",
+      "filters": {
+        "thisWeek": "هذا الأسبوع"
+      },
+      "actions": {
+        "createRequest": "إنشاء طلب"
+      },
+      "stats": {
+        "active": {
+          "title": "الطلبات النشطة",
+          "trend": "+12% هذا الأسبوع"
+        },
+        "completed": {
+          "title": "مكتملة هذا الأسبوع",
+          "trend": "+18% هذا الأسبوع"
+        },
+        "delayed": {
+          "title": "الطلبات المتأخرة",
+          "trend": "-2% هذا الأسبوع"
+        },
+        "acceptance": {
+          "title": "معدل القبول",
+          "trend": "+3% هذا الأسبوع"
+        }
+      },
+      "charts": {
+        "requestsOverTime": "الطلبات بمرور الوقت"
+      },
+      "months": {
+        "jan": "ينا",
+        "feb": "فبر",
+        "mar": "مار",
+        "apr": "أبر",
+        "may": "ماي",
+        "jun": "يون",
+        "jul": "يول"
+      },
+      "status": {
+        "pending": "قيد الانتظار",
+        "inProgress": "قيد التنفيذ",
+        "completed": "مكتمل",
+        "failed": "فشل",
+        "rejected": "مرفوض"
+      },
+      "table": {
+        "title": "الطلبات",
+        "columns": {
+          "requestId": "رقم الطلب",
+          "location": "الموقع",
+          "assignedBy": "المسؤول",
+          "time": "الوقت",
+          "status": "الحالة",
+          "action": "الإجراء"
+        },
+        "actions": {
+          "delete": "حذف الطلب",
+          "edit": "تعديل الطلب"
+        }
+      },
+      "mock": {
+        "locations": {
+          "dammam": "الدمام"
+        },
+        "assignees": {
+          "mohamedAli": "محمد علي"
+        }
       }
     }
   },

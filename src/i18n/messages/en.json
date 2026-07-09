@@ -172,10 +172,107 @@
       "name": "Alf Company",
       "description": "Mohamed"
     },
+    "notifications": {
+      "title": "Notification",
+      "newBadge": "2 new",
+      "closeOverlay": "Close notifications",
+      "items": {
+        "newHiringRequest": {
+          "title": "New hiring request",
+          "description": "TechCorp requested a UI Designer.",
+          "time": "2m ago"
+        },
+        "assignmentRejected": {
+          "title": "Assignment Rejected",
+          "description": "Omar Aly rejected the project.",
+          "time": "2m ago"
+        },
+        "freelancerAssigned": {
+          "title": "Freelancer Assigned",
+          "description": "Omar Aly accept request.",
+          "time": "15m ago"
+        },
+        "walletCredited": {
+          "title": "Wallet Credited",
+          "description": "TechCorp added $2,000 to wallet.",
+          "time": "2h ago"
+        }
+      }
+    },
     "home": {
       "empty": {
         "title": "Start by creating your first service request to manage field execution.",
         "action": "Create Your First Request"
+      }
+    },
+    "overview": {
+      "title": "Dashboard",
+      "subtitle": "Welcome back, here's what's happening today",
+      "filters": {
+        "thisWeek": "This Week"
+      },
+      "actions": {
+        "createRequest": "Create Request"
+      },
+      "stats": {
+        "active": {
+          "title": "Active Requests",
+          "trend": "+12% this week"
+        },
+        "completed": {
+          "title": "Completed This Week",
+          "trend": "+18% this week"
+        },
+        "delayed": {
+          "title": "Delayed Requests",
+          "trend": "-2% this week"
+        },
+        "acceptance": {
+          "title": "Acceptance Rate",
+          "trend": "+3% this week"
+        }
+      },
+      "charts": {
+        "requestsOverTime": "Requests Over Time"
+      },
+      "months": {
+        "jan": "Jan",
+        "feb": "Feb",
+        "mar": "Mar",
+        "apr": "Apr",
+        "may": "May",
+        "jun": "Jun",
+        "jul": "Jul"
+      },
+      "status": {
+        "pending": "Pending",
+        "inProgress": "In Progress",
+        "completed": "Completed",
+        "failed": "Failed",
+        "rejected": "Rejected"
+      },
+      "table": {
+        "title": "Requests",
+        "columns": {
+          "requestId": "Request ID",
+          "location": "Location",
+          "assignedBy": "Assigned By",
+          "time": "Time",
+          "status": "Status",
+          "action": "Action"
+        },
+        "actions": {
+          "delete": "Delete request",
+          "edit": "Edit request"
+        }
+      },
+      "mock": {
+        "locations": {
+          "dammam": "Dammam"
+        },
+        "assignees": {
+          "mohamedAli": "Mohamed Ali"
+        }
       }
     }
   },
