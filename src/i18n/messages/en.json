@@ -146,6 +146,32 @@
       },
       "bottom": {
         "copy": "© 2025 ShelfSpot. All rights reserved"
+  "dashboard": {
+    "navigation": {
+      "label": "Dashboard navigation",
+      "dashboard": "Dashboard",
+      "requests": "Requests",
+      "payment": "Payment",
+      "catalog": "Catalog",
+      "admins": "Admins",
+      "trash": "Trash",
+      "logout": "Logout"
+    },
+    "topbar": {
+      "searchLabel": "Search",
+      "searchPlaceholder": "Search",
+      "menu": "Open dashboard navigation",
+      "notification": "Notifications",
+      "userMenu": "Open user profile menu"
+    },
+    "user": {
+      "name": "Alf Company",
+      "description": "Mohamed"
+    },
+    "home": {
+      "empty": {
+        "title": "Start by creating your first service request to manage field execution.",
+        "action": "Create Your First Request"
       }
     }
   },

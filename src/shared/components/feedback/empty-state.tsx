@@ -8,6 +8,7 @@ interface EmptyStateProps {
   icon?: ReactNode;
   action?: ReactNode;
   className?: string;
+  variant?: "card" | "plain";
 }
 
 export function EmptyState({
@@ -16,11 +17,13 @@ export function EmptyState({
   icon,
   action,
   className,
+  variant = "card",
 }: EmptyStateProps) {
   return (
     <section
       className={cn(
-        "flex min-h-40 flex-col items-center justify-center gap-3 rounded-lg border border-dashed p-6 text-center",
+        "flex min-h-40 flex-col items-center justify-center gap-3 text-center",
+        variant === "card" && "rounded-lg border border-dashed p-6",
         className,
       )}
     >
