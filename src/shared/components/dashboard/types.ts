@@ -1,12 +1,12 @@
-import type { ComponentType } from "react";
+import type { DashboardIconKey } from "@/shared/components/dashboard/dashboard-icons";
 
 export interface DashboardSidebarItem {
   key: string;
   label: string;
   href: string;
-  icon: ComponentType<{ className?: string }>;
+  icon: DashboardIconKey;
   disabled?: boolean;
-  trailingIcon?: ComponentType<{ className?: string }>;
+  trailingIcon?: DashboardIconKey;
 }
 
 export interface DashboardUser {

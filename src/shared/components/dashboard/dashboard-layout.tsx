@@ -7,7 +7,6 @@ import type { DashboardSidebarItem, DashboardUser } from "./types";
 interface DashboardLayoutProps {
   children: ReactNode;
   sidebarItems: DashboardSidebarItem[];
-  activeSidebarItemKey?: string;
   user: DashboardUser;
   labels: {
     navigation: string;
@@ -23,7 +22,6 @@ interface DashboardLayoutProps {
 export function DashboardLayout({
   children,
   sidebarItems,
-  activeSidebarItemKey,
   user,
   labels,
 }: DashboardLayoutProps) {
@@ -33,7 +31,6 @@ export function DashboardLayout({
         items={sidebarItems}
         navigationLabel={labels.navigation}
         logoLabel={labels.logo}
-        activeItemKey={activeSidebarItemKey}
       />
       <div className="flex min-w-0 flex-1 flex-col">
         <DashboardTopbar

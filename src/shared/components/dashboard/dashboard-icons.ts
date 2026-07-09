@@ -1,14 +1,40 @@
 export {
+  AlertTriangle as WarningIcon,
   Bell as NotificationIcon,
   Boxes as BoxIcon,
+  CalendarDays as CalendarIcon,
   CheckCircle2 as CheckCircleIcon,
+  Check as CheckIcon,
   ChevronDown as SidebarChevronIcon,
+  ChevronUp as SidebarChevronUpIcon,
+  CircleDollarSign as CostIcon,
+  Clock3 as ClockIcon,
   CreditCard as PaymentIcon,
   Edit3 as EditIcon,
   LayoutGrid as DashboardGridIcon,
   LogOut as LogoutIcon,
+  MapPin as MapPinIcon,
   NotebookTabs as CatalogIcon,
+  Plus as AddIcon,
+  ArrowLeft as PaginationPreviousIcon,
+  ArrowRight as PaginationNextIcon,
   Star as StarIcon,
+  SlidersHorizontal as FilterIcon,
   Trash2 as TrashIcon,
+  UploadCloud as UploadIcon,
   UsersRound as AdminsIcon,
+  X as CloseIcon,
 } from "lucide-react";
+
+export const dashboardIconKeys = [
+  "dashboard",
+  "box",
+  "payment",
+  "catalog",
+  "admins",
+  "trash",
+  "logout",
+  "chevron",
+] as const;
+
+export type DashboardIconKey = (typeof dashboardIconKeys)[number];

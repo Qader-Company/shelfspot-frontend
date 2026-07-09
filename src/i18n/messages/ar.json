@@ -274,6 +274,76 @@
           "mohamedAli": "محمد علي"
         }
       }
+    },
+    "requestsPage": {
+      "title": "الطلبات",
+      "subtitle": "مرحبًا بعودتك، إليك ما يحدث اليوم",
+      "actions": {
+        "createRequest": "إنشاء طلب"
+      },
+      "stats": {
+        "total": {
+          "title": "إجمالي الطلبات",
+          "trend": "+12% هذا الأسبوع"
+        },
+        "completed": {
+          "title": "مكتملة هذا الأسبوع",
+          "trend": "+18% هذا الأسبوع"
+        },
+        "delayed": {
+          "title": "الطلبات المتأخرة",
+          "trend": "-2% هذا الأسبوع"
+        },
+        "acceptance": {
+          "title": "معدل القبول",
+          "trend": "+3% هذا الأسبوع"
+        }
+      },
+      "search": {
+        "label": "البحث في الطلبات",
+        "placeholder": "البحث بالعلامة التجارية"
+      },
+      "filters": {
+        "allStatuses": "كل الحالات"
+      },
+      "status": {
+        "inProgress": "قيد التنفيذ",
+        "completed": "مكتمل",
+        "inReview": "قيد المراجعة",
+        "accepted": "مقبول",
+        "failed": "فشل",
+        "rejected": "مرفوض",
+        "canceled": "ملغي",
+        "pending": "قيد الانتظار"
+      },
+      "table": {
+        "columns": {
+          "requestId": "رقم الطلب",
+          "location": "الموقع",
+          "assignedBy": "المسؤول",
+          "time": "الوقت",
+          "status": "الحالة",
+          "action": "الإجراء"
+        },
+        "actions": {
+          "selectAll": "تحديد كل الطلبات",
+          "selectRow": "تحديد الطلب",
+          "delete": "حذف الطلب",
+          "edit": "تعديل الطلب"
+        }
+      },
+      "pagination": {
+        "previous": "السابق",
+        "next": "التالي"
+      },
+      "mock": {
+        "locations": {
+          "dammam": "الدمام"
+        },
+        "assignees": {
+          "mohamedAli": "محمد علي"
+        }
+      }
     }
   },
   "auth": {

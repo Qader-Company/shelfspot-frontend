@@ -274,6 +274,76 @@
           "mohamedAli": "Mohamed Ali"
         }
       }
+    },
+    "requestsPage": {
+      "title": "Requests",
+      "subtitle": "Welcome back, here's what's happening today",
+      "actions": {
+        "createRequest": "Create Request"
+      },
+      "stats": {
+        "total": {
+          "title": "Total Requests",
+          "trend": "+12% this week"
+        },
+        "completed": {
+          "title": "Completed This Week",
+          "trend": "+18% this week"
+        },
+        "delayed": {
+          "title": "Delayed Requests",
+          "trend": "-2% this week"
+        },
+        "acceptance": {
+          "title": "Acceptance Rate",
+          "trend": "+3% this week"
+        }
+      },
+      "search": {
+        "label": "Search requests",
+        "placeholder": "Search by brand"
+      },
+      "filters": {
+        "allStatuses": "All Statuses"
+      },
+      "status": {
+        "inProgress": "In progress",
+        "completed": "Completed",
+        "inReview": "In Review",
+        "accepted": "Accepted",
+        "failed": "Failed",
+        "rejected": "Rejected",
+        "canceled": "Canceled",
+        "pending": "Pending"
+      },
+      "table": {
+        "columns": {
+          "requestId": "Request ID",
+          "location": "Location",
+          "assignedBy": "Assigned By",
+          "time": "Time",
+          "status": "Status",
+          "action": "Action"
+        },
+        "actions": {
+          "selectAll": "Select all requests",
+          "selectRow": "Select request",
+          "delete": "Delete request",
+          "edit": "Edit request"
+        }
+      },
+      "pagination": {
+        "previous": "Previous",
+        "next": "Next"
+      },
+      "mock": {
+        "locations": {
+          "dammam": "Dammam"
+        },
+        "assignees": {
+          "mohamedAli": "Mohamed Ali"
+        }
+      }
     }
   },
   "auth": {

@@ -1,5 +1,19 @@
-import { SidebarChevronIcon } from "@/shared/components/dashboard/dashboard-icons";
+"use client";
+
+import type { ComponentType } from "react";
+
 import { Link } from "@/i18n/navigation";
+import {
+  AdminsIcon,
+  BoxIcon,
+  CatalogIcon,
+  DashboardGridIcon,
+  LogoutIcon,
+  PaymentIcon,
+  SidebarChevronIcon,
+  TrashIcon,
+  type DashboardIconKey,
+} from "@/shared/components/dashboard/dashboard-icons";
 import { cn } from "@/shared/lib/utils";
 
 import type { DashboardSidebarItem } from "./types";
@@ -9,9 +23,22 @@ interface SidebarItemProps {
   isActive?: boolean;
 }
 
+const iconComponents = {
+  dashboard: DashboardGridIcon,
+  box: BoxIcon,
+  payment: PaymentIcon,
+  catalog: CatalogIcon,
+  admins: AdminsIcon,
+  trash: TrashIcon,
+  logout: LogoutIcon,
+  chevron: SidebarChevronIcon,
+} satisfies Record<DashboardIconKey, ComponentType<{ className?: string }>>;
+
 export function SidebarItem({ item, isActive = false }: SidebarItemProps) {
-  const Icon = item.icon;
-  const TrailingIcon = item.trailingIcon ?? SidebarChevronIcon;
+  const Icon = iconComponents[item.icon];
+  const TrailingIcon = item.trailingIcon
+    ? iconComponents[item.trailingIcon]
+    : SidebarChevronIcon;
 
   return (
     <Link

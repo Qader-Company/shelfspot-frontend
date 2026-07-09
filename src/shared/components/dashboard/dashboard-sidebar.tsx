@@ -1,5 +1,7 @@
+"use client";
+
 import { ROUTES } from "@/config/routes";
-import { Link } from "@/i18n/navigation";
+import { Link, usePathname } from "@/i18n/navigation";
 import { Logo } from "@/shared/ui/logo";
 
 import { SidebarItem } from "./sidebar-item";
@@ -18,8 +20,17 @@ export function DashboardSidebar({
   logoLabel,
   activeItemKey,
 }: DashboardSidebarProps) {
+  const pathname = usePathname();
   const primaryItems = items.slice(0, 4);
   const secondaryItems = items.slice(4);
+  const resolvedActiveItemKey =
+    activeItemKey ??
+    items
+      .filter((item) => item.href !== ROUTES.home)
+      .sort((first, second) => second.href.length - first.href.length)
+      .find((item) => pathname === item.href || pathname.startsWith(`${item.href}/`))
+      ?.key ??
+    "home";
 
   return (
     <aside className="hidden min-h-dvh w-60 shrink-0 border-e border-border bg-card lg:flex lg:flex-col">
@@ -34,7 +45,7 @@ export function DashboardSidebar({
             <SidebarItem
               key={item.key}
               item={item}
-              isActive={item.key === activeItemKey}
+              isActive={item.key === resolvedActiveItemKey}
             />
           ))}
         </div>
@@ -44,7 +55,7 @@ export function DashboardSidebar({
               <SidebarItem
                 key={item.key}
                 item={item}
-                isActive={item.key === activeItemKey}
+                isActive={item.key === resolvedActiveItemKey}
               />
             ))}
           </div>

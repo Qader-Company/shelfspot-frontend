@@ -2,16 +2,6 @@ import { getTranslations } from "next-intl/server";
 
 import { ROUTES } from "@/config/routes";
 import { DashboardLayout } from "@/shared/components/dashboard";
-import {
-  AdminsIcon,
-  BoxIcon,
-  CatalogIcon,
-  DashboardGridIcon,
-  LogoutIcon,
-  PaymentIcon,
-  SidebarChevronIcon,
-  TrashIcon,
-} from "@/shared/components/dashboard/dashboard-icons";
 import type { DashboardSidebarItem } from "@/shared/components/dashboard";
 
 export default async function Layout({
@@ -26,51 +16,50 @@ export default async function Layout({
       key: "home",
       label: t("navigation.dashboard"),
       href: ROUTES.dashboard,
-      icon: DashboardGridIcon,
+      icon: "dashboard",
     },
     {
       key: "requests",
       label: t("navigation.requests"),
       href: ROUTES.dashboardRequests,
-      icon: BoxIcon,
+      icon: "box",
     },
     {
       key: "payment",
       label: t("navigation.payment"),
       href: ROUTES.dashboardPayment,
-      icon: PaymentIcon,
+      icon: "payment",
     },
     {
       key: "catalog",
       label: t("navigation.catalog"),
       href: ROUTES.dashboardCatalog,
-      icon: CatalogIcon,
-      trailingIcon: SidebarChevronIcon,
+      icon: "catalog",
+      trailingIcon: "chevron",
     },
     {
       key: "admins",
       label: t("navigation.admins"),
       href: ROUTES.dashboardAdmins,
-      icon: AdminsIcon,
+      icon: "admins",
     },
     {
       key: "trash",
       label: t("navigation.trash"),
       href: ROUTES.dashboardTrash,
-      icon: TrashIcon,
+      icon: "trash",
     },
     {
       key: "logout",
       label: t("navigation.logout"),
       href: ROUTES.login,
-      icon: LogoutIcon,
+      icon: "logout",
     },
   ];
 
   return (
     <DashboardLayout
       sidebarItems={sidebarItems}
-      activeSidebarItemKey="home"
       user={{
         name: t("user.name"),
         description: t("user.description"),
