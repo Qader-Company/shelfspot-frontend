@@ -1,5 +1,4 @@
-import { ChevronDown } from "lucide-react";
-
+import { SidebarChevronIcon } from "@/shared/components/dashboard/dashboard-icons";
 import { Link } from "@/i18n/navigation";
 import { cn } from "@/shared/lib/utils";
 
@@ -12,7 +11,7 @@ interface SidebarItemProps {
 
 export function SidebarItem({ item, isActive = false }: SidebarItemProps) {
   const Icon = item.icon;
-  const TrailingIcon = item.trailingIcon ?? ChevronDown;
+  const TrailingIcon = item.trailingIcon ?? SidebarChevronIcon;
 
   return (
     <Link

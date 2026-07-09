@@ -1,5 +1,4 @@
-import { Bell } from "lucide-react";
-
+import { NotificationIcon } from "@/shared/components/dashboard/dashboard-icons";
 import { Button } from "@/shared/ui/button";
 
 interface NotificationButtonProps {
@@ -15,7 +14,7 @@ export function NotificationButton({ label }: NotificationButtonProps) {
       variant="ghost"
       size="icon"
     >
-      <Bell className="size-5 stroke-[1.8]" />
+      <NotificationIcon className="size-5 stroke-[1.8]" />
     </Button>
   );
 }

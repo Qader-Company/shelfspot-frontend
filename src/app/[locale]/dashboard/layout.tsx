@@ -1,4 +1,3 @@
-import { ChevronDown } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 
 import { ROUTES } from "@/config/routes";
@@ -10,6 +9,7 @@ import {
   DashboardGridIcon,
   LogoutIcon,
   PaymentIcon,
+  SidebarChevronIcon,
   TrashIcon,
 } from "@/shared/components/dashboard/dashboard-icons";
 import type { DashboardSidebarItem } from "@/shared/components/dashboard";
@@ -45,7 +45,7 @@ export default async function Layout({
       label: t("navigation.catalog"),
       href: ROUTES.dashboardCatalog,
       icon: CatalogIcon,
-      trailingIcon: ChevronDown,
+      trailingIcon: SidebarChevronIcon,
     },
     {
       key: "admins",
