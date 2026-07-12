@@ -589,6 +589,92 @@
         "noServices": "لا توجد خدمات متاحة."
       }
     },
+    "adminsPage": {
+      "title": "إدارة المشرفين",
+      "subtitle": "مراقبة وإدارة مشرفي المنصة",
+      "tabsLabel": "أقسام المشرفين",
+      "tabs": {
+        "admins": "المشرفون",
+        "roles": "الأدوار"
+      },
+      "search": {
+        "label": "البحث عن مشرف",
+        "placeholder": "البحث عن الشركات"
+      },
+      "filters": {
+        "allStatuses": "جميع الحالات"
+      },
+      "actions": {
+        "addNew": "إضافة مشرف جديد"
+      },
+      "table": {
+        "columns": {
+          "adminName": "اسم المشرف",
+          "phoneNumber": "رقم الجوال",
+          "email": "البريد الإلكتروني",
+          "role": "الدور",
+          "status": "الحالة",
+          "action": "الإجراء",
+          "roleName": "اسم الدور",
+          "numberOfUsers": "عدد المستخدمين"
+        },
+        "actions": {
+          "toggleStatus": "تبديل الحالة",
+          "delete": "حذف المشرف",
+          "edit": "تعديل المشرف",
+          "deleteRole": "حذف الدور",
+          "editRole": "تعديل الدور"
+        }
+      },
+      "pagination": {
+        "previous": "السابق",
+        "next": "التالي"
+      },
+      "dialogs": {
+        "deleteAdmin": {
+          "title": "حذف المشرف؟",
+          "descriptionLine1": "هل أنت متأكد من حذف {name}؟",
+          "descriptionLine2": "لا يمكن التراجع عن هذا الإجراء.",
+          "cancel": "لا، احتفظ به",
+          "confirm": "نعم، احذفه!"
+        },
+        "deleteRole": {
+          "title": "حذف الدور؟",
+          "descriptionLine1": "هل أنت متأكد من حذف دور {name}؟",
+          "descriptionLine2": "لا يمكن التراجع عن هذا الإجراء.",
+          "cancel": "لا، احتفظ به",
+          "confirm": "نعم، احذفه!"
+        },
+        "adminForm": {
+          "createTitle": "إنشاء مشرف جديد",
+          "editTitle": "تحديث بيانات المشرف",
+          "activation": "التفعيل",
+          "active": "نشط",
+          "name": "الاسم",
+          "namePlaceholder": "عمر علي",
+          "role": "الدور",
+          "email": "البريد الإلكتروني",
+          "emailPlaceholder": "omarali3@gmail.com",
+          "phoneNumber": "رقم الجوال",
+          "phonePlaceholder": "+966 6262525242",
+          "password": "كلمة المرور",
+          "passwordPlaceholder": "أدخل كلمة المرور",
+          "confirmPassword": "تأكيد كلمة المرور",
+          "confirmPasswordPlaceholder": "تأكيد كلمة المرور",
+          "cancel": "إلغاء",
+          "confirm": "تأكيد"
+        },
+        "roleForm": {
+          "title": "إنشاء دور جديد",
+          "activation": "التفعيل",
+          "active": "نشط",
+          "role": "الدور",
+          "permission": "صلاحية 1",
+          "cancel": "إلغاء",
+          "confirm": "تأكيد"
+        }
+      }
+    },
     "trashPage": {
       "title": "المهملات",
       "subtitle": "العناصر المحذوفة — استعادتها أو حذفها نهائيًا",

@@ -5,6 +5,7 @@ export { NotificationButton } from "@/shared/components/dashboard/notification-b
 export { SearchInput } from "@/shared/components/dashboard/search-input";
 export { SidebarItem } from "@/shared/components/dashboard/sidebar-item";
 export { UserMenu } from "@/shared/components/dashboard/user-menu";
+export { StatusToggle } from "@/shared/components/dashboard/status-toggle";
 export type {
   DashboardSidebarItem,
   DashboardUser,

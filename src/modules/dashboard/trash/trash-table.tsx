@@ -2,7 +2,7 @@ import type { TrashRow } from "./trash.seed";
 import { CategoryPath } from "./category-path";
 import { ProductCell } from "./product-cell";
 import { RowActions } from "./row-actions";
-import { StatusToggle } from "./status-toggle";
+import { StatusToggle } from "@/shared/components/dashboard/status-toggle";
 
 interface TrashTableLabels {
   products: string;

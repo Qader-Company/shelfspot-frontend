@@ -589,6 +589,92 @@
         "noServices": "No services available."
       }
     },
+    "adminsPage": {
+      "title": "Admins Management",
+      "subtitle": "Monitor and manage platform admins",
+      "tabsLabel": "Admin sections",
+      "tabs": {
+        "admins": "Admins",
+        "roles": "Rols"
+      },
+      "search": {
+        "label": "Search admins",
+        "placeholder": "Search for companies"
+      },
+      "filters": {
+        "allStatuses": "All Statuses"
+      },
+      "actions": {
+        "addNew": "Add New admin"
+      },
+      "table": {
+        "columns": {
+          "adminName": "Admin Name",
+          "phoneNumber": "Phone Number",
+          "email": "Email",
+          "role": "Role",
+          "status": "Status",
+          "action": "Action",
+          "roleName": "Role Name",
+          "numberOfUsers": "Numbers of users"
+        },
+        "actions": {
+          "toggleStatus": "Toggle status",
+          "delete": "Delete admin",
+          "edit": "Edit admin",
+          "deleteRole": "Delete role",
+          "editRole": "Edit role"
+        }
+      },
+      "pagination": {
+        "previous": "Previous",
+        "next": "Next"
+      },
+      "dialogs": {
+        "deleteAdmin": {
+          "title": "Delete Admin?",
+          "descriptionLine1": "Are you sure you want to delete {name}",
+          "descriptionLine2": "This action cannot be undone.",
+          "cancel": "No, Keep it",
+          "confirm": "Yes, Delete!"
+        },
+        "deleteRole": {
+          "title": "Delete Role?",
+          "descriptionLine1": "Are you sure you want to delete {name} role",
+          "descriptionLine2": "This action cannot be undone.",
+          "cancel": "No, Keep it",
+          "confirm": "Yes, Delete!"
+        },
+        "adminForm": {
+          "createTitle": "Create New Admin",
+          "editTitle": "Update Admin Details",
+          "activation": "Activation",
+          "active": "Active",
+          "name": "Name",
+          "namePlaceholder": "omar ali",
+          "role": "Role",
+          "email": "Email",
+          "emailPlaceholder": "omarali3@gmail.com",
+          "phoneNumber": "Phone Number",
+          "phonePlaceholder": "+966 6262525242",
+          "password": "Password",
+          "passwordPlaceholder": "Enter password",
+          "confirmPassword": "Confirm Password",
+          "confirmPasswordPlaceholder": "Confirm password",
+          "cancel": "Cancel",
+          "confirm": "Confirm"
+        },
+        "roleForm": {
+          "title": "Create New Role",
+          "activation": "Activation",
+          "active": "Active",
+          "role": "Role",
+          "permission": "Permission 1",
+          "cancel": "Cancel",
+          "confirm": "Confirm"
+        }
+      }
+    },
     "trashPage": {
       "title": "Trash",
       "subtitle": "Deleted items recover or permanently remove them",

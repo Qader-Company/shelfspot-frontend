@@ -4,3 +4,4 @@ export { DashboardRequestsPage } from "@/modules/dashboard/components/dashboard-
 export { CreateRequestPage } from "@/modules/dashboard/components/create-request-page";
 export { PaymentsPage } from "@/modules/dashboard/payment";
 export { TrashPage } from "@/modules/dashboard/trash";
+export { AdminsPage } from "@/modules/dashboard/admins";

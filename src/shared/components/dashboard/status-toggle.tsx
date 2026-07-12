@@ -21,7 +21,7 @@ export function StatusToggle({ isActive, ariaLabel }: StatusToggleProps) {
         isActive ? "bg-success" : "bg-muted-foreground/30",
       )}
     >
-      {/* Knob — start-[2px] for OFF, end-[2px] for ON. Logical props auto-flip in RTL. */}
+      {/* Knob — start-[3px] OFF, end-[3px] ON. Logical props auto-flip in RTL. */}
       <span
         className={cn(
           "absolute top-[3px] size-[18px] rounded-full bg-white shadow-sm transition-all duration-200",
