@@ -9,7 +9,7 @@ interface StepNavigationProps {
   isLastStep: boolean;
   onBack: () => void;
   onCancel: () => void;
-  onNext: () => void;
+  onNext: () => void | Promise<void>;
 }
 
 export function StepNavigation({

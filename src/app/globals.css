@@ -257,6 +257,119 @@ html[dir="ltr"] {
 }
 
 @layer components {
+  @keyframes dialog-overlay-in {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes dialog-overlay-out {
+    from {
+      opacity: 1;
+    }
+
+    to {
+      opacity: 0;
+    }
+  }
+
+  @keyframes dialog-panel-in {
+    from {
+      opacity: 0;
+      transform: scale(0.96) translateY(0.75rem);
+    }
+
+    to {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+  }
+
+  @keyframes dialog-panel-out {
+    from {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+
+    to {
+      opacity: 0;
+      transform: scale(0.96) translateY(0.75rem);
+    }
+  }
+
+  @keyframes clock-overlay-pop {
+    from {
+      opacity: 0;
+      transform: scale(0.86) translateY(0.75rem);
+    }
+
+    to {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+  }
+
+  @keyframes clock-overlay-out {
+    from {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+
+    to {
+      opacity: 0;
+      transform: scale(0.86) translateY(0.75rem);
+    }
+  }
+
+  @keyframes clock-period-switch {
+    from {
+      opacity: 0;
+      transform: translate(-50%, -42%) scale(0.88);
+    }
+
+    to {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+  }
+
+  .dialog-overlay-in {
+    animation: dialog-overlay-in 180ms ease-out both;
+  }
+
+  .dialog-overlay-out {
+    animation: dialog-overlay-out 180ms ease-in both;
+  }
+
+  .dialog-panel-in {
+    animation: dialog-panel-in 200ms ease-out both;
+  }
+
+  .dialog-panel-out {
+    animation: dialog-panel-out 180ms ease-in both;
+  }
+
+  .clock-overlay-pop {
+    animation: clock-overlay-pop 200ms ease-out both;
+  }
+
+  .clock-overlay-out {
+    animation: clock-overlay-out 180ms ease-in both;
+  }
+
+  .clock-hand {
+    transform-box: view-box;
+    transition: transform 220ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  .clock-period-switch {
+    animation: clock-period-switch 180ms ease-out both;
+  }
+
   .section-label {
     @apply text-section-label font-regular text-foreground;
   }

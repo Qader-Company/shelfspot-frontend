@@ -275,6 +275,302 @@
         }
       }
     },
+    "createRequest": {
+      "title": "Create New Request",
+      "subtitle": "Schedule and manage your in-store execution request with real-time tracking and verified completion.",
+      "stepperLabel": "Create request steps",
+      "steps": {
+        "location": "Location, Date & Time",
+        "service": "Service & Product Details",
+        "guidelines": "Guidelines & Execution Rules"
+      },
+      "actions": {
+        "previous": "Previous",
+        "next": "Next",
+        "cancel": "Cancel Request",
+        "submit": "Submit Request",
+        "closeDialog": "Close dialog",
+        "toggleSection": "Toggle section",
+        "addService": "Add Service",
+        "deleteService": "Delete service",
+        "removeServiceDraft": "Remove service draft",
+        "save": "Save",
+        "confirm": "Confirm",
+        "cancelPayment": "Cancel"
+      },
+      "location": {
+        "title": "Location & Date,Time",
+        "description": "Choose where and when the task should be executed.",
+        "executionDateTime": "Execution Date & Time",
+        "scheduleHint": "Execution requests can only be scheduled for today or the following day.",
+        "storeLocation": "Store Location",
+        "storeDescription": "Select the store where the task will be executed.",
+        "addLocation": "Add Location",
+        "addLocationDescription": "Add a store manually or select it from the map."
+      },
+      "services": {
+        "title": "Services",
+        "description": "Add New Service",
+        "serviceLabel": "Service #{index}",
+        "selectServiceTitle": "Select service type & Price",
+        "selectServiceDescription": "Choose the type of field execution service required."
+      },
+      "guidelines": {
+        "title": "Guidelines & Documents",
+        "description": "Upload supporting files and instructions for the assigned merchandiser.",
+        "documents": "Planogram Documents",
+        "uploadTitle": "Upload Files",
+        "uploadDescription": "Drag & drop files here or browse files",
+        "supportedFormats": "Supported formats: PNG, JPG, PDF"
+      },
+      "fields": {
+        "executionDate": {
+          "label": "Select execution date",
+          "placeholder": "Select execution date"
+        },
+        "executionTime": {
+          "label": "Select execution time",
+          "placeholder": "--:-- --"
+        },
+        "serviceType": {
+          "label": "Select service type",
+          "placeholder": "Select Service"
+        },
+        "estimatedTime": {
+          "label": "Estimated Time"
+        },
+        "price": {
+          "label": "Price"
+        },
+        "brand": {
+          "label": "Brand",
+          "placeholder": "Select Brand"
+        },
+        "subBrand": {
+          "label": "Sub-Brand",
+          "placeholder": "Select Sub-Brand"
+        },
+        "category": {
+          "label": "Category",
+          "placeholder": "Select category"
+        },
+        "subCategory": {
+          "label": "Sub-Category",
+          "placeholder": "Select Sub-category"
+        },
+        "instructions": {
+          "label": "Execution Instructions",
+          "description": "Add clear execution notes, placement requirements, timing details, or special instructions.",
+          "placeholder": "Write detailed instructions for the assigned merchandiser..."
+        }
+      },
+      "options": {
+        "services": {
+          "freshnessReport": "Freshness Report “Must go backdoor”",
+          "onShelfAvailability": "On Shelf Availability"
+        },
+        "brands": {
+          "pepsico": "Pepsico"
+        },
+        "subBrands": {
+          "pepsiDiet": "Pepsi Diet"
+        },
+        "categories": {
+          "softDrinks": "Soft Drinks"
+        },
+        "subCategories": {
+          "softDrinks": "Soft Drinks"
+        }
+      },
+      "productTable": {
+        "searchPlaceholder": "Search by product name or SKU",
+        "showProducts": "54 Product",
+        "emptyDetail": "-",
+        "columns": {
+          "products": "Products",
+          "sku": "SKU Code",
+          "details": "Product Details",
+          "expiryDate": "Expiry Date"
+        }
+      },
+      "pagination": {
+        "previous": "Previous",
+        "next": "Next",
+        "ellipsis": "..."
+      },
+      "locationDialog": {
+        "title": "Choose Store Location",
+        "mapLabel": "Interactive store location map",
+        "mapHint": "Click the map to place the location pin",
+        "tabs": {
+          "map": "On Map",
+          "manual": "Manual"
+        },
+        "fields": {
+          "storeName": {
+            "label": "Store Name",
+            "placeholder": "e.g.,carrefour"
+          },
+          "streetAddress": {
+            "label": "Street Address",
+            "placeholder": "e.g.,123 main street"
+          },
+          "state": {
+            "label": "State",
+            "placeholder": "e.g., Cairo State"
+          },
+          "region": {
+            "label": "Region",
+            "placeholder": "e.g., Central Region"
+          },
+          "city": {
+            "label": "City",
+            "placeholder": "e.g., New Cairo"
+          },
+          "district": {
+            "label": "District",
+            "placeholder": "e.g., District 5"
+          }
+        }
+      },
+      "dateDialog": {
+        "title": "Select Execution Date",
+        "month": "May 2026",
+        "previousMonth": "Previous month",
+        "nextMonth": "Next month",
+        "previousYear": "Previous year",
+        "nextYear": "Next year",
+        "changeMonthYear": "Change month and year",
+        "days": {
+          "mon": "Mon",
+          "tue": "Tue",
+          "wed": "Wed",
+          "thu": "Thu",
+          "fri": "Fri",
+          "sat": "Sat",
+          "sun": "Sun"
+        }
+      },
+      "timeDialog": {
+        "title": "Select Execution Time",
+        "icon": "◷",
+        "openPicker": "Open time picker",
+        "clockFace": "Analog time picker clock face",
+        "hour": "Hour",
+        "minute": "Minute",
+        "period": "Period",
+        "am": "AM",
+        "pm": "PM",
+        "incrementHour": "Increase hour",
+        "decrementHour": "Decrease hour",
+        "incrementMinute": "Increase minute",
+        "decrementMinute": "Decrease minute",
+        "togglePeriod": "Toggle AM or PM"
+      },
+      "productsDialog": {
+        "title": "Selected Products",
+        "selectedCount": "8 products selected"
+      },
+      "paymentDialog": {
+        "title": "Payment Confirmation",
+        "reviewTitle": "Review payment details",
+        "currentBalance": "Current Balance",
+        "amountToHold": "Amount to Hold",
+        "remainingBalance": "Remaining Balance",
+        "currentBalanceValue": "230 SAR",
+        "amountToHoldValue": "175 SAR",
+        "remainingBalanceValue": "55 SAR",
+        "howItWorks": {
+          "title": "How Payment Works",
+          "hold": "Hold: Amount is held in your wallet (not transferred yet)",
+          "completed": "If Completed: Money is transferred to shelfspot",
+          "refund": "If Not Completed: Full refund to your wallet"
+        },
+        "status": {
+          "title": "Status: Pending",
+          "description": "The request will appear in your dashboard with “Pending” status until a merchandiser accepts it."
+        }
+      },
+      "cost": {
+        "title": "Total Estimated Cost",
+        "description": "For all 2 service",
+        "amount": "$ 230"
+      },
+      "success": {
+        "title": "Request submitted",
+        "description": "Your request has been created and is now pending assignment.",
+        "action": "Done"
+      },
+      "mock": {
+        "executionDate": "12 May 2026",
+        "executionTime": "9:00 PM",
+        "estimatedTime": "30Min",
+        "price": "30$",
+        "servicePrice": "$ 75$",
+        "location": {
+          "storeName": "Panda Hypermarket",
+          "streetAddress": "King Fahd Road, Al Malqa District, Al Malqa, Riyadh",
+          "state": "Riyadh",
+          "region": "Central Region",
+          "city": "Riyadh",
+          "district": "Al Malqa"
+        },
+        "products": {
+          "dietDrinksOne": {
+            "name": "Diet Drinks",
+            "sku": "123SKU",
+            "skuLong": "SKU: CC-ZS-330-CAN",
+            "expiryDate": "12 May 2026"
+          },
+          "dietDrinksTwo": {
+            "name": "Diet Drinks",
+            "sku": "123SKU",
+            "skuLong": "SKU: CC-ZS-330-CAN",
+            "expiryDate": "12 May 2026"
+          },
+          "dietDrinksThree": {
+            "name": "Diet Drinks",
+            "sku": "123SKU",
+            "skuLong": "SKU: CC-ZS-330-CAN",
+            "expiryDate": "12 May 2026"
+          },
+          "dietDrinksFour": {
+            "name": "Diet Drinks",
+            "sku": "123SKU",
+            "skuLong": "SKU: CC-ZS-330-CAN",
+            "expiryDate": "12 May 2026"
+          },
+          "dietDrinksFive": {
+            "name": "Diet Drinks",
+            "sku": "123SKU",
+            "skuLong": "SKU: CC-ZS-330-CAN",
+            "expiryDate": "12 May 2026"
+          },
+          "dietDrinksSix": {
+            "name": "Diet Drinks",
+            "sku": "123SKU",
+            "skuLong": "SKU: CC-ZS-330-CAN",
+            "expiryDate": "12 May 2026"
+          }
+        }
+      },
+      "validation": {
+        "executionDateRequired": "Execution date is required.",
+        "executionTimeRequired": "Execution time is required.",
+        "storeRequired": "Store location is required.",
+        "streetAddressRequired": "Street address is required.",
+        "stateRequired": "State is required.",
+        "regionRequired": "Region is required.",
+        "cityRequired": "City is required.",
+        "serviceTypeRequired": "Service type is required.",
+        "brandRequired": "Brand is required.",
+        "subBrandRequired": "Sub-brand is required.",
+        "categoryRequired": "Category is required.",
+        "subCategoryRequired": "Sub-category is required.",
+        "productsRequired": "Select at least one product.",
+        "instructionsRequired": "Execution instructions are required."
+      }
+    },
     "requestsPage": {
       "title": "Requests",
       "subtitle": "Welcome back, here's what's happening today",

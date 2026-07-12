@@ -275,6 +275,302 @@
         }
       }
     },
+    "createRequest": {
+      "title": "إنشاء طلب جديد",
+      "subtitle": "جدولة وإدارة طلب التنفيذ داخل المتجر مع متابعة لحظية وتحقق موثق من الإكمال.",
+      "stepperLabel": "خطوات إنشاء الطلب",
+      "steps": {
+        "location": "الموقع والتاريخ والوقت",
+        "service": "تفاصيل الخدمة والمنتجات",
+        "guidelines": "الإرشادات وقواعد التنفيذ"
+      },
+      "actions": {
+        "previous": "السابق",
+        "next": "التالي",
+        "cancel": "إلغاء الطلب",
+        "submit": "إرسال الطلب",
+        "closeDialog": "إغلاق النافذة",
+        "toggleSection": "فتح أو إغلاق القسم",
+        "addService": "إضافة خدمة",
+        "deleteService": "حذف الخدمة",
+        "removeServiceDraft": "إزالة مسودة الخدمة",
+        "save": "حفظ",
+        "confirm": "تأكيد",
+        "cancelPayment": "إلغاء"
+      },
+      "location": {
+        "title": "الموقع والتاريخ والوقت",
+        "description": "اختر مكان وموعد تنفيذ المهمة.",
+        "executionDateTime": "تاريخ ووقت التنفيذ",
+        "scheduleHint": "يمكن جدولة طلبات التنفيذ لليوم الحالي أو اليوم التالي فقط.",
+        "storeLocation": "موقع المتجر",
+        "storeDescription": "اختر المتجر الذي سيتم تنفيذ المهمة فيه.",
+        "addLocation": "إضافة موقع",
+        "addLocationDescription": "أضف المتجر يدويًا أو اختره من الخريطة."
+      },
+      "services": {
+        "title": "الخدمات",
+        "description": "إضافة خدمة جديدة",
+        "serviceLabel": "الخدمة رقم {index}",
+        "selectServiceTitle": "اختر نوع الخدمة والسعر",
+        "selectServiceDescription": "اختر نوع خدمة التنفيذ الميداني المطلوبة."
+      },
+      "guidelines": {
+        "title": "الإرشادات والمستندات",
+        "description": "ارفع الملفات والتعليمات الداعمة للمنفذ الميداني.",
+        "documents": "مستندات البلانوجرام",
+        "uploadTitle": "رفع الملفات",
+        "uploadDescription": "اسحب الملفات هنا أو تصفح الملفات",
+        "supportedFormats": "الصيغ المدعومة: PNG، JPG، PDF"
+      },
+      "fields": {
+        "executionDate": {
+          "label": "اختيار تاريخ التنفيذ",
+          "placeholder": "اختر تاريخ التنفيذ"
+        },
+        "executionTime": {
+          "label": "اختيار وقت التنفيذ",
+          "placeholder": "--:-- --"
+        },
+        "serviceType": {
+          "label": "اختر نوع الخدمة",
+          "placeholder": "اختر الخدمة"
+        },
+        "estimatedTime": {
+          "label": "الوقت المتوقع"
+        },
+        "price": {
+          "label": "السعر"
+        },
+        "brand": {
+          "label": "العلامة التجارية",
+          "placeholder": "اختر العلامة التجارية"
+        },
+        "subBrand": {
+          "label": "العلامة الفرعية",
+          "placeholder": "اختر العلامة الفرعية"
+        },
+        "category": {
+          "label": "الفئة",
+          "placeholder": "اختر الفئة"
+        },
+        "subCategory": {
+          "label": "الفئة الفرعية",
+          "placeholder": "اختر الفئة الفرعية"
+        },
+        "instructions": {
+          "label": "تعليمات التنفيذ",
+          "description": "أضف ملاحظات تنفيذ واضحة أو متطلبات ترتيب أو تفاصيل توقيت أو تعليمات خاصة.",
+          "placeholder": "اكتب تعليمات تفصيلية للمنفذ الميداني..."
+        }
+      },
+      "options": {
+        "services": {
+          "freshnessReport": "تقرير النضارة “يجب إرجاعه من الخلف”",
+          "onShelfAvailability": "توفر المنتج على الرف"
+        },
+        "brands": {
+          "pepsico": "بيبسيكو"
+        },
+        "subBrands": {
+          "pepsiDiet": "بيبسي دايت"
+        },
+        "categories": {
+          "softDrinks": "مشروبات غازية"
+        },
+        "subCategories": {
+          "softDrinks": "مشروبات غازية"
+        }
+      },
+      "productTable": {
+        "searchPlaceholder": "البحث باسم المنتج أو رمز SKU",
+        "showProducts": "54 منتج",
+        "emptyDetail": "-",
+        "columns": {
+          "products": "المنتجات",
+          "sku": "رمز SKU",
+          "details": "تفاصيل المنتج",
+          "expiryDate": "تاريخ الانتهاء"
+        }
+      },
+      "pagination": {
+        "previous": "السابق",
+        "next": "التالي",
+        "ellipsis": "..."
+      },
+      "locationDialog": {
+        "title": "اختيار موقع المتجر",
+        "mapLabel": "خريطة تفاعلية لموقع المتجر",
+        "mapHint": "اضغط على الخريطة لتحديد دبوس الموقع",
+        "tabs": {
+          "map": "على الخريطة",
+          "manual": "يدوي"
+        },
+        "fields": {
+          "storeName": {
+            "label": "اسم المتجر",
+            "placeholder": "مثال: كارفور"
+          },
+          "streetAddress": {
+            "label": "عنوان الشارع",
+            "placeholder": "مثال: 123 شارع رئيسي"
+          },
+          "state": {
+            "label": "المحافظة",
+            "placeholder": "مثال: محافظة القاهرة"
+          },
+          "region": {
+            "label": "المنطقة",
+            "placeholder": "مثال: المنطقة المركزية"
+          },
+          "city": {
+            "label": "المدينة",
+            "placeholder": "مثال: القاهرة الجديدة"
+          },
+          "district": {
+            "label": "الحي",
+            "placeholder": "مثال: الحي الخامس"
+          }
+        }
+      },
+      "dateDialog": {
+        "title": "اختيار تاريخ التنفيذ",
+        "month": "مايو 2026",
+        "previousMonth": "الشهر السابق",
+        "nextMonth": "الشهر التالي",
+        "previousYear": "السنة السابقة",
+        "nextYear": "السنة التالية",
+        "changeMonthYear": "تغيير الشهر والسنة",
+        "days": {
+          "mon": "الإثنين",
+          "tue": "الثلاثاء",
+          "wed": "الأربعاء",
+          "thu": "الخميس",
+          "fri": "الجمعة",
+          "sat": "السبت",
+          "sun": "الأحد"
+        }
+      },
+      "timeDialog": {
+        "title": "اختيار وقت التنفيذ",
+        "icon": "◷",
+        "openPicker": "فتح منتقي الوقت",
+        "clockFace": "واجهة ساعة تناظرية لاختيار الوقت",
+        "hour": "الساعة",
+        "minute": "الدقيقة",
+        "period": "الفترة",
+        "am": "صباحًا",
+        "pm": "مساءً",
+        "incrementHour": "زيادة الساعة",
+        "decrementHour": "تقليل الساعة",
+        "incrementMinute": "زيادة الدقيقة",
+        "decrementMinute": "تقليل الدقيقة",
+        "togglePeriod": "التبديل بين صباحًا ومساءً"
+      },
+      "productsDialog": {
+        "title": "المنتجات المحددة",
+        "selectedCount": "تم تحديد 8 منتجات"
+      },
+      "paymentDialog": {
+        "title": "تأكيد الدفع",
+        "reviewTitle": "راجع تفاصيل الدفع",
+        "currentBalance": "الرصيد الحالي",
+        "amountToHold": "المبلغ المحجوز",
+        "remainingBalance": "الرصيد المتبقي",
+        "currentBalanceValue": "230 ر.س",
+        "amountToHoldValue": "175 ر.س",
+        "remainingBalanceValue": "55 ر.س",
+        "howItWorks": {
+          "title": "كيف يعمل الدفع",
+          "hold": "الحجز: يتم حجز المبلغ في محفظتك دون تحويله الآن",
+          "completed": "عند الإكمال: يتم تحويل المبلغ إلى شيلف سبوت",
+          "refund": "عند عدم الإكمال: يتم رد المبلغ بالكامل إلى محفظتك"
+        },
+        "status": {
+          "title": "الحالة: قيد الانتظار",
+          "description": "سيظهر الطلب في لوحة التحكم بحالة “قيد الانتظار” حتى يقبله المنفذ الميداني."
+        }
+      },
+      "cost": {
+        "title": "إجمالي التكلفة المتوقعة",
+        "description": "لجميع الخدمتين",
+        "amount": "230 $"
+      },
+      "success": {
+        "title": "تم إرسال الطلب",
+        "description": "تم إنشاء طلبك وهو الآن بانتظار التعيين.",
+        "action": "تم"
+      },
+      "mock": {
+        "executionDate": "12 مايو 2026",
+        "executionTime": "9:00 مساءً",
+        "estimatedTime": "30 دقيقة",
+        "price": "30$",
+        "servicePrice": "$ 75$",
+        "location": {
+          "storeName": "بنده هايبرماركت",
+          "streetAddress": "طريق الملك فهد، حي الملقا، الملقا، الرياض",
+          "state": "الرياض",
+          "region": "المنطقة الوسطى",
+          "city": "الرياض",
+          "district": "الملقا"
+        },
+        "products": {
+          "dietDrinksOne": {
+            "name": "مشروبات دايت",
+            "sku": "123SKU",
+            "skuLong": "SKU: CC-ZS-330-CAN",
+            "expiryDate": "12 مايو 2026"
+          },
+          "dietDrinksTwo": {
+            "name": "مشروبات دايت",
+            "sku": "123SKU",
+            "skuLong": "SKU: CC-ZS-330-CAN",
+            "expiryDate": "12 مايو 2026"
+          },
+          "dietDrinksThree": {
+            "name": "مشروبات دايت",
+            "sku": "123SKU",
+            "skuLong": "SKU: CC-ZS-330-CAN",
+            "expiryDate": "12 مايو 2026"
+          },
+          "dietDrinksFour": {
+            "name": "مشروبات دايت",
+            "sku": "123SKU",
+            "skuLong": "SKU: CC-ZS-330-CAN",
+            "expiryDate": "12 مايو 2026"
+          },
+          "dietDrinksFive": {
+            "name": "مشروبات دايت",
+            "sku": "123SKU",
+            "skuLong": "SKU: CC-ZS-330-CAN",
+            "expiryDate": "12 مايو 2026"
+          },
+          "dietDrinksSix": {
+            "name": "مشروبات دايت",
+            "sku": "123SKU",
+            "skuLong": "SKU: CC-ZS-330-CAN",
+            "expiryDate": "12 مايو 2026"
+          }
+        }
+      },
+      "validation": {
+        "executionDateRequired": "تاريخ التنفيذ مطلوب.",
+        "executionTimeRequired": "وقت التنفيذ مطلوب.",
+        "storeRequired": "موقع المتجر مطلوب.",
+        "streetAddressRequired": "عنوان الشارع مطلوب.",
+        "stateRequired": "المحافظة مطلوبة.",
+        "regionRequired": "المنطقة مطلوبة.",
+        "cityRequired": "المدينة مطلوبة.",
+        "serviceTypeRequired": "نوع الخدمة مطلوب.",
+        "brandRequired": "العلامة التجارية مطلوبة.",
+        "subBrandRequired": "العلامة الفرعية مطلوبة.",
+        "categoryRequired": "الفئة مطلوبة.",
+        "subCategoryRequired": "الفئة الفرعية مطلوبة.",
+        "productsRequired": "اختر منتجًا واحدًا على الأقل.",
+        "instructionsRequired": "تعليمات التنفيذ مطلوبة."
+      }
+    },
     "requestsPage": {
       "title": "الطلبات",
       "subtitle": "مرحبًا بعودتك، إليك ما يحدث اليوم",

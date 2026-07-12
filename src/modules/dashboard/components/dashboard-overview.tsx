@@ -1,6 +1,7 @@
-import { Plus } from "lucide-react";
 import { useTranslations } from "next-intl";
 
+import { ROUTES } from "@/config/routes";
+import { Link } from "@/i18n/navigation";
 import { ChartCard } from "@/modules/dashboard/components/chart-card";
 import {
   dashboardStats,
@@ -13,7 +14,10 @@ import { DashboardStatCard } from "@/modules/dashboard/components/dashboard-stat
 import { RequestsChart } from "@/modules/dashboard/components/requests-chart";
 import { RequestsTable } from "@/modules/dashboard/components/requests-table";
 import { StatusDonutChart } from "@/modules/dashboard/components/status-donut-chart";
-import { SidebarChevronIcon } from "@/shared/components/dashboard/dashboard-icons";
+import {
+  AddIcon,
+  SidebarChevronIcon,
+} from "@/shared/components/dashboard/dashboard-icons";
 import { Button } from "@/shared/ui/button";
 
 export function DashboardOverview() {
@@ -45,11 +49,13 @@ export function DashboardOverview() {
             <SidebarChevronIcon className="size-4" />
           </Button>
           <Button
-            type="button"
+            asChild
             className="h-10 rounded-lg px-5 text-sm font-semibold text-white hover:text-white"
           >
-            <Plus className="size-4" />
-            {t("overview.actions.createRequest")}
+            <Link href={ROUTES.dashboardCreateRequest}>
+              <AddIcon className="size-4" />
+              {t("overview.actions.createRequest")}
+            </Link>
           </Button>
         </div>
       </div>
