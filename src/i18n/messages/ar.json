@@ -589,6 +589,95 @@
         "noServices": "لا توجد خدمات متاحة."
       }
     },
+    "paymentPage": {
+      "title": "الدفع",
+      "subtitle": "إدارة طرق الدفع والمعاملات",
+      "summary": {
+        "accountBalance": "رصيد الحساب",
+        "accountId": "رقم الحساب",
+        "monthlySpending": "الإنفاق الشهري",
+        "lastMonth": "آخر شهر",
+        "pending": "معلق",
+        "paymentMethods": "طريقة دفع",
+        "toggleBalance": "إظهار أو إخفاء الرصيد",
+        "copyAccountId": "نسخ رقم الحساب"
+      },
+      "actions": {
+        "addFund": "إضافة رصيد"
+      },
+      "search": {
+        "label": "البحث في المدفوعات",
+        "placeholder": "البحث عن الشركات"
+      },
+      "filters": {
+        "date": "التاريخ",
+        "allStatuses": "جميع الحالات"
+      },
+      "table": {
+        "columns": {
+          "types": "النوع",
+          "totalSpending": "إجمالي الإنفاق",
+          "date": "التاريخ",
+          "status": "الحالة",
+          "action": "الإجراء"
+        },
+        "actions": {
+          "delete": "حذف المعاملة"
+        }
+      },
+      "status": {
+        "refunded": "مسترد",
+        "completed": "مكتمل",
+        "failed": "فشل"
+      },
+      "types": {
+        "couponRedemption": "استرداد قسيمة",
+        "manualWalletRecharge": "شحن محفظة يدوي",
+        "taskPayment": "دفع مهمة",
+        "taskRefund": "استرداد مهمة"
+      },
+      "pagination": {
+        "previous": "السابق",
+        "next": "التالي"
+      },
+      "addFundDialog": {
+        "title": "اختر طريقة الدفع",
+        "close": "إغلاق النافذة",
+        "methods": {
+          "promoCode": {
+            "label": "رمز الخصم",
+            "description": "تطبيق رمز خصم أو بطاقة هدية"
+          },
+          "creditCard": {
+            "label": "بطاقة ائتمان / مدين",
+            "description": "فيزا، ماستركارد"
+          },
+          "bankTransfer": {
+            "label": "تحويل بنكي",
+            "description": "تحويل بنكي مباشر"
+          }
+        },
+        "promoCodeSection": {
+          "title": "أدخل رمز الخصم",
+          "placeholder": "رمز الخصم",
+          "validate": "تحقق",
+          "availableTitle": "رموز الخصم المتاحة",
+          "apply": "تطبيق رمز الخصم"
+        },
+        "promoCodes": {
+          "welcomeBonus": {
+            "title": "مكافأة ترحيبية 50$",
+            "description": "للمستخدمين الجدد فقط",
+            "code": "Welcome $50"
+          },
+          "credit100": {
+            "title": "رصيد 100$",
+            "description": "عرض لفترة محدودة",
+            "code": "PROMO 100"
+          }
+        }
+      }
+    },
     "requestsPage": {
       "title": "الطلبات",
       "subtitle": "مرحبًا بعودتك، إليك ما يحدث اليوم",

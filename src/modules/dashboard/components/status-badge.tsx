@@ -8,7 +8,8 @@ export type StatusBadgeStatus =
   | "failed"
   | "rejected"
   | "canceled"
-  | "pending";
+  | "pending"
+  | "refunded";
 
 const statusClasses = {
   inProgress: "bg-[var(--info-50)] text-[var(--info-700)]",
@@ -18,7 +19,8 @@ const statusClasses = {
   failed: "bg-[var(--error-50)] text-[var(--error-700)]",
   rejected: "bg-[var(--error-50)] text-[var(--error-700)]",
   canceled: "bg-[var(--error-50)] text-[var(--error-700)]",
-  pending: "bg-[var(--warning-50)] text-[var(--warning-700)]",
+  pending:  "bg-[var(--warning-50)] text-[var(--warning-700)]",
+  refunded: "bg-[var(--warning-50)] text-[var(--warning-700)]",
 } satisfies Record<StatusBadgeStatus, string>;
 
 interface StatusBadgeProps {

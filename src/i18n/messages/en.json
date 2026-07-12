@@ -589,6 +589,95 @@
         "noServices": "No services available."
       }
     },
+    "paymentPage": {
+      "title": "Payment",
+      "subtitle": "Manage your payment methods and transactions",
+      "summary": {
+        "accountBalance": "Account Balance",
+        "accountId": "Account ID",
+        "monthlySpending": "Monthly Spending",
+        "lastMonth": "Last 1 month",
+        "pending": "Pending",
+        "paymentMethods": "Payment Method",
+        "toggleBalance": "Toggle balance visibility",
+        "copyAccountId": "Copy account ID"
+      },
+      "actions": {
+        "addFund": "Add Fund"
+      },
+      "search": {
+        "label": "Search payments",
+        "placeholder": "Search for companies"
+      },
+      "filters": {
+        "date": "Date",
+        "allStatuses": "All Statuses"
+      },
+      "table": {
+        "columns": {
+          "types": "Types",
+          "totalSpending": "Total Spending",
+          "date": "Date",
+          "status": "Status",
+          "action": "Action"
+        },
+        "actions": {
+          "delete": "Delete transaction"
+        }
+      },
+      "status": {
+        "refunded": "Refunded",
+        "completed": "Completed",
+        "failed": "Failed"
+      },
+      "types": {
+        "couponRedemption": "Coupon redemption",
+        "manualWalletRecharge": "Manual wallet recharge",
+        "taskPayment": "Task payment",
+        "taskRefund": "Task refund"
+      },
+      "pagination": {
+        "previous": "Previous",
+        "next": "Next"
+      },
+      "addFundDialog": {
+        "title": "Select Payment Method",
+        "close": "Close dialog",
+        "methods": {
+          "promoCode": {
+            "label": "Promo Code",
+            "description": "Apply discount or gift code"
+          },
+          "creditCard": {
+            "label": "Credit / Debit Card",
+            "description": "Visa , Mastercard"
+          },
+          "bankTransfer": {
+            "label": "Bank Transfer",
+            "description": "Direct bank transfer"
+          }
+        },
+        "promoCodeSection": {
+          "title": "Enter Promo Code",
+          "placeholder": "Promo Code",
+          "validate": "Validate",
+          "availableTitle": "Available Promo Code",
+          "apply": "Apply Promo Code"
+        },
+        "promoCodes": {
+          "welcomeBonus": {
+            "title": "$50 welcome Bonus",
+            "description": "For new users only",
+            "code": "Welcome $50"
+          },
+          "credit100": {
+            "title": "$100 Credit",
+            "description": "Limited time offer",
+            "code": "PROMO 100"
+          }
+        }
+      }
+    },
     "requestsPage": {
       "title": "Requests",
       "subtitle": "Welcome back, here's what's happening today",

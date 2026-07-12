@@ -33,7 +33,7 @@ export function DashboardSidebar({
     "home";
 
   return (
-    <aside className="hidden min-h-dvh w-60 shrink-0 border-e border-border bg-card lg:flex lg:flex-col">
+    <aside className="hidden h-full w-60 shrink-0 border-e border-border bg-card lg:flex lg:flex-col">
       <div className="flex h-24 items-center px-12">
         <Link href={ROUTES.home} aria-label={logoLabel} className="block">
           <Logo className="h-auto w-36" width={292} height={108} />
