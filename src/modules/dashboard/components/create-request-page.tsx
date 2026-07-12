@@ -6,13 +6,20 @@ import { useTranslations } from "next-intl";
 import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 
+import { useCreateTaskMutation } from "@/modules/dashboard/hooks/use-create-task-mutation";
+import { useServicesQuery } from "@/modules/dashboard/hooks/use-services-query";
+import { useProductsQuery } from "@/modules/dashboard/hooks/use-products-query";
+import type { CompanyService } from "@/modules/dashboard/types/service";
+import type { CompanyProduct, GetProductsParams } from "@/modules/dashboard/types/product";
+import { normalizeApiError } from "@/shared/lib/api/errors";
+import { useDialogPresence } from "@/shared/hooks/use-dialog-presence";
+
 import { createRequestSteps } from "@/modules/dashboard/components/create-request.seed";
 import { CreateRequestLayout } from "@/modules/dashboard/components/create-request-layout";
 import { CreateRequestStepper } from "@/modules/dashboard/components/create-request-stepper";
 import { FlowDialog } from "@/modules/dashboard/components/flow-dialog";
 import { AnalogClockFace } from "@/shared/components/analog-clock-face";
 import {
-  AddIcon,
   CalendarIcon,
   CheckCircleIcon,
   ClockIcon,
@@ -49,72 +56,53 @@ type DialogName =
   | "success"
   | null;
 
-const productRows = [
-  "dietDrinksOne",
-  "dietDrinksTwo",
-  "dietDrinksThree",
-  "dietDrinksFour",
-  "dietDrinksFive",
-  "dietDrinksSix",
-] as const;
-
-const selectOptions = {
-  serviceType: ["freshnessReport", "onShelfAvailability"],
-  brand: ["pepsico"],
-  subBrand: ["pepsiDiet"],
-  category: ["softDrinks"],
-  subCategory: ["softDrinks"],
-} as const;
-
-const saudiArabiaMapEmbedUrl =
-  "https://www.openstreetmap.org/export/embed.html?bbox=34.4%2C16.3%2C55.7%2C32.2&layer=mapnik&marker=24.7136%2C46.6753";
-
-function createRequestSchema(t: DashboardTranslate) {
+function createRequestSchema(t: DashboardTranslate, selectedService: CompanyService | null) {
   return z.object({
-    executionDate: z
-      .string()
-      .min(1, t("createRequest.validation.executionDateRequired")),
-    executionTime: z
-      .string()
-      .min(1, t("createRequest.validation.executionTimeRequired")),
+    executionDate: z.string().min(1, t("createRequest.validation.executionDateRequired")),
+    executionDateIso: z.string().min(1, t("createRequest.validation.executionDateRequired")),
+    executionTime: z.string().min(1, t("createRequest.validation.executionTimeRequired")),
     storeName: z.string().min(1, t("createRequest.validation.storeRequired")),
-    streetAddress: z
-      .string()
-      .min(1, t("createRequest.validation.streetAddressRequired")),
+    streetAddress: z.string().min(1, t("createRequest.validation.streetAddressRequired")),
     state: z.string().min(1, t("createRequest.validation.stateRequired")),
     region: z.string().min(1, t("createRequest.validation.regionRequired")),
     city: z.string().min(1, t("createRequest.validation.cityRequired")),
     district: z.string().optional(),
-    serviceType: z
-      .string()
-      .min(1, t("createRequest.validation.serviceTypeRequired")),
-    brand: z.string().min(1, t("createRequest.validation.brandRequired")),
-    subBrand: z
-      .string()
-      .min(1, t("createRequest.validation.subBrandRequired")),
-    category: z
-      .string()
-      .min(1, t("createRequest.validation.categoryRequired")),
-    subCategory: z
-      .string()
-      .min(1, t("createRequest.validation.subCategoryRequired")),
-    productIds: z
-      .array(z.string())
-      .min(1, t("createRequest.validation.productsRequired")),
-    instructions: z
-      .string()
-      .min(10, t("createRequest.validation.instructionsRequired")),
+    latitude: z.number({ error: t("createRequest.validation.storeRequired") }).min(-90).max(90),
+    longitude: z.number({ error: t("createRequest.validation.storeRequired") }).min(-180).max(180),
+    serviceKey: z.string().min(1, t("createRequest.validation.serviceTypeRequired")),
+    price: z
+      .number({ error: t("createRequest.validation.priceRequired") })
+      .min(
+        selectedService?.minimum_price ?? 0,
+        t("createRequest.validation.priceRequired"),
+      ),
+    executionTimeMins: z
+      .number({ error: t("createRequest.validation.executionTimeMinsRequired") })
+      .int()
+      .min(
+        selectedService?.minimum_execution_time ?? 0,
+        t("createRequest.validation.executionTimeMinsRequired"),
+      ),
+    brand: z.string().optional(),
+    subBrand: z.string().optional(),
+    category: z.string().optional(),
+    subCategory: z.string().optional(),
+    search: z.string().optional(),
+    productIds: z.array(z.number()).min(1, t("createRequest.validation.productsRequired")),
+    instructions: z.string().min(10, t("createRequest.validation.instructionsRequired")),
+    documentFiles: z.array(z.instanceof(File)).optional(),
   });
 }
 
 type CreateRequestFormValues = z.infer<ReturnType<typeof createRequestSchema>>;
 type LocationFormValues = Pick<
   CreateRequestFormValues,
-  "storeName" | "streetAddress" | "state" | "region" | "city" | "district"
+  "storeName" | "streetAddress" | "state" | "region" | "city" | "district" | "latitude" | "longitude"
 >;
 
 const defaultValues: CreateRequestFormValues = {
   executionDate: "",
+  executionDateIso: "",
   executionTime: "",
   storeName: "",
   streetAddress: "",
@@ -122,27 +110,44 @@ const defaultValues: CreateRequestFormValues = {
   region: "",
   city: "",
   district: "",
-  serviceType: "",
+  latitude: 0,
+  longitude: 0,
+  serviceKey: "",
+  price: 0,
+  executionTimeMins: 0,
   brand: "",
   subBrand: "",
   category: "",
   subCategory: "",
+  search: "",
   productIds: [],
   instructions: "",
+  documentFiles: [],
 };
 
 export function CreateRequestPage() {
   const t = useTranslations("dashboard");
-  const schema = useMemo(() => createRequestSchema(t), [t]);
   const [openDialog, setOpenDialog] = useState<DialogName>(null);
   const [activeStepIndex, setActiveStepIndex] = useState(0);
   const [isLocationExpanded, setIsLocationExpanded] = useState(true);
   const [isServiceExpanded, setIsServiceExpanded] = useState(true);
   const [isGuidelinesExpanded, setIsGuidelinesExpanded] = useState(true);
-  const [serviceCount, setServiceCount] = useState(1);
+  const [productPage, setProductPage] = useState(1);
+
   const locationSectionRef = useRef<HTMLElement | null>(null);
   const serviceSectionRef = useRef<HTMLElement | null>(null);
   const guidelinesSectionRef = useRef<HTMLElement | null>(null);
+
+  const createTaskMutation = useCreateTaskMutation();
+  const servicesQuery = useServicesQuery();
+
+  const [selectedService, setSelectedService] = useState<CompanyService | null>(null);
+
+  const schema = useMemo(
+    () => createRequestSchema(t, selectedService),
+    [t, selectedService],
+  );
+
   const form = useForm<CreateRequestFormValues>({
     resolver: zodResolver(schema),
     defaultValues,
@@ -151,103 +156,132 @@ export function CreateRequestPage() {
 
   const values = useWatch({ control: form.control });
   const hasLocation = Boolean(values.storeName);
-  const selectedProducts = values.productIds ?? [];
-  const sectionRefs = useMemo(
-    () => [
-      locationSectionRef,
-      serviceSectionRef,
-      guidelinesSectionRef,
-    ],
-    [],
-  );
+  const selectedProductIds = (values.productIds ?? []) as number[];
+
+  const productFilters: GetProductsParams = useMemo(() => ({
+    brand: values.brand || undefined,
+    sub_brand: values.subBrand || undefined,
+    category: values.category || undefined,
+    sub_category: values.subCategory || undefined,
+    search: values.search || undefined,
+    page: productPage,
+  }), [values.brand, values.subBrand, values.category, values.subCategory, values.search, productPage]);
+
+  const productsQuery = useProductsQuery(productFilters);
+  const products = productsQuery.data?.data ?? [];
+  const productsMeta = productsQuery.data?.meta;
+
+  const sectionRefs = useMemo(() => [locationSectionRef, serviceSectionRef, guidelinesSectionRef], []);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-        const visibleEntry = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((firstEntry, secondEntry) => {
-            return secondEntry.intersectionRatio - firstEntry.intersectionRatio;
-          })[0];
-
-        if (!visibleEntry) {
-          return;
-        }
-
-        const nextIndex = Number(
-          (visibleEntry.target as HTMLElement).dataset.stepIndex,
-        );
-
-        if (!Number.isNaN(nextIndex)) {
-          setActiveStepIndex(nextIndex);
-        }
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (!visible) return;
+        const idx = Number((visible.target as HTMLElement).dataset.stepIndex);
+        if (!Number.isNaN(idx)) setActiveStepIndex(idx);
       },
-      {
-        root: null,
-        rootMargin: "-20% 0px -55% 0px",
-        threshold: [0.2, 0.4, 0.6, 0.8],
-      },
+      { root: null, rootMargin: "-20% 0px -55% 0px", threshold: [0.2, 0.4, 0.6, 0.8] },
     );
-
-    sectionRefs.forEach((sectionRef) => {
-      if (sectionRef.current) {
-        observer.observe(sectionRef.current);
-      }
-    });
-
-    return () => {
-      observer.disconnect();
-    };
+    sectionRefs.forEach((r) => { if (r.current) observer.observe(r.current); });
+    return () => observer.disconnect();
   }, [sectionRefs]);
 
+  // Reset product page when filters change is handled in each filter onChange via setProductPage(1)
   function resetRequest() {
     form.reset(defaultValues);
+    createTaskMutation.reset();
+    setSelectedService(null);
+    setProductPage(1);
     setIsLocationExpanded(true);
     setIsServiceExpanded(true);
     setIsGuidelinesExpanded(true);
-    setServiceCount(1);
   }
 
   function goToStep(index: number) {
     setActiveStepIndex(index);
-
-    if (index === 0) {
-      setIsLocationExpanded(true);
-    }
-
-    if (index === 1) {
-      setIsServiceExpanded(true);
-    }
-
-    if (index === 2) {
-      setIsGuidelinesExpanded(true);
-    }
-
+    if (index === 0) setIsLocationExpanded(true);
+    if (index === 1) setIsServiceExpanded(true);
+    if (index === 2) setIsGuidelinesExpanded(true);
     window.requestAnimationFrame(() => {
-      sectionRefs[index]?.current?.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
+      sectionRefs[index]?.current?.scrollIntoView({ behavior: "smooth", block: "start" });
     });
   }
 
   function saveLocation(locationValues: LocationFormValues) {
-    Object.entries(locationValues).forEach(([fieldName, fieldValue]) => {
-      form.setValue(fieldName as keyof LocationFormValues, fieldValue, {
-        shouldDirty: true,
-        shouldValidate: true,
-      });
+    Object.entries(locationValues).forEach(([key, val]) => {
+      form.setValue(
+        key as keyof LocationFormValues,
+        val as string & number,
+        { shouldDirty: true, shouldValidate: true },
+      );
     });
     setOpenDialog(null);
+  }
+
+  function handleServiceChange(serviceKey: string) {
+    const svc = servicesQuery.data?.data.find((s) => s.key === serviceKey) ?? null;
+    setSelectedService(svc);
+    form.setValue("serviceKey", serviceKey, { shouldDirty: true, shouldValidate: true });
+    // clear products when service changes
+    form.setValue("productIds", [], { shouldDirty: true });
+  }
+
+  function toggleProduct(productId: number) {
+    const current = form.getValues("productIds") as number[];
+    const next = current.includes(productId)
+      ? current.filter((id) => id !== productId)
+      : [...current, productId];
+    form.setValue("productIds", next, { shouldDirty: true, shouldValidate: true });
   }
 
   function submitForPayment() {
     setOpenDialog("payment");
   }
 
-  function confirmPayment() {
-    setOpenDialog("success");
+  async function confirmPayment() {
+    const vals = form.getValues();
+    try {
+      await createTaskMutation.mutateAsync({
+        companySlug: "",
+        payload: {
+          date: vals.executionDateIso,
+          location: {
+            latitude: vals.latitude,
+            longitude: vals.longitude,
+            location_name: vals.storeName || null,
+            address: vals.streetAddress || null,
+          },
+          notes: vals.instructions || null,
+          services: [
+            {
+              service_key: vals.serviceKey,
+              price: vals.price,
+              execution_time_minutes: vals.executionTimeMins,
+              execution_instructions: vals.instructions || null,
+              products: (vals.productIds as number[]).map((id) => ({ product_id: id })),
+            },
+          ],
+          documentFiles: vals.documentFiles ?? [],
+        },
+      });
+      setOpenDialog("success");
+    } catch (error) {
+      const apiError = normalizeApiError(error);
+      const message =
+        apiError.status === 401 ? t("createRequest.errors.unauthorized")
+        : apiError.status === 403 ? t("createRequest.errors.forbidden")
+        : apiError.status === 422 ? apiError.message
+        : t("createRequest.errors.generic");
+      form.setError("root", { message });
+      setOpenDialog(null);
+    }
   }
+
+  const services = servicesQuery.data?.data ?? [];
+  const totalPrice = selectedService ? values.price ?? 0 : 0;
 
   return (
     <>
@@ -284,6 +318,13 @@ export function CreateRequestPage() {
       >
         <Form {...form}>
           <form className="space-y-5" noValidate>
+            {form.formState.errors.root?.message ? (
+              <p className="rounded-xl border border-destructive/20 bg-destructive/10 px-4 py-3 text-sm font-medium text-destructive">
+                {form.formState.errors.root.message}
+              </p>
+            ) : null}
+
+            {/* ── Location section ── */}
             <SectionCard
               sectionRef={locationSectionRef}
               stepIndex={0}
@@ -291,7 +332,7 @@ export function CreateRequestPage() {
               description={t("createRequest.location.description")}
               isExpanded={isLocationExpanded}
               toggleLabel={t("createRequest.actions.toggleSection")}
-              onToggle={() => setIsLocationExpanded((current) => !current)}
+              onToggle={() => setIsLocationExpanded((c) => !c)}
             >
               <div className="space-y-5">
                 <div>
@@ -303,19 +344,13 @@ export function CreateRequestPage() {
                     <PickerField
                       label={t("createRequest.fields.executionDate.label")}
                       icon="calendar"
-                      value={
-                        values.executionDate ||
-                        t("createRequest.fields.executionDate.placeholder")
-                      }
+                      value={values.executionDate || t("createRequest.fields.executionDate.placeholder")}
                       onClick={() => setOpenDialog("date")}
                     />
                     <PickerField
                       label={t("createRequest.fields.executionTime.label")}
                       icon="clock"
-                      value={
-                        values.executionTime ||
-                        t("createRequest.fields.executionTime.placeholder")
-                      }
+                      value={values.executionTime || t("createRequest.fields.executionTime.placeholder")}
                       onClick={() => setOpenDialog("time")}
                     />
                   </div>
@@ -327,7 +362,6 @@ export function CreateRequestPage() {
                     {t("createRequest.location.scheduleHint")}
                   </p>
                 </div>
-
                 <div>
                   <h3 className="text-lg font-bold text-foreground">
                     {t("createRequest.location.storeLocation")}
@@ -345,14 +379,10 @@ export function CreateRequestPage() {
                     </span>
                     <span>
                       <span className="block text-sm font-bold text-foreground">
-                        {hasLocation
-                          ? values.storeName
-                          : t("createRequest.location.addLocation")}
+                        {hasLocation ? values.storeName : t("createRequest.location.addLocation")}
                       </span>
                       <span className="mt-1 block text-xs font-medium leading-5 text-muted-foreground">
-                        {hasLocation
-                          ? values.streetAddress
-                          : t("createRequest.location.addLocationDescription")}
+                        {hasLocation ? values.streetAddress : t("createRequest.location.addLocationDescription")}
                       </span>
                     </span>
                   </button>
@@ -361,68 +391,258 @@ export function CreateRequestPage() {
               </div>
             </SectionCard>
 
+            {/* ── Services section ── */}
             <SectionCard
               sectionRef={serviceSectionRef}
               stepIndex={1}
               title={t("createRequest.services.title")}
               description={t("createRequest.services.description")}
-              action={
-                <Button
-                  type="button"
-                  className="h-11 rounded-lg px-5 text-sm font-semibold text-primary-foreground hover:text-primary-foreground"
-                  onClick={() => setServiceCount(2)}
-                >
-                  <AddIcon className="size-5" />
-                  {t("createRequest.actions.addService")}
-                </Button>
-              }
               isExpanded={isServiceExpanded}
               toggleLabel={t("createRequest.actions.toggleSection")}
-              onToggle={() => setIsServiceExpanded((current) => !current)}
+              onToggle={() => setIsServiceExpanded((c) => !c)}
             >
               <div className="space-y-4">
-                <ServiceSummary
-                  label={t("createRequest.services.serviceLabel", {
-                    index: 1,
-                  })}
-                  price={t("createRequest.mock.servicePrice")}
-                  isExpanded={isServiceExpanded}
-                  toggleLabel={t("createRequest.actions.toggleSection")}
-                  deleteLabel={t("createRequest.actions.deleteService")}
-                  onToggle={() =>
-                    setIsServiceExpanded((current) => !current)
-                  }
-                />
+                {/* Service header bar */}
+                <div className="flex items-center justify-between gap-4 rounded-xl border border-border bg-muted/20 px-5 py-4">
+                  <div className="flex items-center gap-3">
+                    <h3 className="text-lg font-bold text-foreground">
+                      {t("createRequest.services.serviceLabel", { index: 1 })}
+                    </h3>
+                    {selectedService ? (
+                      <span className="rounded-full bg-emerald-500/10 px-2.5 py-1 text-xs font-bold text-emerald-500">
+                        {values.price} SAR
+                      </span>
+                    ) : null}
+                  </div>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon-lg"
+                    className="rounded-full bg-primary/10 text-primary hover:bg-primary/15 hover:text-primary"
+                    aria-label={t("createRequest.actions.toggleSection")}
+                    onClick={() => setIsServiceExpanded((c) => !c)}
+                  >
+                    <PaginationNextIcon className={cn("size-4 rotate-90 transition", isServiceExpanded && "-rotate-90")} />
+                  </Button>
+                </div>
+
+                {/* Service form body */}
                 {isServiceExpanded ? (
-                  <ServiceForm
-                    t={t}
-                    selectedProducts={selectedProducts}
-                    onShowProducts={() => setOpenDialog("products")}
-                  />
+                  <div className="rounded-xl border border-border bg-card p-5">
+                    <div className="flex items-start justify-between gap-4">
+                      <div>
+                        <h3 className="text-lg font-bold text-foreground">
+                          {t("createRequest.services.selectServiceTitle")}
+                        </h3>
+                        <p className="mt-1 text-sm font-medium text-muted-foreground">
+                          {t("createRequest.services.selectServiceDescription")}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="mt-4 space-y-4">
+                      {/* Service type select — driven by real API */}
+                      <FormField
+                        control={form.control}
+                        name="serviceKey"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-base font-bold">
+                              {t("createRequest.fields.serviceType.label")}
+                            </FormLabel>
+                            <FormControl>
+                              <select
+                                value={field.value}
+                                disabled={servicesQuery.isPending}
+                                className="h-12 w-full rounded-lg border border-input bg-background px-4 text-sm font-medium text-foreground outline-none transition focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 disabled:opacity-50"
+                                onChange={(e) => handleServiceChange(e.target.value)}
+                              >
+                                <option value="">
+                                  {servicesQuery.isPending
+                                    ? t("createRequest.states.loading")
+                                    : t("createRequest.fields.serviceType.placeholder")}
+                                </option>
+                                {services.map((svc) => (
+                                  <option key={svc.key} value={svc.key}>
+                                    {svc.name}
+                                  </option>
+                                ))}
+                              </select>
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      {/* Price and execution time — editable, validated against service minimum */}
+                      <div className="grid gap-4 md:grid-cols-2">
+                        <FormField
+                          control={form.control}
+                          name="price"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="text-base font-bold">
+                                {t("createRequest.fields.price.label")}
+                                {selectedService ? (
+                                  <span className="ms-2 text-xs font-normal text-muted-foreground">
+                                    (min: {selectedService.minimum_price})
+                                  </span>
+                                ) : null}
+                              </FormLabel>
+                              <FormControl>
+                                <Input
+                                  type="number"
+                                  min={selectedService?.minimum_price ?? 0}
+                                  placeholder={t("createRequest.fields.price.placeholder")}
+                                  className="h-12 rounded-lg"
+                                  disabled={!selectedService}
+                                  {...field}
+                                  value={field.value ?? ""}
+                                  onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name="executionTimeMins"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="text-base font-bold">
+                                {t("createRequest.fields.estimatedTime.label")}
+                                {selectedService ? (
+                                  <span className="ms-2 text-xs font-normal text-muted-foreground">
+                                    (min: {selectedService.minimum_execution_time})
+                                  </span>
+                                ) : null}
+                              </FormLabel>
+                              <FormControl>
+                                <Input
+                                  type="number"
+                                  min={selectedService?.minimum_execution_time ?? 0}
+                                  placeholder="60"
+                                  className="h-12 rounded-lg"
+                                  disabled={!selectedService}
+                                  {...field}
+                                  value={field.value ?? ""}
+                                  onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+
+                      {/* Product filters */}
+                      <div className="grid gap-4 lg:grid-cols-4">
+                        <FormField
+                          control={form.control}
+                          name="brand"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="text-base font-bold">
+                                {t("createRequest.fields.brand.label")}
+                              </FormLabel>
+                              <FormControl>
+                                <Input
+                                  className="h-12 rounded-lg"
+                                  placeholder={t("createRequest.fields.brand.placeholder")}
+                                  {...field}
+                                />
+                              </FormControl>
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name="subBrand"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="text-base font-bold">
+                                {t("createRequest.fields.subBrand.label")}
+                              </FormLabel>
+                              <FormControl>
+                                <Input
+                                  className="h-12 rounded-lg"
+                                  placeholder={t("createRequest.fields.subBrand.placeholder")}
+                                  {...field}
+                                />
+                              </FormControl>
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name="category"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="text-base font-bold">
+                                {t("createRequest.fields.category.label")}
+                              </FormLabel>
+                              <FormControl>
+                                <Input
+                                  className="h-12 rounded-lg"
+                                  placeholder={t("createRequest.fields.category.placeholder")}
+                                  {...field}
+                                />
+                              </FormControl>
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name="subCategory"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="text-base font-bold">
+                                {t("createRequest.fields.subCategory.label")}
+                              </FormLabel>
+                              <FormControl>
+                                <Input
+                                  className="h-12 rounded-lg"
+                                  placeholder={t("createRequest.fields.subCategory.placeholder")}
+                                  {...field}
+                                />
+                              </FormControl>
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+
+                      {/* Product table */}
+                      <ProductTable
+                        t={t}
+                        products={products}
+                        isLoading={productsQuery.isPending}
+                        isError={productsQuery.isError}
+                        selectedProductIds={selectedProductIds}
+                        meta={productsMeta}
+                        page={productPage}
+                        onPageChange={setProductPage}
+                        onToggle={toggleProduct}
+                        onShowProducts={() => setOpenDialog("products")}
+                        control={form.control}
+                      />
+                      <HiddenFieldMessage name="productIds" />
+                    </div>
+                  </div>
                 ) : null}
-                {serviceCount > 1 ? (
-                  <ServiceSummary
-                    label={t("createRequest.services.serviceLabel", {
-                      index: 2,
-                    })}
-                    price={t("createRequest.mock.servicePrice")}
-                    isExpanded={false}
-                    toggleLabel={t("createRequest.actions.toggleSection")}
-                    deleteLabel={t("createRequest.actions.deleteService")}
-                    onToggle={() => undefined}
-                    onDelete={() => setServiceCount(1)}
-                  />
-                ) : null}
-                {serviceCount > 1 ? (
+
+                {/* Total cost */}
+                {selectedService ? (
                   <TotalCostCard
                     label={t("createRequest.cost.title")}
-                    description={t("createRequest.cost.description")}
-                    amount={t("createRequest.cost.amount")}
+                    description={selectedService.name}
+                    amount={`${totalPrice} SAR`}
                   />
                 ) : null}
               </div>
             </SectionCard>
 
+            {/* ── Guidelines section ── */}
             <SectionCard
               sectionRef={guidelinesSectionRef}
               stepIndex={2}
@@ -430,24 +650,23 @@ export function CreateRequestPage() {
               description={t("createRequest.guidelines.description")}
               isExpanded={isGuidelinesExpanded}
               toggleLabel={t("createRequest.actions.toggleSection")}
-              onToggle={() => setIsGuidelinesExpanded((current) => !current)}
+              onToggle={() => setIsGuidelinesExpanded((c) => !c)}
             >
-              <GuidelinesFields t={t} />
+              <GuidelinesFields t={t} control={form.control} />
             </SectionCard>
           </form>
         </Form>
       </CreateRequestLayout>
 
+      {/* ── Dialogs ── */}
       {openDialog === "date" ? (
         <DateDialog
           t={t}
           isOpen
           onClose={() => setOpenDialog(null)}
-          onSelect={(date) => {
-            form.setValue("executionDate", date, {
-              shouldDirty: true,
-              shouldValidate: true,
-            });
+          onSelect={(display, iso) => {
+            form.setValue("executionDate", display, { shouldDirty: true, shouldValidate: true });
+            form.setValue("executionDateIso", iso, { shouldDirty: true, shouldValidate: true });
             setOpenDialog(null);
           }}
         />
@@ -459,10 +678,7 @@ export function CreateRequestPage() {
           onClose={() => setOpenDialog(null)}
           value={values.executionTime ?? ""}
           onSelect={(time) => {
-            form.setValue("executionTime", time, {
-              shouldDirty: true,
-              shouldValidate: true,
-            });
+            form.setValue("executionTime", time, { shouldDirty: true, shouldValidate: true });
           }}
         />
       ) : null}
@@ -477,6 +693,8 @@ export function CreateRequestPage() {
             region: values.region ?? "",
             city: values.city ?? "",
             district: values.district ?? "",
+            latitude: values.latitude ?? 0,
+            longitude: values.longitude ?? 0,
           }}
           onClose={() => setOpenDialog(null)}
           onSave={saveLocation}
@@ -485,22 +703,17 @@ export function CreateRequestPage() {
       <ProductsDialog
         t={t}
         isOpen={openDialog === "products"}
-        selectedProducts={selectedProducts}
+        products={products}
+        isLoading={productsQuery.isPending}
+        selectedProductIds={selectedProductIds}
         onClose={() => setOpenDialog(null)}
         onConfirm={() => setOpenDialog(null)}
-        onToggle={(productId) => {
-          const nextProducts = selectedProducts.includes(productId)
-            ? selectedProducts.filter((id) => id !== productId)
-            : [...selectedProducts, productId];
-          form.setValue("productIds", nextProducts, {
-            shouldDirty: true,
-            shouldValidate: true,
-          });
-        }}
+        onToggle={toggleProduct}
       />
       <PaymentDialog
         t={t}
         isOpen={openDialog === "payment"}
+        isPending={createTaskMutation.isPending}
         onClose={() => setOpenDialog(null)}
         onConfirm={confirmPayment}
       />
@@ -532,16 +745,11 @@ export function CreateRequestPage() {
   );
 }
 
+// ─── Sub-components ──────────────────────────────────────────────────────────
+
 function SectionCard({
-  sectionRef,
-  stepIndex,
-  title,
-  description,
-  action,
-  isExpanded,
-  toggleLabel,
-  children,
-  onToggle,
+  sectionRef, stepIndex, title, description, action,
+  isExpanded, toggleLabel, children, onToggle,
 }: {
   sectionRef?: React.Ref<HTMLElement>;
   stepIndex?: number;
@@ -562,9 +770,7 @@ function SectionCard({
       <div className="flex items-start justify-between gap-4">
         <div>
           <h2 className="text-xl font-bold text-foreground">{title}</h2>
-          <p className="mt-2 text-sm font-medium text-muted-foreground">
-            {description}
-          </p>
+          <p className="mt-2 text-sm font-medium text-muted-foreground">{description}</p>
         </div>
         <div className="flex items-center gap-3">
           {action}
@@ -576,12 +782,7 @@ function SectionCard({
             aria-label={toggleLabel}
             onClick={onToggle}
           >
-            <PaginationNextIcon
-              className={cn(
-                "size-4 rotate-90 transition",
-                isExpanded && "-rotate-90",
-              )}
-            />
+            <PaginationNextIcon className={cn("size-4 rotate-90 transition", isExpanded && "-rotate-90")} />
           </Button>
         </div>
       </div>
@@ -590,233 +791,41 @@ function SectionCard({
   );
 }
 
-function ServiceSummary({
-  label,
-  price,
-  isExpanded,
-  toggleLabel,
-  deleteLabel,
-  onToggle,
-  onDelete,
-}: {
-  label: string;
-  price: string;
-  isExpanded: boolean;
-  toggleLabel: string;
-  deleteLabel: string;
-  onToggle: () => void;
-  onDelete?: () => void;
-}) {
-  return (
-    <div className="flex items-center justify-between gap-4 rounded-xl border border-border bg-muted/20 px-5 py-4">
-      <div className="flex items-center gap-3">
-        <h3 className="text-lg font-bold text-foreground">{label}</h3>
-        <span className="rounded-full bg-emerald-500/10 px-2.5 py-1 text-xs font-bold text-emerald-500">
-          {price}
-        </span>
-      </div>
-      <div className="flex items-center gap-3">
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon-lg"
-          className="rounded-full bg-primary/10 text-primary hover:bg-primary/15 hover:text-primary"
-          aria-label={toggleLabel}
-          onClick={onToggle}
-        >
-          <PaginationNextIcon
-            className={cn(
-              "size-4 rotate-90 transition",
-              isExpanded && "-rotate-90",
-            )}
-          />
-        </Button>
-        {onDelete ? (
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon-lg"
-            className="rounded-full bg-destructive/10 text-destructive hover:bg-destructive/15 hover:text-destructive"
-            aria-label={deleteLabel}
-            onClick={onDelete}
-          >
-            <TrashIcon className="size-4" />
-          </Button>
-        ) : null}
-      </div>
-    </div>
-  );
-}
-
-function ServiceForm({
-  t,
-  selectedProducts,
-  onShowProducts,
-}: {
-  t: DashboardTranslate;
-  selectedProducts: string[];
-  onShowProducts: () => void;
-}) {
-  return (
-    <div className="rounded-xl border border-border bg-card p-5">
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <h3 className="text-lg font-bold text-foreground">
-            {t("createRequest.services.selectServiceTitle")}
-          </h3>
-          <p className="mt-1 text-sm font-medium text-muted-foreground">
-            {t("createRequest.services.selectServiceDescription")}
-          </p>
-        </div>
-        <div className="flex items-center gap-3">
-          <Button
-            type="button"
-            size="icon-lg"
-            variant="ghost"
-            className="rounded-full bg-primary/10 text-primary"
-            aria-label={t("createRequest.actions.toggleSection")}
-          >
-            <PaginationNextIcon className="-rotate-90" />
-          </Button>
-          <Button
-            type="button"
-            size="icon-lg"
-            variant="ghost"
-            className="rounded-full text-muted-foreground"
-            aria-label={t("createRequest.actions.removeServiceDraft")}
-          >
-            <CloseIcon className="size-4" />
-          </Button>
-        </div>
-      </div>
-
-      <div className="mt-4 space-y-4">
-        <SelectField
-          name="serviceType"
-          label={t("createRequest.fields.serviceType.label")}
-          placeholder={t("createRequest.fields.serviceType.placeholder")}
-          options={selectOptions.serviceType.map((value) => ({
-            value,
-            label: t(`createRequest.options.services.${value}`),
-          }))}
-        />
-
-        <div className="grid gap-4 md:grid-cols-2">
-          <ReadOnlyField
-            label={t("createRequest.fields.estimatedTime.label")}
-            value={t("createRequest.mock.estimatedTime")}
-          />
-          <ReadOnlyField
-            label={t("createRequest.fields.price.label")}
-            value={t("createRequest.mock.price")}
-          />
-        </div>
-
-        <div className="grid gap-4 lg:grid-cols-4">
-          <SelectField
-            name="brand"
-            label={t("createRequest.fields.brand.label")}
-            placeholder={t("createRequest.fields.brand.placeholder")}
-            required
-            options={selectOptions.brand.map((value) => ({
-              value,
-              label: t(`createRequest.options.brands.${value}`),
-            }))}
-          />
-          <SelectField
-            name="subBrand"
-            label={t("createRequest.fields.subBrand.label")}
-            placeholder={t("createRequest.fields.subBrand.placeholder")}
-            required
-            options={selectOptions.subBrand.map((value) => ({
-              value,
-              label: t(`createRequest.options.subBrands.${value}`),
-            }))}
-          />
-          <SelectField
-            name="category"
-            label={t("createRequest.fields.category.label")}
-            placeholder={t("createRequest.fields.category.placeholder")}
-            required
-            options={selectOptions.category.map((value) => ({
-              value,
-              label: t(`createRequest.options.categories.${value}`),
-            }))}
-          />
-          <SelectField
-            name="subCategory"
-            label={t("createRequest.fields.subCategory.label")}
-            placeholder={t("createRequest.fields.subCategory.placeholder")}
-            required
-            options={selectOptions.subCategory.map((value) => ({
-              value,
-              label: t(`createRequest.options.subCategories.${value}`),
-            }))}
-          />
-        </div>
-
-        <ProductTable
-          t={t}
-          selectedProducts={selectedProducts}
-          onShowProducts={onShowProducts}
-        />
-        <HiddenFieldMessage name="productIds" />
-
-        <div className="flex items-center justify-between gap-4">
-          <Button
-            type="button"
-            variant="outline"
-            className="h-10 rounded-lg border-border bg-card px-4 text-sm font-semibold shadow-none"
-          >
-            <PaginationPreviousIcon className="size-4 rtl:rotate-180" />
-            {t("createRequest.pagination.previous")}
-          </Button>
-          <div className="flex items-center gap-2">
-            {["1", "2", "3", "ellipsis", "8", "9", "10"].map((page) => (
-              <Button
-                key={page}
-                type="button"
-                variant="ghost"
-                size="icon-sm"
-                className={cn(
-                  "rounded-lg text-sm text-muted-foreground",
-                  page === "1" && "bg-primary/15 text-primary",
-                )}
-              >
-                {page === "ellipsis" ? t("createRequest.pagination.ellipsis") : page}
-              </Button>
-            ))}
-          </div>
-          <Button
-            type="button"
-            variant="outline"
-            className="h-10 rounded-lg border-border bg-card px-4 text-sm font-semibold shadow-none"
-          >
-            {t("createRequest.pagination.next")}
-            <PaginationNextIcon className="size-4 rtl:rotate-180" />
-          </Button>
-        </div>
-
-      </div>
-    </div>
-  );
-}
-
 function ProductTable({
-  t,
-  selectedProducts,
-  onShowProducts,
+  t, products, isLoading, isError, selectedProductIds, meta, page,
+  onPageChange, onToggle, onShowProducts, control,
 }: {
   t: DashboardTranslate;
-  selectedProducts: string[];
+  products: CompanyProduct[];
+  isLoading: boolean;
+  isError: boolean;
+  selectedProductIds: number[];
+  meta?: { current_page: number; last_page: number; per_page: number; total: number };
+  page: number;
+  onPageChange: (p: number) => void;
+  onToggle: (id: number) => void;
   onShowProducts: () => void;
+  control: import("react-hook-form").Control<CreateRequestFormValues>;
 }) {
+  const totalPages = meta?.last_page ?? 1;
+
   return (
     <div>
       <div className="flex flex-col gap-3 md:flex-row md:items-center">
-        <Input
-          className="h-11 flex-1 rounded-lg px-4 text-sm"
-          placeholder={t("createRequest.productTable.searchPlaceholder")}
+        <FormField
+          control={control}
+          name="search"
+          render={({ field }) => (
+            <FormItem className="flex-1">
+              <FormControl>
+                <Input
+                  className="h-11 rounded-lg px-4 text-sm"
+                  placeholder={t("createRequest.productTable.searchPlaceholder")}
+                  {...field}
+                />
+              </FormControl>
+            </FormItem>
+          )}
         />
         <button
           type="button"
@@ -824,6 +833,7 @@ function ProductTable({
           onClick={onShowProducts}
         >
           {t("createRequest.productTable.showProducts")}
+          {meta ? ` (${meta.total})` : ""}
         </button>
       </div>
       <div className="mt-3 overflow-hidden rounded-lg border border-border">
@@ -831,7 +841,7 @@ function ProductTable({
           <thead className="bg-muted/20 text-xs font-bold text-muted-foreground">
             <tr>
               <th className="w-16 border-b border-e border-border px-4 py-3 text-start">
-                <input type="checkbox" className="size-4 accent-primary" />
+                <input type="checkbox" className="size-4 accent-primary" readOnly />
               </th>
               <th className="border-b border-e border-border px-4 py-3 text-start">
                 {t("createRequest.productTable.columns.products")}
@@ -848,70 +858,172 @@ function ProductTable({
             </tr>
           </thead>
           <tbody>
-            {productRows.map((productId) => {
-              const isSelected = selectedProducts.includes(productId);
-
-              return (
-                <tr key={productId} className="border-b border-border last:border-b-0">
-                  <td className="px-4 py-4">
-                    <input
-                      type="checkbox"
-                      className="size-4 accent-primary"
-                      checked={isSelected}
-                      readOnly
-                    />
-                  </td>
-                  <td className="px-4 py-4">
-                    <div className="flex items-center gap-3">
-                      <ProductThumbnail />
-                      <span className="font-bold text-foreground">
-                        {t(`createRequest.mock.products.${productId}.name`)}
-                      </span>
-                    </div>
-                  </td>
-                  <td className="px-4 py-4 text-center font-medium text-muted-foreground">
-                    {t(`createRequest.mock.products.${productId}.sku`)}
-                  </td>
-                  <td className="px-4 py-4 text-center font-medium text-muted-foreground">
-                    {t("createRequest.productTable.emptyDetail")}
-                  </td>
-                  <td className="px-4 py-4">
-                    <div className="flex items-center justify-center gap-3 font-medium text-muted-foreground">
-                      {t(`createRequest.mock.products.${productId}.expiryDate`)}
-                      <EditIcon className="size-4 text-primary" />
-                    </div>
-                  </td>
-                </tr>
-              );
-            })}
+            {isLoading ? (
+              <tr>
+                <td colSpan={5} className="px-4 py-8 text-center text-sm text-muted-foreground">
+                  {t("createRequest.states.loading")}
+                </td>
+              </tr>
+            ) : isError ? (
+              <tr>
+                <td colSpan={5} className="px-4 py-8 text-center text-sm text-destructive">
+                  {t("createRequest.errors.loadProducts")}
+                </td>
+              </tr>
+            ) : products.length === 0 ? (
+              <tr>
+                <td colSpan={5} className="px-4 py-8 text-center text-sm text-muted-foreground">
+                  {t("createRequest.productTable.noProducts")}
+                </td>
+              </tr>
+            ) : (
+              products.map((product) => {
+                const isSelected = selectedProductIds.includes(product.id);
+                return (
+                  <tr key={product.id} className="border-b border-border last:border-b-0">
+                    <td className="border-e border-border px-4 py-4">
+                      <input
+                        type="checkbox"
+                        className="size-4 accent-primary"
+                        checked={isSelected}
+                        onChange={() => onToggle(product.id)}
+                      />
+                    </td>
+                    <td className="border-e border-border px-4 py-4">
+                      <div className="flex items-center gap-3">
+                        <ProductThumbnail imageUrl={product.image_url} />
+                        <span className="font-bold text-foreground">{product.name}</span>
+                      </div>
+                    </td>
+                    <td className="border-e border-border px-4 py-4 text-center font-medium text-muted-foreground">
+                      {product.sku}
+                    </td>
+                    <td className="border-e border-border px-4 py-4 text-center font-medium text-muted-foreground">
+                      {t("createRequest.productTable.emptyDetail")}
+                    </td>
+                    <td className="px-4 py-4">
+                      <div className="flex items-center justify-center gap-3 font-medium text-muted-foreground">
+                        {product.expiry_date ?? "—"}
+                        <EditIcon className="size-4 text-primary" />
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })
+            )}
           </tbody>
         </table>
       </div>
+      {totalPages > 1 ? (
+        <div className="mt-3 flex items-center justify-between gap-4">
+          <Button
+            type="button"
+            variant="outline"
+            className="h-10 rounded-lg border-border bg-card px-4 text-sm font-semibold shadow-none"
+            disabled={page <= 1}
+            onClick={() => onPageChange(page - 1)}
+          >
+            <PaginationPreviousIcon className="size-4 rtl:rotate-180" />
+            {t("createRequest.pagination.previous")}
+          </Button>
+          <span className="text-sm text-muted-foreground">
+            {page} / {totalPages}
+          </span>
+          <Button
+            type="button"
+            variant="outline"
+            className="h-10 rounded-lg border-border bg-card px-4 text-sm font-semibold shadow-none"
+            disabled={page >= totalPages}
+            onClick={() => onPageChange(page + 1)}
+          >
+            {t("createRequest.pagination.next")}
+            <PaginationNextIcon className="size-4 rtl:rotate-180" />
+          </Button>
+        </div>
+      ) : null}
     </div>
   );
 }
 
-function GuidelinesFields({ t }: { t: DashboardTranslate }) {
+function GuidelinesFields({
+  t, control,
+}: {
+  t: DashboardTranslate;
+  control: import("react-hook-form").Control<CreateRequestFormValues>;
+}) {
   return (
     <div className="space-y-4">
-      <div>
-        <h4 className="text-base font-bold text-foreground">
-          {t("createRequest.guidelines.documents")}
-        </h4>
-        <div className="mt-3 rounded-lg border border-dashed border-border px-5 py-8 text-center">
-          <UploadIcon className="mx-auto size-5 text-muted-foreground" />
-          <p className="mt-2 text-base font-bold text-muted-foreground">
-            {t("createRequest.guidelines.uploadTitle")}
-          </p>
-          <p className="mt-1 text-xs font-medium text-muted-foreground">
-            {t("createRequest.guidelines.uploadDescription")}
-          </p>
-          <p className="mt-2 text-xs font-semibold text-primary">
-            {t("createRequest.guidelines.supportedFormats")}
-          </p>
-        </div>
-      </div>
       <FormField
+        control={control}
+        name="documentFiles"
+        render={({ field }) => {
+          const files: File[] = field.value ?? [];
+
+          function handleFilesSelected(e: React.ChangeEvent<HTMLInputElement>) {
+            const selected = Array.from(e.target.files ?? []);
+            const merged = [
+              ...files,
+              ...selected.filter((inc) => !files.some((ex) => ex.name === inc.name)),
+            ];
+            field.onChange(merged);
+            e.target.value = "";
+          }
+
+          function removeFile(name: string) {
+            field.onChange(files.filter((f) => f.name !== name));
+          }
+
+          return (
+            <FormItem>
+              <FormLabel className="text-base font-bold">
+                {t("createRequest.guidelines.documents")}
+              </FormLabel>
+              <FormControl>
+                <label className="mt-3 flex cursor-pointer flex-col items-center rounded-lg border border-dashed border-border px-5 py-8 text-center transition hover:border-primary/50 hover:bg-primary/5">
+                  <UploadIcon className="mx-auto size-5 text-muted-foreground" />
+                  <p className="mt-2 text-base font-bold text-muted-foreground">
+                    {t("createRequest.guidelines.uploadTitle")}
+                  </p>
+                  <p className="mt-1 text-xs font-medium text-muted-foreground">
+                    {t("createRequest.guidelines.uploadDescription")}
+                  </p>
+                  <p className="mt-2 text-xs font-semibold text-primary">
+                    {t("createRequest.guidelines.supportedFormats")}
+                  </p>
+                  <input
+                    type="file"
+                    className="sr-only"
+                    multiple
+                    accept="image/png,image/jpeg,application/pdf"
+                    onChange={handleFilesSelected}
+                  />
+                </label>
+              </FormControl>
+              {files.length > 0 ? (
+                <ul className="mt-3 space-y-2">
+                  {files.map((file) => (
+                    <li key={file.name} className="flex items-center justify-between gap-3 rounded-lg border border-border bg-muted/20 px-4 py-2.5">
+                      <span className="truncate text-sm font-medium text-foreground">{file.name}</span>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon-sm"
+                        className="shrink-0 rounded-full text-muted-foreground hover:text-destructive"
+                        aria-label={t("createRequest.guidelines.removeFile")}
+                        onClick={() => removeFile(file.name)}
+                      >
+                        <CloseIcon className="size-4" />
+                      </Button>
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
+            </FormItem>
+          );
+        }}
+      />
+      <FormField
+        control={control}
         name="instructions"
         render={({ field }) => (
           <FormItem>
@@ -936,12 +1048,133 @@ function GuidelinesFields({ t }: { t: DashboardTranslate }) {
   );
 }
 
+function ProductsDialog({
+  t, isOpen, products, isLoading, selectedProductIds, onClose, onConfirm, onToggle,
+}: {
+  t: DashboardTranslate;
+  isOpen: boolean;
+  products: CompanyProduct[];
+  isLoading: boolean;
+  selectedProductIds: number[];
+  onClose: () => void;
+  onConfirm: () => void;
+  onToggle: (id: number) => void;
+}) {
+  return (
+    <FlowDialog
+      title={t("createRequest.productsDialog.title")}
+      closeLabel={t("createRequest.actions.closeDialog")}
+      isOpen={isOpen}
+      onClose={onClose}
+      footer={
+        <Button type="button" className="h-12 w-full rounded-lg text-sm font-semibold" onClick={onConfirm}>
+          {t("createRequest.actions.confirm")}
+        </Button>
+      }
+    >
+      <p className="text-sm font-semibold text-muted-foreground">
+        {t("createRequest.productsDialog.selectedCount", { count: selectedProductIds.length })}
+      </p>
+      <div className="mt-4 space-y-3">
+        {isLoading ? (
+          <p className="py-4 text-center text-sm text-muted-foreground">
+            {t("createRequest.states.loading")}
+          </p>
+        ) : products.length === 0 ? (
+          <p className="py-4 text-center text-sm text-muted-foreground">
+            {t("createRequest.states.noProducts")}
+          </p>
+        ) : (
+          products.map((product) => (
+            <div
+              key={product.id}
+              className="flex items-center justify-between gap-3 rounded-lg border border-border p-3"
+            >
+              <div className="flex items-center gap-3">
+                <input
+                  type="checkbox"
+                  className="size-4 accent-primary"
+                  checked={selectedProductIds.includes(product.id)}
+                  onChange={() => onToggle(product.id)}
+                />
+                <ProductThumbnail imageUrl={product.image_url} />
+                <div>
+                  <p className="text-sm font-bold text-foreground">{product.name}</p>
+                  <p className="text-xs font-medium text-muted-foreground">SKU: {product.sku}</p>
+                </div>
+              </div>
+              <TrashIcon className="size-4 text-muted-foreground" />
+            </div>
+          ))
+        )}
+      </div>
+    </FlowDialog>
+  );
+}
+
+function PaymentDialog({
+  t, isOpen, isPending, onClose, onConfirm,
+}: {
+  t: DashboardTranslate;
+  isOpen: boolean;
+  isPending: boolean;
+  onClose: () => void;
+  onConfirm: () => void;
+}) {
+  return (
+    <FlowDialog
+      title={t("createRequest.paymentDialog.title")}
+      closeLabel={t("createRequest.actions.closeDialog")}
+      isOpen={isOpen}
+      onClose={onClose}
+      footer={
+        <div className="grid gap-3 sm:grid-cols-2">
+          <Button
+            type="button"
+            variant="outline"
+            className="h-12 rounded-lg border-border bg-card text-sm font-semibold shadow-none"
+            disabled={isPending}
+            onClick={onClose}
+          >
+            {t("createRequest.actions.cancelPayment")}
+          </Button>
+          <Button
+            type="button"
+            className="h-12 rounded-lg text-sm font-semibold"
+            disabled={isPending}
+            onClick={onConfirm}
+          >
+            {isPending ? t("createRequest.actions.submitting") : t("createRequest.actions.confirm")}
+          </Button>
+        </div>
+      }
+    >
+      <p className="text-sm font-bold text-foreground">{t("createRequest.paymentDialog.reviewTitle")}</p>
+      <div className="mt-4 overflow-hidden rounded-lg border border-border bg-muted/20">
+        <PaymentRow label={t("createRequest.paymentDialog.currentBalance")} value={t("createRequest.paymentDialog.currentBalanceValue")} />
+        <PaymentRow label={t("createRequest.paymentDialog.amountToHold")} value={t("createRequest.paymentDialog.amountToHoldValue")} tone="danger" />
+        <PaymentRow label={t("createRequest.paymentDialog.remainingBalance")} value={t("createRequest.paymentDialog.remainingBalanceValue")} tone="success" />
+      </div>
+      <div className="mt-4 rounded-lg border border-emerald-500 bg-emerald-500/10 p-4">
+        <h3 className="font-bold text-foreground">{t("createRequest.paymentDialog.howItWorks.title")}</h3>
+        <ol className="mt-2 list-decimal space-y-1 ps-5 text-xs font-medium leading-5 text-muted-foreground">
+          <li>{t("createRequest.paymentDialog.howItWorks.hold")}</li>
+          <li>{t("createRequest.paymentDialog.howItWorks.completed")}</li>
+          <li>{t("createRequest.paymentDialog.howItWorks.refund")}</li>
+        </ol>
+      </div>
+      <div className="mt-4 rounded-lg border border-orange-400 bg-orange-400/10 p-4">
+        <h3 className="font-bold text-foreground">{t("createRequest.paymentDialog.status.title")}</h3>
+        <p className="mt-1 text-xs font-medium leading-5 text-muted-foreground">
+          {t("createRequest.paymentDialog.status.description")}
+        </p>
+      </div>
+    </FlowDialog>
+  );
+}
+
 function LocationDialog({
-  t,
-  isOpen,
-  initialValues,
-  onClose,
-  onSave,
+  t, isOpen, initialValues, onClose, onSave,
 }: {
   t: DashboardTranslate;
   isOpen: boolean;
@@ -950,42 +1183,30 @@ function LocationDialog({
   onSave: (values: LocationFormValues) => void;
 }) {
   const [activeTab, setActiveTab] = useState<"map" | "manual">("manual");
-  const [locationValues, setLocationValues] =
-    useState<LocationFormValues>(initialValues);
+  const [locationValues, setLocationValues] = useState<LocationFormValues>(initialValues);
   const [pinPosition, setPinPosition] = useState({ x: 50, y: 50 });
 
-  function updateLocationField(
-    fieldName: keyof LocationFormValues,
-    fieldValue: string,
-  ) {
-    setLocationValues((currentValues) => ({
-      ...currentValues,
-      [fieldName]: fieldValue,
-    }));
+  function updateField(key: keyof LocationFormValues, val: string) {
+    setLocationValues((prev) => ({ ...prev, [key]: val }));
   }
 
-  function selectMapPoint(event: React.MouseEvent<HTMLButtonElement>) {
-    const rect = event.currentTarget.getBoundingClientRect();
-    const x = ((event.clientX - rect.left) / rect.width) * 100;
-    const y = ((event.clientY - rect.top) / rect.height) * 100;
-
-    setPinPosition({
-      x: Math.min(92, Math.max(8, x)),
-      y: Math.min(85, Math.max(15, y)),
-    });
-
-    setLocationValues((currentValues) => ({
-      ...currentValues,
-      storeName:
-        currentValues.storeName || t("createRequest.mock.location.storeName"),
-      streetAddress:
-        currentValues.streetAddress ||
-        t("createRequest.mock.location.streetAddress"),
-      state: currentValues.state || t("createRequest.mock.location.state"),
-      region: currentValues.region || t("createRequest.mock.location.region"),
-      city: currentValues.city || t("createRequest.mock.location.city"),
-      district:
-        currentValues.district || t("createRequest.mock.location.district"),
+  function selectMapPoint(e: React.MouseEvent<HTMLButtonElement>) {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = Math.min(92, Math.max(8, ((e.clientX - rect.left) / rect.width) * 100));
+    const y = Math.min(85, Math.max(15, ((e.clientY - rect.top) / rect.height) * 100));
+    setPinPosition({ x, y });
+    const lat = Math.round((32.2 - (y / 100) * (32.2 - 16.3)) * 10000) / 10000;
+    const lng = Math.round((34.4 + (x / 100) * (55.7 - 34.4)) * 10000) / 10000;
+    setLocationValues((prev) => ({
+      ...prev,
+      latitude: lat,
+      longitude: lng,
+      storeName: prev.storeName || t("createRequest.mock.location.storeName"),
+      streetAddress: prev.streetAddress || t("createRequest.mock.location.streetAddress"),
+      state: prev.state || t("createRequest.mock.location.state"),
+      region: prev.region || t("createRequest.mock.location.region"),
+      city: prev.city || t("createRequest.mock.location.city"),
+      district: prev.district || t("createRequest.mock.location.district"),
     }));
   }
 
@@ -996,40 +1217,22 @@ function LocationDialog({
       isOpen={isOpen}
       onClose={onClose}
       footer={
-        <Button
-          type="button"
-          className="h-12 w-full rounded-lg text-sm font-semibold"
-          onClick={() => onSave(locationValues)}
-        >
+        <Button type="button" className="h-12 w-full rounded-lg text-sm font-semibold" onClick={() => onSave(locationValues)}>
           {t("createRequest.actions.save")}
         </Button>
       }
     >
       <div className="mb-4 flex gap-6 border-b border-border">
-        <button
-          className={cn(
-            "pb-3 text-sm font-semibold",
-            activeTab === "map"
-              ? "border-b-2 border-primary text-primary"
-              : "text-muted-foreground",
-          )}
-          type="button"
-          onClick={() => setActiveTab("map")}
-        >
-          {t("createRequest.locationDialog.tabs.map")}
-        </button>
-        <button
-          className={cn(
-            "pb-3 text-sm font-semibold",
-            activeTab === "manual"
-              ? "border-b-2 border-primary text-primary"
-              : "text-muted-foreground",
-          )}
-          type="button"
-          onClick={() => setActiveTab("manual")}
-        >
-          {t("createRequest.locationDialog.tabs.manual")}
-        </button>
+        {(["map", "manual"] as const).map((tab) => (
+          <button
+            key={tab}
+            type="button"
+            className={cn("pb-3 text-sm font-semibold", activeTab === tab ? "border-b-2 border-primary text-primary" : "text-muted-foreground")}
+            onClick={() => setActiveTab(tab)}
+          >
+            {t(`createRequest.locationDialog.tabs.${tab}`)}
+          </button>
+        ))}
       </div>
       {activeTab === "map" ? (
         <div className="space-y-4">
@@ -1039,13 +1242,10 @@ function LocationDialog({
             aria-label={t("createRequest.locationDialog.mapLabel")}
             onClick={selectMapPoint}
           >
-            <span className="absolute inset-0 bg-[linear-gradient(90deg,transparent_0,transparent_46%,hsl(var(--background))_46%,hsl(var(--background))_54%,transparent_54%),linear-gradient(0deg,transparent_0,transparent_42%,hsl(var(--background))_42%,hsl(var(--background))_50%,transparent_50%),linear-gradient(35deg,transparent_0,transparent_48%,hsl(var(--background))_48%,hsl(var(--background))_52%,transparent_52%)] opacity-80" />
+            <span className="absolute inset-0 bg-[linear-gradient(90deg,transparent_0,transparent_46%,hsl(var(--background))_46%,hsl(var(--background))_54%,transparent_54%),linear-gradient(0deg,transparent_0,transparent_42%,hsl(var(--background))_42%,hsl(var(--background))_50%,transparent_50%)] opacity-80" />
             <span
               className="absolute flex size-12 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg"
-              style={{
-                left: `${pinPosition.x}%`,
-                top: `${pinPosition.y}%`,
-              }}
+              style={{ left: `${pinPosition.x}%`, top: `${pinPosition.y}%` }}
             >
               <MapPinIcon className="size-5" />
             </span>
@@ -1055,65 +1255,19 @@ function LocationDialog({
           </button>
           <DialogInput
             label={t("createRequest.locationDialog.fields.storeName.label")}
-            placeholder={t(
-              "createRequest.locationDialog.fields.storeName.placeholder",
-            )}
+            placeholder={t("createRequest.locationDialog.fields.storeName.placeholder")}
             value={locationValues.storeName}
-            onChange={(value) => updateLocationField("storeName", value)}
+            onChange={(v) => updateField("storeName", v)}
           />
         </div>
       ) : (
         <div className="grid gap-4 md:grid-cols-2">
-          <DialogInput
-            className="md:col-span-2"
-            label={t("createRequest.locationDialog.fields.storeName.label")}
-            placeholder={t(
-              "createRequest.locationDialog.fields.storeName.placeholder",
-            )}
-            value={locationValues.storeName}
-            onChange={(value) => updateLocationField("storeName", value)}
-          />
-          <DialogInput
-            className="md:col-span-2"
-            label={t("createRequest.locationDialog.fields.streetAddress.label")}
-            placeholder={t(
-              "createRequest.locationDialog.fields.streetAddress.placeholder",
-            )}
-            value={locationValues.streetAddress}
-            onChange={(value) => updateLocationField("streetAddress", value)}
-          />
-          <DialogInput
-            label={t("createRequest.locationDialog.fields.state.label")}
-            placeholder={t(
-              "createRequest.locationDialog.fields.state.placeholder",
-            )}
-            value={locationValues.state}
-            onChange={(value) => updateLocationField("state", value)}
-          />
-          <DialogInput
-            label={t("createRequest.locationDialog.fields.region.label")}
-            placeholder={t(
-              "createRequest.locationDialog.fields.region.placeholder",
-            )}
-            value={locationValues.region}
-            onChange={(value) => updateLocationField("region", value)}
-          />
-          <DialogInput
-            label={t("createRequest.locationDialog.fields.city.label")}
-            placeholder={t(
-              "createRequest.locationDialog.fields.city.placeholder",
-            )}
-            value={locationValues.city}
-            onChange={(value) => updateLocationField("city", value)}
-          />
-          <DialogInput
-            label={t("createRequest.locationDialog.fields.district.label")}
-            placeholder={t(
-              "createRequest.locationDialog.fields.district.placeholder",
-            )}
-            value={locationValues.district ?? ""}
-            onChange={(value) => updateLocationField("district", value)}
-          />
+          <DialogInput className="md:col-span-2" label={t("createRequest.locationDialog.fields.storeName.label")} placeholder={t("createRequest.locationDialog.fields.storeName.placeholder")} value={locationValues.storeName} onChange={(v) => updateField("storeName", v)} />
+          <DialogInput className="md:col-span-2" label={t("createRequest.locationDialog.fields.streetAddress.label")} placeholder={t("createRequest.locationDialog.fields.streetAddress.placeholder")} value={locationValues.streetAddress} onChange={(v) => updateField("streetAddress", v)} />
+          <DialogInput label={t("createRequest.locationDialog.fields.state.label")} placeholder={t("createRequest.locationDialog.fields.state.placeholder")} value={locationValues.state} onChange={(v) => updateField("state", v)} />
+          <DialogInput label={t("createRequest.locationDialog.fields.region.label")} placeholder={t("createRequest.locationDialog.fields.region.placeholder")} value={locationValues.region} onChange={(v) => updateField("region", v)} />
+          <DialogInput label={t("createRequest.locationDialog.fields.city.label")} placeholder={t("createRequest.locationDialog.fields.city.placeholder")} value={locationValues.city} onChange={(v) => updateField("city", v)} />
+          <DialogInput label={t("createRequest.locationDialog.fields.district.label")} placeholder={t("createRequest.locationDialog.fields.district.placeholder")} value={locationValues.district ?? ""} onChange={(v) => updateField("district", v)} />
         </div>
       )}
     </FlowDialog>
@@ -1121,62 +1275,38 @@ function LocationDialog({
 }
 
 function DateDialog({
-  t,
-  isOpen,
-  onClose,
-  onSelect,
+  t, isOpen, onClose, onSelect,
 }: {
   t: DashboardTranslate;
   isOpen: boolean;
   onClose: () => void;
-  onSelect: (date: string) => void;
+  onSelect: (display: string, iso: string) => void;
 }) {
-  const [visibleDate, setVisibleDate] = useState(() => new Date(2026, 4, 1));
+  const [visibleDate, setVisibleDate] = useState(() => new Date());
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [isYearPickerOpen, setIsYearPickerOpen] = useState(false);
   const year = visibleDate.getFullYear();
   const month = visibleDate.getMonth();
-  const monthLabel = new Intl.DateTimeFormat(undefined, {
-    month: "long",
-    year: "numeric",
-  }).format(visibleDate);
+  const monthLabel = new Intl.DateTimeFormat(undefined, { month: "long", year: "numeric" }).format(visibleDate);
   const firstDay = new Date(year, month, 1).getDay();
   const daysInMonth = new Date(year, month + 1, 0).getDate();
   const leadingDays = (firstDay + 6) % 7;
   const calendarDays = [
-    ...Array.from({ length: leadingDays }, (_, index) => ({
-      date: new Date(year, month, index - leadingDays + 1),
-      isCurrentMonth: false,
-    })),
-    ...Array.from({ length: daysInMonth }, (_, index) => ({
-      date: new Date(year, month, index + 1),
-      isCurrentMonth: true,
-    })),
+    ...Array.from({ length: leadingDays }, (_, i) => ({ date: new Date(year, month, i - leadingDays + 1), isCurrentMonth: false })),
+    ...Array.from({ length: daysInMonth }, (_, i) => ({ date: new Date(year, month, i + 1), isCurrentMonth: true })),
   ];
-  const trailingDays = (7 - (calendarDays.length % 7)) % 7;
-  const fullCalendarDays = [
-    ...calendarDays,
-    ...Array.from({ length: trailingDays }, (_, index) => ({
-      date: new Date(year, month + 1, index + 1),
-      isCurrentMonth: false,
-    })),
-  ];
+  const trailing = (7 - (calendarDays.length % 7)) % 7;
+  const fullDays = [...calendarDays, ...Array.from({ length: trailing }, (_, i) => ({ date: new Date(year, month + 1, i + 1), isCurrentMonth: false }))];
 
-  function moveMonth(direction: -1 | 1) {
-    setVisibleDate((currentDate) => {
-      return new Date(currentDate.getFullYear(), currentDate.getMonth() + direction, 1);
-    });
+  function moveMonth(dir: -1 | 1) {
+    setVisibleDate((d) => new Date(d.getFullYear(), d.getMonth() + dir, 1));
   }
 
   function selectDate(date: Date) {
     setSelectedDate(date);
-    onSelect(
-      new Intl.DateTimeFormat(undefined, {
-        day: "2-digit",
-        month: "long",
-        year: "numeric",
-      }).format(date),
-    );
+    const display = new Intl.DateTimeFormat(undefined, { day: "2-digit", month: "long", year: "numeric" }).format(date);
+    const iso = [date.getFullYear(), String(date.getMonth() + 1).padStart(2, "0"), String(date.getDate()).padStart(2, "0")].join("-");
+    onSelect(display, iso);
   }
 
   return (
@@ -1193,89 +1323,49 @@ function DateDialog({
             type="button"
             className="flex items-center gap-3 text-start"
             aria-label={t("createRequest.dateDialog.changeMonthYear")}
-            onClick={() => setIsYearPickerOpen((current) => !current)}
+            onClick={() => setIsYearPickerOpen((v) => !v)}
           >
-            <h3 className="text-3xl font-bold text-foreground">
-              {monthLabel}
-            </h3>
+            <h3 className="text-3xl font-bold text-foreground">{monthLabel}</h3>
             <SidebarChevronIcon className="size-5 text-primary" />
           </button>
-          <div className="flex items-center gap-2 text-primary">
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon-sm"
-              className="rounded-full text-primary"
-              aria-label={t("createRequest.dateDialog.previousMonth")}
-              onClick={() => moveMonth(-1)}
-            >
+          <div className="flex items-center gap-2">
+            <Button type="button" variant="ghost" size="icon-sm" className="rounded-full text-primary" aria-label={t("createRequest.dateDialog.previousMonth")} onClick={() => moveMonth(-1)}>
               <PaginationPreviousIcon className="size-5 rtl:rotate-180" />
             </Button>
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon-sm"
-              className="rounded-full text-primary"
-              aria-label={t("createRequest.dateDialog.nextMonth")}
-              onClick={() => moveMonth(1)}
-            >
+            <Button type="button" variant="ghost" size="icon-sm" className="rounded-full text-primary" aria-label={t("createRequest.dateDialog.nextMonth")} onClick={() => moveMonth(1)}>
               <PaginationNextIcon className="size-5 rtl:rotate-180" />
             </Button>
           </div>
         </div>
         {isYearPickerOpen ? (
           <div className="mt-5 grid grid-cols-4 gap-2 rounded-lg bg-muted/40 p-3">
-            {Array.from({ length: 8 }, (_, index) => year - 3 + index).map(
-              (yearOption) => (
-                <button
-                  key={yearOption}
-                  type="button"
-                  className={cn(
-                    "rounded-lg px-3 py-2 text-sm font-semibold text-muted-foreground transition hover:bg-primary/10 hover:text-primary",
-                    yearOption === year && "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground",
-                  )}
-                  onClick={() => {
-                    setVisibleDate(new Date(yearOption, month, 1));
-                    setIsYearPickerOpen(false);
-                  }}
-                >
-                  {yearOption}
-                </button>
-              ),
-            )}
+            {Array.from({ length: 8 }, (_, i) => year - 3 + i).map((yr) => (
+              <button
+                key={yr}
+                type="button"
+                className={cn("rounded-lg px-3 py-2 text-sm font-semibold text-muted-foreground transition hover:bg-primary/10 hover:text-primary", yr === year && "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground")}
+                onClick={() => { setVisibleDate(new Date(yr, month, 1)); setIsYearPickerOpen(false); }}
+              >
+                {yr}
+              </button>
+            ))}
           </div>
         ) : null}
         <div className="mt-8 grid grid-cols-7 gap-5 text-center">
-          {[
-            "mon",
-            "tue",
-            "wed",
-            "thu",
-            "fri",
-            "sat",
-            "sun",
-          ].map((day) => (
-            <span key={day} className="text-base font-medium text-muted-foreground">
-              {t(`createRequest.dateDialog.days.${day}`)}
-            </span>
+          {(["mon","tue","wed","thu","fri","sat","sun"] as const).map((d) => (
+            <span key={d} className="text-base font-medium text-muted-foreground">{t(`createRequest.dateDialog.days.${d}`)}</span>
           ))}
-          {fullCalendarDays.map(({ date, isCurrentMonth }) => {
-            const isSelected =
-              selectedDate?.toDateString() === date.toDateString();
-
+          {fullDays.map(({ date, isCurrentMonth }) => {
+            const isSel = selectedDate?.toDateString() === date.toDateString();
             return (
-            <button
-              key={date.toISOString()}
-              type="button"
-              className={cn(
-                "rounded-lg py-1 text-2xl font-medium text-muted-foreground transition hover:bg-primary/10 hover:text-foreground",
-                isCurrentMonth && "text-foreground",
-                isSelected && "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground",
-              )}
-              onClick={() => selectDate(date)}
-            >
-              {date.getDate()}
-            </button>
+              <button
+                key={date.toISOString()}
+                type="button"
+                className={cn("rounded-lg py-1 text-2xl font-medium text-muted-foreground transition hover:bg-primary/10 hover:text-foreground", isCurrentMonth && "text-foreground", isSel && "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground")}
+                onClick={() => selectDate(date)}
+              >
+                {date.getDate()}
+              </button>
             );
           })}
         </div>
@@ -1285,11 +1375,7 @@ function DateDialog({
 }
 
 function TimeDialog({
-  t,
-  isOpen,
-  onClose,
-  value,
-  onSelect,
+  t, isOpen, onClose, value, onSelect,
 }: {
   t: DashboardTranslate;
   isOpen: boolean;
@@ -1298,79 +1384,41 @@ function TimeDialog({
   onSelect: (time: string) => void;
 }) {
   const initialInputValue = parseDisplayTime(value) || "09:00";
-  const [timeParts, setTimeParts] = useState(() =>
-    getTimePartsFromInput(initialInputValue),
-  );
-  const [activeClockStep, setActiveClockStep] = useState<
-    "hour" | "minute" | "period"
-  >(
-    "hour",
-  );
+  const [timeParts, setTimeParts] = useState(() => getTimePartsFromInput(initialInputValue));
+  const [activeClockStep, setActiveClockStep] = useState<"hour" | "minute" | "period">("hour");
   const { isExiting, isMounted } = useDialogPresence(isOpen);
 
   useEffect(() => {
-    if (!isOpen) {
-      return;
-    }
-
-    const nextInputValue = parseDisplayTime(value) || "09:00";
-
-    setTimeParts(getTimePartsFromInput(nextInputValue));
+    if (!isOpen) return;
+    setTimeParts(getTimePartsFromInput(parseDisplayTime(value) || "09:00"));
     setActiveClockStep("hour");
   }, [isOpen, value]);
 
-  function updateTimeParts(nextParts: TimeParts) {
-    const nextInputValue = getInputFromTimeParts(nextParts);
-
-    setTimeParts(nextParts);
-    onSelect(formatTimeValue(nextInputValue));
+  function updateTimeParts(next: TimeParts) {
+    setTimeParts(next);
+    onSelect(formatTimeValue(getInputFromTimeParts(next)));
   }
 
   function updatePeriod(period: TimeParts["period"]) {
-    updateTimeParts({
-      ...timeParts,
-      period,
-    });
+    updateTimeParts({ ...timeParts, period });
     onClose();
   }
 
-  function updateTimeFromClock(event: React.PointerEvent<HTMLDivElement>) {
-    if (activeClockStep === "period") {
-      return;
-    }
-
-    const nextParts = getTimePartsFromClockPointer(
-      event.currentTarget,
-      event.clientX,
-      event.clientY,
-      timeParts,
-      activeClockStep,
-    );
-
-    updateTimeParts(nextParts);
+  function updateTimeFromClock(e: React.PointerEvent<HTMLDivElement>) {
+    if (activeClockStep === "period") return;
+    updateTimeParts(getTimePartsFromClockPointer(e.currentTarget, e.clientX, e.clientY, timeParts, activeClockStep));
   }
 
   function completeClockStep() {
-    if (activeClockStep === "hour") {
-      setActiveClockStep("minute");
-      return;
-    }
-
-    if (activeClockStep === "minute") {
-      setActiveClockStep("period");
-    }
+    if (activeClockStep === "hour") { setActiveClockStep("minute"); return; }
+    if (activeClockStep === "minute") { setActiveClockStep("period"); }
   }
 
-  if (!isMounted) {
-    return null;
-  }
+  if (!isMounted) return null;
 
   return (
     <div
-      className={cn(
-        "fixed inset-0 z-50 flex items-center justify-center bg-foreground/30 p-4 backdrop-blur-[1px]",
-        isExiting ? "dialog-overlay-out" : "dialog-overlay-in",
-      )}
+      className={cn("fixed inset-0 z-50 flex items-center justify-center bg-foreground/30 p-4 backdrop-blur-[1px]", isExiting ? "dialog-overlay-out" : "dialog-overlay-in")}
       role="presentation"
       onClick={onClose}
     >
@@ -1379,25 +1427,15 @@ function TimeDialog({
         aria-modal="true"
         aria-label={t("createRequest.timeDialog.title")}
         className={isExiting ? "clock-overlay-out" : "clock-overlay-pop"}
-        onClick={(event) => event.stopPropagation()}
+        onClick={(e) => e.stopPropagation()}
       >
         <div
           role="group"
           className="relative block aspect-square w-[min(82vw,20rem)] cursor-pointer touch-none overflow-hidden rounded-full border border-primary/30 bg-card/95 shadow-2xl ring-8 ring-primary/10 backdrop-blur"
           aria-label={t("createRequest.timeDialog.clockFace")}
-          onPointerDown={(event) => {
-            event.currentTarget.setPointerCapture(event.pointerId);
-            updateTimeFromClock(event);
-          }}
-          onPointerMove={(event) => {
-            if (event.buttons === 1) {
-              updateTimeFromClock(event);
-            }
-          }}
-          onPointerUp={(event) => {
-            event.currentTarget.releasePointerCapture(event.pointerId);
-            completeClockStep();
-          }}
+          onPointerDown={(e) => { e.currentTarget.setPointerCapture(e.pointerId); updateTimeFromClock(e); }}
+          onPointerMove={(e) => { if (e.buttons === 1) updateTimeFromClock(e); }}
+          onPointerUp={(e) => { e.currentTarget.releasePointerCapture(e.pointerId); completeClockStep(); }}
         >
           <AnalogClockFace
             hourRotation={getHourRotation(timeParts)}
@@ -1413,23 +1451,13 @@ function TimeDialog({
                 <button
                   key={period}
                   type="button"
-                  className={cn(
-                    "cursor-pointer rounded-full px-4 py-2 text-sm font-bold transition",
-                    timeParts.period === period
-                      ? "bg-primary text-primary-foreground shadow-sm"
-                      : "text-muted-foreground hover:bg-primary/10 hover:text-foreground",
-                  )}
-                  onPointerDown={(event) => event.stopPropagation()}
-                  onPointerMove={(event) => event.stopPropagation()}
-                  onPointerUp={(event) => event.stopPropagation()}
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    updatePeriod(period);
-                  }}
+                  className={cn("cursor-pointer rounded-full px-4 py-2 text-sm font-bold transition", timeParts.period === period ? "bg-primary text-primary-foreground shadow-sm" : "text-muted-foreground hover:bg-primary/10 hover:text-foreground")}
+                  onPointerDown={(e) => e.stopPropagation()}
+                  onPointerMove={(e) => e.stopPropagation()}
+                  onPointerUp={(e) => e.stopPropagation()}
+                  onClick={(e) => { e.stopPropagation(); updatePeriod(period); }}
                 >
-                  {period === "AM"
-                    ? t("createRequest.timeDialog.am")
-                    : t("createRequest.timeDialog.pm")}
+                  {period === "AM" ? t("createRequest.timeDialog.am") : t("createRequest.timeDialog.pm")}
                 </button>
               ))}
             </div>
@@ -1440,162 +1468,9 @@ function TimeDialog({
   );
 }
 
-function ProductsDialog({
-  t,
-  isOpen,
-  selectedProducts,
-  onClose,
-  onConfirm,
-  onToggle,
-}: {
-  t: DashboardTranslate;
-  isOpen: boolean;
-  selectedProducts: string[];
-  onClose: () => void;
-  onConfirm: () => void;
-  onToggle: (productId: string) => void;
-}) {
-  const visibleProducts = selectedProducts.length ? selectedProducts : productRows.slice(0, 4);
+// ─── Primitive UI helpers ─────────────────────────────────────────────────────
 
-  return (
-    <FlowDialog
-      title={t("createRequest.productsDialog.title")}
-      closeLabel={t("createRequest.actions.closeDialog")}
-      isOpen={isOpen}
-      onClose={onClose}
-      footer={
-        <Button
-          type="button"
-          className="h-12 w-full rounded-lg text-sm font-semibold"
-          onClick={onConfirm}
-        >
-          {t("createRequest.actions.confirm")}
-        </Button>
-      }
-    >
-      <p className="text-sm font-semibold text-muted-foreground">
-        {t("createRequest.productsDialog.selectedCount")}
-      </p>
-      <div className="mt-4 space-y-3">
-        {visibleProducts.map((productId) => (
-          <div
-            key={productId}
-            className="flex items-center justify-between gap-3 rounded-lg border border-border p-3"
-          >
-            <div className="flex items-center gap-3">
-              <input
-                type="checkbox"
-                className="size-4 accent-primary"
-                checked={selectedProducts.includes(productId)}
-                onChange={() => onToggle(productId)}
-              />
-              <ProductThumbnail />
-              <div>
-                <p className="text-sm font-bold text-foreground">
-                  {t(`createRequest.mock.products.${productId}.name`)}
-                </p>
-                <p className="text-xs font-medium text-muted-foreground">
-                  {t(`createRequest.mock.products.${productId}.skuLong`)}
-                </p>
-              </div>
-            </div>
-            <TrashIcon className="size-4 text-muted-foreground" />
-          </div>
-        ))}
-      </div>
-    </FlowDialog>
-  );
-}
-
-function PaymentDialog({
-  t,
-  isOpen,
-  onClose,
-  onConfirm,
-}: {
-  t: DashboardTranslate;
-  isOpen: boolean;
-  onClose: () => void;
-  onConfirm: () => void;
-}) {
-  return (
-    <FlowDialog
-      title={t("createRequest.paymentDialog.title")}
-      closeLabel={t("createRequest.actions.closeDialog")}
-      isOpen={isOpen}
-      onClose={onClose}
-      footer={
-        <div className="grid gap-3 sm:grid-cols-2">
-          <Button
-            type="button"
-            variant="outline"
-            className="h-12 rounded-lg border-border bg-card text-sm font-semibold shadow-none"
-            onClick={onClose}
-          >
-            {t("createRequest.actions.cancelPayment")}
-          </Button>
-          <Button
-            type="button"
-            className="h-12 rounded-lg text-sm font-semibold"
-            onClick={onConfirm}
-          >
-            {t("createRequest.actions.confirm")}
-          </Button>
-        </div>
-      }
-    >
-      <p className="text-sm font-bold text-foreground">
-        {t("createRequest.paymentDialog.reviewTitle")}
-      </p>
-      <div className="mt-4 overflow-hidden rounded-lg border border-border bg-muted/20">
-        <PaymentRow
-          label={t("createRequest.paymentDialog.currentBalance")}
-          value={t("createRequest.paymentDialog.currentBalanceValue")}
-        />
-        <PaymentRow
-          label={t("createRequest.paymentDialog.amountToHold")}
-          value={t("createRequest.paymentDialog.amountToHoldValue")}
-          tone="danger"
-        />
-        <PaymentRow
-          label={t("createRequest.paymentDialog.remainingBalance")}
-          value={t("createRequest.paymentDialog.remainingBalanceValue")}
-          tone="success"
-        />
-      </div>
-      <div className="mt-4 rounded-lg border border-emerald-500 bg-emerald-500/10 p-4">
-        <h3 className="font-bold text-foreground">
-          {t("createRequest.paymentDialog.howItWorks.title")}
-        </h3>
-        <ol className="mt-2 list-decimal space-y-1 ps-5 text-xs font-medium leading-5 text-muted-foreground">
-          <li>{t("createRequest.paymentDialog.howItWorks.hold")}</li>
-          <li>{t("createRequest.paymentDialog.howItWorks.completed")}</li>
-          <li>{t("createRequest.paymentDialog.howItWorks.refund")}</li>
-        </ol>
-      </div>
-      <div className="mt-4 rounded-lg border border-orange-400 bg-orange-400/10 p-4">
-        <h3 className="font-bold text-foreground">
-          {t("createRequest.paymentDialog.status.title")}
-        </h3>
-        <p className="mt-1 text-xs font-medium leading-5 text-muted-foreground">
-          {t("createRequest.paymentDialog.status.description")}
-        </p>
-      </div>
-    </FlowDialog>
-  );
-}
-
-function PickerField({
-  label,
-  icon,
-  value,
-  onClick,
-}: {
-  label: string;
-  icon: "calendar" | "clock";
-  value: string;
-  onClick: () => void;
-}) {
+function PickerField({ label, icon, value, onClick }: { label: string; icon: "calendar" | "clock"; value: string; onClick: () => void }) {
   return (
     <button
       type="button"
@@ -1605,55 +1480,9 @@ function PickerField({
     >
       {value}
       <span className="text-primary">
-        {icon === "calendar" ? (
-          <CalendarIcon className="size-5" />
-        ) : (
-          <ClockIcon className="size-5" />
-        )}
+        {icon === "calendar" ? <CalendarIcon className="size-5" /> : <ClockIcon className="size-5" />}
       </span>
     </button>
-  );
-}
-
-function SelectField({
-  name,
-  label,
-  placeholder,
-  options,
-  required = false,
-}: {
-  name: keyof CreateRequestFormValues;
-  label: string;
-  placeholder: string;
-  options: Array<{ value: string; label: string }>;
-  required?: boolean;
-}) {
-  return (
-    <FormField
-      name={name}
-      render={({ field }) => (
-        <FormItem>
-          <FormLabel className="text-base font-bold">
-            {label}
-            {required ? <RequiredMark /> : null}
-          </FormLabel>
-          <FormControl>
-            <select
-              {...field}
-              className="h-12 w-full rounded-lg border border-input bg-background px-4 text-sm font-medium text-foreground outline-none transition focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 aria-invalid:border-destructive aria-invalid:ring-destructive/20"
-            >
-              <option value="">{placeholder}</option>
-              {options.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-          </FormControl>
-          <FormMessage />
-        </FormItem>
-      )}
-    />
   );
 }
 
@@ -1670,30 +1499,7 @@ function HiddenFieldMessage({ name }: { name: keyof CreateRequestFormValues }) {
   );
 }
 
-function ReadOnlyField({ label, value }: { label: string; value: string }) {
-  return (
-    <div>
-      <p className="text-sm font-bold text-foreground">{label}</p>
-      <div className="mt-2 flex h-12 items-center rounded-lg border border-input px-4 text-sm font-semibold text-foreground">
-        {value}
-      </div>
-    </div>
-  );
-}
-
-function DialogInput({
-  label,
-  placeholder,
-  value,
-  className,
-  onChange,
-}: {
-  label: string;
-  placeholder: string;
-  value: string;
-  className?: string;
-  onChange: (value: string) => void;
-}) {
+function DialogInput({ label, placeholder, value, className, onChange }: { label: string; placeholder: string; value: string; className?: string; onChange: (v: string) => void }) {
   return (
     <label className={cn("grid gap-2", className)}>
       <span className="text-sm font-bold text-foreground">
@@ -1704,107 +1510,51 @@ function DialogInput({
         className="h-11 rounded-lg"
         placeholder={placeholder}
         value={value}
-        onChange={(event) => onChange(event.target.value)}
+        onChange={(e) => onChange(e.target.value)}
       />
     </label>
   );
 }
 
-function formatTimeValue(value: string) {
-  const [hourValue = "0", minuteValue = "0"] = value.split(":");
-  const hour = Number(hourValue);
-  const minute = Number(minuteValue);
-  const period = hour >= 12 ? "PM" : "AM";
-  const displayHour = hour % 12 || 12;
-
-  return `${displayHour}:${String(minute).padStart(2, "0")} ${period}`;
+function TotalCostCard({ label, description, amount }: { label: string; description: string; amount: string }) {
+  return (
+    <div className="flex items-center justify-between gap-4 rounded-xl border border-primary/20 bg-primary/10 p-4">
+      <div className="flex items-center gap-3">
+        <span className="flex size-9 items-center justify-center rounded-full bg-background text-primary">
+          <CostIcon className="size-5" />
+        </span>
+        <div>
+          <p className="text-sm font-bold text-foreground">{label}</p>
+          <p className="text-xs font-medium text-muted-foreground">{description}</p>
+        </div>
+      </div>
+      <span className="rounded-full bg-primary/10 px-4 py-2 text-lg font-bold text-primary">{amount}</span>
+    </div>
+  );
 }
 
-function parseDisplayTime(value: string) {
-  const match = value.match(/^(\d{1,2}):(\d{2})\s?(AM|PM)$/i);
+function PaymentRow({ label, value, tone }: { label: string; value: string; tone?: "danger" | "success" }) {
+  return (
+    <div className="flex items-center justify-between border-b border-border px-4 py-3 last:border-b-0">
+      <span className="font-medium text-foreground">{label}</span>
+      <span className={cn("font-bold text-foreground", tone === "danger" && "text-destructive", tone === "success" && "text-emerald-500")}>
+        {value}
+      </span>
+    </div>
+  );
+}
 
-  if (!match) {
-    return "";
+function ProductThumbnail({ imageUrl }: { imageUrl?: string | null }) {
+  if (imageUrl) {
+    return (
+      <img
+        src={imageUrl}
+        alt=""
+        aria-hidden="true"
+        className="size-8 shrink-0 rounded-sm object-cover"
+      />
+    );
   }
-
-  const [, hourText, minuteText, periodText] = match;
-  const hour = Number(hourText);
-  const normalizedHour =
-    periodText.toUpperCase() === "PM"
-      ? hour === 12
-        ? 12
-        : hour + 12
-      : hour === 12
-        ? 0
-        : hour;
-
-  return `${String(normalizedHour).padStart(2, "0")}:${minuteText}`;
-}
-
-interface TimeParts {
-  hour: number;
-  minute: number;
-  period: "AM" | "PM";
-}
-
-function getTimePartsFromInput(value: string): TimeParts {
-  const [hourValue = "9", minuteValue = "0"] = value.split(":");
-  const hour24 = Number(hourValue);
-  const minute = Number(minuteValue);
-  const period = hour24 >= 12 ? "PM" : "AM";
-
-  return {
-    hour: hour24 % 12 || 12,
-    minute: Number.isNaN(minute) ? 0 : minute,
-    period,
-  };
-}
-
-function getInputFromTimeParts({ hour, minute, period }: TimeParts) {
-  const hour24 =
-    period === "PM" ? (hour === 12 ? 12 : hour + 12) : hour === 12 ? 0 : hour;
-
-  return `${String(hour24).padStart(2, "0")}:${String(minute).padStart(2, "0")}`;
-}
-
-function getHourRotation({ hour, minute }: TimeParts) {
-  return ((hour % 12) + minute / 60) * 30;
-}
-
-function getMinuteRotation({ minute }: TimeParts) {
-  return minute * 6;
-}
-
-function getTimePartsFromClockPointer(
-  clockElement: HTMLElement,
-  clientX: number,
-  clientY: number,
-  timeParts: TimeParts,
-  activeHand: "hour" | "minute",
-): TimeParts {
-  const rect = clockElement.getBoundingClientRect();
-  const centerX = rect.left + rect.width / 2;
-  const centerY = rect.top + rect.height / 2;
-  const angle =
-    (Math.atan2(clientY - centerY, clientX - centerX) * 180) / Math.PI;
-  const normalizedAngle = (angle + 90 + 360) % 360;
-
-  if (activeHand === "hour") {
-    const nextHour = Math.round(normalizedAngle / 30) || 12;
-
-    return {
-      ...timeParts,
-      hour: nextHour,
-    };
-  }
-
-  return {
-    ...timeParts,
-    minute: Math.round(normalizedAngle / 6) % 60,
-  };
-}
-
-function ProductThumbnail() {
   return (
     <span className="grid size-8 shrink-0 grid-cols-3 gap-0.5 rounded-sm bg-slate-950 p-1">
       <span className="rounded-sm bg-slate-100" />
@@ -1817,60 +1567,71 @@ function ProductThumbnail() {
   );
 }
 
-function TotalCostCard({
-  label,
-  description,
-  amount,
-}: {
-  label: string;
-  description: string;
-  amount: string;
-}) {
-  return (
-    <div className="flex items-center justify-between gap-4 rounded-xl border border-primary/20 bg-primary/10 p-4">
-      <div className="flex items-center gap-3">
-        <span className="flex size-9 items-center justify-center rounded-full bg-background text-primary">
-          <CostIcon className="size-5" />
-        </span>
-        <div>
-          <p className="text-sm font-bold text-foreground">{label}</p>
-          <p className="text-xs font-medium text-muted-foreground">
-            {description}
-          </p>
-        </div>
-      </div>
-      <span className="rounded-full bg-primary/10 px-4 py-2 text-lg font-bold text-primary">
-        {amount}
-      </span>
-    </div>
-  );
-}
-
-function PaymentRow({
-  label,
-  value,
-  tone,
-}: {
-  label: string;
-  value: string;
-  tone?: "danger" | "success";
-}) {
-  return (
-    <div className="flex items-center justify-between border-b border-border px-4 py-3 last:border-b-0">
-      <span className="font-medium text-foreground">{label}</span>
-      <span
-        className={cn(
-          "font-bold text-foreground",
-          tone === "danger" && "text-destructive",
-          tone === "success" && "text-emerald-500",
-        )}
-      >
-        {value}
-      </span>
-    </div>
-  );
-}
-
 function RequiredMark() {
   return <span className="text-destructive">*</span>;
+}
+
+// ─── Time-picker utilities ────────────────────────────────────────────────────
+
+interface TimeParts {
+  hour: number;
+  minute: number;
+  period: "AM" | "PM";
+}
+
+function formatTimeValue(value: string) {
+  const [h = "0", m = "0"] = value.split(":");
+  const hour = Number(h);
+  const minute = Number(m);
+  const period = hour >= 12 ? "PM" : "AM";
+  const displayHour = hour % 12 || 12;
+  return `${displayHour}:${String(minute).padStart(2, "0")} ${period}`;
+}
+
+function parseDisplayTime(value: string) {
+  const match = value.match(/^(\d{1,2}):(\d{2})\s?(AM|PM)$/i);
+  if (!match) return "";
+  const [, hText, mText, pText] = match;
+  const h = Number(hText);
+  const normalized =
+    pText.toUpperCase() === "PM" ? (h === 12 ? 12 : h + 12) : h === 12 ? 0 : h;
+  return `${String(normalized).padStart(2, "0")}:${mText}`;
+}
+
+function getTimePartsFromInput(value: string): TimeParts {
+  const [h = "9", m = "0"] = value.split(":");
+  const h24 = Number(h);
+  const minute = Number(m);
+  return {
+    hour: h24 % 12 || 12,
+    minute: Number.isNaN(minute) ? 0 : minute,
+    period: h24 >= 12 ? "PM" : "AM",
+  };
+}
+
+function getInputFromTimeParts({ hour, minute, period }: TimeParts) {
+  const h24 = period === "PM" ? (hour === 12 ? 12 : hour + 12) : hour === 12 ? 0 : hour;
+  return `${String(h24).padStart(2, "0")}:${String(minute).padStart(2, "0")}`;
+}
+
+function getHourRotation({ hour, minute }: TimeParts) {
+  return ((hour % 12) + minute / 60) * 30;
+}
+
+function getMinuteRotation({ minute }: TimeParts) {
+  return minute * 6;
+}
+
+function getTimePartsFromClockPointer(
+  el: HTMLElement,
+  clientX: number,
+  clientY: number,
+  parts: TimeParts,
+  hand: "hour" | "minute",
+): TimeParts {
+  const rect = el.getBoundingClientRect();
+  const angle = (Math.atan2(clientY - (rect.top + rect.height / 2), clientX - (rect.left + rect.width / 2)) * 180) / Math.PI;
+  const normalized = (angle + 90 + 360) % 360;
+  if (hand === "hour") return { ...parts, hour: Math.round(normalized / 30) || 12 };
+  return { ...parts, minute: Math.round(normalized / 6) % 60 };
 }

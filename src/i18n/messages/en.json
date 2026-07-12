@@ -289,6 +289,7 @@
         "next": "Next",
         "cancel": "Cancel Request",
         "submit": "Submit Request",
+        "submitting": "Submitting...",
         "closeDialog": "Close dialog",
         "toggleSection": "Toggle section",
         "addService": "Add Service",
@@ -321,7 +322,8 @@
         "documents": "Planogram Documents",
         "uploadTitle": "Upload Files",
         "uploadDescription": "Drag & drop files here or browse files",
-        "supportedFormats": "Supported formats: PNG, JPG, PDF"
+        "supportedFormats": "Supported formats: PNG, JPG, PDF",
+        "removeFile": "Remove file"
       },
       "fields": {
         "executionDate": {
@@ -337,10 +339,11 @@
           "placeholder": "Select Service"
         },
         "estimatedTime": {
-          "label": "Estimated Time"
+          "label": "Estimated Time (minutes)"
         },
         "price": {
-          "label": "Price"
+          "label": "Price (SAR)",
+          "placeholder": "Enter price"
         },
         "brand": {
           "label": "Brand",
@@ -384,8 +387,9 @@
       },
       "productTable": {
         "searchPlaceholder": "Search by product name or SKU",
-        "showProducts": "54 Product",
+        "showProducts": "Products",
         "emptyDetail": "-",
+        "noProducts": "No products found.",
         "columns": {
           "products": "Products",
           "sku": "SKU Code",
@@ -469,7 +473,7 @@
       },
       "productsDialog": {
         "title": "Selected Products",
-        "selectedCount": "8 products selected"
+        "selectedCount": "{count} products selected"
       },
       "paymentDialog": {
         "title": "Payment Confirmation",
@@ -563,12 +567,26 @@
         "regionRequired": "Region is required.",
         "cityRequired": "City is required.",
         "serviceTypeRequired": "Service type is required.",
+        "priceRequired": "Price must be at least the service minimum.",
+        "executionTimeMinsRequired": "Execution time must be at least the service minimum.",
         "brandRequired": "Brand is required.",
         "subBrandRequired": "Sub-brand is required.",
         "categoryRequired": "Category is required.",
         "subCategoryRequired": "Sub-category is required.",
         "productsRequired": "Select at least one product.",
-        "instructionsRequired": "Execution instructions are required."
+        "instructionsRequired": "Execution instructions are required (min 10 characters)."
+      },
+      "errors": {
+        "unauthorized": "Your session has expired. Please log in again.",
+        "forbidden": "You do not have permission to create requests.",
+        "generic": "Something went wrong. Please try again.",
+        "loadServices": "Failed to load services.",
+        "loadProducts": "Failed to load products."
+      },
+      "states": {
+        "loading": "Loading...",
+        "noProducts": "No products found. Try adjusting your filters.",
+        "noServices": "No services available."
       }
     },
     "requestsPage": {

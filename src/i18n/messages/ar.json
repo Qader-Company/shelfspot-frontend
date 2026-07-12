@@ -289,6 +289,7 @@
         "next": "التالي",
         "cancel": "إلغاء الطلب",
         "submit": "إرسال الطلب",
+        "submitting": "جارٍ الإرسال...",
         "closeDialog": "إغلاق النافذة",
         "toggleSection": "فتح أو إغلاق القسم",
         "addService": "إضافة خدمة",
@@ -321,7 +322,8 @@
         "documents": "مستندات البلانوجرام",
         "uploadTitle": "رفع الملفات",
         "uploadDescription": "اسحب الملفات هنا أو تصفح الملفات",
-        "supportedFormats": "الصيغ المدعومة: PNG، JPG، PDF"
+        "supportedFormats": "الصيغ المدعومة: PNG، JPG، PDF",
+        "removeFile": "حذف الملف"
       },
       "fields": {
         "executionDate": {
@@ -337,10 +339,11 @@
           "placeholder": "اختر الخدمة"
         },
         "estimatedTime": {
-          "label": "الوقت المتوقع"
+          "label": "الوقت المتوقع (دقيقة)"
         },
         "price": {
-          "label": "السعر"
+          "label": "السعر (ر.س)",
+          "placeholder": "أدخل السعر"
         },
         "brand": {
           "label": "العلامة التجارية",
@@ -384,8 +387,9 @@
       },
       "productTable": {
         "searchPlaceholder": "البحث باسم المنتج أو رمز SKU",
-        "showProducts": "54 منتج",
+        "showProducts": "المنتجات",
         "emptyDetail": "-",
+        "noProducts": "لا توجد منتجات.",
         "columns": {
           "products": "المنتجات",
           "sku": "رمز SKU",
@@ -469,7 +473,7 @@
       },
       "productsDialog": {
         "title": "المنتجات المحددة",
-        "selectedCount": "تم تحديد 8 منتجات"
+        "selectedCount": "تم تحديد {count} منتجات"
       },
       "paymentDialog": {
         "title": "تأكيد الدفع",
@@ -563,12 +567,26 @@
         "regionRequired": "المنطقة مطلوبة.",
         "cityRequired": "المدينة مطلوبة.",
         "serviceTypeRequired": "نوع الخدمة مطلوب.",
+        "priceRequired": "يجب أن يكون السعر بحد أدنى للخدمة على الأقل.",
+        "executionTimeMinsRequired": "يجب أن يكون وقت التنفيذ بحد أدنى للخدمة على الأقل.",
         "brandRequired": "العلامة التجارية مطلوبة.",
         "subBrandRequired": "العلامة الفرعية مطلوبة.",
         "categoryRequired": "الفئة مطلوبة.",
         "subCategoryRequired": "الفئة الفرعية مطلوبة.",
         "productsRequired": "اختر منتجًا واحدًا على الأقل.",
-        "instructionsRequired": "تعليمات التنفيذ مطلوبة."
+        "instructionsRequired": "تعليمات التنفيذ مطلوبة (10 أحرف على الأقل)."
+      },
+      "errors": {
+        "unauthorized": "انتهت جلستك. يرجى تسجيل الدخول مجددًا.",
+        "forbidden": "ليس لديك صلاحية إنشاء طلبات.",
+        "generic": "حدث خطأ ما. يرجى المحاولة مجددًا.",
+        "loadServices": "فشل تحميل الخدمات.",
+        "loadProducts": "فشل تحميل المنتجات."
+      },
+      "states": {
+        "loading": "جارٍ التحميل...",
+        "noProducts": "لا توجد منتجات. جرّب تعديل الفلاتر.",
+        "noServices": "لا توجد خدمات متاحة."
       }
     },
     "requestsPage": {
