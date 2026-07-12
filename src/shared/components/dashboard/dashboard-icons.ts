@@ -23,6 +23,7 @@ export {
   Trash2 as TrashIcon,
   UploadCloud as UploadIcon,
   UsersRound as AdminsIcon,
+  RotateCcw as RestoreIcon,
   X as CloseIcon,
 } from "lucide-react";
 

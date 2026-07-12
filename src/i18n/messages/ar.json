@@ -589,6 +589,47 @@
         "noServices": "لا توجد خدمات متاحة."
       }
     },
+    "trashPage": {
+      "title": "المهملات",
+      "subtitle": "العناصر المحذوفة — استعادتها أو حذفها نهائيًا",
+      "tabs": {
+        "brand": "العلامة التجارية",
+        "subBrand": "العلامة الفرعية",
+        "category": "الفئة",
+        "subCategory": "الفئة الفرعية",
+        "products": "المنتجات",
+        "requests": "الطلبات"
+      },
+      "search": {
+        "label": "البحث في المهملات",
+        "placeholder": "البحث بالعلامة التجارية"
+      },
+      "filters": {
+        "allStatuses": "جميع الحالات"
+      },
+      "table": {
+        "columns": {
+          "products": "المنتجات",
+          "family": "العائلة",
+          "sku": "رمز SKU",
+          "description": "الوصف",
+          "status": "الحالة",
+          "deletedDate": "تاريخ الحذف",
+          "action": "الإجراء"
+        },
+        "actions": {
+          "selectAll": "تحديد جميع العناصر",
+          "selectRow": "تحديد العنصر",
+          "delete": "حذف نهائي",
+          "restore": "استعادة العنصر",
+          "toggleStatus": "تبديل حالة العنصر"
+        }
+      },
+      "pagination": {
+        "previous": "السابق",
+        "next": "التالي"
+      }
+    },
     "paymentPage": {
       "title": "الدفع",
       "subtitle": "إدارة طرق الدفع والمعاملات",

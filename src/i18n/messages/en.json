@@ -589,6 +589,47 @@
         "noServices": "No services available."
       }
     },
+    "trashPage": {
+      "title": "Trash",
+      "subtitle": "Deleted items recover or permanently remove them",
+      "tabs": {
+        "brand": "Brand",
+        "subBrand": "Sub-Brand",
+        "category": "Category",
+        "subCategory": "Sub-Category",
+        "products": "Products",
+        "requests": "Requests"
+      },
+      "search": {
+        "label": "Search trash",
+        "placeholder": "Search by brand"
+      },
+      "filters": {
+        "allStatuses": "All Statuses"
+      },
+      "table": {
+        "columns": {
+          "products": "Products",
+          "family": "Family",
+          "sku": "SKU",
+          "description": "Description",
+          "status": "Status",
+          "deletedDate": "Deleted Date",
+          "action": "Action"
+        },
+        "actions": {
+          "selectAll": "Select all items",
+          "selectRow": "Select item",
+          "delete": "Permanently delete",
+          "restore": "Restore item",
+          "toggleStatus": "Toggle item status"
+        }
+      },
+      "pagination": {
+        "previous": "Previous",
+        "next": "Next"
+      }
+    },
     "paymentPage": {
       "title": "Payment",
       "subtitle": "Manage your payment methods and transactions",
