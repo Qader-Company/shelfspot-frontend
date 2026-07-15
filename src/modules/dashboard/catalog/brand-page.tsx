@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 
 import { useCreateBrandMutation } from "@/modules/dashboard/hooks/use-create-brand-mutation";
+import { downloadBrandsTemplateService } from "@/modules/dashboard/services/download-brands-template-service";
 import { normalizeApiError } from "@/shared/lib/api/errors";
 
 import {
@@ -36,6 +37,8 @@ export function BrandPage() {
   const [logo, setLogo] = useState<File | null>(null);
   const [formError, setFormError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const [isDownloadingTemplate, setIsDownloadingTemplate] = useState(false);
+  const [downloadError, setDownloadError] = useState("");
   const createBrandMutation = useCreateBrandMutation();
 
   const close = () => {
@@ -74,6 +77,22 @@ export function BrandPage() {
     } catch (error) {
       const apiError = normalizeApiError(error);
       setFormError(apiError.message || t("catalogPage.brand.dialog.error"));
+    }
+  }
+
+  async function handleDownloadTemplate() {
+    setIsDownloadingTemplate(true);
+    setDownloadError("");
+
+    try {
+      await downloadBrandsTemplateService();
+    } catch (error) {
+      const apiError = normalizeApiError(error);
+      setDownloadError(
+        apiError.message || t("catalogPage.brand.dialog.templateError"),
+      );
+    } finally {
+      setIsDownloadingTemplate(false);
     }
   }
   const handleDelete = () => setOpenDialog("delete");
@@ -273,6 +292,9 @@ export function BrandPage() {
         saveLabel={t("catalogPage.dialog.save")}
         closeLabel={t("catalogPage.dialog.close")}
         onClose={close}
+        onDownload={handleDownloadTemplate}
+        isDownloading={isDownloadingTemplate}
+        downloadError={downloadError}
       />
     </div>
   );

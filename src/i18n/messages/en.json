@@ -632,7 +632,7 @@
         "title": "Brand", "subtitle": "Manage and monitor all your registered brands and their details",
         "actions": { "add": "Add Brand" },
         "table": { "columns": { "brandName": "Brand Name" } },
-        "dialog": { "title": "Add New Brand", "editTitle": "Update Brand", "uploadLabel": "Upload Brand Logo", "nameLabel": "Brand Name", "namePlaceholder": "Enter brand name", "nameEnLabel": "Brand Name (English)", "nameEnPlaceholder": "Enter the English brand name", "nameArLabel": "Brand Name (Arabic)", "nameArPlaceholder": "Enter the Arabic brand name", "requiredNames": "Enter both the English and Arabic brand names.", "success": "Brand created successfully.", "error": "Unable to create the brand.", "statusDescription": "Brand is available and visible" },
+        "dialog": { "title": "Add New Brand", "editTitle": "Update Brand", "uploadLabel": "Upload Brand Logo", "nameLabel": "Brand Name", "namePlaceholder": "Enter brand name", "nameEnLabel": "Brand Name (English)", "nameEnPlaceholder": "Enter the English brand name", "nameArLabel": "Brand Name (Arabic)", "nameArPlaceholder": "Enter the Arabic brand name", "requiredNames": "Enter both the English and Arabic brand names.", "success": "Brand created successfully.", "error": "Unable to create the brand.", "templateError": "Unable to download the brands template.", "statusDescription": "Brand is available and visible" },
         "deleteDialog": { "title": "Delete Brand?", "descriptionLine1": "Are you sure you want to delete this brand?", "descriptionLine2": "This action cannot be undone.", "cancel": "No, Keep it", "confirm": "Yes, Delete!" }
       },
       "subBrand": {

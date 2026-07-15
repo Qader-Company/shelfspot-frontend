@@ -17,6 +17,9 @@ interface CatalogImportDialogProps {
   saveLabel: string;
   closeLabel: string;
   onClose: () => void;
+  onDownload?: () => void;
+  isDownloading?: boolean;
+  downloadError?: string;
 }
 
 export function CatalogImportDialog({
@@ -31,6 +34,9 @@ export function CatalogImportDialog({
   saveLabel,
   closeLabel,
   onClose,
+  onDownload,
+  isDownloading = false,
+  downloadError,
 }: CatalogImportDialogProps) {
   if (!isOpen) return null;
 
@@ -69,10 +75,21 @@ export function CatalogImportDialog({
             type="button"
             variant="outline"
             className="h-11 w-full gap-2 rounded-lg border-border text-sm font-medium shadow-none"
+            onClick={onDownload}
+            disabled={isDownloading}
           >
             {downloadLabel}
             <DownloadIcon className="size-4" />
           </Button>
+
+          {downloadError ? (
+            <p
+              className="rounded-xl border border-destructive/20 bg-destructive/10 px-4 py-3 text-sm text-destructive"
+              role="alert"
+            >
+              {downloadError}
+            </p>
+          ) : null}
 
           {/* Upload area */}
           <div className="flex min-h-32 flex-col items-center justify-center gap-2 rounded-lg border border-dashed border-border p-6">

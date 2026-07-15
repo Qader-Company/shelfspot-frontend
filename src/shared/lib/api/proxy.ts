@@ -18,6 +18,7 @@ import {
 export async function proxyCompanyRequest(
   request: NextRequest,
   upstreamPath: string,
+  options?: { responseType?: "arraybuffer" },
 ) {
   const apiClient = await createServerApiClient();
 
@@ -68,8 +69,25 @@ export async function proxyCompanyRequest(
       method: request.method,
       data: body ?? undefined,
       headers: forwardedHeaders,
+      responseType: options?.responseType,
       validateStatus: () => true,
     });
+
+    if (options?.responseType === "arraybuffer") {
+      const responseHeaders = new Headers();
+      const contentType = response.headers["content-type"];
+      const contentDisposition = response.headers["content-disposition"];
+
+      if (contentType) responseHeaders.set("Content-Type", String(contentType));
+      if (contentDisposition) {
+        responseHeaders.set("Content-Disposition", String(contentDisposition));
+      }
+
+      return new NextResponse(new Uint8Array(response.data), {
+        status: response.status,
+        headers: responseHeaders,
+      });
+    }
 
     const hasInvalidCompanyContext =
       response.status === 404 &&

@@ -632,7 +632,7 @@
         "title": "العلامة التجارية", "subtitle": "إدارة ومراقبة جميع علاماتك التجارية",
         "actions": { "add": "إضافة علامة تجارية" },
         "table": { "columns": { "brandName": "اسم العلامة" } },
-        "dialog": { "title": "إضافة علامة جديدة", "editTitle": "تحديث العلامة", "uploadLabel": "رفع شعار العلامة", "nameLabel": "اسم العلامة", "namePlaceholder": "أدخل اسم العلامة", "nameEnLabel": "اسم العلامة (بالإنجليزية)", "nameEnPlaceholder": "أدخل اسم العلامة بالإنجليزية", "nameArLabel": "اسم العلامة (بالعربية)", "nameArPlaceholder": "أدخل اسم العلامة بالعربية", "requiredNames": "أدخل اسم العلامة باللغتين الإنجليزية والعربية.", "success": "تم إنشاء العلامة التجارية بنجاح.", "error": "تعذر إنشاء العلامة التجارية.", "statusDescription": "العلامة متاحة وظاهرة" },
+        "dialog": { "title": "إضافة علامة جديدة", "editTitle": "تحديث العلامة", "uploadLabel": "رفع شعار العلامة", "nameLabel": "اسم العلامة", "namePlaceholder": "أدخل اسم العلامة", "nameEnLabel": "اسم العلامة (بالإنجليزية)", "nameEnPlaceholder": "أدخل اسم العلامة بالإنجليزية", "nameArLabel": "اسم العلامة (بالعربية)", "nameArPlaceholder": "أدخل اسم العلامة بالعربية", "requiredNames": "أدخل اسم العلامة باللغتين الإنجليزية والعربية.", "success": "تم إنشاء العلامة التجارية بنجاح.", "error": "تعذر إنشاء العلامة التجارية.", "templateError": "تعذر تنزيل قالب العلامات التجارية.", "statusDescription": "العلامة متاحة وظاهرة" },
         "deleteDialog": { "title": "حذف العلامة؟", "descriptionLine1": "هل أنت متأكد من حذف هذه العلامة؟", "descriptionLine2": "لا يمكن التراجع عن هذا الإجراء.", "cancel": "لا، احتفظ به", "confirm": "نعم، احذفه!" }
       },
       "subBrand": {
