@@ -14,7 +14,7 @@ import {
 import { AuthInputField } from "@/modules/auth/components/auth-input-field";
 import { AuthModeSwitch } from "@/modules/auth/components/auth-mode-switch";
 import { useLoginMutation } from "@/modules/auth/hooks/use-login-mutation";
-import { Link } from "@/i18n/navigation";
+import { Link, useRouter } from "@/i18n/navigation";
 import { ROUTES } from "@/config/routes";
 import {
   createLoginSchema,
@@ -33,6 +33,7 @@ interface LoginFormProps {
 
 export function LoginForm({ showRegistrationSuccess = false }: LoginFormProps) {
   const t = useTranslations("auth.login");
+  const router = useRouter();
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const loginSchema = useMemo(() => createLoginSchema(t), [t]);
   const loginMutation = useLoginMutation();
@@ -50,6 +51,7 @@ export function LoginForm({ showRegistrationSuccess = false }: LoginFormProps) {
 
     try {
       await loginMutation.mutateAsync(values);
+      router.replace(ROUTES.dashboard);
     } catch (error) {
       const apiError = normalizeApiError(error);
 
