@@ -7,9 +7,16 @@ import { Button } from "@/shared/ui/button";
 interface RowActionsProps {
   deleteLabel: string;
   restoreLabel: string;
+  onDelete: () => void;
+  onRestore: () => void;
 }
 
-export function RowActions({ deleteLabel, restoreLabel }: RowActionsProps) {
+export function RowActions({
+  deleteLabel,
+  restoreLabel,
+  onDelete,
+  onRestore,
+}: RowActionsProps) {
   return (
     <div className="flex items-center gap-2">
       <Button
@@ -18,6 +25,7 @@ export function RowActions({ deleteLabel, restoreLabel }: RowActionsProps) {
         size="icon-xs"
         aria-label={deleteLabel}
         className="text-muted-foreground hover:text-destructive"
+        onClick={onDelete}
       >
         <TrashIcon className="size-4" />
       </Button>
@@ -27,6 +35,7 @@ export function RowActions({ deleteLabel, restoreLabel }: RowActionsProps) {
         size="icon-xs"
         aria-label={restoreLabel}
         className="text-muted-foreground hover:text-foreground"
+        onClick={onRestore}
       >
         <RestoreIcon className="size-4" />
       </Button>

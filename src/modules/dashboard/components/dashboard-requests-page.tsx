@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import { useTranslations } from "next-intl";
 
 import { ROUTES } from "@/config/routes";
@@ -10,6 +13,7 @@ import {
 import type { DashboardRequestRow } from "@/modules/dashboard/components/dashboard-requests.seed";
 import { DashboardRequestsTable } from "@/modules/dashboard/components/dashboard-requests-table";
 import { DashboardStatCard } from "@/modules/dashboard/components/dashboard-stat-card";
+import { RequestDeleteDialog } from "@/modules/dashboard/requests/request-delete-dialog";
 import {
   AddIcon,
   FilterIcon,
@@ -22,6 +26,20 @@ import { Button } from "@/shared/ui/button";
 
 export function DashboardRequestsPage() {
   const t = useTranslations("dashboard");
+  const [deleteTarget, setDeleteTarget] = useState("");
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+
+  const handleDeleteClick = (id: string) => {
+    setDeleteTarget(id);
+    setIsDeleteOpen(true);
+  };
+
+  const deletionReasons = [
+    { value: "duplicate",  label: t("requestsPage.deleteDialog.reasons.duplicate")  },
+    { value: "cancelled",  label: t("requestsPage.deleteDialog.reasons.cancelled")  },
+    { value: "error",      label: t("requestsPage.deleteDialog.reasons.error")      },
+    { value: "other",      label: t("requestsPage.deleteDialog.reasons.other")      },
+  ];
 
   return (
     <div className="space-y-6 px-4 py-8 lg:px-8">
@@ -90,6 +108,22 @@ export function DashboardRequestsPage() {
         resolveStatus={(status: DashboardRequestRow["status"]) =>
           t(`requestsPage.status.${status}`)
         }
+        onDelete={handleDeleteClick}
+      />
+
+      <RequestDeleteDialog
+        isOpen={isDeleteOpen}
+        requestId={deleteTarget}
+        labels={{
+          title:               t("requestsPage.deleteDialog.title"),
+          description:        t("requestsPage.deleteDialog.description"),
+          reasonLabel:        t("requestsPage.deleteDialog.reasonLabel"),
+          reasonPlaceholder:  t("requestsPage.deleteDialog.reasonPlaceholder"),
+          reasons:            deletionReasons,
+          cancel:             t("requestsPage.deleteDialog.cancel"),
+          confirm:            t("requestsPage.deleteDialog.confirm"),
+        }}
+        onClose={() => setIsDeleteOpen(false)}
       />
 
       <div className="flex flex-col items-center justify-between gap-4 px-5 pb-2 md:flex-row">

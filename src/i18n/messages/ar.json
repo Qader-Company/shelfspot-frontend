@@ -157,6 +157,11 @@
       "requests": "الطلبات",
       "payment": "الدفع",
       "catalog": "الكتالوج",
+      "catalogBrand": "العلامةالتجارية",
+      "catalogSubBrand": "العلامةالفرعية",
+      "catalogCategory": "الفئة",
+      "catalogSubCategory": "الفئةالفرعية",
+      "catalogProduct": "المنتجات",
       "admins": "المشرفون",
       "trash": "المهملات",
       "logout": "تسجيل الخروج"
@@ -589,6 +594,67 @@
         "noServices": "لا توجد خدمات متاحة."
       }
     },
+    "catalogPage": {
+      "search": { "label": "البحث في الكتالوج", "placeholder": "البحث بالعلامة التجارية" },
+      "filters": { "allStatuses": "جميع الحالات" },
+      "actions": { "import": "استيراد" },
+      "status": { "active": "نشط", "inactive": "غير نشط" },
+      "table": {
+        "columns": { "status": "الحالة", "createdDate": "تاريخ الإنشاء", "action": "الإجراء" },
+        "actions": { "selectAll": "تحديد الكل", "selectRow": "تحديد الصف", "delete": "حذف العنصر", "edit": "تعديل العنصر", "toggleStatus": "تبديل الحالة" }
+      },
+      "pagination": { "previous": "السابق", "next": "التالي" },
+      "dialog": {
+        "close": "إغلاق", "cancel": "إلغاء", "save": "حفظ",
+        "uploadHint": "PNG,JSG حتى 5 ميغابايت",
+        "statusLabel": "الحالة", "statusActive": "نشط",
+        "parentBrand": "العلامة الرئيسية", "selectBrand": "اختر علامة تجارية",
+        "subBrand": "العلامة الفرعية", "selectSubBrand": "اختر علامة فرعية"
+      },
+      "import": {
+        "title": "استيراد الملفات",
+        "description": "حدد الملفات وارفعها وفقاً لملف القالب",
+        "downloadLabel": "تنزيل ملف القالب",
+        "uploadLabel": "رفع الملفات",
+        "uploadHint": "حدد ملفاً أو اسحبه هنا",
+        "uploadFormat": "الصيغة: CSV, XLSX"
+      },
+      "brand": {
+        "title": "العلامة التجارية", "subtitle": "إدارة ومراقبة جميع علاماتك التجارية",
+        "actions": { "add": "إضافة علامة تجارية" },
+        "table": { "columns": { "brandName": "اسم العلامة" } },
+        "dialog": { "title": "إضافة علامة جديدة", "editTitle": "تحديث العلامة", "uploadLabel": "رفع شعار العلامة", "nameLabel": "اسم العلامة", "namePlaceholder": "أدخل اسم العلامة", "statusDescription": "العلامة متاحة وظاهرة" },
+        "deleteDialog": { "title": "حذف العلامة؟", "descriptionLine1": "هل أنت متأكد من حذف هذه العلامة؟", "descriptionLine2": "لا يمكن التراجع عن هذا الإجراء.", "cancel": "لا، احتفظ به", "confirm": "نعم، احذفه!" }
+      },
+      "subBrand": {
+        "title": "العلامة الفرعية", "subtitle": "إدارة ومراقبة جميع علاماتك الفرعية",
+        "actions": { "add": "إضافة علامة فرعية" },
+        "table": { "columns": { "subBrandName": "اسم العلامة الفرعية", "brand": "العلامة" } },
+        "dialog": { "title": "إضافة علامة فرعية جديدة", "editTitle": "تحديث العلامة الفرعية", "uploadLabel": "رفع صورة العلامة الفرعية", "nameLabel": "اسم العلامة الفرعية", "namePlaceholder": "أدخل اسم العلامة الفرعية", "statusDescription": "العلامة الفرعية متاحة وظاهرة" },
+        "deleteDialog": { "title": "حذف العلامة الفرعية؟", "descriptionLine1": "هل أنت متأكد من حذف هذه العلامة الفرعية؟", "descriptionLine2": "لا يمكن التراجع عن هذا الإجراء.", "cancel": "لا، احتفظ به", "confirm": "نعم، احذفه!" }
+      },
+      "category": {
+        "title": "الفئة", "subtitle": "إدارة ومراقبة جميع فئاتك المسجلة",
+        "actions": { "add": "إضافة فئة" },
+        "table": { "columns": { "category": "الفئة", "brand": "العلامة", "subBrand": "العلامة الفرعية" } },
+        "dialog": { "title": "إضافة فئة جديدة", "editTitle": "تحديث الفئة", "uploadLabel": "رفع صورة الفئة", "nameLabel": "اسم الفئة", "namePlaceholder": "أدخل اسم الفئة", "statusDescription": "الفئة متاحة وظاهرة" },
+        "deleteDialog": { "title": "حذف الفئة؟", "descriptionLine1": "هل أنت متأكد من حذف هذه الفئة؟", "descriptionLine2": "لا يمكن التراجع عن هذا الإجراء.", "cancel": "لا، احتفظ به", "confirm": "نعم، احذفه!" }
+      },
+      "subCategory": {
+        "title": "الفئة الفرعية", "subtitle": "إدارة ومراقبة جميع فئاتك المسجلة",
+        "actions": { "add": "إضافة فئة فرعية" },
+        "table": { "columns": { "subCategory": "الفئة", "brand": "العلامة", "subBrand": "العلامة الفرعية", "category": "الفئة" } },
+        "dialog": { "title": "إضافة فئة فرعية جديدة", "editTitle": "تحديث الفئة الفرعية", "uploadLabel": "رفع صورة الفئة الفرعية", "nameLabel": "اسم الفئة الفرعية", "namePlaceholder": "أدخل اسم الفئة الفرعية", "categoryLabel": "الفئة الفرعية", "selectCategory": "اختر فئة فرعية", "statusDescription": "الفئة الفرعية متاحة وظاهرة" },
+        "deleteDialog": { "title": "حذف الفئة الفرعية؟", "descriptionLine1": "هل أنت متأكد من حذف هذه الفئة الفرعية؟", "descriptionLine2": "لا يمكن التراجع عن هذا الإجراء.", "cancel": "لا، احتفظ به", "confirm": "نعم، احذفه!" }
+      },
+      "product": {
+        "title": "المنتجات", "subtitle": "إدارة علاماتك ومنتجاتك هنا",
+        "actions": { "add": "إضافة منتج" },
+        "table": { "columns": { "products": "المنتجات", "family": "العائلة", "sku": "رمز SKU", "description": "الوصف" } },
+        "dialog": { "title": "إضافة منتج جديد", "editTitle": "تحديث المنتج", "uploadLabel": "رفع صورة المنتج", "nameLabel": "اسم المنتج", "namePlaceholder": "أدخل اسم المنتج", "skuLabel": "رمز SKU", "skuPlaceholder": "أدخل رمز SKU", "descriptionLabel": "الوصف", "descriptionPlaceholder": "أدخل وصف المنتج", "categoryLabel": "الفئة", "selectCategory": "اختر فئة", "subCategoryLabel": "الفئة الفرعية", "selectSubCategory": "اختر فئة فرعية", "statusDescription": "المنتج متاح وظاهر" },
+        "deleteDialog": { "title": "حذف المنتج؟", "descriptionLine1": "هل أنت متأكد من حذف هذا المنتج؟", "descriptionLine2": "لا يمكن التراجع عن هذا الإجراء.", "cancel": "لا، احتفظ به", "confirm": "نعم، احذفه!" }
+      }
+    },
     "adminsPage": {
       "title": "إدارة المشرفين",
       "subtitle": "مراقبة وإدارة مشرفي المنصة",
@@ -714,6 +780,32 @@
       "pagination": {
         "previous": "السابق",
         "next": "التالي"
+      },
+      "requests": {
+        "columns": {
+          "requestId": "رقم الطلب",
+          "location": "الموقع",
+          "assignedBy": "المسؤول",
+          "deletedAt": "تاريخ الحذف",
+          "status": "الحالة",
+          "action": "الإجراء"
+        }
+      },
+      "dialogs": {
+        "permanentDelete": {
+          "title": "حذف نهائي؟",
+          "descriptionLine1": "هل أنت متأكد من حذف هذا العنصر نهائياً؟",
+          "descriptionLine2": "لا يمكن التراجع عن هذا الإجراء.",
+          "cancel": "لا، احتفظ به",
+          "confirm": "نعم، احذفه!"
+        },
+        "restore": {
+          "title": "استعادة العنصر؟",
+          "descriptionLine1": "هل أنت متأكد من استعادة هذا العنصر؟",
+          "descriptionLine2": "سيتم إعادة العنصر إلى موضعه الأصلي.",
+          "cancel": "لا، إلغاء",
+          "confirm": "نعم، استعده!"
+        }
       }
     },
     "paymentPage": {
@@ -844,7 +936,8 @@
         "failed": "فشل",
         "rejected": "مرفوض",
         "canceled": "ملغي",
-        "pending": "قيد الانتظار"
+        "pending": "قيد الانتظار",
+        "reopened": "معاد فتحه"
       },
       "table": {
         "columns": {
@@ -873,6 +966,77 @@
         "assignees": {
           "mohamedAli": "محمد علي"
         }
+      },
+      "deleteDialog": {
+        "title": "حذف الطلب؟",
+        "description": "هل أنت متأكد من حذف الطلب #{id}؟ لا يمكن التراجع عن هذا الإجراء.",
+        "reasonLabel": "سبب الحذف",
+        "reasonPlaceholder": "اختر سببًا",
+        "reasons": {
+          "duplicate": "طلب مكرر",
+          "cancelled": "تم إلغاؤه من قبل العميل",
+          "error": "أُنشئ بالخطأ",
+          "other": "سبب آخر"
+        },
+        "cancel": "لا، احتفظ به",
+        "confirm": "نعم، احذفه!"
+      }
+    },
+    "requestDetails": {
+      "title": "تفاصيل الطلب",
+      "subtitle": "معلومات كاملة حول طلب التنفيذ {id}",
+      "createdOn": "تاريخ الإنشاء",
+      "info": {
+        "location": "الموقع",
+        "assignedBy": "المسؤول",
+        "executionDate": "تاريخ التنفيذ",
+        "timeWindow": "النافذة الزمنية"
+      },
+      "stats": {
+        "totalCost": "إجمالي التكلفة",
+        "totalProducts": "إجمالي المنتجات",
+        "unitsSubtitle": "وحدات عبر جميع الخدمات",
+        "timeRemaining": "الوقت المتبقي",
+        "expired": "منتهي",
+        "untilDeadline": "حتى الموعد"
+      },
+      "actions": {
+        "reschedule": "إعادة جدولة الطلب",
+        "cancelRequest": "إلغاء الطلب",
+        "repeatRequest": "تكرار الطلب",
+        "viewExecution": "عرض تفاصيل التنفيذ",
+        "cancelReopening": "إلغاء إعادة الفتح"
+      },
+      "status": {
+        "inProgress": "قيد التنفيذ",
+        "pending": "قيد الانتظار",
+        "failed": "فشل",
+        "rejected": "مرفوض",
+        "inReview": "قيد المراجعة",
+        "accepted": "مقبول",
+        "reopened": "معاد فتحه",
+        "completed": "مكتمل",
+        "canceled": "ملغي"
+      },
+      "services": {
+        "heading": "تفاصيل الخدمات ({count})",
+        "productHeading": "المنتج",
+        "executionGuidelines": "إرشادات التنفيذ",
+        "brand": "العلامة التجارية",
+        "subBrand": "العلامة الفرعية",
+        "category": "الفئة",
+        "subCategory": "الفئة الفرعية",
+        "columns": {
+          "products": "المنتجات",
+          "skuCode": "رمز SKU",
+          "quantity": "الكمية",
+          "expiryDate": "تاريخ الانتهاء"
+        }
+      },
+      "reschedule": {
+        "dateTitle": "اختر تاريخ التنفيذ",
+        "timeTitle": "اختر وقت التنفيذ",
+        "close": "إغلاق"
       }
     }
   },

@@ -1,3 +1,4 @@
+import { Link } from "@/i18n/navigation";
 import type { DashboardRequestRow } from "@/modules/dashboard/components/dashboard-requests.seed";
 import { StatusBadge } from "@/modules/dashboard/components/status-badge";
 import { EditIcon, TrashIcon } from "@/shared/components/dashboard/dashboard-icons";
@@ -19,6 +20,7 @@ interface DashboardRequestsTableProps {
   };
   resolveText: (key: string) => string;
   resolveStatus: (status: DashboardRequestRow["status"]) => string;
+  onDelete?: (id: string) => void;
 }
 
 export function DashboardRequestsTable({
@@ -26,6 +28,7 @@ export function DashboardRequestsTable({
   labels,
   resolveText,
   resolveStatus,
+  onDelete,
 }: DashboardRequestsTableProps) {
   return (
     <div className="overflow-hidden rounded-lg border border-border bg-card shadow-sm">
@@ -65,7 +68,12 @@ export function DashboardRequestsTable({
                   <span className="block size-4 rounded border border-border bg-card" />
                 </td>
                 <td className="border-b border-border px-5 py-4 font-semibold text-foreground">
-                  {row.id}
+                  <Link
+                    href={`/dashboard/requests/${row.id}`}
+                    className="text-primary hover:underline"
+                  >
+                    {row.id}
+                  </Link>
                 </td>
                 <td className="border-b border-border px-7 py-4 text-muted-foreground">
                   {resolveText(row.locationKey)}
@@ -86,7 +94,8 @@ export function DashboardRequestsTable({
                       type="button"
                       variant="ghost"
                       size="icon-xs"
-                      className="text-muted-foreground hover:text-foreground"
+                      className="text-muted-foreground hover:text-destructive"
+                      onClick={() => onDelete?.(row.id)}
                     >
                       <TrashIcon className="size-4" />
                     </Button>

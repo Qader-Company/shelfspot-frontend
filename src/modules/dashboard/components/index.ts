@@ -5,3 +5,4 @@ export { CreateRequestPage } from "@/modules/dashboard/components/create-request
 export { PaymentsPage } from "@/modules/dashboard/payment";
 export { TrashPage } from "@/modules/dashboard/trash";
 export { AdminsPage } from "@/modules/dashboard/admins";
+export { BrandPage, SubBrandPage, CategoryPage, SubCategoryPage, ProductPage } from "@/modules/dashboard/catalog";

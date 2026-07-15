@@ -21,6 +21,7 @@ import type { DashboardSidebarItem } from "./types";
 interface SidebarItemProps {
   item: DashboardSidebarItem;
   isActive?: boolean;
+  isExpanded?: boolean;
 }
 
 const iconComponents = {
@@ -34,7 +35,11 @@ const iconComponents = {
   chevron: SidebarChevronIcon,
 } satisfies Record<DashboardIconKey, ComponentType<{ className?: string }>>;
 
-export function SidebarItem({ item, isActive = false }: SidebarItemProps) {
+export function SidebarItem({
+  item,
+  isActive = false,
+  isExpanded = false,
+}: SidebarItemProps) {
   const Icon = iconComponents[item.icon];
   const TrailingIcon = item.trailingIcon
     ? iconComponents[item.trailingIcon]
@@ -53,7 +58,14 @@ export function SidebarItem({ item, isActive = false }: SidebarItemProps) {
     >
       <Icon className="size-5 shrink-0" />
       <span className="min-w-0 flex-1 truncate">{item.label}</span>
-      {item.trailingIcon ? <TrailingIcon className="size-4 shrink-0" /> : null}
+      {item.trailingIcon ? (
+        <TrailingIcon
+          className={cn(
+            "size-4 shrink-0 transition-transform duration-200",
+            isExpanded && "rotate-180",
+          )}
+        />
+      ) : null}
     </Link>
   );
 }

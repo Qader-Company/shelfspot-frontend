@@ -157,6 +157,11 @@
       "requests": "Requests",
       "payment": "Payment",
       "catalog": "Catalog",
+      "catalogBrand": "Brand",
+      "catalogSubBrand": "Sub-Brand",
+      "catalogCategory": "Category",
+      "catalogSubCategory": "Sub-Category",
+      "catalogProduct": "Product",
       "admins": "Admins",
       "trash": "Trash",
       "logout": "Logout"
@@ -589,6 +594,67 @@
         "noServices": "No services available."
       }
     },
+    "catalogPage": {
+      "search": { "label": "Search catalog", "placeholder": "Search by brand" },
+      "filters": { "allStatuses": "All Statuses" },
+      "actions": { "import": "Import" },
+      "status": { "active": "Active", "inactive": "In Active" },
+      "table": {
+        "columns": { "status": "Status", "createdDate": "Created Date", "action": "Action" },
+        "actions": { "selectAll": "Select all", "selectRow": "Select row", "delete": "Delete item", "edit": "Edit item", "toggleStatus": "Toggle status" }
+      },
+      "pagination": { "previous": "Previous", "next": "Next" },
+      "dialog": {
+        "close": "Close dialog", "cancel": "Cancel", "save": "Save",
+        "uploadHint": "PNG,JSG up to 5 MB",
+        "statusLabel": "Status", "statusActive": "Active",
+        "parentBrand": "Parent Brand", "selectBrand": "Select a brand",
+        "subBrand": "Sub-Brand", "selectSubBrand": "Select a sub-brand"
+      },
+      "import": {
+        "title": "Import Files",
+        "description": "Select and Upload the files according to the template file",
+        "downloadLabel": "Download template File",
+        "uploadLabel": "Upload Files",
+        "uploadHint": "Select a file or drag and drop here",
+        "uploadFormat": "Format: CSV, XLSX"
+      },
+      "brand": {
+        "title": "Brand", "subtitle": "Manage and monitor all your registered brands and their details",
+        "actions": { "add": "Add Brand" },
+        "table": { "columns": { "brandName": "Brand Name" } },
+        "dialog": { "title": "Add New Brand", "editTitle": "Update Brand", "uploadLabel": "Upload Brand Logo", "nameLabel": "Brand Name", "namePlaceholder": "Enter brand name", "statusDescription": "Brand is available and visible" },
+        "deleteDialog": { "title": "Delete Brand?", "descriptionLine1": "Are you sure you want to delete this brand?", "descriptionLine2": "This action cannot be undone.", "cancel": "No, Keep it", "confirm": "Yes, Delete!" }
+      },
+      "subBrand": {
+        "title": "Sub-Brand", "subtitle": "Manage and monitor all your registered sub-brands and their details",
+        "actions": { "add": "Add Sub-Brand" },
+        "table": { "columns": { "subBrandName": "Sub-Brand Name", "brand": "Brand" } },
+        "dialog": { "title": "Add New Sub-Brand", "editTitle": "Update Sub-Brand", "uploadLabel": "Upload Sub-Brand Image", "nameLabel": "Sub-Brand Name", "namePlaceholder": "Enter sub-brand name", "statusDescription": "Sub-Brand is available and visible" },
+        "deleteDialog": { "title": "Delete Sub-Brand?", "descriptionLine1": "Are you sure you want to delete this sub-brand?", "descriptionLine2": "This action cannot be undone.", "cancel": "No, Keep it", "confirm": "Yes, Delete!" }
+      },
+      "category": {
+        "title": "Category", "subtitle": "Manage and monitor all your registered categories and their details",
+        "actions": { "add": "Add Category" },
+        "table": { "columns": { "category": "Category", "brand": "Brand", "subBrand": "Sub-Brand" } },
+        "dialog": { "title": "Add New Category", "editTitle": "Update Category", "uploadLabel": "Upload Category Image", "nameLabel": "Category Name", "namePlaceholder": "Enter category name", "statusDescription": "Category is available and visible" },
+        "deleteDialog": { "title": "Delete Category?", "descriptionLine1": "Are you sure you want to delete this category?", "descriptionLine2": "This action cannot be undone.", "cancel": "No, Keep it", "confirm": "Yes, Delete!" }
+      },
+      "subCategory": {
+        "title": "Sub-Category", "subtitle": "Manage and monitor all your registered categories and their details",
+        "actions": { "add": "Add Sub-Category" },
+        "table": { "columns": { "subCategory": "Category", "brand": "Brand", "subBrand": "Sub-Brand", "category": "Category" } },
+        "dialog": { "title": "Add New Sub-Category", "editTitle": "Update Sub-Category", "uploadLabel": "Upload Sub-Category Image", "nameLabel": "Sub-Category Name", "namePlaceholder": "Enter sub-category name", "categoryLabel": "Sub-Category", "selectCategory": "Select sub-category", "statusDescription": "Sub-Category is available and visible" },
+        "deleteDialog": { "title": "Delete Sub-Category?", "descriptionLine1": "Are you sure you want to delete this sub-category?", "descriptionLine2": "This action cannot be undone.", "cancel": "No, Keep it", "confirm": "Yes, Delete!" }
+      },
+      "product": {
+        "title": "Products", "subtitle": "Manage your brands and products here",
+        "actions": { "add": "Add Product" },
+        "table": { "columns": { "products": "Products", "family": "Family", "sku": "SKU", "description": "Description" } },
+        "dialog": { "title": "Add New product", "editTitle": "Update Product", "uploadLabel": "Upload Product Image", "nameLabel": "Product Name", "namePlaceholder": "Enter product name", "skuLabel": "SKU Code", "skuPlaceholder": "Enter SKU Code (eg, 1234SKU)", "descriptionLabel": "Description", "descriptionPlaceholder": "Enter product description", "categoryLabel": "Category", "selectCategory": "Select a category", "subCategoryLabel": "Sub-Category", "selectSubCategory": "Select sub-category", "statusDescription": "Product is available and visible" },
+        "deleteDialog": { "title": "Delete Product?", "descriptionLine1": "Are you sure you want to delete this product?", "descriptionLine2": "This action cannot be undone.", "cancel": "No, Keep it", "confirm": "Yes, Delete!" }
+      }
+    },
     "adminsPage": {
       "title": "Admins Management",
       "subtitle": "Monitor and manage platform admins",
@@ -714,6 +780,32 @@
       "pagination": {
         "previous": "Previous",
         "next": "Next"
+      },
+      "requests": {
+        "columns": {
+          "requestId": "Request ID",
+          "location": "Location",
+          "assignedBy": "Assigned By",
+          "deletedAt": "Deleted at",
+          "status": "Status",
+          "action": "Action"
+        }
+      },
+      "dialogs": {
+        "permanentDelete": {
+          "title": "Permanently Delete?",
+          "descriptionLine1": "Are you sure you want to permanently delete this item?",
+          "descriptionLine2": "This action cannot be undone.",
+          "cancel": "No, Keep it",
+          "confirm": "Yes, Delete!"
+        },
+        "restore": {
+          "title": "Restore Item?",
+          "descriptionLine1": "Are you sure you want to restore this item?",
+          "descriptionLine2": "The item will be moved back to its original location.",
+          "cancel": "No, Cancel",
+          "confirm": "Yes, Restore!"
+        }
       }
     },
     "paymentPage": {
@@ -844,7 +936,8 @@
         "failed": "Failed",
         "rejected": "Rejected",
         "canceled": "Canceled",
-        "pending": "Pending"
+        "pending": "Pending",
+        "reopened": "Reopened"
       },
       "table": {
         "columns": {
@@ -873,6 +966,77 @@
         "assignees": {
           "mohamedAli": "Mohamed Ali"
         }
+      },
+      "deleteDialog": {
+        "title": "Delete Request?",
+        "description": "Are you sure you want to delete request #{id}? This action cannot be undone.",
+        "reasonLabel": "Deletion Reason",
+        "reasonPlaceholder": "Select a reason",
+        "reasons": {
+          "duplicate": "Duplicate request",
+          "cancelled": "Request cancelled by client",
+          "error": "Created by error",
+          "other": "Other reason"
+        },
+        "cancel": "No, Keep it",
+        "confirm": "Yes, Delete!"
+      }
+    },
+    "requestDetails": {
+      "title": "Request Details",
+      "subtitle": "Complete information about execution request {id}",
+      "createdOn": "Created on",
+      "info": {
+        "location": "Location",
+        "assignedBy": "Assigned By",
+        "executionDate": "Execution Date",
+        "timeWindow": "Time Window"
+      },
+      "stats": {
+        "totalCost": "Total Cost",
+        "totalProducts": "Total Products",
+        "unitsSubtitle": "Units across all services",
+        "timeRemaining": "Time Remaining",
+        "expired": "Expired",
+        "untilDeadline": "Until deadline"
+      },
+      "actions": {
+        "reschedule": "Reschedule This Request",
+        "cancelRequest": "Cancel Request",
+        "repeatRequest": "Repeat This Request",
+        "viewExecution": "View Execution Details",
+        "cancelReopening": "Cancel reopening task"
+      },
+      "status": {
+        "inProgress": "In Progress",
+        "pending": "Pending",
+        "failed": "Failed",
+        "rejected": "Rejected",
+        "inReview": "In Review",
+        "accepted": "Accepted",
+        "reopened": "Reopened",
+        "completed": "Completed",
+        "canceled": "Canceled"
+      },
+      "services": {
+        "heading": "Services Details ({count})",
+        "productHeading": "Product",
+        "executionGuidelines": "Execution Guidelines",
+        "brand": "Brand",
+        "subBrand": "Sub-Brand",
+        "category": "Category",
+        "subCategory": "Sub-Category",
+        "columns": {
+          "products": "Products",
+          "skuCode": "SKU Code",
+          "quantity": "Quantity",
+          "expiryDate": "Expiry Date"
+        }
+      },
+      "reschedule": {
+        "dateTitle": "Select Execution Date",
+        "timeTitle": "Select Execution Time",
+        "close": "Close"
       }
     }
   },

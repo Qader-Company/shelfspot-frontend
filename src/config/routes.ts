@@ -10,7 +10,12 @@ export const ROUTES = {
   dashboardRequests: "/dashboard/requests",
   dashboardCreateRequest: "/dashboard/requests/create",
   dashboardPayment: "/dashboard/payment",
-  dashboardCatalog: "/dashboard/catalog",
+  dashboardCatalog:            "/dashboard/catalog",
+  dashboardCatalogBrand:       "/dashboard/catalog/brand",
+  dashboardCatalogSubBrand:    "/dashboard/catalog/sub-brand",
+  dashboardCatalogCategory:    "/dashboard/catalog/category",
+  dashboardCatalogSubCategory: "/dashboard/catalog/sub-category",
+  dashboardCatalogProduct:     "/dashboard/catalog/product",
   dashboardAdmins: "/dashboard/admins",
   dashboardTrash: "/dashboard/trash",
 } as const;

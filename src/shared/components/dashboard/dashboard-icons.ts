@@ -24,6 +24,9 @@ export {
   UploadCloud as UploadIcon,
   UsersRound as AdminsIcon,
   RotateCcw as RestoreIcon,
+  Download as DownloadIcon,
+  Activity as ActivityIcon,
+  MessageCircle as ScheduleIcon,
   X as CloseIcon,
 } from "lucide-react";
 

@@ -33,9 +33,16 @@ export default async function Layout({
     {
       key: "catalog",
       label: t("navigation.catalog"),
-      href: ROUTES.dashboardCatalog,
+      href: ROUTES.dashboardCatalogBrand,
       icon: "catalog",
       trailingIcon: "chevron",
+      children: [
+        { key: "brand",       label: t("navigation.catalogBrand"),       href: ROUTES.dashboardCatalogBrand },
+        { key: "subBrand",    label: t("navigation.catalogSubBrand"),    href: ROUTES.dashboardCatalogSubBrand },
+        { key: "category",    label: t("navigation.catalogCategory"),    href: ROUTES.dashboardCatalogCategory },
+        { key: "subCategory", label: t("navigation.catalogSubCategory"), href: ROUTES.dashboardCatalogSubCategory },
+        { key: "product",     label: t("navigation.catalogProduct"),     href: ROUTES.dashboardCatalogProduct },
+      ],
     },
     {
       key: "admins",
