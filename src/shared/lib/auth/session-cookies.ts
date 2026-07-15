@@ -58,13 +58,12 @@ export function setSessionCookies(
     refresh.token,
     cookieOptions(
       persistent && refresh.ttl ? refresh.ttl * 60 : undefined,
-      "/api/auth",
     ),
   );
   response.cookies.set(
     PERSISTENT_SESSION_COOKIE,
     String(persistent),
-    cookieOptions(persistent && refresh.ttl ? refresh.ttl * 60 : undefined, "/api/auth"),
+    cookieOptions(persistent && refresh.ttl ? refresh.ttl * 60 : undefined),
   );
 }
 
@@ -74,11 +73,11 @@ export function clearSessionCookies(response: NextResponse) {
     maxAge: 0,
   });
   response.cookies.set(REFRESH_TOKEN_COOKIE, "", {
-    ...cookieOptions(undefined, "/api/auth"),
+    ...cookieOptions(),
     maxAge: 0,
   });
   response.cookies.set(PERSISTENT_SESSION_COOKIE, "", {
-    ...cookieOptions(undefined, "/api/auth"),
+    ...cookieOptions(),
     maxAge: 0,
   });
 }
