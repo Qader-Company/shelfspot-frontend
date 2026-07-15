@@ -1,12 +1,16 @@
 "use client";
 
-import { useState } from "react";
-import { useTranslations } from "next-intl";
+import { useQueryClient } from "@tanstack/react-query";
+import { useDeferredValue, useMemo, useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
 
+import { useBrandsQuery } from "@/modules/dashboard/hooks/use-brands-query";
 import { useCreateBrandMutation } from "@/modules/dashboard/hooks/use-create-brand-mutation";
 import { downloadBrandsTemplateService } from "@/modules/dashboard/services/download-brands-template-service";
 import { importBrandsService } from "@/modules/dashboard/services/import-brands-service";
+import type { CompanyBrand } from "@/modules/dashboard/types/brand";
 import { normalizeApiError } from "@/shared/lib/api/errors";
+import { QUERY_KEYS } from "@/shared/lib/query/keys";
 
 import {
   AddIcon,
@@ -25,13 +29,44 @@ import { CatalogFormDialog, CatalogStatusField } from "./catalog-form-dialog";
 import { CatalogImportDialog } from "./catalog-import-dialog";
 import { CatalogItemsTable } from "./catalog-items-table";
 import { CatalogUploadArea } from "./catalog-upload-area";
-import { brandRows, catalogPagination } from "./catalog.seed";
+import type { BrandRow } from "./catalog.seed";
 
 type BrandDialog = "add" | "edit" | "delete" | "import" | null;
 
+function getBrandName(brand: CompanyBrand, locale: string) {
+  if (brand.name) return brand.name;
+
+  const translations = brand.translations;
+  if (Array.isArray(translations)) {
+    return (
+      translations.find((translation) => translation.locale === locale)?.name ??
+      translations[0]?.name ??
+      "-"
+    );
+  }
+
+  if (translations) {
+    const localized = translations[locale];
+    if (typeof localized === "string") return localized;
+    if (localized?.name) return localized.name;
+
+    for (const translation of Object.values(translations)) {
+      if (typeof translation === "string") return translation;
+      if (translation?.name) return translation.name;
+    }
+  }
+
+  return "-";
+}
+
 export function BrandPage() {
   const t = useTranslations("dashboard");
+  const locale = useLocale();
+  const queryClient = useQueryClient();
   const [openDialog, setOpenDialog] = useState<BrandDialog>(null);
+  const [searchName, setSearchName] = useState("");
+  const [activeFilter, setActiveFilter] = useState<"all" | "1" | "0">("all");
+  const [page, setPage] = useState(1);
   const [nameEn, setNameEn] = useState("");
   const [nameAr, setNameAr] = useState("");
   const [isActive, setIsActive] = useState(true);
@@ -44,6 +79,39 @@ export function BrandPage() {
   const [isImporting, setIsImporting] = useState(false);
   const [importError, setImportError] = useState("");
   const createBrandMutation = useCreateBrandMutation();
+  const deferredName = useDeferredValue(searchName.trim());
+  const brandsQuery = useBrandsQuery({
+    per_page: 10,
+    page,
+    name: deferredName || undefined,
+    active:
+      activeFilter === "all" ? undefined : (Number(activeFilter) as 0 | 1),
+  });
+
+  const brandRows = useMemo<BrandRow[]>(
+    () =>
+      (brandsQuery.data?.data ?? []).map((brand) => ({
+        id: String(brand.id),
+        name: getBrandName(brand, locale),
+        thumbnailAlt: getBrandName(brand, locale),
+        isActive: Boolean(brand.is_active),
+        statusDisplay: "toggle",
+        createdDate: brand.created_at
+          ? new Intl.DateTimeFormat(locale, {
+              dateStyle: "medium",
+              timeStyle: "short",
+            }).format(new Date(brand.created_at))
+          : "-",
+      })),
+    [brandsQuery.data?.data, locale],
+  );
+  const currentPage = brandsQuery.data?.meta?.current_page ?? page;
+  const lastPage = Math.max(brandsQuery.data?.meta?.last_page ?? 1, 1);
+  const paginationPages = useMemo(() => {
+    const count = Math.min(lastPage, 5);
+    const start = Math.max(1, Math.min(currentPage - 2, lastPage - count + 1));
+    return Array.from({ length: count }, (_, index) => start + index);
+  }, [currentPage, lastPage]);
 
   const close = () => {
     setOpenDialog(null);
@@ -84,6 +152,7 @@ export function BrandPage() {
       setSuccessMessage(
         response.message || t("catalogPage.brand.dialog.success"),
       );
+      await queryClient.invalidateQueries({ queryKey: QUERY_KEYS.brands() });
       close();
     } catch (error) {
       const apiError = normalizeApiError(error);
@@ -121,6 +190,7 @@ export function BrandPage() {
       setSuccessMessage(
         response.message || t("catalogPage.brand.dialog.importSuccess"),
       );
+      await queryClient.invalidateQueries({ queryKey: QUERY_KEYS.brands() });
       close();
     } catch (error) {
       const apiError = normalizeApiError(error);
@@ -196,42 +266,90 @@ export function BrandPage() {
           label={t("catalogPage.search.label")}
           placeholder={t("catalogPage.search.placeholder")}
           className="max-w-[400px]"
+          value={searchName}
+          onChange={(event) => {
+            setSearchName(event.target.value);
+            setPage(1);
+          }}
         />
-        <Button
-          type="button"
-          variant="outline"
-          className="h-10 gap-2 rounded-lg border-border bg-card px-4 text-sm font-medium text-foreground shadow-none"
-        >
-          <FilterIcon className="size-4" />
-          {t("catalogPage.filters.allStatuses")}
-        </Button>
+        <label className="relative">
+          <span className="sr-only">
+            {t("catalogPage.filters.allStatuses")}
+          </span>
+          <FilterIcon className="pointer-events-none absolute start-4 top-1/2 size-4 -translate-y-1/2" />
+          <select
+            value={activeFilter}
+            onChange={(event) => {
+              setActiveFilter(event.target.value as "all" | "1" | "0");
+              setPage(1);
+            }}
+            className="h-10 appearance-none rounded-lg border border-border bg-card pe-8 ps-10 text-sm font-medium text-foreground"
+          >
+            <option value="all">{t("catalogPage.filters.allStatuses")}</option>
+            <option value="1">{t("catalogPage.status.active")}</option>
+            <option value="0">{t("catalogPage.status.inactive")}</option>
+          </select>
+        </label>
       </div>
 
       {/* Table */}
-      <CatalogItemsTable
-        rows={brandRows}
-        labels={tableLabels}
-        extraColumns={[]}
-        onDelete={handleDelete}
-        onEdit={handleEdit}
-      />
+      {brandsQuery.isError ? (
+        <p
+          className="rounded-xl border border-destructive/20 bg-destructive/10 px-4 py-3 text-sm text-destructive"
+          role="alert"
+        >
+          {normalizeApiError(brandsQuery.error).message ||
+            t("catalogPage.brand.listError")}
+        </p>
+      ) : (
+        <div className={cn(brandsQuery.isFetching && "opacity-60")}>
+          <CatalogItemsTable
+            rows={brandRows}
+            labels={tableLabels}
+            extraColumns={[]}
+            onDelete={handleDelete}
+            onEdit={handleEdit}
+          />
+        </div>
+      )}
 
       {/* Pagination */}
       <div className="flex flex-col items-center justify-between gap-4 px-5 pb-2 md:flex-row">
-        <Button type="button" variant="outline" className="h-10 gap-2 rounded-lg border-border bg-card px-4 text-sm font-semibold shadow-none">
+        <Button
+          type="button"
+          variant="outline"
+          disabled={currentPage <= 1 || brandsQuery.isFetching}
+          onClick={() => setPage((value) => Math.max(1, value - 1))}
+          className="h-10 gap-2 rounded-lg border-border bg-card px-4 text-sm font-semibold shadow-none"
+        >
           <PaginationPreviousIcon className="size-4 rtl:rotate-180" />
           {t("catalogPage.pagination.previous")}
         </Button>
         <div className="flex items-center gap-2">
-          {catalogPagination.pages.map((page) => (
-            <Button key={page} type="button" variant="ghost" size="icon-sm"
-              className={cn("rounded-lg text-sm text-muted-foreground",
-                page === catalogPagination.activePage && "bg-primary/20 text-foreground hover:bg-primary/20")}>
-              {page}
+          {paginationPages.map((pageNumber) => (
+            <Button
+              key={pageNumber}
+              type="button"
+              variant="ghost"
+              size="icon-sm"
+              onClick={() => setPage(pageNumber)}
+              className={cn(
+                "rounded-lg text-sm text-muted-foreground",
+                pageNumber === currentPage &&
+                  "bg-primary/20 text-foreground hover:bg-primary/20",
+              )}
+            >
+              {pageNumber}
             </Button>
           ))}
         </div>
-        <Button type="button" variant="outline" className="h-10 gap-2 rounded-lg border-border bg-card px-4 text-sm font-semibold shadow-none">
+        <Button
+          type="button"
+          variant="outline"
+          disabled={currentPage >= lastPage || brandsQuery.isFetching}
+          onClick={() => setPage((value) => Math.min(lastPage, value + 1))}
+          className="h-10 gap-2 rounded-lg border-border bg-card px-4 text-sm font-semibold shadow-none"
+        >
           {t("catalogPage.pagination.next")}
           <PaginationNextIcon className="size-4 rtl:rotate-180" />
         </Button>
