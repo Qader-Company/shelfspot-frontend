@@ -3,6 +3,10 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 
+import { useBrandsQuery } from "@/modules/dashboard/hooks/use-brands-query";
+import { useCreateSubBrandMutation } from "@/modules/dashboard/hooks/use-create-sub-brand-mutation";
+import { normalizeApiError } from "@/shared/lib/api/errors";
+
 import {
   AddIcon,
   FilterIcon,
@@ -17,7 +21,6 @@ import { Input } from "@/shared/ui/input";
 
 import {
   CatalogFormDialog,
-  CatalogSelectField,
   CatalogStatusField,
 } from "./catalog-form-dialog";
 import { DeleteConfirmDialog } from "@/shared/components/dashboard/delete-confirm-dialog";
@@ -26,7 +29,6 @@ import { CatalogItemsTable } from "./catalog-items-table";
 import type { CatalogExtraColumn } from "./catalog-items-table";
 import { CatalogUploadArea } from "./catalog-upload-area";
 import {
-  catalogBrandOptions,
   catalogPagination,
   subBrandRows,
 } from "./catalog.seed";
@@ -36,7 +38,56 @@ type SubBrandDialog = "add" | "edit" | "delete" | "import" | null;
 export function SubBrandPage() {
   const t = useTranslations("dashboard");
   const [openDialog, setOpenDialog] = useState<SubBrandDialog>(null);
-  const close = () => setOpenDialog(null);
+  const [brandId, setBrandId] = useState("");
+  const [nameEn, setNameEn] = useState("");
+  const [nameAr, setNameAr] = useState("");
+  const [isActive, setIsActive] = useState(true);
+  const [logo, setLogo] = useState<File | null>(null);
+  const [formError, setFormError] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+  const brandsQuery = useBrandsQuery({ per_page: 100, page: 1 });
+  const createSubBrandMutation = useCreateSubBrandMutation();
+
+  const close = () => {
+    setOpenDialog(null);
+    setFormError("");
+  };
+
+  const openAddDialog = () => {
+    setBrandId("");
+    setNameEn("");
+    setNameAr("");
+    setIsActive(true);
+    setLogo(null);
+    setFormError("");
+    setOpenDialog("add");
+  };
+
+  async function handleCreateSubBrand() {
+    if (!brandId || !nameEn.trim() || !nameAr.trim() || !logo) {
+      setFormError(t("catalogPage.subBrand.dialog.requiredFields"));
+      return;
+    }
+
+    setFormError("");
+
+    try {
+      const response = await createSubBrandMutation.mutateAsync({
+        brandId,
+        nameEn: nameEn.trim(),
+        nameAr: nameAr.trim(),
+        isActive,
+        logo,
+      });
+      setSuccessMessage(
+        response.message || t("catalogPage.subBrand.dialog.success"),
+      );
+      close();
+    } catch (error) {
+      const apiError = normalizeApiError(error);
+      setFormError(apiError.message || t("catalogPage.subBrand.dialog.error"));
+    }
+  }
   const handleDelete = () => setOpenDialog("delete");
   const handleEdit = () => setOpenDialog("edit");
 
@@ -78,12 +129,21 @@ export function SubBrandPage() {
             <UploadIcon className="size-4" />
             {t("catalogPage.actions.import")}
           </Button>
-          <Button type="button" className="h-10 gap-2 rounded-lg px-4 text-sm font-semibold text-white hover:text-white" onClick={() => setOpenDialog("add")}>
+          <Button type="button" className="h-10 gap-2 rounded-lg px-4 text-sm font-semibold text-white hover:text-white" onClick={openAddDialog}>
             <AddIcon className="size-4" />
             {t("catalogPage.subBrand.actions.add")}
           </Button>
         </div>
       </div>
+
+      {successMessage ? (
+        <p
+          className="rounded-xl border border-success/20 bg-success/10 px-4 py-3 text-sm text-success"
+          role="status"
+        >
+          {successMessage}
+        </p>
+      ) : null}
 
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <SearchInput label={t("catalogPage.search.label")} placeholder={t("catalogPage.search.placeholder")} className="max-w-[400px]" />
@@ -133,21 +193,49 @@ export function SubBrandPage() {
         cancelLabel={t("catalogPage.dialog.cancel")}
         saveLabel={t("catalogPage.dialog.save")}
         onClose={close}
+        onSubmit={openDialog === "add" ? handleCreateSubBrand : undefined}
+        isPending={createSubBrandMutation.isPending}
+        errorMessage={formError}
       >
-        <CatalogSelectField
-          label={t("catalogPage.dialog.parentBrand")}
-          placeholder={t("catalogPage.dialog.selectBrand")}
-          options={catalogBrandOptions}
-        />
+        <div className="space-y-1.5">
+          <label htmlFor="sub-brand-parent" className="text-sm font-semibold text-foreground">
+            {t("catalogPage.dialog.parentBrand")}
+          </label>
+          <select
+            id="sub-brand-parent"
+            value={brandId}
+            onChange={(event) => setBrandId(event.target.value)}
+            required
+            className="h-11 w-full rounded-lg border border-border bg-secondary px-4 text-sm text-foreground shadow-none"
+          >
+            <option value="" disabled>
+              {t("catalogPage.dialog.selectBrand")}
+            </option>
+            {(brandsQuery.data?.data ?? []).map((brand) => (
+              <option key={brand.id} value={String(brand.id)}>
+                {brand.name ?? `#${brand.id}`}
+              </option>
+            ))}
+          </select>
+        </div>
         <CatalogUploadArea
           label={t("catalogPage.subBrand.dialog.uploadLabel")}
           hint={t("catalogPage.dialog.uploadHint")}
+          file={logo}
+          onFileChange={setLogo}
         />
         <div className="space-y-1.5">
-          <label className="text-sm font-semibold text-foreground">
-            {t("catalogPage.subBrand.dialog.nameLabel")}
+          <label htmlFor="sub-brand-name-en" className="text-sm font-semibold text-foreground">
+            {t("catalogPage.subBrand.dialog.nameEnLabel")}
           </label>
-          <Input type="text" placeholder={t("catalogPage.subBrand.dialog.namePlaceholder")}
+          <Input id="sub-brand-name-en" type="text" value={nameEn} onChange={(event) => setNameEn(event.target.value)} required placeholder={t("catalogPage.subBrand.dialog.nameEnPlaceholder")}
+            className="h-11 rounded-lg border-border bg-secondary text-sm shadow-none" />
+        </div>
+        <div className="space-y-1.5">
+          <label htmlFor="sub-brand-name-ar" className="text-sm font-semibold text-foreground">
+            {t("catalogPage.subBrand.dialog.nameArLabel")}
+          </label>
+          <Input id="sub-brand-name-ar" type="text" dir="rtl" value={nameAr} onChange={(event) => setNameAr(event.target.value)} required placeholder={t("catalogPage.subBrand.dialog.nameArPlaceholder")}
             className="h-11 rounded-lg border-border bg-secondary text-sm shadow-none" />
         </div>
         <div className="space-y-1.5">
@@ -156,6 +244,8 @@ export function SubBrandPage() {
             activeLabel={t("catalogPage.dialog.statusActive")}
             description={t("catalogPage.subBrand.dialog.statusDescription")}
             ariaLabel={t("catalogPage.dialog.statusActive")}
+            isActive={isActive}
+            onChange={setIsActive}
           />
         </div>
       </CatalogFormDialog>

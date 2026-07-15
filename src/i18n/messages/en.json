@@ -639,7 +639,7 @@
         "title": "Sub-Brand", "subtitle": "Manage and monitor all your registered sub-brands and their details",
         "actions": { "add": "Add Sub-Brand" },
         "table": { "columns": { "subBrandName": "Sub-Brand Name", "brand": "Brand" } },
-        "dialog": { "title": "Add New Sub-Brand", "editTitle": "Update Sub-Brand", "uploadLabel": "Upload Sub-Brand Image", "nameLabel": "Sub-Brand Name", "namePlaceholder": "Enter sub-brand name", "statusDescription": "Sub-Brand is available and visible" },
+        "dialog": { "title": "Add New Sub-Brand", "editTitle": "Update Sub-Brand", "uploadLabel": "Upload Sub-Brand Image", "nameLabel": "Sub-Brand Name", "namePlaceholder": "Enter sub-brand name", "nameEnLabel": "Sub-Brand Name (English)", "nameEnPlaceholder": "Enter the English sub-brand name", "nameArLabel": "Sub-Brand Name (Arabic)", "nameArPlaceholder": "Enter the Arabic sub-brand name", "requiredFields": "Select a parent brand, enter both names, and upload a logo.", "success": "Sub-brand created successfully.", "error": "Unable to create the sub-brand.", "statusDescription": "Sub-Brand is available and visible" },
         "deleteDialog": { "title": "Delete Sub-Brand?", "descriptionLine1": "Are you sure you want to delete this sub-brand?", "descriptionLine2": "This action cannot be undone.", "cancel": "No, Keep it", "confirm": "Yes, Delete!" }
       },
       "category": {
