@@ -5,11 +5,15 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
 import { createServerApiClient } from "@/shared/lib/api/server";
-import { ACCESS_TOKEN_COOKIE } from "@/shared/lib/auth/session-cookies";
+import {
+  ACCESS_TOKEN_COOKIE,
+  COMPANY_ID_COOKIE,
+  clearSessionCookies,
+} from "@/shared/lib/auth/session-cookies";
 
 /**
  * Generic BFF proxy for authenticated company API routes.
- * Forwards Authorization, X-Company-Slug, and Content-Type headers to the upstream server.
+ * Adds server-managed Authorization and X-Company-id headers before forwarding.
  */
 export async function proxyCompanyRequest(
   request: NextRequest,
@@ -44,6 +48,11 @@ export async function proxyCompanyRequest(
     forwardedHeaders["Authorization"] = `Bearer ${accessToken}`;
   }
 
+  const companyId = request.cookies.get(COMPANY_ID_COOKIE)?.value;
+  if (companyId) {
+    forwardedHeaders["X-Company-id"] = companyId;
+  }
+
   const companySlug = request.headers.get("x-company-slug");
   if (companySlug) {
     forwardedHeaders["X-Company-Slug"] = companySlug;
@@ -58,9 +67,22 @@ export async function proxyCompanyRequest(
       validateStatus: () => true,
     });
 
-    return NextResponse.json(response.data, {
-      status: response.status,
+    const hasInvalidCompanyContext =
+      response.status === 404 &&
+      response.data &&
+      typeof response.data === "object" &&
+      (response.data as { message?: string }).message === "Company not found.";
+    const nextResponse = NextResponse.json(response.data, {
+      // Treat a stale company cookie as an invalid session so the client can
+      // re-authenticate and receive the correct company context.
+      status: hasInvalidCompanyContext ? 401 : response.status,
     });
+
+    if (hasInvalidCompanyContext) {
+      clearSessionCookies(nextResponse);
+    }
+
+    return nextResponse;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {
       return NextResponse.json(error.response.data, {

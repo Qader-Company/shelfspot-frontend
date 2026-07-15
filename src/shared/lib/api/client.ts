@@ -39,6 +39,14 @@ function isPublicAuthRequest(url?: string) {
   );
 }
 
+function redirectToLogin() {
+  if (typeof window === "undefined") return;
+  const locale = window.location.pathname.split("/")[1];
+  const loginPath = locale === "en" || locale === "ar" ? `/${locale}/login` : "/ar/login";
+
+  window.location.replace(loginPath);
+}
+
 export function setupApiClient() {
   if (isApiClientReady) {
     return;
@@ -76,6 +84,7 @@ export function setupApiClient() {
         return apiClient(config);
       } catch (refreshError) {
         useAuthStore.getState().clearSession();
+        redirectToLogin();
         throw refreshError;
       }
     },

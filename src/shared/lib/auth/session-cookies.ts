@@ -8,6 +8,7 @@ const productionPrefix = process.env.NODE_ENV === "production" ? "__Host-" : "";
 export const ACCESS_TOKEN_COOKIE = `${productionPrefix}shelfspot-access`;
 export const REFRESH_TOKEN_COOKIE = `${productionPrefix}shelfspot-refresh`;
 export const PERSISTENT_SESSION_COOKIE = `${productionPrefix}shelfspot-persistent`;
+export const COMPANY_ID_COOKIE = `${productionPrefix}shelfspot-company-id`;
 
 type TokenValue = string | { token: string; ttl?: number };
 
@@ -15,10 +16,26 @@ interface TokenPayload {
   access_token: TokenValue;
   refresh_token: TokenValue;
   token_type?: string;
+  user?: unknown;
+  company_id?: string | number;
 }
 
 function readToken(value: TokenValue) {
   return typeof value === "string" ? { token: value } : value;
+}
+
+function readCompanyId(payload: TokenPayload) {
+  if (payload.company_id != null) return String(payload.company_id);
+  if (!payload.user || typeof payload.user !== "object") return null;
+
+  const user = payload.user as {
+    company_id?: string | number;
+    companyId?: string | number;
+    company?: { id?: string | number };
+  };
+
+  const companyId = user.company_id ?? user.companyId ?? user.company?.id;
+  return companyId == null ? null : String(companyId);
 }
 
 function cookieOptions(
@@ -47,12 +64,20 @@ export function setSessionCookies(
 ) {
   const access = readToken(payload.access_token);
   const refresh = readToken(payload.refresh_token);
+  const companyId = readCompanyId(payload);
 
   response.cookies.set(
     ACCESS_TOKEN_COOKIE,
     access.token,
     cookieOptions(persistent && access.ttl ? access.ttl * 60 : undefined),
   );
+  if (companyId) {
+    response.cookies.set(
+      COMPANY_ID_COOKIE,
+      companyId,
+      cookieOptions(persistent && refresh.ttl ? refresh.ttl * 60 : undefined),
+    );
+  }
   response.cookies.set(
     REFRESH_TOKEN_COOKIE,
     refresh.token,
@@ -77,6 +102,10 @@ export function clearSessionCookies(response: NextResponse) {
     maxAge: 0,
   });
   response.cookies.set(PERSISTENT_SESSION_COOKIE, "", {
+    ...cookieOptions(),
+    maxAge: 0,
+  });
+  response.cookies.set(COMPANY_ID_COOKIE, "", {
     ...cookieOptions(),
     maxAge: 0,
   });

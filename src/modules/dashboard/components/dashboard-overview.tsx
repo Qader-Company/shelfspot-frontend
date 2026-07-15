@@ -104,7 +104,22 @@ export function DashboardOverview() {
         </p>
       ) : null}
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4" aria-busy={reportQuery.isPending}>
-        {dashboardStats.map((item) => <DashboardStatCard key={item.key} item={item} title={t(item.titleKey)} trend={t("overview.stats.change", { value: item.changePercentage > 0 ? `+${item.changePercentage}` : item.changePercentage })} />)}
+        {dashboardStats.map((item) => {
+          const changePercentage = item.changePercentage ?? 0;
+          return (
+            <DashboardStatCard
+              key={item.key}
+              item={item}
+              title={t(item.titleKey)}
+              trend={t("overview.stats.change", {
+                value:
+                  changePercentage > 0
+                    ? `+${changePercentage}`
+                    : changePercentage,
+              })}
+            />
+          );
+        })}
       </div>
       <div className="grid gap-6 xl:grid-cols-[minmax(0,1.5fr)_minmax(20rem,1fr)]">
         <ChartCard title={t("overview.charts.requestsOverTime")} action={<Button type="button" variant="outline" className="h-9 gap-3 rounded-lg border-border bg-card px-4 text-xs font-medium text-muted-foreground shadow-none">{t("overview.filters.thisWeek")}<SidebarChevronIcon className="size-3.5" /></Button>}>
