@@ -6,6 +6,7 @@ import { useLocale, useTranslations } from "next-intl";
 
 import { useBrandsQuery } from "@/modules/dashboard/hooks/use-brands-query";
 import { useCreateBrandMutation } from "@/modules/dashboard/hooks/use-create-brand-mutation";
+import { useDeleteBrandMutation } from "@/modules/dashboard/hooks/use-delete-brand-mutation";
 import { useUpdateBrandMutation } from "@/modules/dashboard/hooks/use-update-brand-mutation";
 import { downloadBrandsTemplateService } from "@/modules/dashboard/services/download-brands-template-service";
 import { importBrandsService } from "@/modules/dashboard/services/import-brands-service";
@@ -101,6 +102,7 @@ export function BrandPage() {
   const [isActive, setIsActive] = useState(true);
   const [logo, setLogo] = useState<File | null>(null);
   const [formError, setFormError] = useState("");
+  const [deleteError, setDeleteError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [isDownloadingTemplate, setIsDownloadingTemplate] = useState(false);
   const [downloadError, setDownloadError] = useState("");
@@ -108,6 +110,7 @@ export function BrandPage() {
   const [isImporting, setIsImporting] = useState(false);
   const [importError, setImportError] = useState("");
   const createBrandMutation = useCreateBrandMutation();
+  const deleteBrandMutation = useDeleteBrandMutation();
   const updateBrandMutation = useUpdateBrandMutation();
   const deferredName = useDeferredValue(searchName.trim());
   const brandsQuery = useBrandsQuery({
@@ -161,6 +164,7 @@ export function BrandPage() {
     setOpenDialog(null);
     setSelectedBrandId(null);
     setFormError("");
+    setDeleteError("");
   };
 
   const openAddDialog = () => {
@@ -306,7 +310,32 @@ export function BrandPage() {
       setIsImporting(false);
     }
   }
-  const handleDelete = () => setOpenDialog("delete");
+
+  async function handleConfirmDelete() {
+    if (!selectedBrandId) return;
+
+    setDeleteError("");
+
+    try {
+      const response = await deleteBrandMutation.mutateAsync(selectedBrandId);
+      setSuccessMessage(
+        response.message || t("catalogPage.brand.deleteDialog.success"),
+      );
+      await queryClient.invalidateQueries({ queryKey: QUERY_KEYS.brands() });
+      close();
+    } catch (error) {
+      const apiError = normalizeApiError(error);
+      setDeleteError(
+        apiError.message || t("catalogPage.brand.deleteDialog.error"),
+      );
+    }
+  }
+
+  const handleDelete = (id: string) => {
+    setSelectedBrandId(id);
+    setDeleteError("");
+    setOpenDialog("delete");
+  };
   const handleEdit = (id: string) => {
     const brand = brandsQuery.data?.data.find(
       (candidate) => String(candidate.id) === id,
@@ -482,6 +511,9 @@ export function BrandPage() {
         cancelLabel={t("catalogPage.brand.deleteDialog.cancel")}
         confirmLabel={t("catalogPage.brand.deleteDialog.confirm")}
         onClose={close}
+        onConfirm={handleConfirmDelete}
+        isPending={deleteBrandMutation.isPending}
+        errorMessage={deleteError}
       />
 
       {/* Add Brand dialog */}

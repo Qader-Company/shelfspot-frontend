@@ -9,3 +9,11 @@ export async function POST(
   const { id } = await context.params;
   return proxyCompanyRequest(request, `/company/brands/${encodeURIComponent(id)}`);
 }
+
+export async function DELETE(
+  request: NextRequest,
+  context: { params: Promise<{ id: string }> },
+) {
+  const { id } = await context.params;
+  return proxyCompanyRequest(request, `/company/brands/${encodeURIComponent(id)}`);
+}
