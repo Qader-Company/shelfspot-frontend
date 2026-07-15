@@ -55,6 +55,15 @@ function parentName(item: CompanySubBrand) {
   return item.brand?.name ?? item.brand_name ?? `#${item.brand_id}`;
 }
 
+function matchesSubBrandName(item: CompanySubBrand, search: string) {
+  if (!search) return true;
+  const names: (string | undefined)[] = [item.name];
+  if (Array.isArray(item.translations)) names.push(...item.translations.map((value) => value.name));
+  else if (item.translations) Object.values(item.translations).forEach((value) => names.push(typeof value === "string" ? value : value?.name));
+  const term = search.toLocaleLowerCase();
+  return names.some((value) => value?.toLocaleLowerCase().includes(term));
+}
+
 export function SubBrandPage() {
   const t = useTranslations("dashboard");
   const locale = useLocale();
@@ -81,16 +90,16 @@ export function SubBrandPage() {
   const deferredSearch = useDeferredValue(search.trim());
 
   const brandsQuery = useBrandsQuery({ per_page: 100, page: 1 });
-  const subBrandsQuery = useSubBrandsQuery({ per_page: 10, page, name: deferredSearch || undefined, active: activeFilter === "all" ? undefined : activeFilter === "1", brand_id: brandFilter || undefined });
+  const subBrandsQuery = useSubBrandsQuery({ per_page: deferredSearch ? 100 : 10, page, active: activeFilter === "all" ? undefined : activeFilter === "1", brand_id: brandFilter || undefined });
   const createMutation = useCreateSubBrandMutation();
   const updateMutation = useUpdateSubBrandMutation();
   const deleteMutation = useDeleteSubBrandMutation();
 
-  const rows = useMemo<SubBrandRow[]>(() => (subBrandsQuery.data?.data ?? []).map((item) => ({
+  const rows = useMemo<SubBrandRow[]>(() => (subBrandsQuery.data?.data ?? []).filter((item) => matchesSubBrandName(item, deferredSearch)).map((item) => ({
     id: String(item.id), name: translationName(item, locale), thumbnailAlt: translationName(item, locale),
     brand: parentName(item), isActive: activeValue(item), statusDisplay: "toggle",
     createdDate: item.created_at ? new Intl.DateTimeFormat(locale, { dateStyle: "medium", timeStyle: "short" }).format(new Date(item.created_at)) : "-",
-  })), [locale, subBrandsQuery.data?.data]);
+  })), [deferredSearch, locale, subBrandsQuery.data?.data]);
   const currentPage = subBrandsQuery.data?.meta?.current_page ?? page;
   const lastPage = Math.max(subBrandsQuery.data?.meta?.last_page ?? 1, 1);
   const pages = useMemo(() => Array.from({ length: Math.min(lastPage, 5) }, (_, index) => Math.max(1, Math.min(currentPage - 2, lastPage - Math.min(lastPage, 5) + 1)) + index), [currentPage, lastPage]);

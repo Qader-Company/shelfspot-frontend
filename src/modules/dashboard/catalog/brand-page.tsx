@@ -88,6 +88,15 @@ function isBrandActive(brand: CompanyBrand) {
   return brand.active ?? normalizeActive(brand.is_active);
 }
 
+function matchesBrandName(brand: CompanyBrand, search: string) {
+  if (!search) return true;
+  const names: (string | undefined)[] = [brand.name];
+  if (Array.isArray(brand.translations)) names.push(...brand.translations.map((value) => value.name));
+  else if (brand.translations) Object.values(brand.translations).forEach((value) => names.push(typeof value === "string" ? value : value?.name));
+  const term = search.toLocaleLowerCase();
+  return names.some((value) => value?.toLocaleLowerCase().includes(term));
+}
+
 export function BrandPage() {
   const t = useTranslations("dashboard");
   const locale = useLocale();
@@ -114,9 +123,8 @@ export function BrandPage() {
   const updateBrandMutation = useUpdateBrandMutation();
   const deferredName = useDeferredValue(searchName.trim());
   const brandsQuery = useBrandsQuery({
-    per_page: 10,
+    per_page: deferredName ? 100 : 10,
     page,
-    name: deferredName || undefined,
     active: activeFilter === "all" ? undefined : activeFilter === "1",
   });
 
@@ -124,9 +132,7 @@ export function BrandPage() {
     () =>
       (brandsQuery.data?.data ?? [])
         .filter((brand) => {
-          const matchesName = getBrandName(brand, locale)
-            .toLocaleLowerCase(locale)
-            .includes(deferredName.toLocaleLowerCase(locale));
+          const matchesName = matchesBrandName(brand, searchName.trim());
           const matchesStatus =
             activeFilter === "all" ||
             isBrandActive(brand) === (activeFilter === "1");
@@ -150,7 +156,7 @@ export function BrandPage() {
               : "-",
           };
         }),
-    [activeFilter, brandsQuery.data?.data, deferredName, locale],
+    [activeFilter, brandsQuery.data?.data, locale, searchName],
   );
   const currentPage = brandsQuery.data?.meta?.current_page ?? page;
   const lastPage = Math.max(brandsQuery.data?.meta?.last_page ?? 1, 1);

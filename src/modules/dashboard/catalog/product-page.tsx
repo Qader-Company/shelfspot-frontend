@@ -27,6 +27,7 @@ import type { ProductRow } from "./catalog.seed";
 type Dialog = "add" | "edit" | "delete" | "import" | null;
 function relation(value: CompanyProduct["brand"] | CompanyProduct["sub_brand"] | CompanyProduct["category"] | CompanyProduct["sub_category"], fallback: string) { return typeof value === "string" ? value : value?.name ?? fallback; }
 function activeOf(item: CompanyProduct) { return item.active ?? (item.is_active === true || item.is_active === 1 || item.is_active === "1"); }
+function matchesProductName(item: CompanyProduct, search: string) { return !search || item.name.toLocaleLowerCase().includes(search.toLocaleLowerCase()); }
 
 export function ProductPage() {
   const t = useTranslations("dashboard"), locale = useLocale(), queryClient = useQueryClient();
@@ -40,9 +41,9 @@ export function ProductPage() {
   const subBrands = useSubBrandsQuery({ per_page: 100, page: 1, brand_id: brandId || brandFilter || undefined });
   const categories = useCategoriesQuery({ per_page: 100, page: 1, brand_id: brandId || brandFilter || undefined, sub_brand_id: subBrandId || subBrandFilter || undefined });
   const subCategories = useSubCategoriesQuery({ per_page: 100, page: 1, brand_id: brandId || brandFilter || undefined, sub_brand_id: subBrandId || subBrandFilter || undefined, category_id: categoryId || categoryFilter || undefined });
-  const products = useProductsQuery({ per_page: 10, page, name: deferred || undefined, active: activeFilter === "all" ? undefined : activeFilter === "1", brand_id: brandFilter || undefined, sub_brand_id: subBrandFilter || undefined, category_id: categoryFilter || undefined, sub_category_id: subCategoryFilter || undefined });
+  const products = useProductsQuery({ per_page: deferred ? 100 : 10, page, active: activeFilter === "all" ? undefined : activeFilter === "1", brand_id: brandFilter || undefined, sub_brand_id: subBrandFilter || undefined, category_id: categoryFilter || undefined, sub_category_id: subCategoryFilter || undefined });
   const createMutation = useCreateProductMutation(), updateMutation = useUpdateProductMutation(), deleteMutation = useDeleteProductMutation();
-  const rows = useMemo<ProductRow[]>(() => (products.data?.data ?? []).map((x) => ({ id: String(x.id), name: x.name, thumbnailAlt: x.name, pathSegments: [relation(x.brand, `#${x.brand_id}`), relation(x.sub_brand, `#${x.sub_brand_id}`), relation(x.category, `#${x.category_id}`), relation(x.sub_category, `#${x.sub_category_id}`)], sku: x.sku, description: x.description ?? "-", isActive: activeOf(x), statusDisplay: "toggle", createdDate: x.created_at ? new Intl.DateTimeFormat(locale, { dateStyle: "medium", timeStyle: "short" }).format(new Date(x.created_at)) : "-" })), [locale, products.data?.data]);
+  const rows = useMemo<ProductRow[]>(() => (products.data?.data ?? []).filter((x) => matchesProductName(x, deferred)).map((x) => ({ id: String(x.id), name: x.name, thumbnailAlt: x.name, pathSegments: [relation(x.brand, `#${x.brand_id}`), relation(x.sub_brand, `#${x.sub_brand_id}`), relation(x.category, `#${x.category_id}`), relation(x.sub_category, `#${x.sub_category_id}`)], sku: x.sku, description: x.description ?? "-", isActive: activeOf(x), statusDisplay: "toggle", createdDate: x.created_at ? new Intl.DateTimeFormat(locale, { dateStyle: "medium", timeStyle: "short" }).format(new Date(x.created_at)) : "-" })), [deferred, locale, products.data?.data]);
   const current = products.data?.meta?.current_page ?? page, last = Math.max(products.data?.meta?.last_page ?? 1, 1), pages = useMemo(() => Array.from({ length: Math.min(last, 5) }, (_, i) => Math.max(1, Math.min(current - 2, last - Math.min(last, 5) + 1)) + i), [current, last]);
   const close = () => { setDialog(null); setSelectedId(null); setError(""); setDeleteError(""); };
   const refresh = () => queryClient.invalidateQueries({ queryKey: QUERY_KEYS.products() });
