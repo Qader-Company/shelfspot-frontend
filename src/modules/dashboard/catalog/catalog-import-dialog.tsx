@@ -25,6 +25,7 @@ interface CatalogImportDialogProps {
   onImport?: () => void;
   isImporting?: boolean;
   importError?: string;
+  showDownload?: boolean;
 }
 
 export function CatalogImportDialog({
@@ -47,6 +48,7 @@ export function CatalogImportDialog({
   onImport,
   isImporting = false,
   importError,
+  showDownload = true,
 }: CatalogImportDialogProps) {
   if (!isOpen) return null;
 
@@ -81,6 +83,7 @@ export function CatalogImportDialog({
 
         <div className="mt-5 space-y-4">
           {/* Download template */}
+          {showDownload ? (
           <Button
             type="button"
             variant="outline"
@@ -91,6 +94,7 @@ export function CatalogImportDialog({
             {downloadLabel}
             <DownloadIcon className="size-4" />
           </Button>
+          ) : null}
 
           {downloadError ? (
             <p

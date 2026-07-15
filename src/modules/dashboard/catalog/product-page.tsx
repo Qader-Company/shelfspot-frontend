@@ -1,152 +1,67 @@
 "use client";
-
-import { useState } from "react";
-import { useTranslations } from "next-intl";
-
-import {
-  AddIcon,
-  FilterIcon,
-  PaginationNextIcon,
-  PaginationPreviousIcon,
-  UploadIcon,
-} from "@/shared/components/dashboard/dashboard-icons";
+import { useQueryClient } from "@tanstack/react-query";
+import { useDeferredValue, useMemo, useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
+import { useBrandsQuery } from "@/modules/dashboard/hooks/use-brands-query";
+import { useCategoriesQuery } from "@/modules/dashboard/hooks/use-categories";
+import { useCreateProductMutation, useDeleteProductMutation, useUpdateProductMutation } from "@/modules/dashboard/hooks/use-product-mutations";
+import { useProductsQuery } from "@/modules/dashboard/hooks/use-products-query";
+import { useSubBrandsQuery } from "@/modules/dashboard/hooks/use-sub-brands-query";
+import { useSubCategoriesQuery } from "@/modules/dashboard/hooks/use-sub-categories";
+import { importProductsService } from "@/modules/dashboard/services/product-services";
+import type { CompanyProduct } from "@/modules/dashboard/types/product";
+import { DeleteConfirmDialog } from "@/shared/components/dashboard/delete-confirm-dialog";
+import { AddIcon, FilterIcon, PaginationNextIcon, PaginationPreviousIcon, UploadIcon } from "@/shared/components/dashboard/dashboard-icons";
 import { SearchInput } from "@/shared/components/dashboard/search-input";
+import { normalizeApiError } from "@/shared/lib/api/errors";
+import { QUERY_KEYS } from "@/shared/lib/query/keys";
 import { cn } from "@/shared/lib/utils";
 import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
-
-import {
-  CatalogFormDialog,
-  CatalogSelectField,
-  CatalogStatusField,
-} from "./catalog-form-dialog";
-import { DeleteConfirmDialog } from "@/shared/components/dashboard/delete-confirm-dialog";
+import { CatalogFormDialog, CatalogStatusField } from "./catalog-form-dialog";
 import { CatalogImportDialog } from "./catalog-import-dialog";
 import { CatalogProductTable } from "./catalog-product-table";
 import { CatalogUploadArea } from "./catalog-upload-area";
-import {
-  catalogBrandOptions,
-  catalogCategoryOptions,
-  catalogPagination,
-  catalogSubBrandOptions,
-  catalogSubCategoryOptions,
-  productRows,
-} from "./catalog.seed";
+import type { ProductRow } from "./catalog.seed";
 
-type ProductDialog = "add" | "edit" | "delete" | "import" | null;
+type Dialog = "add" | "edit" | "delete" | "import" | null;
+function relation(value: CompanyProduct["brand"] | CompanyProduct["sub_brand"] | CompanyProduct["category"] | CompanyProduct["sub_category"], fallback: string) { return typeof value === "string" ? value : value?.name ?? fallback; }
+function activeOf(item: CompanyProduct) { return item.active ?? (item.is_active === true || item.is_active === 1 || item.is_active === "1"); }
 
 export function ProductPage() {
-  const t = useTranslations("dashboard");
-  const [openDialog, setOpenDialog] = useState<ProductDialog>(null);
-  const close = () => setOpenDialog(null);
-  const handleDelete = () => setOpenDialog("delete");
-  const handleEdit = () => setOpenDialog("edit");
+  const t = useTranslations("dashboard"), locale = useLocale(), queryClient = useQueryClient();
+  const [dialog, setDialog] = useState<Dialog>(null), [selectedId, setSelectedId] = useState<string | null>(null);
+  const [brandId, setBrandId] = useState(""), [subBrandId, setSubBrandId] = useState(""), [categoryId, setCategoryId] = useState(""), [subCategoryId, setSubCategoryId] = useState("");
+  const [name, setName] = useState(""), [sku, setSku] = useState(""), [description, setDescription] = useState(""), [active, setActive] = useState(true), [image, setImage] = useState<File | null>(null);
+  const [search, setSearch] = useState(""), [activeFilter, setActiveFilter] = useState<"all" | "1" | "0">("all"), [brandFilter, setBrandFilter] = useState(""), [subBrandFilter, setSubBrandFilter] = useState(""), [categoryFilter, setCategoryFilter] = useState(""), [subCategoryFilter, setSubCategoryFilter] = useState(""), [page, setPage] = useState(1);
+  const [error, setError] = useState(""), [deleteError, setDeleteError] = useState(""), [success, setSuccess] = useState(""), [importFile, setImportFile] = useState<File | null>(null), [importError, setImportError] = useState(""), [importing, setImporting] = useState(false);
+  const deferred = useDeferredValue(search.trim());
+  const brands = useBrandsQuery({ per_page: 100, page: 1 });
+  const subBrands = useSubBrandsQuery({ per_page: 100, page: 1, brand_id: brandId || brandFilter || undefined });
+  const categories = useCategoriesQuery({ per_page: 100, page: 1, brand_id: brandId || brandFilter || undefined, sub_brand_id: subBrandId || subBrandFilter || undefined });
+  const subCategories = useSubCategoriesQuery({ per_page: 100, page: 1, brand_id: brandId || brandFilter || undefined, sub_brand_id: subBrandId || subBrandFilter || undefined, category_id: categoryId || categoryFilter || undefined });
+  const products = useProductsQuery({ per_page: 10, page, name: deferred || undefined, active: activeFilter === "all" ? undefined : activeFilter === "1", brand_id: brandFilter || undefined, sub_brand_id: subBrandFilter || undefined, category_id: categoryFilter || undefined, sub_category_id: subCategoryFilter || undefined });
+  const createMutation = useCreateProductMutation(), updateMutation = useUpdateProductMutation(), deleteMutation = useDeleteProductMutation();
+  const rows = useMemo<ProductRow[]>(() => (products.data?.data ?? []).map((x) => ({ id: String(x.id), name: x.name, thumbnailAlt: x.name, pathSegments: [relation(x.brand, `#${x.brand_id}`), relation(x.sub_brand, `#${x.sub_brand_id}`), relation(x.category, `#${x.category_id}`), relation(x.sub_category, `#${x.sub_category_id}`)], sku: x.sku, description: x.description ?? "-", isActive: activeOf(x), statusDisplay: "toggle", createdDate: x.created_at ? new Intl.DateTimeFormat(locale, { dateStyle: "medium", timeStyle: "short" }).format(new Date(x.created_at)) : "-" })), [locale, products.data?.data]);
+  const current = products.data?.meta?.current_page ?? page, last = Math.max(products.data?.meta?.last_page ?? 1, 1), pages = useMemo(() => Array.from({ length: Math.min(last, 5) }, (_, i) => Math.max(1, Math.min(current - 2, last - Math.min(last, 5) + 1)) + i), [current, last]);
+  const close = () => { setDialog(null); setSelectedId(null); setError(""); setDeleteError(""); };
+  const refresh = () => queryClient.invalidateQueries({ queryKey: QUERY_KEYS.products() });
+  const add = () => { setBrandId(""); setSubBrandId(""); setCategoryId(""); setSubCategoryId(""); setName(""); setSku(""); setDescription(""); setActive(true); setImage(null); setDialog("add"); };
+  async function save() { if (!brandId || !subBrandId || !categoryId || !subCategoryId || !name.trim() || !sku.trim() || (dialog === "add" && !image)) { setError(t("catalogPage.product.dialog.requiredFields")); return; } try { const payload = { brandId, subBrandId, categoryId, subCategoryId, name: name.trim(), sku: sku.trim(), description: description.trim() || undefined, isActive: active, image: image ?? undefined }; const response = dialog === "edit" && selectedId ? await updateMutation.mutateAsync({ id: selectedId, payload }) : await createMutation.mutateAsync(payload); setSuccess(response.message); await refresh(); close(); } catch (value) { setError(normalizeApiError(value).message); } }
+  function edit(id: string) { const x = products.data?.data.find((value) => String(value.id) === id); if (!x) return; setSelectedId(id); setBrandId(String(x.brand_id)); setSubBrandId(String(x.sub_brand_id)); setCategoryId(String(x.category_id)); setSubCategoryId(String(x.sub_category_id)); setName(x.name); setSku(x.sku); setDescription(x.description ?? ""); setActive(activeOf(x)); setImage(null); setDialog("edit"); }
+  async function remove() { if (!selectedId) return; try { const response = await deleteMutation.mutateAsync(selectedId); setSuccess(response.message); await refresh(); close(); } catch (value) { setDeleteError(normalizeApiError(value).message); } }
+  async function upload() { if (!importFile) { setImportError(t("catalogPage.product.dialog.importFileRequired")); return; } setImporting(true); try { const response = await importProductsService(importFile); setSuccess(response.message); await refresh(); close(); } catch (value) { setImportError(normalizeApiError(value).message); } finally { setImporting(false); } }
+  const labels = { products: t("catalogPage.product.table.columns.products"), family: t("catalogPage.product.table.columns.family"), sku: t("catalogPage.product.table.columns.sku"), description: t("catalogPage.product.table.columns.description"), status: t("catalogPage.table.columns.status"), createdDate: t("catalogPage.table.columns.createdDate"), action: t("catalogPage.table.columns.action"), selectAll: t("catalogPage.table.actions.selectAll"), selectRow: t("catalogPage.table.actions.selectRow"), delete: t("catalogPage.table.actions.delete"), edit: t("catalogPage.table.actions.edit"), toggleStatus: t("catalogPage.table.actions.toggleStatus"), activeLabel: t("catalogPage.status.active"), inactiveLabel: t("catalogPage.status.inactive") };
+  const brandOptions = brands.data?.data ?? [], subBrandOptions = subBrands.data?.data ?? [], categoryOptions = categories.data?.data ?? [], subCategoryOptions = subCategories.data?.data ?? [];
+  const select = (value: string, set: (x: string) => void, placeholder: string, options: { id: string | number; name?: string }[]) => <select value={value} onChange={(e) => set(e.target.value)} className="h-11 rounded-lg border bg-card px-3"><option value="">{placeholder}</option>{options.map((x) => <option key={x.id} value={x.id}>{x.name ?? `#${x.id}`}</option>)}</select>;
 
-  const tableLabels = {
-    products:      t("catalogPage.product.table.columns.products"),
-    family:        t("catalogPage.product.table.columns.family"),
-    sku:           t("catalogPage.product.table.columns.sku"),
-    description:   t("catalogPage.product.table.columns.description"),
-    status:        t("catalogPage.table.columns.status"),
-    createdDate:   t("catalogPage.table.columns.createdDate"),
-    action:        t("catalogPage.table.columns.action"),
-    selectAll:     t("catalogPage.table.actions.selectAll"),
-    selectRow:     t("catalogPage.table.actions.selectRow"),
-    delete:        t("catalogPage.table.actions.delete"),
-    edit:          t("catalogPage.table.actions.edit"),
-    toggleStatus:  t("catalogPage.table.actions.toggleStatus"),
-    activeLabel:   t("catalogPage.status.active"),
-    inactiveLabel: t("catalogPage.status.inactive"),
-  };
-
-  return (
-    <div className="space-y-6 px-4 py-8 lg:px-8">
-      <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-        <div>
-          <h1 className="text-3xl font-bold leading-tight text-foreground">{t("catalogPage.product.title")}</h1>
-          <p className="mt-2 text-lg font-medium text-muted-foreground">{t("catalogPage.product.subtitle")}</p>
-        </div>
-        <div className="flex items-center gap-3">
-          <Button type="button" variant="outline" className="h-10 gap-2 rounded-lg border-border bg-card px-4 text-sm font-medium shadow-none" onClick={() => setOpenDialog("import")}>
-            <UploadIcon className="size-4" />{t("catalogPage.actions.import")}
-          </Button>
-          <Button type="button" className="h-10 gap-2 rounded-lg px-4 text-sm font-semibold text-white hover:text-white" onClick={() => setOpenDialog("add")}>
-            <AddIcon className="size-4" />{t("catalogPage.product.actions.add")}
-          </Button>
-        </div>
-      </div>
-
-      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-        <SearchInput label={t("catalogPage.search.label")} placeholder={t("catalogPage.search.placeholder")} className="max-w-[400px]" />
-        <Button type="button" variant="outline" className="h-10 gap-2 rounded-lg border-border bg-card px-4 text-sm font-medium text-foreground shadow-none">
-          <FilterIcon className="size-4" />{t("catalogPage.filters.allStatuses")}
-        </Button>
-      </div>
-
-      <CatalogProductTable rows={productRows} labels={tableLabels} onDelete={handleDelete} onEdit={handleEdit} />
-
-      <div className="flex flex-col items-center justify-between gap-4 px-5 pb-2 md:flex-row">
-        <Button type="button" variant="outline" className="h-10 gap-2 rounded-lg border-border bg-card px-4 text-sm font-semibold shadow-none">
-          <PaginationPreviousIcon className="size-4 rtl:rotate-180" />{t("catalogPage.pagination.previous")}
-        </Button>
-        <div className="flex items-center gap-2">
-          {catalogPagination.pages.map((page) => (
-            <Button key={page} type="button" variant="ghost" size="icon-sm"
-              className={cn("rounded-lg text-sm text-muted-foreground", page === catalogPagination.activePage && "bg-primary/20 text-foreground hover:bg-primary/20")}>
-              {page}
-            </Button>
-          ))}
-        </div>
-        <Button type="button" variant="outline" className="h-10 gap-2 rounded-lg border-border bg-card px-4 text-sm font-semibold shadow-none">
-          {t("catalogPage.pagination.next")}<PaginationNextIcon className="size-4 rtl:rotate-180" />
-        </Button>
-      </div>
-
-      {/* Delete Product confirmation */}
-      <DeleteConfirmDialog
-        isOpen={openDialog === "delete"}
-        title={t("catalogPage.product.deleteDialog.title")}
-        descriptionLine1={t("catalogPage.product.deleteDialog.descriptionLine1")}
-        descriptionLine2={t("catalogPage.product.deleteDialog.descriptionLine2")}
-        cancelLabel={t("catalogPage.product.deleteDialog.cancel")}
-        confirmLabel={t("catalogPage.product.deleteDialog.confirm")}
-        onClose={close}
-      />
-
-      {/* Add / Edit Product dialog */}
-      <CatalogFormDialog isOpen={openDialog === "add" || openDialog === "edit"} title={openDialog === "edit" ? t("catalogPage.product.dialog.editTitle") : t("catalogPage.product.dialog.title")} closeLabel={t("catalogPage.dialog.close")} cancelLabel={t("catalogPage.dialog.cancel")} saveLabel={t("catalogPage.dialog.save")} onClose={close}>
-        <CatalogUploadArea label={t("catalogPage.product.dialog.uploadLabel")} hint={t("catalogPage.dialog.uploadHint")} />
-        <div className="grid grid-cols-2 gap-4">
-          <CatalogSelectField label={t("catalogPage.dialog.parentBrand")} placeholder={t("catalogPage.dialog.selectBrand")} options={catalogBrandOptions} />
-          <CatalogSelectField label={t("catalogPage.dialog.subBrand")} placeholder={t("catalogPage.dialog.selectSubBrand")} options={catalogSubBrandOptions} />
-        </div>
-        <div className="grid grid-cols-2 gap-4">
-          <CatalogSelectField label={t("catalogPage.product.dialog.categoryLabel")} placeholder={t("catalogPage.product.dialog.selectCategory")} options={catalogCategoryOptions} />
-          <CatalogSelectField label={t("catalogPage.product.dialog.subCategoryLabel")} placeholder={t("catalogPage.product.dialog.selectSubCategory")} options={catalogSubCategoryOptions} />
-        </div>
-        <div className="space-y-1.5">
-          <label className="text-sm font-semibold text-foreground">{t("catalogPage.product.dialog.nameLabel")}</label>
-          <Input type="text" placeholder={t("catalogPage.product.dialog.namePlaceholder")} className="h-11 rounded-lg border-border bg-secondary text-sm shadow-none" />
-        </div>
-        <div className="space-y-1.5">
-          <label className="text-sm font-semibold text-foreground">{t("catalogPage.product.dialog.skuLabel")}</label>
-          <Input type="text" placeholder={t("catalogPage.product.dialog.skuPlaceholder")} className="h-11 rounded-lg border-border bg-secondary text-sm shadow-none" />
-        </div>
-        <div className="space-y-1.5">
-          <label className="text-sm font-semibold text-foreground">{t("catalogPage.product.dialog.descriptionLabel")}</label>
-          <textarea
-            placeholder={t("catalogPage.product.dialog.descriptionPlaceholder")}
-            rows={3}
-            className="w-full resize-none rounded-lg border border-border bg-secondary px-4 py-3 text-sm text-foreground shadow-none placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
-          />
-        </div>
-        <div className="space-y-1.5">
-          <p className="text-sm font-semibold text-foreground">{t("catalogPage.dialog.statusLabel")}</p>
-          <CatalogStatusField activeLabel={t("catalogPage.dialog.statusActive")} description={t("catalogPage.product.dialog.statusDescription")} ariaLabel={t("catalogPage.dialog.statusActive")} />
-        </div>
-      </CatalogFormDialog>
-
-      <CatalogImportDialog isOpen={openDialog === "import"} title={t("catalogPage.import.title")} description={t("catalogPage.import.description")} downloadLabel={t("catalogPage.import.downloadLabel")} uploadLabel={t("catalogPage.import.uploadLabel")} uploadHint={t("catalogPage.import.uploadHint")} uploadFormat={t("catalogPage.import.uploadFormat")} cancelLabel={t("catalogPage.dialog.cancel")} saveLabel={t("catalogPage.dialog.save")} closeLabel={t("catalogPage.dialog.close")} onClose={close} />
-    </div>
-  );
+  return <div className="space-y-6 px-4 py-8 lg:px-8"><div className="flex justify-between"><div><h1 className="text-3xl font-bold">{t("catalogPage.product.title")}</h1><p className="mt-2 text-lg text-muted-foreground">{t("catalogPage.product.subtitle")}</p></div><div className="flex gap-3"><Button variant="outline" onClick={() => { setImportFile(null); setImportError(""); setDialog("import"); }}><UploadIcon className="size-4" />{t("catalogPage.actions.import")}</Button><Button onClick={add}><AddIcon className="size-4" />{t("catalogPage.product.actions.add")}</Button></div></div>
+    {success ? <p className="rounded-xl border border-success/20 bg-success/10 px-4 py-3 text-success">{success}</p> : null}
+    <div className="flex flex-wrap gap-3"><SearchInput label={t("catalogPage.search.label")} placeholder={t("catalogPage.search.placeholder")} className="max-w-[400px]" value={search} onChange={(e) => { setSearch(e.target.value); setPage(1); }} />{select(brandFilter, (x) => { setBrandFilter(x); setSubBrandFilter(""); setCategoryFilter(""); setSubCategoryFilter(""); }, t("catalogPage.dialog.parentBrand"), brandOptions)}{select(subBrandFilter, (x) => { setSubBrandFilter(x); setCategoryFilter(""); setSubCategoryFilter(""); }, t("catalogPage.dialog.subBrand"), subBrandOptions)}{select(categoryFilter, (x) => { setCategoryFilter(x); setSubCategoryFilter(""); }, t("catalogPage.product.dialog.categoryLabel"), categoryOptions)}{select(subCategoryFilter, setSubCategoryFilter, t("catalogPage.product.dialog.subCategoryLabel"), subCategoryOptions)}<label className="relative"><FilterIcon className="absolute start-3 top-1/2 size-4 -translate-y-1/2" /><select value={activeFilter} onChange={(e) => setActiveFilter(e.target.value as "all" | "1" | "0")} className="h-11 rounded-lg border ps-9"><option value="all">{t("catalogPage.filters.allStatuses")}</option><option value="1">{t("catalogPage.status.active")}</option><option value="0">{t("catalogPage.status.inactive")}</option></select></label></div>
+    {products.isError ? <p className="rounded-xl border border-destructive/20 bg-destructive/10 px-4 py-3 text-destructive">{normalizeApiError(products.error).message}</p> : <div className={cn(products.isFetching && "opacity-60")}><CatalogProductTable rows={rows} labels={labels} onDelete={(id) => { setSelectedId(id); setDialog("delete"); }} onEdit={edit} /></div>}
+    <div className="flex justify-between"><Button variant="outline" disabled={current <= 1} onClick={() => setPage((x) => x - 1)}><PaginationPreviousIcon className="size-4" />{t("catalogPage.pagination.previous")}</Button><div>{pages.map((x) => <Button key={x} variant="ghost" className={cn(x === current && "bg-primary/20")} onClick={() => setPage(x)}>{x}</Button>)}</div><Button variant="outline" disabled={current >= last} onClick={() => setPage((x) => x + 1)}>{t("catalogPage.pagination.next")}<PaginationNextIcon className="size-4" /></Button></div>
+    <DeleteConfirmDialog isOpen={dialog === "delete"} title={t("catalogPage.product.deleteDialog.title")} descriptionLine1={t("catalogPage.product.deleteDialog.descriptionLine1")} descriptionLine2={t("catalogPage.product.deleteDialog.descriptionLine2")} cancelLabel={t("catalogPage.product.deleteDialog.cancel")} confirmLabel={t("catalogPage.product.deleteDialog.confirm")} onClose={close} onConfirm={remove} isPending={deleteMutation.isPending} errorMessage={deleteError} />
+    <CatalogFormDialog isOpen={dialog === "add" || dialog === "edit"} title={dialog === "edit" ? t("catalogPage.product.dialog.editTitle") : t("catalogPage.product.dialog.title")} closeLabel={t("catalogPage.dialog.close")} cancelLabel={t("catalogPage.dialog.cancel")} saveLabel={t("catalogPage.dialog.save")} onClose={close} onSubmit={save} isPending={createMutation.isPending || updateMutation.isPending} errorMessage={error}><CatalogUploadArea label={t("catalogPage.product.dialog.uploadLabel")} hint={t("catalogPage.dialog.uploadHint")} file={image} onFileChange={setImage} /><div className="grid grid-cols-2 gap-4">{select(brandId, (x) => { setBrandId(x); setSubBrandId(""); setCategoryId(""); setSubCategoryId(""); }, t("catalogPage.dialog.selectBrand"), brandOptions)}{select(subBrandId, (x) => { setSubBrandId(x); setCategoryId(""); setSubCategoryId(""); }, t("catalogPage.dialog.selectSubBrand"), subBrandOptions)}{select(categoryId, (x) => { setCategoryId(x); setSubCategoryId(""); }, t("catalogPage.product.dialog.selectCategory"), categoryOptions)}{select(subCategoryId, setSubCategoryId, t("catalogPage.product.dialog.selectSubCategory"), subCategoryOptions)}</div><Input value={name} onChange={(e) => setName(e.target.value)} placeholder={t("catalogPage.product.dialog.namePlaceholder")} /><Input value={sku} onChange={(e) => setSku(e.target.value)} placeholder={t("catalogPage.product.dialog.skuPlaceholder")} /><textarea value={description} onChange={(e) => setDescription(e.target.value)} rows={3} className="w-full rounded-lg border bg-secondary p-3" placeholder={t("catalogPage.product.dialog.descriptionPlaceholder")} /><CatalogStatusField activeLabel={t("catalogPage.dialog.statusActive")} description={t("catalogPage.product.dialog.statusDescription")} ariaLabel={t("catalogPage.dialog.statusActive")} isActive={active} onChange={setActive} /></CatalogFormDialog>
+    <CatalogImportDialog isOpen={dialog === "import"} title={t("catalogPage.import.title")} description={t("catalogPage.import.description")} downloadLabel={t("catalogPage.import.downloadLabel")} uploadLabel={t("catalogPage.import.uploadLabel")} uploadHint={t("catalogPage.import.uploadHint")} uploadFormat={t("catalogPage.import.uploadFormat")} cancelLabel={t("catalogPage.dialog.cancel")} saveLabel={t("catalogPage.dialog.save")} closeLabel={t("catalogPage.dialog.close")} onClose={close} showDownload={false} selectedFile={importFile} onFileChange={setImportFile} onImport={upload} isImporting={importing} importError={importError} />
+  </div>;
 }

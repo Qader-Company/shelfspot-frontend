@@ -653,14 +653,14 @@
         "title": "Sub-Category", "subtitle": "Manage and monitor all your registered categories and their details",
         "actions": { "add": "Add Sub-Category" },
         "table": { "columns": { "subCategory": "Category", "brand": "Brand", "subBrand": "Sub-Brand", "category": "Category" } },
-        "dialog": { "title": "Add New Sub-Category", "editTitle": "Update Sub-Category", "uploadLabel": "Upload Sub-Category Image", "nameLabel": "Sub-Category Name", "namePlaceholder": "Enter sub-category name", "categoryLabel": "Sub-Category", "selectCategory": "Select sub-category", "statusDescription": "Sub-Category is available and visible" },
+        "dialog": { "title": "Add New Sub-Category", "editTitle": "Update Sub-Category", "uploadLabel": "Upload Sub-Category Image", "nameLabel": "Sub-Category Name", "namePlaceholder": "Enter sub-category name", "nameEnLabel": "Sub-Category Name (English)", "nameArLabel": "Sub-Category Name (Arabic)", "categoryLabel": "Category", "selectCategory": "Select a category", "requiredFields": "Select the brand hierarchy, enter both names, and upload an image.", "importFileRequired": "Select a CSV or XLSX file to import.", "statusDescription": "Sub-Category is available and visible" },
         "deleteDialog": { "title": "Delete Sub-Category?", "descriptionLine1": "Are you sure you want to delete this sub-category?", "descriptionLine2": "This action cannot be undone.", "cancel": "No, Keep it", "confirm": "Yes, Delete!" }
       },
       "product": {
         "title": "Products", "subtitle": "Manage your brands and products here",
         "actions": { "add": "Add Product" },
         "table": { "columns": { "products": "Products", "family": "Family", "sku": "SKU", "description": "Description" } },
-        "dialog": { "title": "Add New product", "editTitle": "Update Product", "uploadLabel": "Upload Product Image", "nameLabel": "Product Name", "namePlaceholder": "Enter product name", "skuLabel": "SKU Code", "skuPlaceholder": "Enter SKU Code (eg, 1234SKU)", "descriptionLabel": "Description", "descriptionPlaceholder": "Enter product description", "categoryLabel": "Category", "selectCategory": "Select a category", "subCategoryLabel": "Sub-Category", "selectSubCategory": "Select sub-category", "statusDescription": "Product is available and visible" },
+        "dialog": { "title": "Add New product", "editTitle": "Update Product", "uploadLabel": "Upload Product Image", "nameLabel": "Product Name", "namePlaceholder": "Enter product name", "skuLabel": "SKU Code", "skuPlaceholder": "Enter SKU Code (eg, 1234SKU)", "descriptionLabel": "Description", "descriptionPlaceholder": "Enter product description", "categoryLabel": "Category", "selectCategory": "Select a category", "subCategoryLabel": "Sub-Category", "selectSubCategory": "Select sub-category", "requiredFields": "Select the full catalog hierarchy, enter a name and SKU, and upload an image.", "importFileRequired": "Select a CSV or XLSX file to import.", "statusDescription": "Product is available and visible" },
         "deleteDialog": { "title": "Delete Product?", "descriptionLine1": "Are you sure you want to delete this product?", "descriptionLine2": "This action cannot be undone.", "cancel": "No, Keep it", "confirm": "Yes, Delete!" }
       }
     },
