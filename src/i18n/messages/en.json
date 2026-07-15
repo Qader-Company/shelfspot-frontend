@@ -220,6 +220,7 @@
         "createRequest": "Create Request"
       },
       "stats": {
+        "change": "{value}% this period",
         "active": {
           "title": "Active Requests",
           "trend": "+12% this week"
@@ -247,7 +248,12 @@
         "apr": "Apr",
         "may": "May",
         "jun": "Jun",
-        "jul": "Jul"
+        "jul": "Jul",
+        "aug": "Aug",
+        "sep": "Sep",
+        "oct": "Oct",
+        "nov": "Nov",
+        "dec": "Dec"
       },
       "status": {
         "pending": "Pending",
@@ -255,6 +261,9 @@
         "completed": "Completed",
         "failed": "Failed",
         "rejected": "Rejected"
+      },
+      "errors": {
+        "report": "We couldn't load the dashboard statistics. Please try again."
       },
       "table": {
         "title": "Requests",

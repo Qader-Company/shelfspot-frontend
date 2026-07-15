@@ -1,24 +1,85 @@
+"use client";
+
 import { useTranslations } from "next-intl";
 
 import { ROUTES } from "@/config/routes";
 import { Link } from "@/i18n/navigation";
 import { ChartCard } from "@/modules/dashboard/components/chart-card";
 import {
-  dashboardStats,
   requestRows,
-  requestsOverTimeData,
-  statusDonutData,
+  type DashboardStatItem,
+  type RequestsChartPoint,
   type RequestStatus,
+  type StatusDonutItem,
 } from "@/modules/dashboard/components/dashboard-overview.seed";
 import { DashboardStatCard } from "@/modules/dashboard/components/dashboard-stat-card";
 import { RequestsChart } from "@/modules/dashboard/components/requests-chart";
 import { RequestsTable } from "@/modules/dashboard/components/requests-table";
 import { StatusDonutChart } from "@/modules/dashboard/components/status-donut-chart";
+import { useDashboardReportQuery } from "@/modules/dashboard/hooks/use-dashboard-report-query";
 import { AddIcon, SidebarChevronIcon } from "@/shared/components/dashboard/dashboard-icons";
 import { Button } from "@/shared/ui/button";
 
 export function DashboardOverview() {
   const t = useTranslations("dashboard");
+  const reportQuery = useDashboardReportQuery();
+  const report = reportQuery.data;
+  const cards = report?.cards;
+  const dashboardStats: DashboardStatItem[] = [
+    {
+      key: "active",
+      titleKey: "overview.stats.active.title",
+      value: String(cards?.active_requests.value ?? 0),
+      trendKey: "overview.stats.active.trend",
+      changePercentage: cards?.active_requests.change_percentage ?? 0,
+      tone: "info",
+      iconSrc: "/company/folders.svg",
+    },
+    {
+      key: "completed",
+      titleKey: "overview.stats.completed.title",
+      value: String(cards?.completed_this_period.value ?? 0),
+      trendKey: "overview.stats.completed.trend",
+      changePercentage: cards?.completed_this_period.change_percentage ?? 0,
+      tone: "success",
+      iconSrc: "/company/rightsign.svg",
+    },
+    {
+      key: "delayed",
+      titleKey: "overview.stats.delayed.title",
+      value: String(cards?.delayed_requests.value ?? 0),
+      trendKey: "overview.stats.delayed.trend",
+      changePercentage: cards?.delayed_requests.change_percentage ?? 0,
+      tone: "danger",
+      iconSrc: "/company/alert.svg",
+    },
+    {
+      key: "acceptance",
+      titleKey: "overview.stats.acceptance.title",
+      value: `${cards?.acceptance_rate.value ?? 0}%`,
+      trendKey: "overview.stats.acceptance.trend",
+      changePercentage: cards?.acceptance_rate.change_percentage ?? 0,
+      tone: "purple",
+      iconSrc: "/company/star.svg",
+    },
+  ];
+  const monthKeys = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"] as const;
+  const requestsOverTimeData: RequestsChartPoint[] = (report?.charts.requests_over_time ?? []).map((item) => ({
+    key: String(item.month),
+    monthKey: `overview.months.${monthKeys[item.month - 1] ?? "jan"}`,
+    value: item.total,
+  }));
+  const totals = new Map(
+    (report?.charts.status_distribution ?? []).map((item) => [item.status, item.total]),
+  );
+  const sumStatuses = (...statuses: string[]) =>
+    statuses.reduce((sum, status) => sum + (totals.get(status) ?? 0), 0);
+  const statusDonutData: StatusDonutItem[] = [
+    { key: "pending", labelKey: "overview.status.pending", value: sumStatuses("draft", "pending"), tone: "warning" },
+    { key: "inProgress", labelKey: "overview.status.inProgress", value: sumStatuses("started", "in_progress", "reopened"), tone: "info" },
+    { key: "completed", labelKey: "overview.status.completed", value: sumStatuses("completed", "accepted"), tone: "success" },
+    { key: "failed", labelKey: "overview.status.failed", value: sumStatuses("worker_cancelled", "company_cancelled", "rejected", "failed"), tone: "danger" },
+  ];
   const statusItems = statusDonutData.map((item) => ({ ...item, label: t(item.labelKey) }));
 
   return (
@@ -37,8 +98,13 @@ export function DashboardOverview() {
           </Button>
         </div>
       </div>
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        {dashboardStats.map((item) => <DashboardStatCard key={item.key} item={item} title={t(item.titleKey)} trend={t(item.trendKey)} />)}
+      {reportQuery.isError ? (
+        <p className="rounded-lg border border-destructive/20 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+          {t("overview.errors.report")}
+        </p>
+      ) : null}
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4" aria-busy={reportQuery.isPending}>
+        {dashboardStats.map((item) => <DashboardStatCard key={item.key} item={item} title={t(item.titleKey)} trend={t("overview.stats.change", { value: item.changePercentage > 0 ? `+${item.changePercentage}` : item.changePercentage })} />)}
       </div>
       <div className="grid gap-6 xl:grid-cols-[minmax(0,1.5fr)_minmax(20rem,1fr)]">
         <ChartCard title={t("overview.charts.requestsOverTime")} action={<Button type="button" variant="outline" className="h-9 gap-3 rounded-lg border-border bg-card px-4 text-xs font-medium text-muted-foreground shadow-none">{t("overview.filters.thisWeek")}<SidebarChevronIcon className="size-3.5" /></Button>}>
