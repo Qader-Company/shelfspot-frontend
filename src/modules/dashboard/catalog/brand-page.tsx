@@ -6,9 +6,13 @@ import { useLocale, useTranslations } from "next-intl";
 
 import { useBrandsQuery } from "@/modules/dashboard/hooks/use-brands-query";
 import { useCreateBrandMutation } from "@/modules/dashboard/hooks/use-create-brand-mutation";
+import { useUpdateBrandMutation } from "@/modules/dashboard/hooks/use-update-brand-mutation";
 import { downloadBrandsTemplateService } from "@/modules/dashboard/services/download-brands-template-service";
 import { importBrandsService } from "@/modules/dashboard/services/import-brands-service";
-import type { CompanyBrand } from "@/modules/dashboard/types/brand";
+import type {
+  CompanyBrand,
+  GetBrandsResponse,
+} from "@/modules/dashboard/types/brand";
 import { normalizeApiError } from "@/shared/lib/api/errors";
 import { QUERY_KEYS } from "@/shared/lib/query/keys";
 
@@ -59,6 +63,22 @@ function getBrandName(brand: CompanyBrand, locale: string) {
   return "-";
 }
 
+function getBrandTranslationName(brand: CompanyBrand, locale: "en" | "ar") {
+  const translations = brand.translations;
+
+  if (Array.isArray(translations)) {
+    return (
+      translations.find((translation) => translation.locale === locale)?.name ??
+      brand.name ??
+      ""
+    );
+  }
+
+  const localized = translations?.[locale];
+  if (typeof localized === "string") return localized;
+  return localized?.name ?? brand.name ?? "";
+}
+
 function normalizeActive(value: CompanyBrand["is_active"]) {
   return value === true || value === 1 || value === "1";
 }
@@ -72,6 +92,7 @@ export function BrandPage() {
   const locale = useLocale();
   const queryClient = useQueryClient();
   const [openDialog, setOpenDialog] = useState<BrandDialog>(null);
+  const [selectedBrandId, setSelectedBrandId] = useState<string | null>(null);
   const [searchName, setSearchName] = useState("");
   const [activeFilter, setActiveFilter] = useState<"all" | "1" | "0">("all");
   const [page, setPage] = useState(1);
@@ -87,6 +108,7 @@ export function BrandPage() {
   const [isImporting, setIsImporting] = useState(false);
   const [importError, setImportError] = useState("");
   const createBrandMutation = useCreateBrandMutation();
+  const updateBrandMutation = useUpdateBrandMutation();
   const deferredName = useDeferredValue(searchName.trim());
   const brandsQuery = useBrandsQuery({
     per_page: 10,
@@ -137,6 +159,7 @@ export function BrandPage() {
 
   const close = () => {
     setOpenDialog(null);
+    setSelectedBrandId(null);
     setFormError("");
   };
 
@@ -182,6 +205,66 @@ export function BrandPage() {
     }
   }
 
+  async function handleUpdateBrand() {
+    if (!selectedBrandId) return;
+
+    if (!nameEn.trim() || !nameAr.trim()) {
+      setFormError(t("catalogPage.brand.dialog.requiredNames"));
+      return;
+    }
+
+    setFormError("");
+
+    const updatedPayload = {
+      nameEn: nameEn.trim(),
+      nameAr: nameAr.trim(),
+      isActive,
+      logo: logo ?? undefined,
+    };
+
+    try {
+      const response = await updateBrandMutation.mutateAsync({
+        id: selectedBrandId,
+        payload: updatedPayload,
+      });
+      setSuccessMessage(
+        response.message || t("catalogPage.brand.dialog.updateSuccess"),
+      );
+      await queryClient.invalidateQueries({ queryKey: QUERY_KEYS.brands() });
+      queryClient.setQueriesData<GetBrandsResponse>(
+        { queryKey: QUERY_KEYS.brands() },
+        (cached) =>
+          cached
+            ? {
+                ...cached,
+                data: cached.data.map((brand) =>
+                  String(brand.id) === selectedBrandId
+                    ? {
+                        ...brand,
+                        name:
+                          locale === "ar"
+                            ? updatedPayload.nameAr
+                            : updatedPayload.nameEn,
+                        active: updatedPayload.isActive,
+                        translations: {
+                          en: { name: updatedPayload.nameEn },
+                          ar: { name: updatedPayload.nameAr },
+                        },
+                      }
+                    : brand,
+                ),
+              }
+            : cached,
+      );
+      close();
+    } catch (error) {
+      const apiError = normalizeApiError(error);
+      setFormError(
+        apiError.message || t("catalogPage.brand.dialog.updateError"),
+      );
+    }
+  }
+
   async function handleDownloadTemplate() {
     setIsDownloadingTemplate(true);
     setDownloadError("");
@@ -224,7 +307,20 @@ export function BrandPage() {
     }
   }
   const handleDelete = () => setOpenDialog("delete");
-  const handleEdit = () => setOpenDialog("edit");
+  const handleEdit = (id: string) => {
+    const brand = brandsQuery.data?.data.find(
+      (candidate) => String(candidate.id) === id,
+    );
+    if (!brand) return;
+
+    setSelectedBrandId(id);
+    setNameEn(getBrandTranslationName(brand, "en"));
+    setNameAr(getBrandTranslationName(brand, "ar"));
+    setIsActive(isBrandActive(brand));
+    setLogo(null);
+    setFormError("");
+    setOpenDialog("edit");
+  };
 
   const tableLabels = {
     nameColumn:   t("catalogPage.brand.table.columns.brandName"),
@@ -396,8 +492,12 @@ export function BrandPage() {
         cancelLabel={t("catalogPage.dialog.cancel")}
         saveLabel={t("catalogPage.dialog.save")}
         onClose={close}
-        onSubmit={openDialog === "add" ? handleCreateBrand : undefined}
-        isPending={createBrandMutation.isPending}
+        onSubmit={
+          openDialog === "add" ? handleCreateBrand : handleUpdateBrand
+        }
+        isPending={
+          createBrandMutation.isPending || updateBrandMutation.isPending
+        }
         errorMessage={formError}
       >
         <CatalogUploadArea
