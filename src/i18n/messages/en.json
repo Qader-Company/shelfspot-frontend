@@ -213,6 +213,12 @@
     "overview": {
       "title": "Dashboard",
       "subtitle": "Welcome back, here's what's happening today",
+      "loading": "Loading dashboard...",
+      "error": {
+        "title": "Dashboard unavailable",
+        "description": "We couldn't load the dashboard report.",
+        "retry": "Try again"
+      },
       "filters": {
         "thisWeek": "This Week"
       },
@@ -220,6 +226,7 @@
         "createRequest": "Create Request"
       },
       "stats": {
+        "change": "{value}% this week",
         "active": {
           "title": "Active Requests",
           "trend": "+12% this week"
@@ -247,7 +254,12 @@
         "apr": "Apr",
         "may": "May",
         "jun": "Jun",
-        "jul": "Jul"
+        "jul": "Jul",
+        "aug": "Aug",
+        "sep": "Sep",
+        "oct": "Oct",
+        "nov": "Nov",
+        "dec": "Dec"
       },
       "status": {
         "pending": "Pending",

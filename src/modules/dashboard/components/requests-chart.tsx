@@ -9,8 +9,6 @@ interface RequestsChartProps {
   months: string[];
 }
 
-const yAxisLabels = [140, 150, 70, 35, 0];
-
 export function RequestsChart({ data, months }: RequestsChartProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -32,11 +30,12 @@ export function RequestsChart({ data, months }: RequestsChartProps) {
       const pixelRatio = window.devicePixelRatio || 1;
       const width = rect.width;
       const height = rect.height;
-      const maxValue = 140;
+      const dataMax = Math.max(...data.map((point) => point.value), 0);
+      const maxValue = Math.max(1, Math.ceil(dataMax / 4) * 4);
       const styles = getComputedStyle(document.documentElement);
       const primary = styles.getPropertyValue("--primary").trim() || "#56cbf2";
       const points = data.map((point, index) => ({
-        x: (index / (data.length - 1)) * width,
+        x: data.length === 1 ? width / 2 : (index / (data.length - 1)) * width,
         y: height - (point.value / maxValue) * height,
       }));
 
@@ -50,6 +49,7 @@ export function RequestsChart({ data, months }: RequestsChartProps) {
       context.strokeStyle = primary;
       context.globalAlpha = 0.92;
       context.beginPath();
+      if (!points.length) return;
       context.moveTo(points[0].x, points[0].y);
 
       for (let index = 0; index < points.length - 1; index += 1) {
@@ -69,7 +69,9 @@ export function RequestsChart({ data, months }: RequestsChartProps) {
 
       context.stroke();
 
-      const focusPoint = points[3];
+      const focusPoint = points.reduce((highest, point) =>
+        point.y < highest.y ? point : highest,
+      );
       context.globalAlpha = 1;
       context.fillStyle = primary;
       context.beginPath();
@@ -89,6 +91,10 @@ export function RequestsChart({ data, months }: RequestsChartProps) {
 
     return () => resizeObserver.disconnect();
   }, [data]);
+
+  const dataMax = Math.max(...data.map((point) => point.value), 0);
+  const maxValue = Math.max(1, Math.ceil(dataMax / 4) * 4);
+  const yAxisLabels = [maxValue, maxValue * 0.75, maxValue * 0.5, maxValue * 0.25, 0];
 
   return (
     <div className="grid h-56 grid-cols-[2.5rem_1fr] gap-3">

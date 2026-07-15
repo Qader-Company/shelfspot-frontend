@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowDownRight, ArrowUpRight, Minus } from "lucide-react";
 
 import type { DashboardStatItem } from "@/modules/dashboard/components/dashboard-overview.seed";
 import { cn } from "@/shared/lib/utils";
@@ -35,6 +35,7 @@ export function DashboardStatCard({
   trend,
 }: DashboardStatCardProps) {
   const tone = toneClasses[item.tone];
+  const TrendIcon = item.trend === 0 ? Minus : item.trend && item.trend < 0 ? ArrowDownRight : ArrowUpRight;
 
   return (
     <article className="flex min-h-24 items-center gap-4 rounded-lg border border-border bg-card p-5 shadow-lg shadow-foreground/5">
@@ -56,7 +57,7 @@ export function DashboardStatCard({
           </p>
           <p className={cn("flex items-center gap-1 text-[10px]", tone.trend)}>
             {trend}
-            <ArrowUpRight className="size-3" />
+            <TrendIcon className="size-3" />
           </p>
         </div>
       </div>

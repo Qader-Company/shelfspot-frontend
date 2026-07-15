@@ -1,19 +1,24 @@
+"use client";
+
 import { useTranslations } from "next-intl";
 
 import { ROUTES } from "@/config/routes";
 import { Link } from "@/i18n/navigation";
 import { ChartCard } from "@/modules/dashboard/components/chart-card";
 import {
-  dashboardStats,
   requestRows,
-  requestsOverTimeData,
-  statusDonutData,
+  type DashboardStatItem,
+  type RequestsChartPoint,
+  type StatusDonutItem,
   type RequestStatus,
 } from "@/modules/dashboard/components/dashboard-overview.seed";
 import { DashboardStatCard } from "@/modules/dashboard/components/dashboard-stat-card";
 import { RequestsChart } from "@/modules/dashboard/components/requests-chart";
 import { RequestsTable } from "@/modules/dashboard/components/requests-table";
 import { StatusDonutChart } from "@/modules/dashboard/components/status-donut-chart";
+import { useDashboardReportQuery } from "@/modules/dashboard/hooks/use-dashboard-report-query";
+import type { DashboardCardMetric } from "@/modules/dashboard/types/dashboard-report";
+import { ErrorState, PageLoadingSkeleton } from "@/shared/components/feedback";
 import {
   AddIcon,
   SidebarChevronIcon,
@@ -22,6 +27,79 @@ import { Button } from "@/shared/ui/button";
 
 export function DashboardOverview() {
   const t = useTranslations("dashboard");
+  const reportQuery = useDashboardReportQuery();
+
+  if (reportQuery.isPending) {
+    return (
+      <PageLoadingSkeleton
+        actionCount={2}
+        cardCount={4}
+        chartCount={2}
+        tableRows={4}
+        tableColumns={6}
+      />
+    );
+  }
+
+  if (reportQuery.isError || !reportQuery.data?.data) {
+    return (
+      <ErrorState
+        className="m-8 min-h-[50dvh]"
+        title={t("overview.error.title")}
+        description={t("overview.error.description")}
+        retryLabel={t("overview.error.retry")}
+        onRetry={() => void reportQuery.refetch()}
+      />
+    );
+  }
+
+  const report = reportQuery.data.data;
+  const metricToStat = (
+    key: string,
+    titleKey: string,
+    metric: DashboardCardMetric,
+    tone: DashboardStatItem["tone"],
+    iconSrc: string,
+    suffix = "",
+  ): DashboardStatItem => ({
+    key,
+    titleKey,
+    value: `${metric.value}${suffix}`,
+    trendKey: "",
+    tone,
+    iconSrc,
+    trend: metric.trend,
+  });
+  const dashboardStats = [
+    metricToStat("active", "overview.stats.active.title", report.cards.active_requests, "info", "/company/folders.svg"),
+    metricToStat("completed", "overview.stats.completed.title", report.cards.completed_this_period, "success", "/company/rightsign.svg"),
+    metricToStat("delayed", "overview.stats.delayed.title", report.cards.delayed_requests, "danger", "/company/alert.svg"),
+    metricToStat("acceptance", "overview.stats.acceptance.title", report.cards.acceptance_rate, "purple", "/company/star.svg", "%"),
+  ];
+  const cardMetrics = [
+    report.cards.active_requests,
+    report.cards.completed_this_period,
+    report.cards.delayed_requests,
+    report.cards.acceptance_rate,
+  ];
+  const formatChange = (metric: DashboardCardMetric) => {
+    const sign = metric.trend > 0 ? "+" : metric.trend < 0 ? "-" : "";
+    return `${sign}${Math.abs(metric.change_percentage)}`;
+  };
+  const monthKeys = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
+  const requestsOverTimeData: RequestsChartPoint[] = report.charts.requests_over_time.map((item) => ({
+    key: String(item.month),
+    monthKey: `overview.months.${monthKeys[item.month - 1] ?? "jan"}`,
+    value: item.total,
+  }));
+  const statusTotals = new Map(report.charts.status_distribution.map((item) => [item.status, item.total]));
+  const sumStatuses = (...statuses: string[]) => statuses.reduce((sum, status) => sum + (statusTotals.get(status) ?? 0), 0);
+  const statusDonutData: StatusDonutItem[] = [
+    { key: "pending", labelKey: "overview.status.pending", value: sumStatuses("draft", "pending"), tone: "warning" },
+    { key: "inProgress", labelKey: "overview.status.inProgress", value: sumStatuses("accepted", "started", "in_progress", "reopened"), tone: "info" },
+    { key: "completed", labelKey: "overview.status.completed", value: sumStatuses("completed"), tone: "success" },
+    { key: "failed", labelKey: "overview.status.failed", value: sumStatuses("worker_cancelled", "company_cancelled", "rejected", "failed"), tone: "danger" },
+  ];
 
   const statusItems = statusDonutData.map((item) => ({
     ...item,
@@ -61,12 +139,14 @@ export function DashboardOverview() {
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        {dashboardStats.map((item) => (
+        {dashboardStats.map((item, index) => (
           <DashboardStatCard
             key={item.key}
             item={item}
             title={t(item.titleKey)}
-            trend={t(item.trendKey)}
+            trend={t("overview.stats.change", {
+              value: formatChange(cardMetrics[index]),
+            })}
           />
         ))}
       </div>

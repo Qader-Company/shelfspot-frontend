@@ -9,6 +9,7 @@ import {
 
 interface AuthState {
   isAuthenticated: boolean;
+  isHydrated: boolean;
   tokens: AuthTokens | null;
   user: unknown | null;
   hydrateSession: () => void;
@@ -24,6 +25,7 @@ interface AuthState {
 
 export const useAuthStore = create<AuthState>((set) => ({
   isAuthenticated: false,
+  isHydrated: false,
   tokens: null,
   user: null,
   hydrateSession: () => {
@@ -31,6 +33,7 @@ export const useAuthStore = create<AuthState>((set) => ({
 
     set({
       isAuthenticated: !!tokens,
+      isHydrated: true,
       tokens,
       user: null,
     });

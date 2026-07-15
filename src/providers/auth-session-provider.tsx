@@ -2,7 +2,6 @@
 
 import { useEffect } from "react";
 
-import { setupApiClient } from "@/shared/lib/api/client";
 import { useAuthStore } from "@/shared/stores/auth-store";
 
 export function AuthSessionProvider() {
@@ -10,7 +9,6 @@ export function AuthSessionProvider() {
 
   useEffect(() => {
     hydrateSession();
-    setupApiClient();
   }, [hydrateSession]);
 
   return null;
