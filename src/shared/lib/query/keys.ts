@@ -14,4 +14,5 @@ export const QUERY_KEYS = {
     params
       ? (["app", "sub-brands", params] as const)
       : (["app", "sub-brands"] as const),
+  categories: (params?: Record<string, unknown>) => params ? (["app", "categories", params] as const) : (["app", "categories"] as const),
 } as const;

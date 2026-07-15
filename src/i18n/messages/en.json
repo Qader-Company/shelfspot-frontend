@@ -646,7 +646,7 @@
         "title": "Category", "subtitle": "Manage and monitor all your registered categories and their details",
         "actions": { "add": "Add Category" },
         "table": { "columns": { "category": "Category", "brand": "Brand", "subBrand": "Sub-Brand" } },
-        "dialog": { "title": "Add New Category", "editTitle": "Update Category", "uploadLabel": "Upload Category Image", "nameLabel": "Category Name", "namePlaceholder": "Enter category name", "statusDescription": "Category is available and visible" },
+        "dialog": { "title": "Add New Category", "editTitle": "Update Category", "uploadLabel": "Upload Category Image", "nameLabel": "Category Name", "namePlaceholder": "Enter category name", "nameEnLabel": "Category Name (English)", "nameArLabel": "Category Name (Arabic)", "requiredFields": "Select a brand and sub-brand, enter both names, and upload an image.", "importFileRequired": "Select a CSV or XLSX file to import.", "statusDescription": "Category is available and visible" },
         "deleteDialog": { "title": "Delete Category?", "descriptionLine1": "Are you sure you want to delete this category?", "descriptionLine2": "This action cannot be undone.", "cancel": "No, Keep it", "confirm": "Yes, Delete!" }
       },
       "subCategory": {

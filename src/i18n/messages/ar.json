@@ -646,7 +646,7 @@
         "title": "الفئة", "subtitle": "إدارة ومراقبة جميع فئاتك المسجلة",
         "actions": { "add": "إضافة فئة" },
         "table": { "columns": { "category": "الفئة", "brand": "العلامة", "subBrand": "العلامة الفرعية" } },
-        "dialog": { "title": "إضافة فئة جديدة", "editTitle": "تحديث الفئة", "uploadLabel": "رفع صورة الفئة", "nameLabel": "اسم الفئة", "namePlaceholder": "أدخل اسم الفئة", "statusDescription": "الفئة متاحة وظاهرة" },
+        "dialog": { "title": "إضافة فئة جديدة", "editTitle": "تحديث الفئة", "uploadLabel": "رفع صورة الفئة", "nameLabel": "اسم الفئة", "namePlaceholder": "أدخل اسم الفئة", "nameEnLabel": "اسم الفئة (بالإنجليزية)", "nameArLabel": "اسم الفئة (بالعربية)", "requiredFields": "حدد العلامة والعلامة الفرعية وأدخل الاسمين وارفع صورة.", "importFileRequired": "حدد ملف CSV أو XLSX للاستيراد.", "statusDescription": "الفئة متاحة وظاهرة" },
         "deleteDialog": { "title": "حذف الفئة؟", "descriptionLine1": "هل أنت متأكد من حذف هذه الفئة؟", "descriptionLine2": "لا يمكن التراجع عن هذا الإجراء.", "cancel": "لا، احتفظ به", "confirm": "نعم، احذفه!" }
       },
       "subCategory": {
