@@ -1,256 +1,150 @@
 "use client";
 
-import { useState } from "react";
-import { useTranslations } from "next-intl";
+import { useQueryClient } from "@tanstack/react-query";
+import { useDeferredValue, useMemo, useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
 
 import { useBrandsQuery } from "@/modules/dashboard/hooks/use-brands-query";
 import { useCreateSubBrandMutation } from "@/modules/dashboard/hooks/use-create-sub-brand-mutation";
-import { normalizeApiError } from "@/shared/lib/api/errors";
-
-import {
-  AddIcon,
-  FilterIcon,
-  PaginationNextIcon,
-  PaginationPreviousIcon,
-  UploadIcon,
-} from "@/shared/components/dashboard/dashboard-icons";
+import { useDeleteSubBrandMutation } from "@/modules/dashboard/hooks/use-delete-sub-brand-mutation";
+import { useSubBrandsQuery } from "@/modules/dashboard/hooks/use-sub-brands-query";
+import { useUpdateSubBrandMutation } from "@/modules/dashboard/hooks/use-update-sub-brand-mutation";
+import { downloadSubBrandsTemplateService } from "@/modules/dashboard/services/download-sub-brands-template-service";
+import { importSubBrandsService } from "@/modules/dashboard/services/import-sub-brands-service";
+import type { CompanySubBrand } from "@/modules/dashboard/types/sub-brand";
+import { DeleteConfirmDialog } from "@/shared/components/dashboard/delete-confirm-dialog";
+import { AddIcon, FilterIcon, PaginationNextIcon, PaginationPreviousIcon, UploadIcon } from "@/shared/components/dashboard/dashboard-icons";
 import { SearchInput } from "@/shared/components/dashboard/search-input";
+import { normalizeApiError } from "@/shared/lib/api/errors";
+import { QUERY_KEYS } from "@/shared/lib/query/keys";
 import { cn } from "@/shared/lib/utils";
 import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
 
-import {
-  CatalogFormDialog,
-  CatalogStatusField,
-} from "./catalog-form-dialog";
-import { DeleteConfirmDialog } from "@/shared/components/dashboard/delete-confirm-dialog";
+import { CatalogFormDialog, CatalogStatusField } from "./catalog-form-dialog";
 import { CatalogImportDialog } from "./catalog-import-dialog";
-import { CatalogItemsTable } from "./catalog-items-table";
-import type { CatalogExtraColumn } from "./catalog-items-table";
+import { CatalogItemsTable, type CatalogExtraColumn } from "./catalog-items-table";
 import { CatalogUploadArea } from "./catalog-upload-area";
-import {
-  catalogPagination,
-  subBrandRows,
-} from "./catalog.seed";
+import type { SubBrandRow } from "./catalog.seed";
 
 type SubBrandDialog = "add" | "edit" | "delete" | "import" | null;
 
+function translationName(item: CompanySubBrand, locale: string) {
+  if (item.name) return item.name;
+  if (Array.isArray(item.translations)) return item.translations.find((value) => value.locale === locale)?.name ?? item.translations[0]?.name ?? "-";
+  const value = item.translations?.[locale];
+  if (typeof value === "string") return value;
+  return value?.name ?? "-";
+}
+
+function editName(item: CompanySubBrand, locale: "en" | "ar") {
+  if (Array.isArray(item.translations)) return item.translations.find((value) => value.locale === locale)?.name ?? item.name ?? "";
+  const value = item.translations?.[locale];
+  return typeof value === "string" ? value : value?.name ?? item.name ?? "";
+}
+
+function activeValue(item: CompanySubBrand) {
+  return (
+    item.active ??
+    (item.is_active === true || item.is_active === 1 || item.is_active === "1")
+  );
+}
+
+function parentName(item: CompanySubBrand) {
+  if (typeof item.brand === "string") return item.brand;
+  return item.brand?.name ?? item.brand_name ?? `#${item.brand_id}`;
+}
+
 export function SubBrandPage() {
   const t = useTranslations("dashboard");
+  const locale = useLocale();
+  const queryClient = useQueryClient();
   const [openDialog, setOpenDialog] = useState<SubBrandDialog>(null);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
   const [brandId, setBrandId] = useState("");
   const [nameEn, setNameEn] = useState("");
   const [nameAr, setNameAr] = useState("");
   const [isActive, setIsActive] = useState(true);
   const [logo, setLogo] = useState<File | null>(null);
+  const [search, setSearch] = useState("");
+  const [activeFilter, setActiveFilter] = useState<"all" | "1" | "0">("all");
+  const [brandFilter, setBrandFilter] = useState("");
+  const [page, setPage] = useState(1);
   const [formError, setFormError] = useState("");
+  const [deleteError, setDeleteError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const [importFile, setImportFile] = useState<File | null>(null);
+  const [importError, setImportError] = useState("");
+  const [isImporting, setIsImporting] = useState(false);
+  const [downloadError, setDownloadError] = useState("");
+  const [isDownloading, setIsDownloading] = useState(false);
+  const deferredSearch = useDeferredValue(search.trim());
+
   const brandsQuery = useBrandsQuery({ per_page: 100, page: 1 });
-  const createSubBrandMutation = useCreateSubBrandMutation();
+  const subBrandsQuery = useSubBrandsQuery({ per_page: 10, page, name: deferredSearch || undefined, active: activeFilter === "all" ? undefined : activeFilter === "1", brand_id: brandFilter || undefined });
+  const createMutation = useCreateSubBrandMutation();
+  const updateMutation = useUpdateSubBrandMutation();
+  const deleteMutation = useDeleteSubBrandMutation();
 
-  const close = () => {
-    setOpenDialog(null);
+  const rows = useMemo<SubBrandRow[]>(() => (subBrandsQuery.data?.data ?? []).map((item) => ({
+    id: String(item.id), name: translationName(item, locale), thumbnailAlt: translationName(item, locale),
+    brand: parentName(item), isActive: activeValue(item), statusDisplay: "toggle",
+    createdDate: item.created_at ? new Intl.DateTimeFormat(locale, { dateStyle: "medium", timeStyle: "short" }).format(new Date(item.created_at)) : "-",
+  })), [locale, subBrandsQuery.data?.data]);
+  const currentPage = subBrandsQuery.data?.meta?.current_page ?? page;
+  const lastPage = Math.max(subBrandsQuery.data?.meta?.last_page ?? 1, 1);
+  const pages = useMemo(() => Array.from({ length: Math.min(lastPage, 5) }, (_, index) => Math.max(1, Math.min(currentPage - 2, lastPage - Math.min(lastPage, 5) + 1)) + index), [currentPage, lastPage]);
+
+  const close = () => { setOpenDialog(null); setSelectedId(null); setFormError(""); setDeleteError(""); };
+  const resetForm = () => { setBrandId(""); setNameEn(""); setNameAr(""); setIsActive(true); setLogo(null); setFormError(""); };
+  const openAdd = () => { resetForm(); setOpenDialog("add"); };
+  const refresh = () => queryClient.invalidateQueries({ queryKey: QUERY_KEYS.subBrands() });
+
+  async function save() {
+    if (!brandId || !nameEn.trim() || !nameAr.trim() || (openDialog === "add" && !logo)) { setFormError(t("catalogPage.subBrand.dialog.requiredFields")); return; }
     setFormError("");
-  };
-
-  const openAddDialog = () => {
-    setBrandId("");
-    setNameEn("");
-    setNameAr("");
-    setIsActive(true);
-    setLogo(null);
-    setFormError("");
-    setOpenDialog("add");
-  };
-
-  async function handleCreateSubBrand() {
-    if (!brandId || !nameEn.trim() || !nameAr.trim() || !logo) {
-      setFormError(t("catalogPage.subBrand.dialog.requiredFields"));
-      return;
-    }
-
-    setFormError("");
-
     try {
-      const response = await createSubBrandMutation.mutateAsync({
-        brandId,
-        nameEn: nameEn.trim(),
-        nameAr: nameAr.trim(),
-        isActive,
-        logo,
-      });
-      setSuccessMessage(
-        response.message || t("catalogPage.subBrand.dialog.success"),
-      );
-      close();
-    } catch (error) {
-      const apiError = normalizeApiError(error);
-      setFormError(apiError.message || t("catalogPage.subBrand.dialog.error"));
-    }
+      const payload = { brandId, nameEn: nameEn.trim(), nameAr: nameAr.trim(), isActive, logo: logo ?? undefined };
+      const response = openDialog === "edit" && selectedId
+        ? await updateMutation.mutateAsync({ id: selectedId, payload })
+        : await createMutation.mutateAsync({ ...payload, logo: logo! });
+      setSuccessMessage(response.message);
+      await refresh(); close();
+    } catch (error) { setFormError(normalizeApiError(error).message); }
   }
-  const handleDelete = () => setOpenDialog("delete");
-  const handleEdit = () => setOpenDialog("edit");
 
-  const extraColumns: CatalogExtraColumn[] = [
-    {
-      key: "brand",
-      header: t("catalogPage.subBrand.table.columns.brand"),
-      getValue: (row) => String(row.brand ?? ""),
-    },
-  ];
+  function edit(id: string) {
+    const item = subBrandsQuery.data?.data.find((value) => String(value.id) === id); if (!item) return;
+    setSelectedId(id); setBrandId(String(item.brand_id ?? (typeof item.brand === "object" ? item.brand?.id : "")));
+    setNameEn(editName(item, "en")); setNameAr(editName(item, "ar")); setIsActive(activeValue(item)); setLogo(null); setFormError(""); setOpenDialog("edit");
+  }
 
-  const tableLabels = {
-    nameColumn:    t("catalogPage.subBrand.table.columns.subBrandName"),
-    status:        t("catalogPage.table.columns.status"),
-    createdDate:   t("catalogPage.table.columns.createdDate"),
-    action:        t("catalogPage.table.columns.action"),
-    selectAll:     t("catalogPage.table.actions.selectAll"),
-    selectRow:     t("catalogPage.table.actions.selectRow"),
-    delete:        t("catalogPage.table.actions.delete"),
-    edit:          t("catalogPage.table.actions.edit"),
-    toggleStatus:  t("catalogPage.table.actions.toggleStatus"),
-    activeLabel:   t("catalogPage.status.active"),
-    inactiveLabel: t("catalogPage.status.inactive"),
-  };
+  async function remove() {
+    if (!selectedId) return; setDeleteError("");
+    try { const response = await deleteMutation.mutateAsync(selectedId); setSuccessMessage(response.message); await refresh(); close(); }
+    catch (error) { setDeleteError(normalizeApiError(error).message); }
+  }
 
-  return (
-    <div className="space-y-6 px-4 py-8 lg:px-8">
-      <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-        <div>
-          <h1 className="text-3xl font-bold leading-tight text-foreground">
-            {t("catalogPage.subBrand.title")}
-          </h1>
-          <p className="mt-2 text-lg font-medium text-muted-foreground">
-            {t("catalogPage.subBrand.subtitle")}
-          </p>
-        </div>
-        <div className="flex items-center gap-3">
-          <Button type="button" variant="outline" className="h-10 gap-2 rounded-lg border-border bg-card px-4 text-sm font-medium shadow-none" onClick={() => setOpenDialog("import")}>
-            <UploadIcon className="size-4" />
-            {t("catalogPage.actions.import")}
-          </Button>
-          <Button type="button" className="h-10 gap-2 rounded-lg px-4 text-sm font-semibold text-white hover:text-white" onClick={openAddDialog}>
-            <AddIcon className="size-4" />
-            {t("catalogPage.subBrand.actions.add")}
-          </Button>
-        </div>
-      </div>
+  async function download() { setIsDownloading(true); setDownloadError(""); try { await downloadSubBrandsTemplateService(); } catch (error) { setDownloadError(normalizeApiError(error).message); } finally { setIsDownloading(false); } }
+  async function importFileNow() { if (!importFile) { setImportError(t("catalogPage.subBrand.dialog.importFileRequired")); return; } setIsImporting(true); setImportError(""); try { const response = await importSubBrandsService(importFile); setSuccessMessage(response.message); await refresh(); close(); } catch (error) { setImportError(normalizeApiError(error).message); } finally { setIsImporting(false); } }
 
-      {successMessage ? (
-        <p
-          className="rounded-xl border border-success/20 bg-success/10 px-4 py-3 text-sm text-success"
-          role="status"
-        >
-          {successMessage}
-        </p>
-      ) : null}
+  const labels = { nameColumn: t("catalogPage.subBrand.table.columns.subBrandName"), status: t("catalogPage.table.columns.status"), createdDate: t("catalogPage.table.columns.createdDate"), action: t("catalogPage.table.columns.action"), selectAll: t("catalogPage.table.actions.selectAll"), selectRow: t("catalogPage.table.actions.selectRow"), delete: t("catalogPage.table.actions.delete"), edit: t("catalogPage.table.actions.edit"), toggleStatus: t("catalogPage.table.actions.toggleStatus"), activeLabel: t("catalogPage.status.active"), inactiveLabel: t("catalogPage.status.inactive") };
+  const extraColumns: CatalogExtraColumn[] = [{ key: "brand", header: t("catalogPage.subBrand.table.columns.brand"), getValue: (row) => String(row.brand ?? "") }];
 
-      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-        <SearchInput label={t("catalogPage.search.label")} placeholder={t("catalogPage.search.placeholder")} className="max-w-[400px]" />
-        <Button type="button" variant="outline" className="h-10 gap-2 rounded-lg border-border bg-card px-4 text-sm font-medium text-foreground shadow-none">
-          <FilterIcon className="size-4" />
-          {t("catalogPage.filters.allStatuses")}
-        </Button>
-      </div>
-
-      <CatalogItemsTable rows={subBrandRows} labels={tableLabels} extraColumns={extraColumns} onDelete={handleDelete} onEdit={handleEdit} />
-
-      <div className="flex flex-col items-center justify-between gap-4 px-5 pb-2 md:flex-row">
-        <Button type="button" variant="outline" className="h-10 gap-2 rounded-lg border-border bg-card px-4 text-sm font-semibold shadow-none">
-          <PaginationPreviousIcon className="size-4 rtl:rotate-180" />
-          {t("catalogPage.pagination.previous")}
-        </Button>
-        <div className="flex items-center gap-2">
-          {catalogPagination.pages.map((page) => (
-            <Button key={page} type="button" variant="ghost" size="icon-sm"
-              className={cn("rounded-lg text-sm text-muted-foreground", page === catalogPagination.activePage && "bg-primary/20 text-foreground hover:bg-primary/20")}>
-              {page}
-            </Button>
-          ))}
-        </div>
-        <Button type="button" variant="outline" className="h-10 gap-2 rounded-lg border-border bg-card px-4 text-sm font-semibold shadow-none">
-          {t("catalogPage.pagination.next")}
-          <PaginationNextIcon className="size-4 rtl:rotate-180" />
-        </Button>
-      </div>
-
-      {/* Delete Sub-Brand confirmation */}
-      <DeleteConfirmDialog
-        isOpen={openDialog === "delete"}
-        title={t("catalogPage.subBrand.deleteDialog.title")}
-        descriptionLine1={t("catalogPage.subBrand.deleteDialog.descriptionLine1")}
-        descriptionLine2={t("catalogPage.subBrand.deleteDialog.descriptionLine2")}
-        cancelLabel={t("catalogPage.subBrand.deleteDialog.cancel")}
-        confirmLabel={t("catalogPage.subBrand.deleteDialog.confirm")}
-        onClose={close}
-      />
-
-      {/* Add / Edit Sub-Brand dialog */}
-      <CatalogFormDialog
-        isOpen={openDialog === "add" || openDialog === "edit"}
-        title={openDialog === "edit" ? t("catalogPage.subBrand.dialog.editTitle") : t("catalogPage.subBrand.dialog.title")}
-        closeLabel={t("catalogPage.dialog.close")}
-        cancelLabel={t("catalogPage.dialog.cancel")}
-        saveLabel={t("catalogPage.dialog.save")}
-        onClose={close}
-        onSubmit={openDialog === "add" ? handleCreateSubBrand : undefined}
-        isPending={createSubBrandMutation.isPending}
-        errorMessage={formError}
-      >
-        <div className="space-y-1.5">
-          <label htmlFor="sub-brand-parent" className="text-sm font-semibold text-foreground">
-            {t("catalogPage.dialog.parentBrand")}
-          </label>
-          <select
-            id="sub-brand-parent"
-            value={brandId}
-            onChange={(event) => setBrandId(event.target.value)}
-            required
-            className="h-11 w-full rounded-lg border border-border bg-secondary px-4 text-sm text-foreground shadow-none"
-          >
-            <option value="" disabled>
-              {t("catalogPage.dialog.selectBrand")}
-            </option>
-            {(brandsQuery.data?.data ?? []).map((brand) => (
-              <option key={brand.id} value={String(brand.id)}>
-                {brand.name ?? `#${brand.id}`}
-              </option>
-            ))}
-          </select>
-        </div>
-        <CatalogUploadArea
-          label={t("catalogPage.subBrand.dialog.uploadLabel")}
-          hint={t("catalogPage.dialog.uploadHint")}
-          file={logo}
-          onFileChange={setLogo}
-        />
-        <div className="space-y-1.5">
-          <label htmlFor="sub-brand-name-en" className="text-sm font-semibold text-foreground">
-            {t("catalogPage.subBrand.dialog.nameEnLabel")}
-          </label>
-          <Input id="sub-brand-name-en" type="text" value={nameEn} onChange={(event) => setNameEn(event.target.value)} required placeholder={t("catalogPage.subBrand.dialog.nameEnPlaceholder")}
-            className="h-11 rounded-lg border-border bg-secondary text-sm shadow-none" />
-        </div>
-        <div className="space-y-1.5">
-          <label htmlFor="sub-brand-name-ar" className="text-sm font-semibold text-foreground">
-            {t("catalogPage.subBrand.dialog.nameArLabel")}
-          </label>
-          <Input id="sub-brand-name-ar" type="text" dir="rtl" value={nameAr} onChange={(event) => setNameAr(event.target.value)} required placeholder={t("catalogPage.subBrand.dialog.nameArPlaceholder")}
-            className="h-11 rounded-lg border-border bg-secondary text-sm shadow-none" />
-        </div>
-        <div className="space-y-1.5">
-          <p className="text-sm font-semibold text-foreground">{t("catalogPage.dialog.statusLabel")}</p>
-          <CatalogStatusField
-            activeLabel={t("catalogPage.dialog.statusActive")}
-            description={t("catalogPage.subBrand.dialog.statusDescription")}
-            ariaLabel={t("catalogPage.dialog.statusActive")}
-            isActive={isActive}
-            onChange={setIsActive}
-          />
-        </div>
-      </CatalogFormDialog>
-
-      <CatalogImportDialog isOpen={openDialog === "import"} title={t("catalogPage.import.title")} description={t("catalogPage.import.description")} downloadLabel={t("catalogPage.import.downloadLabel")} uploadLabel={t("catalogPage.import.uploadLabel")} uploadHint={t("catalogPage.import.uploadHint")} uploadFormat={t("catalogPage.import.uploadFormat")} cancelLabel={t("catalogPage.dialog.cancel")} saveLabel={t("catalogPage.dialog.save")} closeLabel={t("catalogPage.dialog.close")} onClose={close} />
-    </div>
-  );
+  return <div className="space-y-6 px-4 py-8 lg:px-8">
+    <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between"><div><h1 className="text-3xl font-bold">{t("catalogPage.subBrand.title")}</h1><p className="mt-2 text-lg text-muted-foreground">{t("catalogPage.subBrand.subtitle")}</p></div><div className="flex gap-3"><Button variant="outline" onClick={() => { setImportFile(null); setImportError(""); setOpenDialog("import"); }}><UploadIcon className="size-4" />{t("catalogPage.actions.import")}</Button><Button onClick={openAdd}><AddIcon className="size-4" />{t("catalogPage.subBrand.actions.add")}</Button></div></div>
+    {successMessage ? <p className="rounded-xl border border-success/20 bg-success/10 px-4 py-3 text-sm text-success">{successMessage}</p> : null}
+    <div className="flex flex-wrap gap-3"><SearchInput label={t("catalogPage.search.label")} placeholder={t("catalogPage.search.placeholder")} className="max-w-[400px]" value={search} onChange={(event) => { setSearch(event.target.value); setPage(1); }} /><select value={brandFilter} onChange={(event) => { setBrandFilter(event.target.value); setPage(1); }} className="h-11 rounded-lg border bg-card px-3"><option value="">{t("catalogPage.dialog.parentBrand")}</option>{(brandsQuery.data?.data ?? []).map((brand) => <option key={brand.id} value={brand.id}>{brand.name ?? `#${brand.id}`}</option>)}</select><label className="relative"><FilterIcon className="pointer-events-none absolute start-3 top-1/2 size-4 -translate-y-1/2" /><select value={activeFilter} onChange={(event) => { setActiveFilter(event.target.value as "all" | "1" | "0"); setPage(1); }} className="h-11 rounded-lg border bg-card pe-4 ps-9"><option value="all">{t("catalogPage.filters.allStatuses")}</option><option value="1">{t("catalogPage.status.active")}</option><option value="0">{t("catalogPage.status.inactive")}</option></select></label></div>
+    {subBrandsQuery.isError ? <p className="rounded-xl border border-destructive/20 bg-destructive/10 px-4 py-3 text-sm text-destructive">{normalizeApiError(subBrandsQuery.error).message}</p> : <div className={cn(subBrandsQuery.isFetching && "opacity-60")}><CatalogItemsTable rows={rows} labels={labels} extraColumns={extraColumns} onDelete={(id) => { setSelectedId(id); setOpenDialog("delete"); }} onEdit={edit} /></div>}
+    <div className="flex items-center justify-between"><Button variant="outline" disabled={currentPage <= 1} onClick={() => setPage((value) => value - 1)}><PaginationPreviousIcon className="size-4" />{t("catalogPage.pagination.previous")}</Button><div>{pages.map((value) => <Button key={value} variant="ghost" onClick={() => setPage(value)} className={cn(value === currentPage && "bg-primary/20")}>{value}</Button>)}</div><Button variant="outline" disabled={currentPage >= lastPage} onClick={() => setPage((value) => value + 1)}>{t("catalogPage.pagination.next")}<PaginationNextIcon className="size-4" /></Button></div>
+    <DeleteConfirmDialog isOpen={openDialog === "delete"} title={t("catalogPage.subBrand.deleteDialog.title")} descriptionLine1={t("catalogPage.subBrand.deleteDialog.descriptionLine1")} descriptionLine2={t("catalogPage.subBrand.deleteDialog.descriptionLine2")} cancelLabel={t("catalogPage.subBrand.deleteDialog.cancel")} confirmLabel={t("catalogPage.subBrand.deleteDialog.confirm")} onClose={close} onConfirm={remove} isPending={deleteMutation.isPending} errorMessage={deleteError} />
+    <CatalogFormDialog isOpen={openDialog === "add" || openDialog === "edit"} title={openDialog === "edit" ? t("catalogPage.subBrand.dialog.editTitle") : t("catalogPage.subBrand.dialog.title")} closeLabel={t("catalogPage.dialog.close")} cancelLabel={t("catalogPage.dialog.cancel")} saveLabel={t("catalogPage.dialog.save")} onClose={close} onSubmit={save} isPending={createMutation.isPending || updateMutation.isPending} errorMessage={formError}>
+      <div className="space-y-1.5"><label className="text-sm font-semibold">{t("catalogPage.dialog.parentBrand")}</label><select value={brandId} onChange={(event) => setBrandId(event.target.value)} required className="h-11 w-full rounded-lg border bg-secondary px-4"><option value="" disabled>{t("catalogPage.dialog.selectBrand")}</option>{(brandsQuery.data?.data ?? []).map((brand) => <option key={brand.id} value={brand.id}>{brand.name ?? `#${brand.id}`}</option>)}</select></div>
+      <CatalogUploadArea label={t("catalogPage.subBrand.dialog.uploadLabel")} hint={t("catalogPage.dialog.uploadHint")} file={logo} onFileChange={setLogo} />
+      <div className="space-y-1.5"><label className="text-sm font-semibold">{t("catalogPage.subBrand.dialog.nameEnLabel")}</label><Input value={nameEn} onChange={(event) => setNameEn(event.target.value)} required /></div>
+      <div className="space-y-1.5"><label className="text-sm font-semibold">{t("catalogPage.subBrand.dialog.nameArLabel")}</label><Input dir="rtl" value={nameAr} onChange={(event) => setNameAr(event.target.value)} required /></div>
+      <CatalogStatusField activeLabel={t("catalogPage.dialog.statusActive")} description={t("catalogPage.subBrand.dialog.statusDescription")} ariaLabel={t("catalogPage.dialog.statusActive")} isActive={isActive} onChange={setIsActive} />
+    </CatalogFormDialog>
+    <CatalogImportDialog isOpen={openDialog === "import"} title={t("catalogPage.import.title")} description={t("catalogPage.import.description")} downloadLabel={t("catalogPage.import.downloadLabel")} uploadLabel={t("catalogPage.import.uploadLabel")} uploadHint={t("catalogPage.import.uploadHint")} uploadFormat={t("catalogPage.import.uploadFormat")} cancelLabel={t("catalogPage.dialog.cancel")} saveLabel={t("catalogPage.dialog.save")} closeLabel={t("catalogPage.dialog.close")} onClose={close} onDownload={download} isDownloading={isDownloading} downloadError={downloadError} selectedFile={importFile} onFileChange={setImportFile} onImport={importFileNow} isImporting={isImporting} importError={importError} />
+  </div>;
 }
