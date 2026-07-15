@@ -1,4 +1,3 @@
-import type { AuthTokens } from "@/shared/lib/auth/types";
 import { apiClient } from "@/shared/lib/api/client";
 
 export interface VerifyEmailPayload {
@@ -8,21 +7,12 @@ export interface VerifyEmailPayload {
 
 export interface VerifyEmailResponse {
   message: string;
-  tokens: AuthTokens;
   user: unknown | null;
 }
 
 interface VerifyEmailApiResponse {
   message: string;
   data: {
-    access_token: {
-      token: string;
-      ttl: number;
-    };
-    refresh_token: {
-      token: string;
-      ttl: number;
-    };
     user: unknown | null;
   };
 }
@@ -47,11 +37,6 @@ export async function verifyEmailService(payload: VerifyEmailPayload) {
 
   return {
     message: response.data.message,
-    tokens: {
-      accessToken: response.data.data.access_token.token,
-      refreshToken: response.data.data.refresh_token.token,
-      tokenType: "Bearer",
-    },
     user: response.data.data.user,
   } satisfies VerifyEmailResponse;
 }

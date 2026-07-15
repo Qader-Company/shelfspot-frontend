@@ -5,6 +5,7 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
 import { createServerApiClient } from "@/shared/lib/api/server";
+import { ACCESS_TOKEN_COOKIE } from "@/shared/lib/auth/session-cookies";
 
 /**
  * Generic BFF proxy for authenticated company API routes.
@@ -38,9 +39,9 @@ export async function proxyCompanyRequest(
     forwardedHeaders["Content-Type"] = contentType;
   }
 
-  const authorization = request.headers.get("authorization");
-  if (authorization) {
-    forwardedHeaders["Authorization"] = authorization;
+  const accessToken = request.cookies.get(ACCESS_TOKEN_COOKIE)?.value;
+  if (accessToken) {
+    forwardedHeaders["Authorization"] = `Bearer ${accessToken}`;
   }
 
   const companySlug = request.headers.get("x-company-slug");

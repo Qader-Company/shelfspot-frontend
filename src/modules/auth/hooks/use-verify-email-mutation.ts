@@ -15,7 +15,6 @@ export function useVerifyEmailMutation() {
       clearStoredVerificationToken();
       setSession({
         isAuthenticated: true,
-        tokens: data.tokens,
         user: data.user,
       });
     },

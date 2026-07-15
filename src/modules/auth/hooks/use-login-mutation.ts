@@ -10,11 +10,9 @@ export function useLoginMutation() {
 
   return useMutation({
     mutationFn: loginService,
-    onSuccess: (data, variables) => {
+    onSuccess: () => {
       setSession({
         isAuthenticated: true,
-        persistent: variables.rememberMe,
-        tokens: data.tokens,
         user: null,
       });
     },
