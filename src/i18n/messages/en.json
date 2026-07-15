@@ -146,13 +146,22 @@
       },
       "bottom": {
         "copy": "© 2025 ShelfSpot. All rights reserved"
+      }
+    }
+  },
   "dashboard": {
     "navigation": {
       "label": "Dashboard navigation",
+      "logo": "Go to home page",
       "dashboard": "Dashboard",
       "requests": "Requests",
       "payment": "Payment",
       "catalog": "Catalog",
+      "catalogBrand": "Brand",
+      "catalogSubBrand": "Sub-Brand",
+      "catalogCategory": "Category",
+      "catalogSubCategory": "Sub-Category",
+      "catalogProduct": "Product",
       "admins": "Admins",
       "trash": "Trash",
       "logout": "Logout"
@@ -168,10 +177,866 @@
       "name": "Alf Company",
       "description": "Mohamed"
     },
+    "notifications": {
+      "title": "Notification",
+      "newBadge": "2 new",
+      "closeOverlay": "Close notifications",
+      "items": {
+        "newHiringRequest": {
+          "title": "New hiring request",
+          "description": "TechCorp requested a UI Designer.",
+          "time": "2m ago"
+        },
+        "assignmentRejected": {
+          "title": "Assignment Rejected",
+          "description": "Omar Aly rejected the project.",
+          "time": "2m ago"
+        },
+        "freelancerAssigned": {
+          "title": "Freelancer Assigned",
+          "description": "Omar Aly accept request.",
+          "time": "15m ago"
+        },
+        "walletCredited": {
+          "title": "Wallet Credited",
+          "description": "TechCorp added $2,000 to wallet.",
+          "time": "2h ago"
+        }
+      }
+    },
     "home": {
       "empty": {
         "title": "Start by creating your first service request to manage field execution.",
         "action": "Create Your First Request"
+      }
+    },
+    "overview": {
+      "title": "Dashboard",
+      "subtitle": "Welcome back, here's what's happening today",
+      "filters": {
+        "thisWeek": "This Week"
+      },
+      "actions": {
+        "createRequest": "Create Request"
+      },
+      "stats": {
+        "active": {
+          "title": "Active Requests",
+          "trend": "+12% this week"
+        },
+        "completed": {
+          "title": "Completed This Week",
+          "trend": "+18% this week"
+        },
+        "delayed": {
+          "title": "Delayed Requests",
+          "trend": "-2% this week"
+        },
+        "acceptance": {
+          "title": "Acceptance Rate",
+          "trend": "+3% this week"
+        }
+      },
+      "charts": {
+        "requestsOverTime": "Requests Over Time"
+      },
+      "months": {
+        "jan": "Jan",
+        "feb": "Feb",
+        "mar": "Mar",
+        "apr": "Apr",
+        "may": "May",
+        "jun": "Jun",
+        "jul": "Jul"
+      },
+      "status": {
+        "pending": "Pending",
+        "inProgress": "In Progress",
+        "completed": "Completed",
+        "failed": "Failed",
+        "rejected": "Rejected"
+      },
+      "table": {
+        "title": "Requests",
+        "columns": {
+          "requestId": "Request ID",
+          "location": "Location",
+          "assignedBy": "Assigned By",
+          "time": "Time",
+          "status": "Status",
+          "action": "Action"
+        },
+        "actions": {
+          "delete": "Delete request",
+          "edit": "Edit request"
+        }
+      },
+      "mock": {
+        "locations": {
+          "dammam": "Dammam"
+        },
+        "assignees": {
+          "mohamedAli": "Mohamed Ali"
+        }
+      }
+    },
+    "createRequest": {
+      "title": "Create New Request",
+      "subtitle": "Schedule and manage your in-store execution request with real-time tracking and verified completion.",
+      "stepperLabel": "Create request steps",
+      "steps": {
+        "location": "Location, Date & Time",
+        "service": "Service & Product Details",
+        "guidelines": "Guidelines & Execution Rules"
+      },
+      "actions": {
+        "previous": "Previous",
+        "next": "Next",
+        "cancel": "Cancel Request",
+        "submit": "Submit Request",
+        "submitting": "Submitting...",
+        "closeDialog": "Close dialog",
+        "toggleSection": "Toggle section",
+        "addService": "Add Service",
+        "deleteService": "Delete service",
+        "removeServiceDraft": "Remove service draft",
+        "save": "Save",
+        "confirm": "Confirm",
+        "cancelPayment": "Cancel"
+      },
+      "location": {
+        "title": "Location & Date,Time",
+        "description": "Choose where and when the task should be executed.",
+        "executionDateTime": "Execution Date & Time",
+        "scheduleHint": "Execution requests can only be scheduled for today or the following day.",
+        "storeLocation": "Store Location",
+        "storeDescription": "Select the store where the task will be executed.",
+        "addLocation": "Add Location",
+        "addLocationDescription": "Add a store manually or select it from the map."
+      },
+      "services": {
+        "title": "Services",
+        "description": "Add New Service",
+        "serviceLabel": "Service #{index}",
+        "selectServiceTitle": "Select service type & Price",
+        "selectServiceDescription": "Choose the type of field execution service required."
+      },
+      "guidelines": {
+        "title": "Guidelines & Documents",
+        "description": "Upload supporting files and instructions for the assigned merchandiser.",
+        "documents": "Planogram Documents",
+        "uploadTitle": "Upload Files",
+        "uploadDescription": "Drag & drop files here or browse files",
+        "supportedFormats": "Supported formats: PNG, JPG, PDF",
+        "removeFile": "Remove file"
+      },
+      "fields": {
+        "executionDate": {
+          "label": "Select execution date",
+          "placeholder": "Select execution date"
+        },
+        "executionTime": {
+          "label": "Select execution time",
+          "placeholder": "--:-- --"
+        },
+        "serviceType": {
+          "label": "Select service type",
+          "placeholder": "Select Service"
+        },
+        "estimatedTime": {
+          "label": "Estimated Time (minutes)"
+        },
+        "price": {
+          "label": "Price (SAR)",
+          "placeholder": "Enter price"
+        },
+        "brand": {
+          "label": "Brand",
+          "placeholder": "Select Brand"
+        },
+        "subBrand": {
+          "label": "Sub-Brand",
+          "placeholder": "Select Sub-Brand"
+        },
+        "category": {
+          "label": "Category",
+          "placeholder": "Select category"
+        },
+        "subCategory": {
+          "label": "Sub-Category",
+          "placeholder": "Select Sub-category"
+        },
+        "instructions": {
+          "label": "Execution Instructions",
+          "description": "Add clear execution notes, placement requirements, timing details, or special instructions.",
+          "placeholder": "Write detailed instructions for the assigned merchandiser..."
+        }
+      },
+      "options": {
+        "services": {
+          "freshnessReport": "Freshness Report “Must go backdoor”",
+          "onShelfAvailability": "On Shelf Availability"
+        },
+        "brands": {
+          "pepsico": "Pepsico"
+        },
+        "subBrands": {
+          "pepsiDiet": "Pepsi Diet"
+        },
+        "categories": {
+          "softDrinks": "Soft Drinks"
+        },
+        "subCategories": {
+          "softDrinks": "Soft Drinks"
+        }
+      },
+      "productTable": {
+        "searchPlaceholder": "Search by product name or SKU",
+        "showProducts": "Products",
+        "emptyDetail": "-",
+        "noProducts": "No products found.",
+        "columns": {
+          "products": "Products",
+          "sku": "SKU Code",
+          "details": "Product Details",
+          "expiryDate": "Expiry Date"
+        }
+      },
+      "pagination": {
+        "previous": "Previous",
+        "next": "Next",
+        "ellipsis": "..."
+      },
+      "locationDialog": {
+        "title": "Choose Store Location",
+        "mapLabel": "Interactive store location map",
+        "mapHint": "Click the map to place the location pin",
+        "tabs": {
+          "map": "On Map",
+          "manual": "Manual"
+        },
+        "fields": {
+          "storeName": {
+            "label": "Store Name",
+            "placeholder": "e.g.,carrefour"
+          },
+          "streetAddress": {
+            "label": "Street Address",
+            "placeholder": "e.g.,123 main street"
+          },
+          "state": {
+            "label": "State",
+            "placeholder": "e.g., Cairo State"
+          },
+          "region": {
+            "label": "Region",
+            "placeholder": "e.g., Central Region"
+          },
+          "city": {
+            "label": "City",
+            "placeholder": "e.g., New Cairo"
+          },
+          "district": {
+            "label": "District",
+            "placeholder": "e.g., District 5"
+          }
+        }
+      },
+      "dateDialog": {
+        "title": "Select Execution Date",
+        "month": "May 2026",
+        "previousMonth": "Previous month",
+        "nextMonth": "Next month",
+        "previousYear": "Previous year",
+        "nextYear": "Next year",
+        "changeMonthYear": "Change month and year",
+        "days": {
+          "mon": "Mon",
+          "tue": "Tue",
+          "wed": "Wed",
+          "thu": "Thu",
+          "fri": "Fri",
+          "sat": "Sat",
+          "sun": "Sun"
+        }
+      },
+      "timeDialog": {
+        "title": "Select Execution Time",
+        "icon": "◷",
+        "openPicker": "Open time picker",
+        "clockFace": "Analog time picker clock face",
+        "hour": "Hour",
+        "minute": "Minute",
+        "period": "Period",
+        "am": "AM",
+        "pm": "PM",
+        "incrementHour": "Increase hour",
+        "decrementHour": "Decrease hour",
+        "incrementMinute": "Increase minute",
+        "decrementMinute": "Decrease minute",
+        "togglePeriod": "Toggle AM or PM"
+      },
+      "productsDialog": {
+        "title": "Selected Products",
+        "selectedCount": "{count} products selected"
+      },
+      "paymentDialog": {
+        "title": "Payment Confirmation",
+        "reviewTitle": "Review payment details",
+        "currentBalance": "Current Balance",
+        "amountToHold": "Amount to Hold",
+        "remainingBalance": "Remaining Balance",
+        "currentBalanceValue": "230 SAR",
+        "amountToHoldValue": "175 SAR",
+        "remainingBalanceValue": "55 SAR",
+        "howItWorks": {
+          "title": "How Payment Works",
+          "hold": "Hold: Amount is held in your wallet (not transferred yet)",
+          "completed": "If Completed: Money is transferred to shelfspot",
+          "refund": "If Not Completed: Full refund to your wallet"
+        },
+        "status": {
+          "title": "Status: Pending",
+          "description": "The request will appear in your dashboard with “Pending” status until a merchandiser accepts it."
+        }
+      },
+      "cost": {
+        "title": "Total Estimated Cost",
+        "description": "For all 2 service",
+        "amount": "$ 230"
+      },
+      "success": {
+        "title": "Request submitted",
+        "description": "Your request has been created and is now pending assignment.",
+        "action": "Done"
+      },
+      "mock": {
+        "executionDate": "12 May 2026",
+        "executionTime": "9:00 PM",
+        "estimatedTime": "30Min",
+        "price": "30$",
+        "servicePrice": "$ 75$",
+        "location": {
+          "storeName": "Panda Hypermarket",
+          "streetAddress": "King Fahd Road, Al Malqa District, Al Malqa, Riyadh",
+          "state": "Riyadh",
+          "region": "Central Region",
+          "city": "Riyadh",
+          "district": "Al Malqa"
+        },
+        "products": {
+          "dietDrinksOne": {
+            "name": "Diet Drinks",
+            "sku": "123SKU",
+            "skuLong": "SKU: CC-ZS-330-CAN",
+            "expiryDate": "12 May 2026"
+          },
+          "dietDrinksTwo": {
+            "name": "Diet Drinks",
+            "sku": "123SKU",
+            "skuLong": "SKU: CC-ZS-330-CAN",
+            "expiryDate": "12 May 2026"
+          },
+          "dietDrinksThree": {
+            "name": "Diet Drinks",
+            "sku": "123SKU",
+            "skuLong": "SKU: CC-ZS-330-CAN",
+            "expiryDate": "12 May 2026"
+          },
+          "dietDrinksFour": {
+            "name": "Diet Drinks",
+            "sku": "123SKU",
+            "skuLong": "SKU: CC-ZS-330-CAN",
+            "expiryDate": "12 May 2026"
+          },
+          "dietDrinksFive": {
+            "name": "Diet Drinks",
+            "sku": "123SKU",
+            "skuLong": "SKU: CC-ZS-330-CAN",
+            "expiryDate": "12 May 2026"
+          },
+          "dietDrinksSix": {
+            "name": "Diet Drinks",
+            "sku": "123SKU",
+            "skuLong": "SKU: CC-ZS-330-CAN",
+            "expiryDate": "12 May 2026"
+          }
+        }
+      },
+      "validation": {
+        "executionDateRequired": "Execution date is required.",
+        "executionTimeRequired": "Execution time is required.",
+        "storeRequired": "Store location is required.",
+        "streetAddressRequired": "Street address is required.",
+        "stateRequired": "State is required.",
+        "regionRequired": "Region is required.",
+        "cityRequired": "City is required.",
+        "serviceTypeRequired": "Service type is required.",
+        "priceRequired": "Price must be at least the service minimum.",
+        "executionTimeMinsRequired": "Execution time must be at least the service minimum.",
+        "brandRequired": "Brand is required.",
+        "subBrandRequired": "Sub-brand is required.",
+        "categoryRequired": "Category is required.",
+        "subCategoryRequired": "Sub-category is required.",
+        "productsRequired": "Select at least one product.",
+        "instructionsRequired": "Execution instructions are required (min 10 characters)."
+      },
+      "errors": {
+        "unauthorized": "Your session has expired. Please log in again.",
+        "forbidden": "You do not have permission to create requests.",
+        "generic": "Something went wrong. Please try again.",
+        "loadServices": "Failed to load services.",
+        "loadProducts": "Failed to load products."
+      },
+      "states": {
+        "loading": "Loading...",
+        "noProducts": "No products found. Try adjusting your filters.",
+        "noServices": "No services available."
+      }
+    },
+    "catalogPage": {
+      "search": { "label": "Search catalog", "placeholder": "Search by brand" },
+      "filters": { "allStatuses": "All Statuses" },
+      "actions": { "import": "Import" },
+      "status": { "active": "Active", "inactive": "In Active" },
+      "table": {
+        "columns": { "status": "Status", "createdDate": "Created Date", "action": "Action" },
+        "actions": { "selectAll": "Select all", "selectRow": "Select row", "delete": "Delete item", "edit": "Edit item", "toggleStatus": "Toggle status" }
+      },
+      "pagination": { "previous": "Previous", "next": "Next" },
+      "dialog": {
+        "close": "Close dialog", "cancel": "Cancel", "save": "Save",
+        "uploadHint": "PNG,JSG up to 5 MB",
+        "statusLabel": "Status", "statusActive": "Active",
+        "parentBrand": "Parent Brand", "selectBrand": "Select a brand",
+        "subBrand": "Sub-Brand", "selectSubBrand": "Select a sub-brand"
+      },
+      "import": {
+        "title": "Import Files",
+        "description": "Select and Upload the files according to the template file",
+        "downloadLabel": "Download template File",
+        "uploadLabel": "Upload Files",
+        "uploadHint": "Select a file or drag and drop here",
+        "uploadFormat": "Format: CSV, XLSX"
+      },
+      "brand": {
+        "title": "Brand", "subtitle": "Manage and monitor all your registered brands and their details",
+        "actions": { "add": "Add Brand" },
+        "table": { "columns": { "brandName": "Brand Name" } },
+        "dialog": { "title": "Add New Brand", "editTitle": "Update Brand", "uploadLabel": "Upload Brand Logo", "nameLabel": "Brand Name", "namePlaceholder": "Enter brand name", "statusDescription": "Brand is available and visible" },
+        "deleteDialog": { "title": "Delete Brand?", "descriptionLine1": "Are you sure you want to delete this brand?", "descriptionLine2": "This action cannot be undone.", "cancel": "No, Keep it", "confirm": "Yes, Delete!" }
+      },
+      "subBrand": {
+        "title": "Sub-Brand", "subtitle": "Manage and monitor all your registered sub-brands and their details",
+        "actions": { "add": "Add Sub-Brand" },
+        "table": { "columns": { "subBrandName": "Sub-Brand Name", "brand": "Brand" } },
+        "dialog": { "title": "Add New Sub-Brand", "editTitle": "Update Sub-Brand", "uploadLabel": "Upload Sub-Brand Image", "nameLabel": "Sub-Brand Name", "namePlaceholder": "Enter sub-brand name", "statusDescription": "Sub-Brand is available and visible" },
+        "deleteDialog": { "title": "Delete Sub-Brand?", "descriptionLine1": "Are you sure you want to delete this sub-brand?", "descriptionLine2": "This action cannot be undone.", "cancel": "No, Keep it", "confirm": "Yes, Delete!" }
+      },
+      "category": {
+        "title": "Category", "subtitle": "Manage and monitor all your registered categories and their details",
+        "actions": { "add": "Add Category" },
+        "table": { "columns": { "category": "Category", "brand": "Brand", "subBrand": "Sub-Brand" } },
+        "dialog": { "title": "Add New Category", "editTitle": "Update Category", "uploadLabel": "Upload Category Image", "nameLabel": "Category Name", "namePlaceholder": "Enter category name", "statusDescription": "Category is available and visible" },
+        "deleteDialog": { "title": "Delete Category?", "descriptionLine1": "Are you sure you want to delete this category?", "descriptionLine2": "This action cannot be undone.", "cancel": "No, Keep it", "confirm": "Yes, Delete!" }
+      },
+      "subCategory": {
+        "title": "Sub-Category", "subtitle": "Manage and monitor all your registered categories and their details",
+        "actions": { "add": "Add Sub-Category" },
+        "table": { "columns": { "subCategory": "Category", "brand": "Brand", "subBrand": "Sub-Brand", "category": "Category" } },
+        "dialog": { "title": "Add New Sub-Category", "editTitle": "Update Sub-Category", "uploadLabel": "Upload Sub-Category Image", "nameLabel": "Sub-Category Name", "namePlaceholder": "Enter sub-category name", "categoryLabel": "Sub-Category", "selectCategory": "Select sub-category", "statusDescription": "Sub-Category is available and visible" },
+        "deleteDialog": { "title": "Delete Sub-Category?", "descriptionLine1": "Are you sure you want to delete this sub-category?", "descriptionLine2": "This action cannot be undone.", "cancel": "No, Keep it", "confirm": "Yes, Delete!" }
+      },
+      "product": {
+        "title": "Products", "subtitle": "Manage your brands and products here",
+        "actions": { "add": "Add Product" },
+        "table": { "columns": { "products": "Products", "family": "Family", "sku": "SKU", "description": "Description" } },
+        "dialog": { "title": "Add New product", "editTitle": "Update Product", "uploadLabel": "Upload Product Image", "nameLabel": "Product Name", "namePlaceholder": "Enter product name", "skuLabel": "SKU Code", "skuPlaceholder": "Enter SKU Code (eg, 1234SKU)", "descriptionLabel": "Description", "descriptionPlaceholder": "Enter product description", "categoryLabel": "Category", "selectCategory": "Select a category", "subCategoryLabel": "Sub-Category", "selectSubCategory": "Select sub-category", "statusDescription": "Product is available and visible" },
+        "deleteDialog": { "title": "Delete Product?", "descriptionLine1": "Are you sure you want to delete this product?", "descriptionLine2": "This action cannot be undone.", "cancel": "No, Keep it", "confirm": "Yes, Delete!" }
+      }
+    },
+    "adminsPage": {
+      "title": "Admins Management",
+      "subtitle": "Monitor and manage platform admins",
+      "tabsLabel": "Admin sections",
+      "tabs": {
+        "admins": "Admins",
+        "roles": "Rols"
+      },
+      "search": {
+        "label": "Search admins",
+        "placeholder": "Search for companies"
+      },
+      "filters": {
+        "allStatuses": "All Statuses"
+      },
+      "actions": {
+        "addNew": "Add New admin"
+      },
+      "table": {
+        "columns": {
+          "adminName": "Admin Name",
+          "phoneNumber": "Phone Number",
+          "email": "Email",
+          "role": "Role",
+          "status": "Status",
+          "action": "Action",
+          "roleName": "Role Name",
+          "numberOfUsers": "Numbers of users"
+        },
+        "actions": {
+          "toggleStatus": "Toggle status",
+          "delete": "Delete admin",
+          "edit": "Edit admin",
+          "deleteRole": "Delete role",
+          "editRole": "Edit role"
+        }
+      },
+      "pagination": {
+        "previous": "Previous",
+        "next": "Next"
+      },
+      "dialogs": {
+        "deleteAdmin": {
+          "title": "Delete Admin?",
+          "descriptionLine1": "Are you sure you want to delete {name}",
+          "descriptionLine2": "This action cannot be undone.",
+          "cancel": "No, Keep it",
+          "confirm": "Yes, Delete!"
+        },
+        "deleteRole": {
+          "title": "Delete Role?",
+          "descriptionLine1": "Are you sure you want to delete {name} role",
+          "descriptionLine2": "This action cannot be undone.",
+          "cancel": "No, Keep it",
+          "confirm": "Yes, Delete!"
+        },
+        "adminForm": {
+          "createTitle": "Create New Admin",
+          "editTitle": "Update Admin Details",
+          "activation": "Activation",
+          "active": "Active",
+          "name": "Name",
+          "namePlaceholder": "omar ali",
+          "role": "Role",
+          "email": "Email",
+          "emailPlaceholder": "omarali3@gmail.com",
+          "phoneNumber": "Phone Number",
+          "phonePlaceholder": "+966 6262525242",
+          "password": "Password",
+          "passwordPlaceholder": "Enter password",
+          "confirmPassword": "Confirm Password",
+          "confirmPasswordPlaceholder": "Confirm password",
+          "cancel": "Cancel",
+          "confirm": "Confirm"
+        },
+        "roleForm": {
+          "title": "Create New Role",
+          "activation": "Activation",
+          "active": "Active",
+          "role": "Role",
+          "permission": "Permission 1",
+          "cancel": "Cancel",
+          "confirm": "Confirm"
+        }
+      }
+    },
+    "trashPage": {
+      "title": "Trash",
+      "subtitle": "Deleted items recover or permanently remove them",
+      "tabs": {
+        "brand": "Brand",
+        "subBrand": "Sub-Brand",
+        "category": "Category",
+        "subCategory": "Sub-Category",
+        "products": "Products",
+        "requests": "Requests"
+      },
+      "search": {
+        "label": "Search trash",
+        "placeholder": "Search by brand"
+      },
+      "filters": {
+        "allStatuses": "All Statuses"
+      },
+      "table": {
+        "columns": {
+          "products": "Products",
+          "family": "Family",
+          "sku": "SKU",
+          "description": "Description",
+          "status": "Status",
+          "deletedDate": "Deleted Date",
+          "action": "Action"
+        },
+        "actions": {
+          "selectAll": "Select all items",
+          "selectRow": "Select item",
+          "delete": "Permanently delete",
+          "restore": "Restore item",
+          "toggleStatus": "Toggle item status"
+        }
+      },
+      "pagination": {
+        "previous": "Previous",
+        "next": "Next"
+      },
+      "requests": {
+        "columns": {
+          "requestId": "Request ID",
+          "location": "Location",
+          "assignedBy": "Assigned By",
+          "deletedAt": "Deleted at",
+          "status": "Status",
+          "action": "Action"
+        }
+      },
+      "dialogs": {
+        "permanentDelete": {
+          "title": "Permanently Delete?",
+          "descriptionLine1": "Are you sure you want to permanently delete this item?",
+          "descriptionLine2": "This action cannot be undone.",
+          "cancel": "No, Keep it",
+          "confirm": "Yes, Delete!"
+        },
+        "restore": {
+          "title": "Restore Item?",
+          "descriptionLine1": "Are you sure you want to restore this item?",
+          "descriptionLine2": "The item will be moved back to its original location.",
+          "cancel": "No, Cancel",
+          "confirm": "Yes, Restore!"
+        }
+      }
+    },
+    "paymentPage": {
+      "title": "Payment",
+      "subtitle": "Manage your payment methods and transactions",
+      "summary": {
+        "accountBalance": "Account Balance",
+        "accountId": "Account ID",
+        "monthlySpending": "Monthly Spending",
+        "lastMonth": "Last 1 month",
+        "pending": "Pending",
+        "paymentMethods": "Payment Method",
+        "toggleBalance": "Toggle balance visibility",
+        "copyAccountId": "Copy account ID"
+      },
+      "actions": {
+        "addFund": "Add Fund"
+      },
+      "search": {
+        "label": "Search payments",
+        "placeholder": "Search for companies"
+      },
+      "filters": {
+        "date": "Date",
+        "allStatuses": "All Statuses"
+      },
+      "table": {
+        "columns": {
+          "types": "Types",
+          "totalSpending": "Total Spending",
+          "date": "Date",
+          "status": "Status",
+          "action": "Action"
+        },
+        "actions": {
+          "delete": "Delete transaction"
+        }
+      },
+      "status": {
+        "refunded": "Refunded",
+        "completed": "Completed",
+        "failed": "Failed"
+      },
+      "types": {
+        "couponRedemption": "Coupon redemption",
+        "manualWalletRecharge": "Manual wallet recharge",
+        "taskPayment": "Task payment",
+        "taskRefund": "Task refund"
+      },
+      "pagination": {
+        "previous": "Previous",
+        "next": "Next"
+      },
+      "addFundDialog": {
+        "title": "Select Payment Method",
+        "close": "Close dialog",
+        "methods": {
+          "promoCode": {
+            "label": "Promo Code",
+            "description": "Apply discount or gift code"
+          },
+          "creditCard": {
+            "label": "Credit / Debit Card",
+            "description": "Visa , Mastercard"
+          },
+          "bankTransfer": {
+            "label": "Bank Transfer",
+            "description": "Direct bank transfer"
+          }
+        },
+        "promoCodeSection": {
+          "title": "Enter Promo Code",
+          "placeholder": "Promo Code",
+          "validate": "Validate",
+          "availableTitle": "Available Promo Code",
+          "apply": "Apply Promo Code"
+        },
+        "promoCodes": {
+          "welcomeBonus": {
+            "title": "$50 welcome Bonus",
+            "description": "For new users only",
+            "code": "Welcome $50"
+          },
+          "credit100": {
+            "title": "$100 Credit",
+            "description": "Limited time offer",
+            "code": "PROMO 100"
+          }
+        }
+      }
+    },
+    "requestsPage": {
+      "title": "Requests",
+      "subtitle": "Welcome back, here's what's happening today",
+      "actions": {
+        "createRequest": "Create Request"
+      },
+      "stats": {
+        "total": {
+          "title": "Total Requests",
+          "trend": "+12% this week"
+        },
+        "completed": {
+          "title": "Completed This Week",
+          "trend": "+18% this week"
+        },
+        "delayed": {
+          "title": "Delayed Requests",
+          "trend": "-2% this week"
+        },
+        "acceptance": {
+          "title": "Acceptance Rate",
+          "trend": "+3% this week"
+        }
+      },
+      "search": {
+        "label": "Search requests",
+        "placeholder": "Search by brand"
+      },
+      "filters": {
+        "allStatuses": "All Statuses"
+      },
+      "status": {
+        "inProgress": "In progress",
+        "completed": "Completed",
+        "inReview": "In Review",
+        "accepted": "Accepted",
+        "failed": "Failed",
+        "rejected": "Rejected",
+        "canceled": "Canceled",
+        "pending": "Pending",
+        "reopened": "Reopened"
+      },
+      "table": {
+        "columns": {
+          "requestId": "Request ID",
+          "location": "Location",
+          "assignedBy": "Assigned By",
+          "time": "Time",
+          "status": "Status",
+          "action": "Action"
+        },
+        "actions": {
+          "selectAll": "Select all requests",
+          "selectRow": "Select request",
+          "delete": "Delete request",
+          "edit": "Edit request"
+        }
+      },
+      "pagination": {
+        "previous": "Previous",
+        "next": "Next"
+      },
+      "mock": {
+        "locations": {
+          "dammam": "Dammam"
+        },
+        "assignees": {
+          "mohamedAli": "Mohamed Ali"
+        }
+      },
+      "deleteDialog": {
+        "title": "Delete Request?",
+        "description": "Are you sure you want to delete request #{id}? This action cannot be undone.",
+        "reasonLabel": "Deletion Reason",
+        "reasonPlaceholder": "Select a reason",
+        "reasons": {
+          "duplicate": "Duplicate request",
+          "cancelled": "Request cancelled by client",
+          "error": "Created by error",
+          "other": "Other reason"
+        },
+        "cancel": "No, Keep it",
+        "confirm": "Yes, Delete!"
+      }
+    },
+    "requestDetails": {
+      "title": "Request Details",
+      "subtitle": "Complete information about execution request {id}",
+      "createdOn": "Created on",
+      "info": {
+        "location": "Location",
+        "assignedBy": "Assigned By",
+        "executionDate": "Execution Date",
+        "timeWindow": "Time Window"
+      },
+      "stats": {
+        "totalCost": "Total Cost",
+        "totalProducts": "Total Products",
+        "unitsSubtitle": "Units across all services",
+        "timeRemaining": "Time Remaining",
+        "expired": "Expired",
+        "untilDeadline": "Until deadline"
+      },
+      "actions": {
+        "reschedule": "Reschedule This Request",
+        "cancelRequest": "Cancel Request",
+        "repeatRequest": "Repeat This Request",
+        "viewExecution": "View Execution Details",
+        "cancelReopening": "Cancel reopening task"
+      },
+      "status": {
+        "inProgress": "In Progress",
+        "pending": "Pending",
+        "failed": "Failed",
+        "rejected": "Rejected",
+        "inReview": "In Review",
+        "accepted": "Accepted",
+        "reopened": "Reopened",
+        "completed": "Completed",
+        "canceled": "Canceled"
+      },
+      "services": {
+        "heading": "Services Details ({count})",
+        "productHeading": "Product",
+        "executionGuidelines": "Execution Guidelines",
+        "brand": "Brand",
+        "subBrand": "Sub-Brand",
+        "category": "Category",
+        "subCategory": "Sub-Category",
+        "columns": {
+          "products": "Products",
+          "skuCode": "SKU Code",
+          "quantity": "Quantity",
+          "expiryDate": "Expiry Date"
+        }
+      },
+      "reschedule": {
+        "dateTitle": "Select Execution Date",
+        "timeTitle": "Select Execution Time",
+        "close": "Close"
       }
     }
   },

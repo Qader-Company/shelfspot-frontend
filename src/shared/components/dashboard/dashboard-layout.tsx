@@ -7,10 +7,10 @@ import type { DashboardSidebarItem, DashboardUser } from "./types";
 interface DashboardLayoutProps {
   children: ReactNode;
   sidebarItems: DashboardSidebarItem[];
-  activeSidebarItemKey?: string;
   user: DashboardUser;
   labels: {
     navigation: string;
+    logo: string;
     search: string;
     searchPlaceholder: string;
     menu: string;
@@ -22,18 +22,17 @@ interface DashboardLayoutProps {
 export function DashboardLayout({
   children,
   sidebarItems,
-  activeSidebarItemKey,
   user,
   labels,
 }: DashboardLayoutProps) {
   return (
-    <div className="flex min-h-dvh bg-background">
+    <div className="flex h-dvh overflow-hidden bg-background">
       <DashboardSidebar
         items={sidebarItems}
         navigationLabel={labels.navigation}
-        activeItemKey={activeSidebarItemKey}
+        logoLabel={labels.logo}
       />
-      <div className="flex min-w-0 flex-1 flex-col">
+      <div className="flex min-w-0 flex-1 flex-col overflow-y-auto">
         <DashboardTopbar
           searchLabel={labels.search}
           searchPlaceholder={labels.searchPlaceholder}
@@ -42,7 +41,7 @@ export function DashboardLayout({
           userMenuLabel={labels.userMenu}
           user={user}
         />
-        <main className="min-h-[calc(100dvh-4rem)] flex-1">{children}</main>
+        <main className="flex-1">{children}</main>
       </div>
     </div>
   );

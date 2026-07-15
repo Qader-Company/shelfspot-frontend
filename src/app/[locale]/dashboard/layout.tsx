@@ -1,13 +1,3 @@
-import {
-  BookOpen,
-  Boxes,
-  ChevronDown,
-  CreditCard,
-  LayoutDashboard,
-  LogOut,
-  Trash2,
-  Users,
-} from "lucide-react";
 import { getTranslations } from "next-intl/server";
 
 import { ROUTES } from "@/config/routes";
@@ -26,57 +16,64 @@ export default async function Layout({
       key: "home",
       label: t("navigation.dashboard"),
       href: ROUTES.dashboard,
-      icon: LayoutDashboard,
+      icon: "dashboard",
     },
     {
       key: "requests",
       label: t("navigation.requests"),
       href: ROUTES.dashboardRequests,
-      icon: Boxes,
+      icon: "box",
     },
     {
       key: "payment",
       label: t("navigation.payment"),
       href: ROUTES.dashboardPayment,
-      icon: CreditCard,
+      icon: "payment",
     },
     {
       key: "catalog",
       label: t("navigation.catalog"),
-      href: ROUTES.dashboardCatalog,
-      icon: BookOpen,
-      trailingIcon: ChevronDown,
+      href: ROUTES.dashboardCatalogBrand,
+      icon: "catalog",
+      trailingIcon: "chevron",
+      children: [
+        { key: "brand",       label: t("navigation.catalogBrand"),       href: ROUTES.dashboardCatalogBrand },
+        { key: "subBrand",    label: t("navigation.catalogSubBrand"),    href: ROUTES.dashboardCatalogSubBrand },
+        { key: "category",    label: t("navigation.catalogCategory"),    href: ROUTES.dashboardCatalogCategory },
+        { key: "subCategory", label: t("navigation.catalogSubCategory"), href: ROUTES.dashboardCatalogSubCategory },
+        { key: "product",     label: t("navigation.catalogProduct"),     href: ROUTES.dashboardCatalogProduct },
+      ],
     },
     {
       key: "admins",
       label: t("navigation.admins"),
       href: ROUTES.dashboardAdmins,
-      icon: Users,
+      icon: "admins",
     },
     {
       key: "trash",
       label: t("navigation.trash"),
       href: ROUTES.dashboardTrash,
-      icon: Trash2,
+      icon: "trash",
     },
     {
       key: "logout",
       label: t("navigation.logout"),
       href: ROUTES.login,
-      icon: LogOut,
+      icon: "logout",
     },
   ];
 
   return (
     <DashboardLayout
       sidebarItems={sidebarItems}
-      activeSidebarItemKey="home"
       user={{
         name: t("user.name"),
         description: t("user.description"),
       }}
       labels={{
         navigation: t("navigation.label"),
+        logo: t("navigation.logo"),
         search: t("topbar.searchLabel"),
         searchPlaceholder: t("topbar.searchPlaceholder"),
         menu: t("topbar.menu"),
