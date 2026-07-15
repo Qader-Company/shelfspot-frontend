@@ -11,6 +11,9 @@ interface CatalogFormDialogProps {
   cancelLabel: string;
   saveLabel: string;
   onClose: () => void;
+  onSubmit?: () => void;
+  isPending?: boolean;
+  errorMessage?: string;
   children: ReactNode;
 }
 
@@ -21,6 +24,9 @@ export function CatalogFormDialog({
   cancelLabel,
   saveLabel,
   onClose,
+  onSubmit,
+  isPending = false,
+  errorMessage,
   children,
 }: CatalogFormDialogProps) {
   if (!isOpen) return null;
@@ -52,26 +58,41 @@ export function CatalogFormDialog({
           </Button>
         </div>
 
-        <div className="mt-5 space-y-4">{children}</div>
+        <form
+          onSubmit={(event) => {
+            event.preventDefault();
+            if (onSubmit) onSubmit();
+            else onClose();
+          }}
+        >
+          <div className="mt-5 space-y-4">{children}</div>
 
-        {/* Footer actions */}
-        <div className="mt-6 flex items-center gap-4">
-          <Button
-            type="button"
-            variant="outline"
-            className="h-11 flex-1 rounded-xl border-border text-sm font-semibold shadow-none"
-            onClick={onClose}
-          >
-            {cancelLabel}
-          </Button>
-          <Button
-            type="button"
-            className="h-11 flex-1 rounded-xl text-sm font-semibold text-white hover:text-white"
-            onClick={onClose}
-          >
-            {saveLabel}
-          </Button>
-        </div>
+          {errorMessage ? (
+            <p className="mt-4 rounded-xl border border-destructive/20 bg-destructive/10 px-4 py-3 text-sm text-destructive" role="alert">
+              {errorMessage}
+            </p>
+          ) : null}
+
+          {/* Footer actions */}
+          <div className="mt-6 flex items-center gap-4">
+            <Button
+              type="button"
+              variant="outline"
+              className="h-11 flex-1 rounded-xl border-border text-sm font-semibold shadow-none"
+              onClick={onClose}
+              disabled={isPending}
+            >
+              {cancelLabel}
+            </Button>
+            <Button
+              type="submit"
+              className="h-11 flex-1 rounded-xl text-sm font-semibold text-white hover:text-white"
+              disabled={isPending}
+            >
+              {saveLabel}
+            </Button>
+          </div>
+        </form>
       </section>
     </div>
   );
@@ -83,12 +104,16 @@ interface CatalogStatusFieldProps {
   activeLabel: string;
   description: string;
   ariaLabel: string;
+  isActive?: boolean;
+  onChange?: (isActive: boolean) => void;
 }
 
 export function CatalogStatusField({
   activeLabel,
   description,
   ariaLabel,
+  isActive = true,
+  onChange,
 }: CatalogStatusFieldProps) {
   return (
     <div className="flex items-center justify-between rounded-xl border border-border px-4 py-3">
@@ -96,7 +121,14 @@ export function CatalogStatusField({
         <p className="text-sm font-semibold text-foreground">{activeLabel}</p>
         <p className="text-xs text-muted-foreground">{description}</p>
       </div>
-      <StatusToggle isActive={true} ariaLabel={ariaLabel} />
+      <button
+        type="button"
+        onClick={() => onChange?.(!isActive)}
+        disabled={!onChange}
+        className="rounded-full disabled:cursor-default"
+      >
+        <StatusToggle isActive={isActive} ariaLabel={ariaLabel} />
+      </button>
     </div>
   );
 }

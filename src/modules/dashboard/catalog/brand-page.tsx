@@ -3,6 +3,9 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 
+import { useCreateBrandMutation } from "@/modules/dashboard/hooks/use-create-brand-mutation";
+import { normalizeApiError } from "@/shared/lib/api/errors";
+
 import {
   AddIcon,
   FilterIcon,
@@ -27,7 +30,52 @@ type BrandDialog = "add" | "edit" | "delete" | "import" | null;
 export function BrandPage() {
   const t = useTranslations("dashboard");
   const [openDialog, setOpenDialog] = useState<BrandDialog>(null);
-  const close = () => setOpenDialog(null);
+  const [nameEn, setNameEn] = useState("");
+  const [nameAr, setNameAr] = useState("");
+  const [isActive, setIsActive] = useState(true);
+  const [logo, setLogo] = useState<File | null>(null);
+  const [formError, setFormError] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+  const createBrandMutation = useCreateBrandMutation();
+
+  const close = () => {
+    setOpenDialog(null);
+    setFormError("");
+  };
+
+  const openAddDialog = () => {
+    setNameEn("");
+    setNameAr("");
+    setIsActive(true);
+    setLogo(null);
+    setFormError("");
+    setOpenDialog("add");
+  };
+
+  async function handleCreateBrand() {
+    if (!nameEn.trim() || !nameAr.trim()) {
+      setFormError(t("catalogPage.brand.dialog.requiredNames"));
+      return;
+    }
+
+    setFormError("");
+
+    try {
+      const response = await createBrandMutation.mutateAsync({
+        nameEn: nameEn.trim(),
+        nameAr: nameAr.trim(),
+        isActive,
+        logo: logo ?? undefined,
+      });
+      setSuccessMessage(
+        response.message || t("catalogPage.brand.dialog.success"),
+      );
+      close();
+    } catch (error) {
+      const apiError = normalizeApiError(error);
+      setFormError(apiError.message || t("catalogPage.brand.dialog.error"));
+    }
+  }
   const handleDelete = () => setOpenDialog("delete");
   const handleEdit = () => setOpenDialog("edit");
 
@@ -70,13 +118,22 @@ export function BrandPage() {
           <Button
             type="button"
             className="h-10 gap-2 rounded-lg px-4 text-sm font-semibold text-white hover:text-white"
-            onClick={() => setOpenDialog("add")}
+            onClick={openAddDialog}
           >
             <AddIcon className="size-4" />
             {t("catalogPage.brand.actions.add")}
           </Button>
         </div>
       </div>
+
+      {successMessage ? (
+        <p
+          className="rounded-xl border border-success/20 bg-success/10 px-4 py-3 text-sm text-success"
+          role="status"
+        >
+          {successMessage}
+        </p>
+      ) : null}
 
       {/* Search + filter */}
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
@@ -144,18 +201,48 @@ export function BrandPage() {
         cancelLabel={t("catalogPage.dialog.cancel")}
         saveLabel={t("catalogPage.dialog.save")}
         onClose={close}
+        onSubmit={openDialog === "add" ? handleCreateBrand : undefined}
+        isPending={createBrandMutation.isPending}
+        errorMessage={formError}
       >
         <CatalogUploadArea
           label={t("catalogPage.brand.dialog.uploadLabel")}
           hint={t("catalogPage.dialog.uploadHint")}
+          file={logo}
+          onFileChange={setLogo}
         />
         <div className="space-y-1.5">
-          <label className="text-sm font-semibold text-foreground">
-            {t("catalogPage.brand.dialog.nameLabel")}
+          <label
+            htmlFor="brand-name-en"
+            className="text-sm font-semibold text-foreground"
+          >
+            {t("catalogPage.brand.dialog.nameEnLabel")}
           </label>
           <Input
+            id="brand-name-en"
             type="text"
-            placeholder={t("catalogPage.brand.dialog.namePlaceholder")}
+            value={nameEn}
+            onChange={(event) => setNameEn(event.target.value)}
+            placeholder={t("catalogPage.brand.dialog.nameEnPlaceholder")}
+            required
+            className="h-11 rounded-lg border-border bg-secondary text-sm shadow-none"
+          />
+        </div>
+        <div className="space-y-1.5">
+          <label
+            htmlFor="brand-name-ar"
+            className="text-sm font-semibold text-foreground"
+          >
+            {t("catalogPage.brand.dialog.nameArLabel")}
+          </label>
+          <Input
+            id="brand-name-ar"
+            type="text"
+            dir="rtl"
+            value={nameAr}
+            onChange={(event) => setNameAr(event.target.value)}
+            placeholder={t("catalogPage.brand.dialog.nameArPlaceholder")}
+            required
             className="h-11 rounded-lg border-border bg-secondary text-sm shadow-none"
           />
         </div>
@@ -167,6 +254,8 @@ export function BrandPage() {
             activeLabel={t("catalogPage.dialog.statusActive")}
             description={t("catalogPage.brand.dialog.statusDescription")}
             ariaLabel={t("catalogPage.dialog.statusActive")}
+            isActive={isActive}
+            onChange={setIsActive}
           />
         </div>
       </CatalogFormDialog>

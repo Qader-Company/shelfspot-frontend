@@ -25,11 +25,15 @@ export async function proxyCompanyRequest(
     .get("content-type")
     ?.includes("multipart/form-data");
 
-  let body: string | FormData | undefined;
+  let body: string | ArrayBuffer | undefined;
 
   if (request.method !== "GET" && request.method !== "HEAD") {
     if (isMultipart) {
-      body = await request.formData();
+      // Preserve the browser-generated multipart body byte-for-byte. Parsing it
+      // into Web FormData and asking Node's axios adapter to serialize it again
+      // can turn uploaded Files into plain fields, causing backend image rules
+      // to reject otherwise valid images.
+      body = await request.arrayBuffer();
     } else {
       body = await request.text() || undefined;
     }
@@ -38,8 +42,8 @@ export async function proxyCompanyRequest(
   const forwardedHeaders: Record<string, string> = {};
 
   const contentType = request.headers.get("content-type");
-  if (contentType && !isMultipart) {
-    // For multipart, let axios set the correct boundary automatically
+  if (contentType) {
+    // Multipart bodies retain their original boundary, matching the raw bytes.
     forwardedHeaders["Content-Type"] = contentType;
   }
 
@@ -62,7 +66,7 @@ export async function proxyCompanyRequest(
     const response = await apiClient.request({
       url: `${upstreamPath}${request.nextUrl.search}`,
       method: request.method,
-      data: body || undefined,
+      data: body ?? undefined,
       headers: forwardedHeaders,
       validateStatus: () => true,
     });
