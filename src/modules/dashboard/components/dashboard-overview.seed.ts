@@ -9,7 +9,6 @@ export interface DashboardStatItem {
   trendKey: string;
   tone: "info" | "success" | "danger" | "purple";
   iconSrc: string;
-  trend?: number;
 }
 
 export interface RequestsChartPoint {

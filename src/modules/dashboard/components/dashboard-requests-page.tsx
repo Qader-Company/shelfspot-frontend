@@ -116,9 +116,7 @@ export function DashboardRequestsPage() {
         requestId={deleteTarget}
         labels={{
           title:               t("requestsPage.deleteDialog.title"),
-          description:        t("requestsPage.deleteDialog.description", {
-            id: deleteTarget,
-          }),
+          description:        t("requestsPage.deleteDialog.description"),
           reasonLabel:        t("requestsPage.deleteDialog.reasonLabel"),
           reasonPlaceholder:  t("requestsPage.deleteDialog.reasonPlaceholder"),
           reasons:            deletionReasons,

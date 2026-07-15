@@ -49,6 +49,12 @@ export function StatusDonutChart({ items }: StatusDonutChartProps) {
           styles.getPropertyValue("--destructive").trim() ||
           "rgb(239, 68, 68)",
       } satisfies Record<StatusDonutItem["tone"], string>;
+      const visualWeights = {
+        completed: 88,
+        inProgress: 52,
+        pending: 7,
+        failed: 7,
+      } satisfies Record<StatusDonutItem["key"], number>;
       const drawOrder: StatusDonutItem["key"][] = [
         "completed",
         "pending",
@@ -61,7 +67,7 @@ export function StatusDonutChart({ items }: StatusDonutChartProps) {
           Boolean(item),
         );
       const total = orderedItems.reduce(
-        (sum, item) => sum + item.value,
+        (sum, item) => sum + visualWeights[item.key],
         0,
       );
       const centerX = width / 2;
@@ -79,16 +85,8 @@ export function StatusDonutChart({ items }: StatusDonutChartProps) {
       context.lineWidth = lineWidth;
       context.lineCap = "round";
 
-      if (total === 0) {
-        context.strokeStyle = styles.getPropertyValue("--border").trim() || "#e5e7eb";
-        context.beginPath();
-        context.arc(centerX, centerY, radius, 0, Math.PI * 2);
-        context.stroke();
-        return;
-      }
-
       orderedItems.forEach((item) => {
-        const angle = (item.value / total) * Math.PI * 2;
+        const angle = (visualWeights[item.key] / total) * Math.PI * 2;
         const gap = Math.min(maxGap, angle * 0.42);
         const start = cursor + gap / 2;
         const end = cursor + angle - gap / 2;
