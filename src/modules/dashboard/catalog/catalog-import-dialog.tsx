@@ -20,6 +20,11 @@ interface CatalogImportDialogProps {
   onDownload?: () => void;
   isDownloading?: boolean;
   downloadError?: string;
+  selectedFile?: File | null;
+  onFileChange?: (file: File | null) => void;
+  onImport?: () => void;
+  isImporting?: boolean;
+  importError?: string;
 }
 
 export function CatalogImportDialog({
@@ -37,6 +42,11 @@ export function CatalogImportDialog({
   onDownload,
   isDownloading = false,
   downloadError,
+  selectedFile,
+  onFileChange,
+  onImport,
+  isImporting = false,
+  importError,
 }: CatalogImportDialogProps) {
   if (!isOpen) return null;
 
@@ -92,12 +102,31 @@ export function CatalogImportDialog({
           ) : null}
 
           {/* Upload area */}
-          <div className="flex min-h-32 flex-col items-center justify-center gap-2 rounded-lg border border-dashed border-border p-6">
+          <label className="flex min-h-32 cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border border-dashed border-border p-6 transition-colors hover:border-primary/60">
+            <input
+              type="file"
+              accept=".csv,.xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/csv"
+              className="sr-only"
+              onChange={(event) =>
+                onFileChange?.(event.target.files?.[0] ?? null)
+              }
+            />
             <UploadIcon className="size-7 text-primary" />
             <p className="text-sm font-medium text-foreground">{uploadLabel}</p>
-            <p className="text-xs text-muted-foreground">{uploadHint}</p>
+            <p className="max-w-full truncate text-xs text-muted-foreground">
+              {selectedFile?.name ?? uploadHint}
+            </p>
             <p className="text-xs text-primary">{uploadFormat}</p>
-          </div>
+          </label>
+
+          {importError ? (
+            <p
+              className="rounded-xl border border-destructive/20 bg-destructive/10 px-4 py-3 text-sm text-destructive"
+              role="alert"
+            >
+              {importError}
+            </p>
+          ) : null}
         </div>
 
         {/* Actions */}
@@ -107,13 +136,15 @@ export function CatalogImportDialog({
             variant="outline"
             className="h-11 flex-1 rounded-xl border-border text-sm font-semibold text-primary shadow-none"
             onClick={onClose}
+            disabled={isImporting}
           >
             {cancelLabel}
           </Button>
           <Button
             type="button"
             className="h-11 flex-1 rounded-xl text-sm font-semibold text-white hover:text-white"
-            onClick={onClose}
+            onClick={onImport ?? onClose}
+            disabled={isImporting}
           >
             {saveLabel}
           </Button>

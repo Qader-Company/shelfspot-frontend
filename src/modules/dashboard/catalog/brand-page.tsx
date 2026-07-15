@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 
 import { useCreateBrandMutation } from "@/modules/dashboard/hooks/use-create-brand-mutation";
 import { downloadBrandsTemplateService } from "@/modules/dashboard/services/download-brands-template-service";
+import { importBrandsService } from "@/modules/dashboard/services/import-brands-service";
 import { normalizeApiError } from "@/shared/lib/api/errors";
 
 import {
@@ -39,6 +40,9 @@ export function BrandPage() {
   const [successMessage, setSuccessMessage] = useState("");
   const [isDownloadingTemplate, setIsDownloadingTemplate] = useState(false);
   const [downloadError, setDownloadError] = useState("");
+  const [importFile, setImportFile] = useState<File | null>(null);
+  const [isImporting, setIsImporting] = useState(false);
+  const [importError, setImportError] = useState("");
   const createBrandMutation = useCreateBrandMutation();
 
   const close = () => {
@@ -53,6 +57,13 @@ export function BrandPage() {
     setLogo(null);
     setFormError("");
     setOpenDialog("add");
+  };
+
+  const openImportDialog = () => {
+    setImportFile(null);
+    setImportError("");
+    setDownloadError("");
+    setOpenDialog("import");
   };
 
   async function handleCreateBrand() {
@@ -95,6 +106,31 @@ export function BrandPage() {
       setIsDownloadingTemplate(false);
     }
   }
+
+  async function handleImportBrands() {
+    if (!importFile) {
+      setImportError(t("catalogPage.brand.dialog.importFileRequired"));
+      return;
+    }
+
+    setIsImporting(true);
+    setImportError("");
+
+    try {
+      const response = await importBrandsService(importFile);
+      setSuccessMessage(
+        response.message || t("catalogPage.brand.dialog.importSuccess"),
+      );
+      close();
+    } catch (error) {
+      const apiError = normalizeApiError(error);
+      setImportError(
+        apiError.message || t("catalogPage.brand.dialog.importError"),
+      );
+    } finally {
+      setIsImporting(false);
+    }
+  }
   const handleDelete = () => setOpenDialog("delete");
   const handleEdit = () => setOpenDialog("edit");
 
@@ -129,7 +165,7 @@ export function BrandPage() {
             type="button"
             variant="outline"
             className="h-10 gap-2 rounded-lg border-border bg-card px-4 text-sm font-medium shadow-none"
-            onClick={() => setOpenDialog("import")}
+            onClick={openImportDialog}
           >
             <UploadIcon className="size-4" />
             {t("catalogPage.actions.import")}
@@ -295,6 +331,14 @@ export function BrandPage() {
         onDownload={handleDownloadTemplate}
         isDownloading={isDownloadingTemplate}
         downloadError={downloadError}
+        selectedFile={importFile}
+        onFileChange={(file) => {
+          setImportFile(file);
+          setImportError("");
+        }}
+        onImport={handleImportBrands}
+        isImporting={isImporting}
+        importError={importError}
       />
     </div>
   );
