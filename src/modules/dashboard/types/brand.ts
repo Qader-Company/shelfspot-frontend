@@ -9,7 +9,8 @@ export interface CompanyBrand {
   translations?:
     | BrandTranslation[]
     | Record<string, BrandTranslation | string | undefined>;
-  is_active: boolean | number;
+  active: boolean;
+  is_active?: boolean | number | "0" | "1";
   logo?: string | null;
   logo_url?: string | null;
   created_at?: string | null;
@@ -18,7 +19,7 @@ export interface CompanyBrand {
 export interface GetBrandsParams {
   per_page?: number;
   name?: string;
-  active?: 0 | 1;
+  active?: boolean;
   page?: number;
 }
 

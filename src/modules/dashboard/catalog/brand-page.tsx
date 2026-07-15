@@ -59,6 +59,14 @@ function getBrandName(brand: CompanyBrand, locale: string) {
   return "-";
 }
 
+function normalizeActive(value: CompanyBrand["is_active"]) {
+  return value === true || value === 1 || value === "1";
+}
+
+function isBrandActive(brand: CompanyBrand) {
+  return brand.active ?? normalizeActive(brand.is_active);
+}
+
 export function BrandPage() {
   const t = useTranslations("dashboard");
   const locale = useLocale();
@@ -84,26 +92,40 @@ export function BrandPage() {
     per_page: 10,
     page,
     name: deferredName || undefined,
-    active:
-      activeFilter === "all" ? undefined : (Number(activeFilter) as 0 | 1),
+    active: activeFilter === "all" ? undefined : activeFilter === "1",
   });
 
   const brandRows = useMemo<BrandRow[]>(
     () =>
-      (brandsQuery.data?.data ?? []).map((brand) => ({
-        id: String(brand.id),
-        name: getBrandName(brand, locale),
-        thumbnailAlt: getBrandName(brand, locale),
-        isActive: Boolean(brand.is_active),
-        statusDisplay: "toggle",
-        createdDate: brand.created_at
-          ? new Intl.DateTimeFormat(locale, {
-              dateStyle: "medium",
-              timeStyle: "short",
-            }).format(new Date(brand.created_at))
-          : "-",
-      })),
-    [brandsQuery.data?.data, locale],
+      (brandsQuery.data?.data ?? [])
+        .filter((brand) => {
+          const matchesName = getBrandName(brand, locale)
+            .toLocaleLowerCase(locale)
+            .includes(deferredName.toLocaleLowerCase(locale));
+          const matchesStatus =
+            activeFilter === "all" ||
+            isBrandActive(brand) === (activeFilter === "1");
+
+          return matchesName && matchesStatus;
+        })
+        .map((brand) => {
+          const name = getBrandName(brand, locale);
+
+          return {
+            id: String(brand.id),
+            name,
+            thumbnailAlt: name,
+            isActive: isBrandActive(brand),
+            statusDisplay: "toggle",
+            createdDate: brand.created_at
+              ? new Intl.DateTimeFormat(locale, {
+                  dateStyle: "medium",
+                  timeStyle: "short",
+                }).format(new Date(brand.created_at))
+              : "-",
+          };
+        }),
+    [activeFilter, brandsQuery.data?.data, deferredName, locale],
   );
   const currentPage = brandsQuery.data?.meta?.current_page ?? page;
   const lastPage = Math.max(brandsQuery.data?.meta?.last_page ?? 1, 1);
