@@ -15,6 +15,9 @@ export interface CompanyProduct {
   sub_category?: { id: string | number; name?: string } | string | null;
   expiry_date?: string | null;
   image_url?: string | null;
+  image?: string | null;
+  logo?: string | null;
+  logo_url?: string | null;
   created_at?: string | null;
 }
 

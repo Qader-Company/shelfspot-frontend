@@ -33,7 +33,7 @@ export function ProductPage() {
   const t = useTranslations("dashboard"), locale = useLocale(), queryClient = useQueryClient();
   const [dialog, setDialog] = useState<Dialog>(null), [selectedId, setSelectedId] = useState<string | null>(null);
   const [brandId, setBrandId] = useState(""), [subBrandId, setSubBrandId] = useState(""), [categoryId, setCategoryId] = useState(""), [subCategoryId, setSubCategoryId] = useState("");
-  const [name, setName] = useState(""), [sku, setSku] = useState(""), [description, setDescription] = useState(""), [active, setActive] = useState(true), [image, setImage] = useState<File | null>(null);
+  const [name, setName] = useState(""), [sku, setSku] = useState(""), [description, setDescription] = useState(""), [active, setActive] = useState(true), [image, setImage] = useState<File | null>(null), [existingImage, setExistingImage] = useState<string | null>(null);
   const [search, setSearch] = useState(""), [activeFilter, setActiveFilter] = useState<"all" | "1" | "0">("all"), [brandFilter, setBrandFilter] = useState(""), [subBrandFilter, setSubBrandFilter] = useState(""), [categoryFilter, setCategoryFilter] = useState(""), [subCategoryFilter, setSubCategoryFilter] = useState(""), [page, setPage] = useState(1);
   const [error, setError] = useState(""), [deleteError, setDeleteError] = useState(""), [success, setSuccess] = useState(""), [importFile, setImportFile] = useState<File | null>(null), [importError, setImportError] = useState(""), [importing, setImporting] = useState(false);
   const deferred = useDeferredValue(search.trim());

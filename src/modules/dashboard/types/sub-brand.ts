@@ -10,6 +10,7 @@ export interface CompanySubBrand {
   brand?: { id: string | number; name?: string } | string | null;
   brand_name?: string | null;
   logo?: string | null;
+  logo_url?: string | null;
   created_at?: string | null;
 }
 

@@ -110,6 +110,7 @@ export function BrandPage() {
   const [nameAr, setNameAr] = useState("");
   const [isActive, setIsActive] = useState(true);
   const [logo, setLogo] = useState<File | null>(null);
+  const [existingLogoUrl, setExistingLogoUrl] = useState<string | null>(null);
   const [formError, setFormError] = useState("");
   const [deleteError, setDeleteError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
@@ -145,7 +146,8 @@ export function BrandPage() {
           return {
             id: String(brand.id),
             name,
-            thumbnailAlt: name,
+        thumbnailAlt: name,
+        thumbnailUrl: brand.logo_url ?? brand.logo ?? null,
             isActive: isBrandActive(brand),
             statusDisplay: "toggle",
             createdDate: brand.created_at
@@ -178,6 +180,7 @@ export function BrandPage() {
     setNameAr("");
     setIsActive(true);
     setLogo(null);
+    setExistingLogoUrl(null);
     setFormError("");
     setOpenDialog("add");
   };
@@ -353,6 +356,7 @@ export function BrandPage() {
     setNameAr(getBrandTranslationName(brand, "ar"));
     setIsActive(isBrandActive(brand));
     setLogo(null);
+    setExistingLogoUrl(brand.logo_url ?? brand.logo ?? null);
     setFormError("");
     setOpenDialog("edit");
   };
@@ -543,6 +547,9 @@ export function BrandPage() {
           hint={t("catalogPage.dialog.uploadHint")}
           file={logo}
           onFileChange={setLogo}
+          existingImageUrl={
+            openDialog === "edit" ? existingLogoUrl : undefined
+          }
         />
         <div className="space-y-1.5">
           <label

@@ -75,6 +75,7 @@ export function SubBrandPage() {
   const [nameAr, setNameAr] = useState("");
   const [isActive, setIsActive] = useState(true);
   const [logo, setLogo] = useState<File | null>(null);
+  const [existingImage, setExistingImage] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [activeFilter, setActiveFilter] = useState<"all" | "1" | "0">("all");
   const [brandFilter, setBrandFilter] = useState("");
@@ -96,7 +97,7 @@ export function SubBrandPage() {
   const deleteMutation = useDeleteSubBrandMutation();
 
   const rows = useMemo<SubBrandRow[]>(() => (subBrandsQuery.data?.data ?? []).filter((item) => matchesSubBrandName(item, search.trim())).map((item) => ({
-    id: String(item.id), name: translationName(item, locale), thumbnailAlt: translationName(item, locale),
+    id: String(item.id), name: translationName(item, locale), thumbnailAlt: translationName(item, locale), thumbnailUrl: item.logo_url ?? item.logo ?? null,
     brand: parentName(item), isActive: activeValue(item), statusDisplay: "toggle",
     createdDate: item.created_at ? new Intl.DateTimeFormat(locale, { dateStyle: "medium", timeStyle: "short" }).format(new Date(item.created_at)) : "-",
   })), [locale, search, subBrandsQuery.data?.data]);
@@ -105,7 +106,7 @@ export function SubBrandPage() {
   const pages = useMemo(() => Array.from({ length: Math.min(lastPage, 5) }, (_, index) => Math.max(1, Math.min(currentPage - 2, lastPage - Math.min(lastPage, 5) + 1)) + index), [currentPage, lastPage]);
 
   const close = () => { setOpenDialog(null); setSelectedId(null); setFormError(""); setDeleteError(""); };
-  const resetForm = () => { setBrandId(""); setNameEn(""); setNameAr(""); setIsActive(true); setLogo(null); setFormError(""); };
+  const resetForm = () => { setBrandId(""); setNameEn(""); setNameAr(""); setIsActive(true); setLogo(null); setExistingImage(null); setFormError(""); };
   const openAdd = () => { resetForm(); setOpenDialog("add"); };
   const refresh = () => queryClient.invalidateQueries({ queryKey: QUERY_KEYS.subBrands() });
 
@@ -125,7 +126,7 @@ export function SubBrandPage() {
   function edit(id: string) {
     const item = subBrandsQuery.data?.data.find((value) => String(value.id) === id); if (!item) return;
     setSelectedId(id); setBrandId(String(item.brand_id ?? (typeof item.brand === "object" ? item.brand?.id : "")));
-    setNameEn(editName(item, "en")); setNameAr(editName(item, "ar")); setIsActive(activeValue(item)); setLogo(null); setFormError(""); setOpenDialog("edit");
+    setNameEn(editName(item, "en")); setNameAr(editName(item, "ar")); setIsActive(activeValue(item)); setLogo(null); setExistingImage(item.logo_url ?? item.logo ?? null); setFormError(""); setOpenDialog("edit");
   }
 
   async function remove() {
@@ -149,7 +150,7 @@ export function SubBrandPage() {
     <DeleteConfirmDialog isOpen={openDialog === "delete"} title={t("catalogPage.subBrand.deleteDialog.title")} descriptionLine1={t("catalogPage.subBrand.deleteDialog.descriptionLine1")} descriptionLine2={t("catalogPage.subBrand.deleteDialog.descriptionLine2")} cancelLabel={t("catalogPage.subBrand.deleteDialog.cancel")} confirmLabel={t("catalogPage.subBrand.deleteDialog.confirm")} onClose={close} onConfirm={remove} isPending={deleteMutation.isPending} errorMessage={deleteError} />
     <CatalogFormDialog isOpen={openDialog === "add" || openDialog === "edit"} title={openDialog === "edit" ? t("catalogPage.subBrand.dialog.editTitle") : t("catalogPage.subBrand.dialog.title")} closeLabel={t("catalogPage.dialog.close")} cancelLabel={t("catalogPage.dialog.cancel")} saveLabel={t("catalogPage.dialog.save")} onClose={close} onSubmit={save} isPending={createMutation.isPending || updateMutation.isPending} errorMessage={formError}>
       <div className="space-y-1.5"><label className="text-sm font-semibold">{t("catalogPage.dialog.parentBrand")}</label><select value={brandId} onChange={(event) => setBrandId(event.target.value)} required className="h-11 w-full rounded-lg border bg-secondary px-4"><option value="" disabled>{t("catalogPage.dialog.selectBrand")}</option>{(brandsQuery.data?.data ?? []).map((brand) => <option key={brand.id} value={brand.id}>{brand.name ?? `#${brand.id}`}</option>)}</select></div>
-      <CatalogUploadArea label={t("catalogPage.subBrand.dialog.uploadLabel")} hint={t("catalogPage.dialog.uploadHint")} file={logo} onFileChange={setLogo} />
+      <CatalogUploadArea label={t("catalogPage.subBrand.dialog.uploadLabel")} hint={t("catalogPage.dialog.uploadHint")} file={logo} onFileChange={setLogo} existingImageUrl={openDialog === "edit" ? existingImage : undefined} />
       <div className="space-y-1.5"><label className="text-sm font-semibold">{t("catalogPage.subBrand.dialog.nameEnLabel")}</label><Input value={nameEn} onChange={(event) => setNameEn(event.target.value)} required /></div>
       <div className="space-y-1.5"><label className="text-sm font-semibold">{t("catalogPage.subBrand.dialog.nameArLabel")}</label><Input dir="rtl" value={nameAr} onChange={(event) => setNameAr(event.target.value)} required /></div>
       <CatalogStatusField activeLabel={t("catalogPage.dialog.statusActive")} description={t("catalogPage.subBrand.dialog.statusDescription")} ariaLabel={t("catalogPage.dialog.statusActive")} isActive={isActive} onChange={setIsActive} />

@@ -84,10 +84,13 @@ export function CatalogProductTable({
                 </td>
 
                 <td className="border-b border-border px-5 py-3">
-                  <ProductCell
-                    name={row.name}
-                    thumbnailAlt={row.thumbnailAlt}
-                  />
+                  <div className="flex items-center gap-3">
+                    {row.thumbnailUrl ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={row.thumbnailUrl} alt={row.thumbnailAlt} className="size-10 rounded border object-contain" />
+                    ) : null}
+                    <ProductCell name={row.name} thumbnailAlt={row.thumbnailAlt} />
+                  </div>
                 </td>
 
                 <td className="border-b border-border px-5 py-4">

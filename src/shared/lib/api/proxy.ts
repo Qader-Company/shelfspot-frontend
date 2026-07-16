@@ -20,6 +20,7 @@ export async function proxyCompanyRequest(
   upstreamPath: string,
   options?: { responseType?: "arraybuffer" },
 ) {
+  upstreamPath = upstreamPath.replace(/\/{2,}/g, "/");
   const apiClient = await createServerApiClient();
 
   const isMultipart = request.headers

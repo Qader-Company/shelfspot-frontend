@@ -91,11 +91,19 @@ export function CatalogItemsTable({
                 {/* Thumbnail + name */}
                 <td className="border-b border-border px-5 py-3">
                   <div className="flex items-center gap-3">
-                    <span
-                      aria-label={row.thumbnailAlt}
-                      className="flex size-10 shrink-0 items-center justify-center rounded border border-border bg-muted"
-                    >
-                      <BoxIcon className="size-5 text-muted-foreground" />
+                    <span className="flex size-10 shrink-0 items-center justify-center overflow-hidden rounded border border-border bg-muted">
+                      {row.thumbnailUrl ? (
+                        // API-hosted catalog images are dynamic and may come
+                        // from different configured backend hosts.
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                          src={row.thumbnailUrl}
+                          alt={row.thumbnailAlt}
+                          className="size-full object-contain"
+                        />
+                      ) : (
+                        <BoxIcon className="size-5 text-muted-foreground" />
+                      )}
                     </span>
                     <span className="text-sm font-medium text-foreground">
                       {row.name}
