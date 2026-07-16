@@ -1,126 +1,22 @@
-import {
-  CheckIcon,
-  SidebarChevronIcon,
-} from "@/shared/components/dashboard/dashboard-icons";
+"use client";
+
+import { useEffect, useState } from "react";
 import { StatusToggle } from "@/shared/components/dashboard/status-toggle";
-import { cn } from "@/shared/lib/utils";
+import { normalizeApiError } from "@/shared/lib/api/errors";
 import { Button } from "@/shared/ui/button";
+import { Input } from "@/shared/ui/input";
+import type { Permission, Role } from "./access-control-api";
 
-import { availableRoles, permissionItems } from "./admins.seed";
-
-interface RoleFormDialogProps {
-  isOpen: boolean;
-  labels: {
-    title: string;
-    activation: string;
-    active: string;
-    role: string;
-    permission: string;
-    cancel: string;
-    confirm: string;
-  };
-  onClose: () => void;
-}
-
-export function RoleFormDialog({
-  isOpen,
-  labels,
-  onClose,
-}: RoleFormDialogProps) {
+interface Props { isOpen: boolean; role?: Role; permissions: Permission[]; labels: Record<string, string>; onClose: () => void; onSubmit: (payload: Record<string, unknown>) => Promise<unknown>; }
+export function RoleFormDialog({ isOpen, role, permissions, labels, onClose, onSubmit }: Props) {
+  const [name, setName] = useState(""); const [active, setActive] = useState(true); const [selected, setSelected] = useState<string[]>([]); const [pending, setPending] = useState(false); const [error, setError] = useState("");
+  useEffect(() => { if (isOpen) { setName(role?.name ?? ""); setActive(role?.active ?? true); setSelected(role?.permissions?.map(p => String(p.id)) ?? []); setError(""); } }, [isOpen, role]);
   if (!isOpen) return null;
-
-  return (
-    <div
-      role="presentation"
-      className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/40 p-4"
-    >
-      <section
-        role="dialog"
-        aria-modal="true"
-        aria-label={labels.title}
-        className="w-full max-w-2xl overflow-y-auto rounded-2xl border border-border bg-card p-8 shadow-xl"
-        style={{ maxHeight: "90dvh" }}
-      >
-        {/* Title */}
-        <h2 className="text-center text-2xl font-bold text-foreground">
-          {labels.title}
-        </h2>
-
-        <div className="mt-6 space-y-5">
-          {/* Activation */}
-          <div className="flex items-center gap-3">
-            <span className="text-sm font-medium text-foreground">
-              {labels.activation}
-            </span>
-            <StatusToggle isActive={true} ariaLabel={labels.activation} />
-            <span className="text-sm text-muted-foreground">{labels.active}</span>
-          </div>
-
-          {/* Role dropdown */}
-          <div className="space-y-1.5">
-            <label className="text-sm font-medium text-foreground">
-              {labels.role}
-            </label>
-            <div className="relative">
-              <select
-                defaultValue="sales"
-                className="h-11 w-full appearance-none rounded-lg border border-border bg-secondary pe-10 ps-4 text-sm text-foreground shadow-none focus:outline-none focus:ring-2 focus:ring-primary/30"
-              >
-                {availableRoles.map((r) => (
-                  <option key={r} value={r}>
-                    {r}
-                  </option>
-                ))}
-              </select>
-              <SidebarChevronIcon className="pointer-events-none absolute end-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-            </div>
-          </div>
-
-          {/* Permissions grid — 5 columns */}
-          <div className="grid grid-cols-5 gap-x-6 gap-y-3">
-            {permissionItems.map((perm) => (
-              <label
-                key={perm.id}
-                className="flex cursor-default items-center gap-2 text-xs text-foreground"
-              >
-                {/* Custom styled checkbox */}
-                <span
-                  className={cn(
-                    "flex size-4 shrink-0 items-center justify-center rounded-sm border transition-colors",
-                    perm.isChecked
-                      ? "border-primary bg-primary"
-                      : "border-border bg-card",
-                  )}
-                >
-                  {perm.isChecked && (
-                    <CheckIcon className="size-3 text-primary-foreground" />
-                  )}
-                </span>
-                {labels.permission}
-              </label>
-            ))}
-          </div>
-        </div>
-
-        {/* Footer actions */}
-        <div className="mt-8 flex items-center gap-4">
-          <Button
-            type="button"
-            variant="outline"
-            className="h-11 flex-1 rounded-xl border-border text-sm font-semibold text-primary shadow-none"
-            onClick={onClose}
-          >
-            {labels.cancel}
-          </Button>
-          <Button
-            type="button"
-            className="h-11 flex-1 rounded-xl text-sm font-semibold text-white hover:text-white"
-            onClick={onClose}
-          >
-            {labels.confirm}
-          </Button>
-        </div>
-      </section>
-    </div>
-  );
+  const submit = async () => { setPending(true); setError(""); try { await onSubmit({ name, is_active: active ? 1 : 0, permissions: selected }); onClose(); } catch(e) { setError(normalizeApiError(e).message); } finally { setPending(false); } };
+  return <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/40 p-4"><section role="dialog" aria-modal="true" className="max-h-[90dvh] w-full max-w-2xl overflow-y-auto rounded-2xl border bg-card p-5 shadow-xl sm:p-8"><h2 className="text-center text-2xl font-bold">{labels.title}</h2><div className="mt-6 space-y-5">
+    <button type="button" className="flex items-center gap-3" onClick={() => setActive(v => !v)}><span className="text-sm font-medium">{labels.activation}</span><StatusToggle isActive={active} ariaLabel={labels.activation}/><span className="text-sm text-muted-foreground">{labels.active}</span></button>
+    <label className="block space-y-1.5 text-sm font-medium"><span>{labels.role}</span><Input value={name} onChange={e => setName(e.target.value)}/></label>
+    <div><p className="mb-3 text-sm font-medium">{labels.permission}</p><div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">{permissions.map(p => <label key={p.id} className="flex items-center gap-2 text-sm"><input type="checkbox" checked={selected.includes(String(p.id))} onChange={() => setSelected(s => s.includes(String(p.id)) ? s.filter(id => id !== String(p.id)) : [...s, String(p.id)])}/>{p.name}</label>)}</div></div>
+    {error && <p role="alert" className="rounded-xl border border-destructive/20 bg-destructive/10 p-3 text-sm text-destructive">{error}</p>}
+  </div><div className="mt-7 flex gap-4"><Button variant="outline" className="h-11 flex-1" onClick={onClose} disabled={pending}>{labels.cancel}</Button><Button className="h-11 flex-1 text-white" onClick={submit} disabled={pending}>{labels.confirm}</Button></div></section></div>;
 }

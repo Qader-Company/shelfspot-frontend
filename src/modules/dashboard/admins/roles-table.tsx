@@ -21,7 +21,7 @@ interface RolesTableProps {
   rows: RoleRow[];
   labels: RolesTableLabels;
   onDelete: (id: string) => void;
-  onEdit: () => void;
+  onEdit: (id: string) => void;
 }
 
 export function RolesTable({
@@ -83,7 +83,7 @@ export function RolesTable({
                       size="icon-xs"
                       aria-label={labels.edit}
                       className="text-muted-foreground hover:text-foreground"
-                      onClick={() => onEdit()}
+                      onClick={() => onEdit(row.id)}
                     >
                       <EditIcon className="size-4" />
                     </Button>
