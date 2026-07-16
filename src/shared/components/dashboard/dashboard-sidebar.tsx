@@ -1,9 +1,13 @@
 "use client";
 
+import { useEffect } from "react";
+import { X } from "lucide-react";
 import { ROUTES } from "@/config/routes";
 import { Link, usePathname } from "@/i18n/navigation";
 import { cn } from "@/shared/lib/utils";
 import { Logo } from "@/shared/ui/logo";
+import { Button } from "@/shared/ui/button";
+import { useUiStore } from "@/shared/stores/ui-store";
 
 import { SidebarItem } from "./sidebar-item";
 import type { DashboardSidebarItem } from "./types";
@@ -22,8 +26,23 @@ export function DashboardSidebar({
   activeItemKey,
 }: DashboardSidebarProps) {
   const pathname = usePathname();
+  const isSidebarOpen = useUiStore((state) => state.isSidebarOpen);
+  const closeSidebar = useUiStore((state) => state.closeSidebar);
   const primaryItems = items.slice(0, 4);
   const secondaryItems = items.slice(4);
+
+  useEffect(() => {
+    closeSidebar();
+  }, [pathname, closeSidebar]);
+
+  useEffect(() => {
+    if (!isSidebarOpen) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") closeSidebar();
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [closeSidebar, isSidebarOpen]);
 
   // Resolve active top-level key (also matches parent when on a child path)
   const resolvedActiveItemKey =
@@ -86,11 +105,27 @@ export function DashboardSidebar({
   }
 
   return (
-    <aside className="hidden h-full w-60 shrink-0 border-e border-border bg-card lg:flex lg:flex-col">
-      <div className="flex h-24 items-center px-12">
+    <>
+      <button
+        type="button"
+        aria-label={navigationLabel}
+        className={cn(
+          "fixed inset-0 z-40 bg-foreground/40 transition-opacity lg:hidden",
+          isSidebarOpen ? "opacity-100" : "pointer-events-none opacity-0",
+        )}
+        onClick={closeSidebar}
+      />
+    <aside className={cn(
+      "fixed inset-y-0 start-0 z-50 flex h-dvh w-[min(18rem,86vw)] shrink-0 flex-col border-e border-border bg-card shadow-xl transition-transform duration-200 lg:static lg:h-full lg:w-60 lg:translate-x-0 lg:shadow-none",
+      isSidebarOpen ? "translate-x-0" : "-translate-x-full rtl:translate-x-full",
+    )}>
+      <div className="flex h-20 items-center justify-between px-6 lg:h-24 lg:px-12">
         <Link href={ROUTES.home} aria-label={logoLabel} className="block">
           <Logo className="h-auto w-36" width={292} height={108} />
         </Link>
+        <Button type="button" variant="ghost" size="icon-sm" className="lg:hidden" onClick={closeSidebar} aria-label={navigationLabel}>
+          <X className="size-5" />
+        </Button>
       </div>
       <nav className="flex flex-1 flex-col" aria-label={navigationLabel}>
         <div className="space-y-3 px-2">{renderItems(primaryItems)}</div>
@@ -99,5 +134,6 @@ export function DashboardSidebar({
         </div>
       </nav>
     </aside>
+    </>
   );
 }

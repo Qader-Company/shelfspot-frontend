@@ -34,14 +34,14 @@ export function CatalogFormDialog({
   return (
     <div
       role="presentation"
-      className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/30 p-4"
+      className="fixed inset-0 z-50 flex items-end justify-center bg-foreground/30 p-0 sm:items-center sm:p-4"
     >
       <section
         role="dialog"
         aria-modal="true"
         aria-label={title}
-        className="w-full max-w-lg overflow-y-auto rounded-2xl border border-border bg-card p-6 shadow-xl"
-        style={{ maxHeight: "90dvh" }}
+        className="w-full max-w-xl overflow-y-auto rounded-t-2xl border border-border bg-card p-4 shadow-xl sm:rounded-2xl sm:p-6"
+        style={{ maxHeight: "min(92dvh, 56rem)" }}
       >
         {/* Header */}
         <div className="flex items-start justify-between gap-4">
@@ -65,7 +65,9 @@ export function CatalogFormDialog({
             else onClose();
           }}
         >
-          <div className="mt-5 space-y-4">{children}</div>
+          <div className="mt-5 space-y-5 [&_.grid]:grid-cols-1 sm:[&_.grid]:grid-cols-2 [&_input]:min-h-12 [&_select]:min-h-12 [&_select]:w-full [&_select]:min-w-0 [&_select]:rounded-xl [&_select]:border-border [&_select]:px-4 [&_textarea]:min-h-24">
+            {children}
+          </div>
 
           {errorMessage ? (
             <p className="mt-4 rounded-xl border border-destructive/20 bg-destructive/10 px-4 py-3 text-sm text-destructive" role="alert">
@@ -74,7 +76,7 @@ export function CatalogFormDialog({
           ) : null}
 
           {/* Footer actions */}
-          <div className="mt-6 flex items-center gap-4">
+          <div className="mt-6 flex flex-col-reverse items-stretch gap-3 sm:flex-row sm:items-center sm:gap-4">
             <Button
               type="button"
               variant="outline"
