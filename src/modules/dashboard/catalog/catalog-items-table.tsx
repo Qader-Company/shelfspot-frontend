@@ -1,3 +1,12 @@
+"use client";
+
+import { useQueryClient } from "@tanstack/react-query";
+import { usePathname } from "next/navigation";
+import { useState } from "react";
+import { useUpdateCatalogStatusMutation } from "@/modules/dashboard/hooks/use-update-catalog-status-mutation";
+import type { CatalogStatusResource } from "@/modules/dashboard/services/update-catalog-status-service";
+import { normalizeApiError } from "@/shared/lib/api/errors";
+
 import { StatusBadge } from "@/modules/dashboard/components/status-badge";
 import {
   BoxIcon,
@@ -35,6 +44,8 @@ interface CatalogItemsTableProps {
   extraColumns: CatalogExtraColumn[];
   onDelete: (id: string) => void;
   onEdit: (id: string) => void;
+  onToggleStatus?: (id: string, isActive: boolean) => void;
+  statusResource?: CatalogStatusResource;
 }
 
 export function CatalogItemsTable({
@@ -43,8 +54,33 @@ export function CatalogItemsTable({
   extraColumns,
   onDelete,
   onEdit,
+  onToggleStatus,
+  statusResource,
 }: CatalogItemsTableProps) {
+  const queryClient = useQueryClient();
+  const pathname = usePathname();
+  const statusMutation = useUpdateCatalogStatusMutation();
+  const [statusError, setStatusError] = useState("");
+  const resolvedResource = statusResource ??
+    (pathname.endsWith("/sub-brand") ? "sub-brands" :
+      pathname.endsWith("/sub-category") ? "sub-categories" :
+        pathname.endsWith("/category") ? "categories" :
+          pathname.endsWith("/brand") ? "brands" : undefined);
+
+  async function toggleStatus(id: string, isActive: boolean) {
+    if (onToggleStatus) return onToggleStatus(id, isActive);
+    if (!resolvedResource) return;
+    setStatusError("");
+    try {
+      await statusMutation.mutateAsync({ resource: resolvedResource, id, isActive });
+      await queryClient.invalidateQueries({ queryKey: ["app", resolvedResource] });
+    } catch (error) {
+      setStatusError(normalizeApiError(error).message);
+    }
+  }
   return (
+    <div className="space-y-3">
+      {statusError ? <p className="rounded-xl border border-destructive/20 bg-destructive/10 px-4 py-3 text-sm text-destructive" role="alert">{statusError}</p> : null}
     <div className="overflow-hidden rounded-lg border border-border bg-card shadow-sm">
       <div className="overflow-x-auto">
         <table className="w-full min-w-[700px] border-separate border-spacing-0 text-start">
@@ -133,10 +169,17 @@ export function CatalogItemsTable({
                       }
                     />
                   ) : (
-                    <StatusToggle
-                      isActive={row.isActive}
-                      ariaLabel={labels.toggleStatus}
-                    />
+                    <button
+                      type="button"
+                      className="rounded-full"
+                      onClick={() => toggleStatus(row.id, !row.isActive)}
+                      disabled={(!onToggleStatus && !resolvedResource) || statusMutation.isPending}
+                    >
+                      <StatusToggle
+                        isActive={row.isActive}
+                        ariaLabel={labels.toggleStatus}
+                      />
+                    </button>
                   )}
                 </td>
 
@@ -175,6 +218,8 @@ export function CatalogItemsTable({
           </tbody>
         </table>
       </div>
-    </div>
+    </div></div>
   );
 }
+
+
