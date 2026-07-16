@@ -28,6 +28,15 @@ function itemName(item: CompanySubCategory, locale: string) { if (item.name) ret
 function translated(item: CompanySubCategory, locale: "en" | "ar") { if (Array.isArray(item.translations)) return item.translations.find((x) => x.locale === locale)?.name ?? item.name ?? ""; const x = item.translations?.[locale]; return typeof x === "string" ? x : x?.name ?? item.name ?? ""; }
 function isActive(item: CompanySubCategory) { return item.active ?? (item.is_active === true || item.is_active === 1 || item.is_active === "1"); }
 function relation(value: CompanySubCategory["brand"] | CompanySubCategory["sub_brand"] | CompanySubCategory["category"], fallback?: string) { return typeof value === "string" ? value : value?.name ?? fallback ?? "-"; }
+function relationId(
+  directId: string | number | undefined,
+  relationValue: CompanySubCategory["brand"] | CompanySubCategory["sub_brand"] | CompanySubCategory["category"],
+) {
+  if (directId != null) return String(directId);
+  return typeof relationValue === "object" && relationValue?.id != null
+    ? String(relationValue.id)
+    : "";
+}
 function matches(item: CompanySubCategory, term: string) { if (!term) return true; const names: (string | undefined)[] = [item.name]; if (Array.isArray(item.translations)) names.push(...item.translations.map((x) => x.name)); else if (item.translations) Object.values(item.translations).forEach((x) => names.push(typeof x === "string" ? x : x?.name)); const search = term.toLocaleLowerCase(); return names.some((x) => x?.toLocaleLowerCase().includes(search)); }
 
 export function SubCategoryPage() {
@@ -47,12 +56,26 @@ export function SubCategoryPage() {
   const createMutation = useCreateSubCategoryMutation(), updateMutation = useUpdateSubCategoryMutation(), deleteMutation = useDeleteSubCategoryMutation();
   const rows = useMemo<SubCategoryRow[]>(() => (list.data?.data ?? []).filter((x) => matches(x, search.trim())).map((x) => ({ id: String(x.id), name: itemName(x, locale), thumbnailAlt: itemName(x, locale), thumbnailUrl: x.image_url ?? x.image ?? x.logo_url ?? x.logo ?? null, brand: relation(x.brand, x.brand_name), subBrand: relation(x.sub_brand, x.sub_brand_name), category: relation(x.category, x.category_name), isActive: isActive(x), statusDisplay: "toggle", createdDate: x.created_at ? new Intl.DateTimeFormat(locale, { dateStyle: "medium", timeStyle: "short" }).format(new Date(x.created_at)) : "-" })), [list.data?.data, locale, search]);
   const current = list.data?.meta?.current_page ?? page, last = Math.max(list.data?.meta?.last_page ?? 1, 1), pageNumbers = useMemo(() => Array.from({ length: Math.min(last, 5) }, (_, i) => Math.max(1, Math.min(current - 2, last - Math.min(last, 5) + 1)) + i), [current, last]);
-  const brandOptions = brands.data?.data ?? [], subBrandOptions = subBrands.data?.data ?? [], categoryOptions = categories.data?.data ?? [];
+  const selectedItem = selectedId
+    ? list.data?.data.find((value) => String(value.id) === selectedId)
+    : undefined;
+  const brandOptions = [...(brands.data?.data ?? [])];
+  const subBrandOptions = [...(subBrands.data?.data ?? [])];
+  const categoryOptions = [...(categories.data?.data ?? [])];
+  if (selectedItem && typeof selectedItem.brand === "object" && selectedItem.brand && !brandOptions.some((item) => String(item.id) === String(selectedItem.brand && typeof selectedItem.brand === "object" ? selectedItem.brand.id : ""))) {
+    brandOptions.push({ ...selectedItem.brand, active: true });
+  }
+  if (selectedItem && typeof selectedItem.sub_brand === "object" && selectedItem.sub_brand && !subBrandOptions.some((item) => String(item.id) === String(selectedItem.sub_brand && typeof selectedItem.sub_brand === "object" ? selectedItem.sub_brand.id : ""))) {
+    subBrandOptions.push({ ...selectedItem.sub_brand, active: true, brand_id: relationId(selectedItem.brand_id, selectedItem.brand) });
+  }
+  if (selectedItem && typeof selectedItem.category === "object" && selectedItem.category && !categoryOptions.some((item) => String(item.id) === String(selectedItem.category && typeof selectedItem.category === "object" ? selectedItem.category.id : ""))) {
+    categoryOptions.push({ ...selectedItem.category, active: true, brand_id: relationId(selectedItem.brand_id, selectedItem.brand), sub_brand_id: relationId(selectedItem.sub_brand_id, selectedItem.sub_brand) });
+  }
   const close = () => { setDialog(null); setSelectedId(null); setError(""); setDeleteError(""); };
   const refresh = () => queryClient.invalidateQueries({ queryKey: QUERY_KEYS.subCategories() });
   const add = () => { setBrandId(""); setSubBrandId(""); setCategoryId(""); setNameEn(""); setNameAr(""); setActive(true); setImage(null); setExistingImage(null); setDialog("add"); };
-  async function save() { if (!brandId || !subBrandId || !categoryId || !nameEn.trim() || !nameAr.trim() || (dialog === "add" && !image)) { setError(t("catalogPage.subCategory.dialog.requiredFields")); return; } try { const payload = { brandId, subBrandId, categoryId, nameEn: nameEn.trim(), nameAr: nameAr.trim(), isActive: active, image: image ?? undefined }; const response = dialog === "edit" && selectedId ? await updateMutation.mutateAsync({ id: selectedId, payload }) : await createMutation.mutateAsync(payload); setSuccess(response.message); await refresh(); close(); } catch (value) { setError(normalizeApiError(value).message); } }
-  function edit(id: string) { const x = list.data?.data.find((value) => String(value.id) === id); if (!x) return; setSelectedId(id); setBrandId(String(x.brand_id)); setSubBrandId(String(x.sub_brand_id)); setCategoryId(String(x.category_id)); setNameEn(translated(x, "en")); setNameAr(translated(x, "ar")); setActive(isActive(x)); setImage(null); setExistingImage(x.image_url ?? x.image ?? x.logo_url ?? x.logo ?? null); setDialog("edit"); }
+  async function save() { if (!brandId || !subBrandId || !categoryId || !nameEn.trim() || !nameAr.trim() || (dialog === "add" && !image)) { setError(t("catalogPage.subCategory.dialog.requiredFields")); return; } try { const isCreating = dialog === "add"; const payload = { brandId, subBrandId, categoryId, nameEn: nameEn.trim(), nameAr: nameAr.trim(), isActive: active, image: image ?? undefined }; const response = dialog === "edit" && selectedId ? await updateMutation.mutateAsync({ id: selectedId, payload }) : await createMutation.mutateAsync(payload); setSuccess(response.message); if (isCreating) { setSearch(""); setPage(1); } await refresh(); close(); } catch (value) { setError(normalizeApiError(value).message); } }
+  function edit(id: string) { const x = list.data?.data.find((value) => String(value.id) === id); if (!x) return; setSelectedId(id); setBrandId(relationId(x.brand_id, x.brand)); setSubBrandId(relationId(x.sub_brand_id, x.sub_brand)); setCategoryId(relationId(x.category_id, x.category)); setNameEn(translated(x, "en")); setNameAr(translated(x, "ar")); setActive(isActive(x)); setImage(null); setExistingImage(x.image_url ?? x.image ?? x.logo_url ?? x.logo ?? null); setDialog("edit"); }
   async function remove() { if (!selectedId) return; try { const response = await deleteMutation.mutateAsync(selectedId); setSuccess(response.message); await refresh(); close(); } catch (value) { setDeleteError(normalizeApiError(value).message); } }
   async function download() { setDownloading(true); try { await downloadSubCategoriesTemplateService(); } catch (value) { setDownloadError(normalizeApiError(value).message); } finally { setDownloading(false); } }
   async function upload() { if (!importFile) { setImportError(t("catalogPage.subCategory.dialog.importFileRequired")); return; } setImporting(true); try { const response = await importSubCategoriesService(importFile); setSuccess(response.message); await refresh(); close(); } catch (value) { setImportError(normalizeApiError(value).message); } finally { setImporting(false); } }
