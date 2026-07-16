@@ -95,11 +95,11 @@ export function SubBrandPage() {
   const updateMutation = useUpdateSubBrandMutation();
   const deleteMutation = useDeleteSubBrandMutation();
 
-  const rows = useMemo<SubBrandRow[]>(() => (subBrandsQuery.data?.data ?? []).filter((item) => matchesSubBrandName(item, deferredSearch)).map((item) => ({
+  const rows = useMemo<SubBrandRow[]>(() => (subBrandsQuery.data?.data ?? []).filter((item) => matchesSubBrandName(item, search.trim())).map((item) => ({
     id: String(item.id), name: translationName(item, locale), thumbnailAlt: translationName(item, locale),
     brand: parentName(item), isActive: activeValue(item), statusDisplay: "toggle",
     createdDate: item.created_at ? new Intl.DateTimeFormat(locale, { dateStyle: "medium", timeStyle: "short" }).format(new Date(item.created_at)) : "-",
-  })), [deferredSearch, locale, subBrandsQuery.data?.data]);
+  })), [locale, search, subBrandsQuery.data?.data]);
   const currentPage = subBrandsQuery.data?.meta?.current_page ?? page;
   const lastPage = Math.max(subBrandsQuery.data?.meta?.last_page ?? 1, 1);
   const pages = useMemo(() => Array.from({ length: Math.min(lastPage, 5) }, (_, index) => Math.max(1, Math.min(currentPage - 2, lastPage - Math.min(lastPage, 5) + 1)) + index), [currentPage, lastPage]);
