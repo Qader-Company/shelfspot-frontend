@@ -3,12 +3,14 @@ export interface CompanyProduct {
   name: string;
   sku: string;
   description?: string | null;
+  translations?: Array<{ locale?: string; name?: string; description?: string }> | Record<string, string | { name?: string; description?: string } | undefined>;
+  barcode?: string | null;
   active: boolean;
   is_active?: boolean | number | "0" | "1";
-  brand_id: string | number;
-  sub_brand_id: string | number;
-  category_id: string | number;
-  sub_category_id: string | number;
+  brand_id?: string | number;
+  sub_brand_id?: string | number;
+  category_id?: string | number;
+  sub_category_id?: string | number;
   brand?: { id: string | number; name?: string } | string | null;
   sub_brand?: { id: string | number; name?: string } | string | null;
   category?: { id: string | number; name?: string } | string | null;

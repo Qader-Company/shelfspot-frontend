@@ -60,8 +60,10 @@ export function SubCategoryPage() {
     ? list.data?.data.find((value) => String(value.id) === selectedId)
     : undefined;
   const brandOptions = [...(brands.data?.data ?? [])];
-  const subBrandOptions = [...(subBrands.data?.data ?? [])];
-  const categoryOptions = [...(categories.data?.data ?? [])];
+  const selectedParentBrand = dialog === "add" || dialog === "edit" ? brandId : brandFilter;
+  const selectedParentSubBrand = dialog === "add" || dialog === "edit" ? subBrandId : subBrandFilter;
+  const subBrandOptions = [...(subBrands.data?.data ?? [])].filter((item) => !selectedParentBrand || String(item.brand_id ?? (typeof item.brand === "object" ? item.brand?.id : "")) === selectedParentBrand);
+  const categoryOptions = [...(categories.data?.data ?? [])].filter((item) => !selectedParentSubBrand || String(item.sub_brand_id ?? (typeof item.sub_brand === "object" ? item.sub_brand?.id : "")) === selectedParentSubBrand);
   if (selectedItem && typeof selectedItem.brand === "object" && selectedItem.brand && !brandOptions.some((item) => String(item.id) === String(selectedItem.brand && typeof selectedItem.brand === "object" ? selectedItem.brand.id : ""))) {
     brandOptions.push({ ...selectedItem.brand, active: true });
   }
@@ -81,7 +83,7 @@ export function SubCategoryPage() {
   async function upload() { if (!importFile) { setImportError(t("catalogPage.subCategory.dialog.importFileRequired")); return; } setImporting(true); try { const response = await importSubCategoriesService(importFile); setSuccess(response.message); await refresh(); close(); } catch (value) { setImportError(normalizeApiError(value).message); } finally { setImporting(false); } }
   const labels = { nameColumn: t("catalogPage.subCategory.table.columns.subCategory"), status: t("catalogPage.table.columns.status"), createdDate: t("catalogPage.table.columns.createdDate"), action: t("catalogPage.table.columns.action"), selectAll: t("catalogPage.table.actions.selectAll"), selectRow: t("catalogPage.table.actions.selectRow"), delete: t("catalogPage.table.actions.delete"), edit: t("catalogPage.table.actions.edit"), toggleStatus: t("catalogPage.table.actions.toggleStatus"), activeLabel: t("catalogPage.status.active"), inactiveLabel: t("catalogPage.status.inactive") };
   const extra: CatalogExtraColumn[] = [{ key: "brand", header: t("catalogPage.subCategory.table.columns.brand"), getValue: (x) => String(x.brand ?? "") }, { key: "subBrand", header: t("catalogPage.subCategory.table.columns.subBrand"), getValue: (x) => String(x.subBrand ?? "") }, { key: "category", header: t("catalogPage.subCategory.table.columns.category"), getValue: (x) => String(x.category ?? "") }];
-  const select = (value: string, set: (x: string) => void, placeholder: string, options: { id: string | number; name?: string }[]) => <select value={value} onChange={(e) => set(e.target.value)} required className="h-11 rounded-lg border bg-card px-3"><option value="">{placeholder}</option>{options.map((x) => <option key={x.id} value={x.id}>{x.name ?? `#${x.id}`}</option>)}</select>;
+  const select = (value: string, set: (x: string) => void, placeholder: string, options: { id: string | number; name?: string }[], disabled = false) => { const blocked = disabled || (options === subBrandOptions && !selectedParentBrand) || (options === categoryOptions && !selectedParentSubBrand); return <select value={value} onChange={(e) => set(e.target.value)} required disabled={blocked} className="h-11 rounded-lg border bg-card px-3 disabled:cursor-not-allowed disabled:opacity-50"><option value="">{placeholder}</option>{options.map((x) => <option key={x.id} value={x.id}>{x.name ?? `#${x.id}`}</option>)}</select>; };
 
   return <div className="space-y-6 px-4 py-8 lg:px-8">
     <div className="flex justify-between"><div><h1 className="text-3xl font-bold">{t("catalogPage.subCategory.title")}</h1><p className="mt-2 text-lg text-muted-foreground">{t("catalogPage.subCategory.subtitle")}</p></div><div className="flex gap-3"><Button variant="outline" onClick={() => { setImportFile(null); setImportError(""); setDialog("import"); }}><UploadIcon className="size-4" />{t("catalogPage.actions.import")}</Button><Button onClick={add}><AddIcon className="size-4" />{t("catalogPage.subCategory.actions.add")}</Button></div></div>

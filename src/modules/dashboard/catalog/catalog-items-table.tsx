@@ -24,6 +24,32 @@ export interface CatalogExtraColumn {
   getValue: (row: Record<string, unknown>) => string;
 }
 
+function CatalogThumbnail({
+  url,
+  alt,
+}: {
+  url?: string | null;
+  alt: string;
+}) {
+  const [hasError, setHasError] = useState(false);
+
+  return (
+    <span className="flex size-10 shrink-0 items-center justify-center overflow-hidden rounded border border-border bg-muted">
+      {url && !hasError ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={url}
+          alt={alt}
+          className="size-full object-contain"
+          onError={() => setHasError(true)}
+        />
+      ) : (
+        <BoxIcon className="size-5 text-muted-foreground" aria-label={alt} />
+      )}
+    </span>
+  );
+}
+
 interface CatalogItemsTableLabels {
   nameColumn: string;
   status: string;
@@ -127,20 +153,10 @@ export function CatalogItemsTable({
                 {/* Thumbnail + name */}
                 <td className="border-b border-border px-5 py-3">
                   <div className="flex items-center gap-3">
-                    <span className="flex size-10 shrink-0 items-center justify-center overflow-hidden rounded border border-border bg-muted">
-                      {row.thumbnailUrl ? (
-                        // API-hosted catalog images are dynamic and may come
-                        // from different configured backend hosts.
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img
-                          src={row.thumbnailUrl}
-                          alt={row.thumbnailAlt}
-                          className="size-full object-contain"
-                        />
-                      ) : (
-                        <BoxIcon className="size-5 text-muted-foreground" />
-                      )}
-                    </span>
+                    <CatalogThumbnail
+                      url={row.thumbnailUrl}
+                      alt={row.thumbnailAlt}
+                    />
                     <span className="text-sm font-medium text-foreground">
                       {row.name}
                     </span>
