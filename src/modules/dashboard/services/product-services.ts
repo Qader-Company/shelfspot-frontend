@@ -6,3 +6,23 @@ export async function createProductService(payload: ProductPayload) { return (aw
 export async function updateProductService({ id, payload }: { id: string; payload: ProductPayload }) { return (await apiClient.post(`/api/company/products/${encodeURIComponent(id)}`, form(payload, true), multipart)).data as { success: boolean; message: string }; }
 export async function deleteProductService(id: string) { return (await apiClient.delete(`/api/company/products/${encodeURIComponent(id)}`)).data as { success: boolean; message: string }; }
 export async function importProductsService(file: File) { const data = new FormData(); data.append("file", file, file.name); return (await apiClient.post("/api/company/products/excel/import", data, multipart)).data as { success: boolean; message: string }; }
+export async function downloadProductsTemplateService() {
+  const response = await apiClient.get<Blob>("/api/company/products/excel/template", { responseType: "blob" });
+  const disposition = response.headers["content-disposition"] as string | undefined;
+  const url = URL.createObjectURL(response.data);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = disposition?.match(/filename="?([^";]+)"?/i)?.[1] ?? "products-template.xlsx";
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}
+export async function bulkDeleteProductsService(ids: string[]) {
+  const body = new URLSearchParams();
+  ids.forEach((id, index) => body.append(`ids[${index}]`, String(Number(id))));
+  return (await apiClient.delete("/api/company/products/bulk-delete", {
+    data: body,
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+  })).data as { success: boolean; message: string };
+}

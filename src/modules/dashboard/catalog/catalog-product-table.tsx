@@ -44,6 +44,8 @@ interface CatalogProductTableProps {
   onEdit: (id: string) => void;
   onToggleStatus?: (id: string, isActive: boolean) => void;
   statusResource?: CatalogStatusResource;
+  selectedIds?: string[];
+  onSelectionChange?: (ids: string[]) => void;
 }
 
 export function CatalogProductTable({
@@ -53,11 +55,14 @@ export function CatalogProductTable({
   onEdit,
   onToggleStatus,
   statusResource,
+  selectedIds = [],
+  onSelectionChange,
 }: CatalogProductTableProps) {
   const queryClient = useQueryClient();
   const statusMutation = useUpdateCatalogStatusMutation();
   const [statusError, setStatusError] = useState("");
   const resolvedResource = statusResource ?? "products";
+  const allSelected = rows.length > 0 && rows.every((row) => selectedIds.includes(row.id));
   async function toggleStatus(id: string, isActive: boolean) {
     if (onToggleStatus) return onToggleStatus(id, isActive);
     if (!resolvedResource) return;
@@ -73,7 +78,7 @@ export function CatalogProductTable({
             <tr className="text-xs font-medium text-foreground">
               <th className="w-10 border-b border-e border-border px-4 py-3 text-start">
                 <span className="sr-only">{labels.selectAll}</span>
-                <span className="block size-4 rounded border border-border bg-card" />
+                <input type="checkbox" checked={allSelected} onChange={() => onSelectionChange?.(allSelected ? selectedIds.filter((id) => !rows.some((row) => row.id === id)) : Array.from(new Set([...selectedIds, ...rows.map((row) => row.id)])))} />
               </th>
               <th className="border-b border-e border-border px-5 py-3 text-start">
                 {labels.products}
@@ -103,7 +108,7 @@ export function CatalogProductTable({
               <tr key={`${row.id}-${index}`} className="text-sm">
                 <td className="border-b border-border px-4 py-4">
                   <span className="sr-only">{labels.selectRow}</span>
-                  <span className="block size-4 rounded border border-border bg-card" />
+                  <input type="checkbox" checked={selectedIds.includes(row.id)} onChange={() => onSelectionChange?.(selectedIds.includes(row.id) ? selectedIds.filter((id) => id !== row.id) : [...selectedIds, row.id])} />
                 </td>
 
                 <td className="border-b border-border px-5 py-3">
