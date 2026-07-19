@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { X } from "lucide-react";
+import { useLocale } from "next-intl";
 import { ROUTES } from "@/config/routes";
 import { Link, usePathname } from "@/i18n/navigation";
 import { cn } from "@/shared/lib/utils";
@@ -25,6 +26,7 @@ export function DashboardSidebar({
   logoLabel,
   activeItemKey,
 }: DashboardSidebarProps) {
+  const locale = useLocale();
   const pathname = usePathname();
   const isSidebarOpen = useUiStore((state) => state.isSidebarOpen);
   const closeSidebar = useUiStore((state) => state.closeSidebar);
@@ -117,7 +119,11 @@ export function DashboardSidebar({
       />
     <aside className={cn(
       "fixed inset-y-0 start-0 z-50 flex h-dvh w-[min(18rem,86vw)] shrink-0 flex-col border-e border-border bg-card shadow-xl transition-transform duration-200 lg:static lg:h-full lg:w-60 lg:translate-x-0 lg:shadow-none",
-      isSidebarOpen ? "translate-x-0" : "-translate-x-full rtl:translate-x-full",
+      isSidebarOpen
+        ? "translate-x-0"
+        : locale === "ar"
+          ? "translate-x-full"
+          : "-translate-x-full",
     )}>
       <div className="flex h-20 items-center justify-between px-6 lg:h-24 lg:px-12">
         <Link href={ROUTES.home} aria-label={logoLabel} className="block">

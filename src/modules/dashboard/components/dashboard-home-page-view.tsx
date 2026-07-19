@@ -9,7 +9,7 @@ export function DashboardHomePageView() {
   const t = useTranslations("dashboard.home");
 
   return (
-    <div className="flex min-h-[calc(100dvh-4rem)] items-center justify-center px-6 py-12">
+    <div className="flex min-h-[calc(100dvh-4rem)] items-center justify-center px-1 py-5 sm:px-2 sm:py-6 lg:px-2">
       <EmptyState
         variant="plain"
         className="max-w-sm"

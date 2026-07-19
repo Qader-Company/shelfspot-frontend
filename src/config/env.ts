@@ -9,6 +9,7 @@ const publicEnvSchema = z.object({
 const serverEnvSchema = publicEnvSchema.extend({
   API_BASE_URL: z.string().optional(),
   API_KEY: z.string().optional(),
+  ALLOW_INSECURE_API_TLS: z.enum(["true", "false"]).default("false"),
 });
 
 export const publicEnv = publicEnvSchema.parse({
@@ -23,4 +24,5 @@ export const serverEnv = serverEnvSchema.parse({
   NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
   API_BASE_URL: process.env.API_BASE_URL,
   API_KEY: process.env.API_KEY,
+  ALLOW_INSECURE_API_TLS: process.env.ALLOW_INSECURE_API_TLS,
 });

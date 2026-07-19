@@ -83,7 +83,7 @@ export function DashboardOverview() {
   const statusItems = statusDonutData.map((item) => ({ ...item, label: t(item.labelKey) }));
 
   return (
-    <div className="space-y-6 px-4 py-8 lg:px-8">
+    <div className="space-y-4 px-1 py-4 sm:px-2 sm:py-5 lg:px-2 lg:py-6">
       <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
         <div>
           <h1 className="text-3xl font-bold leading-tight text-foreground">{t("overview.title")}</h1>
@@ -121,7 +121,7 @@ export function DashboardOverview() {
           );
         })}
       </div>
-      <div className="grid gap-6 xl:grid-cols-[minmax(0,1.5fr)_minmax(20rem,1fr)]">
+      <div className="grid gap-4 xl:grid-cols-[minmax(0,1.5fr)_minmax(20rem,1fr)]">
         <ChartCard title={t("overview.charts.requestsOverTime")} action={<Button type="button" variant="outline" className="h-9 gap-3 rounded-lg border-border bg-card px-4 text-xs font-medium text-muted-foreground shadow-none">{t("overview.filters.thisWeek")}<SidebarChevronIcon className="size-3.5" /></Button>}>
           <RequestsChart data={requestsOverTimeData} months={requestsOverTimeData.map((item) => t(item.monthKey))} />
         </ChartCard>
