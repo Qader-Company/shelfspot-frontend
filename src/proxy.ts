@@ -30,22 +30,6 @@ export default function proxy(request: NextRequest) {
     }
   }
 
-  const companyAuthMatch = request.nextUrl.pathname.match(/^\/(ar|en)\/(login|forgot-password|otp-verification|reset-password)$/);
-  if (companyAuthMatch) {
-    const [, locale, action] = companyAuthMatch;
-    const internalAction = action === "otp-verification" ? "verify-otp" : action;
-    const rewriteUrl = request.nextUrl.clone();
-    rewriteUrl.pathname = `/${locale}/company/${internalAction}`;
-    return NextResponse.rewrite(rewriteUrl);
-  }
-
-  const legacyAdminOtpMatch = request.nextUrl.pathname.match(/^\/(ar|en)\/admin\/otp-verification$/);
-  if (legacyAdminOtpMatch) {
-    const rewriteUrl = request.nextUrl.clone();
-    rewriteUrl.pathname = `/${legacyAdminOtpMatch[1]}/admin/verify-otp`;
-    return NextResponse.rewrite(rewriteUrl);
-  }
-
   return intlMiddleware(request);
 }
 
