@@ -1050,6 +1050,68 @@
       }
     }
   },
+  "adminDashboard": {
+    "title": "لوحة التحكم",
+    "welcome": "مرحبًا بعودتك، إليك ما يحدث اليوم",
+    "summaryLabel": "ملخص المنصة",
+    "navigation": {
+      "label": "التنقل في لوحة تحكم الإدارة",
+      "logo": "الانتقال إلى لوحة تحكم الإدارة",
+      "dashboard": "لوحة التحكم",
+      "companies": "الشركات",
+      "merchandisers": "مندوبو العرض",
+      "requests": "الطلبات",
+      "promoCode": "الرموز الترويجية",
+      "admins": "المشرفون",
+      "payments": "المدفوعات",
+      "settings": "الإعدادات",
+      "services": "الخدمات",
+      "trash": "سلة المحذوفات",
+      "logout": "تسجيل الخروج"
+    },
+    "header": {
+      "searchLabel": "البحث في لوحة تحكم الإدارة",
+      "searchPlaceholder": "بحث",
+      "searchNoResults": "لا توجد صفحات إدارة مطابقة",
+      "menu": "فتح قائمة الإدارة",
+      "notification": "الإشعارات",
+      "userMenu": "فتح قائمة ملف المشرف"
+    },
+    "user": { "name": "ShelfSpot", "role": "مشرف" },
+    "stats": {
+      "totalCompanies": "إجمالي الشركات",
+      "activeCompanies": "الشركات النشطة",
+      "requestsToday": "طلبات اليوم",
+      "totalWorkers": "إجمالي المستقلين",
+      "activeWorkers": "المستقلون النشطون",
+      "platformRevenue": "إيرادات المنصة"
+    },
+    "trends": {
+      "monthlyIncrease": "+12% هذا الشهر",
+      "weeklyIncrease": "+8% هذا الأسبوع",
+      "weeklyDecrease": "-2% هذا الأسبوع",
+      "workersIncrease": "+18% هذا الأسبوع",
+      "activeWorkersIncrease": "+15% هذا الأسبوع",
+      "revenueIncrease": "+24% هذا الأسبوع"
+    },
+    "chart": {
+      "requestsOverTime": "الطلبات بمرور الوقت",
+      "statusDistribution": "توزيع حالات الطلبات",
+      "thisWeek": "هذا الأسبوع",
+      "dates": { "mar3": "3 مارس", "mar9": "9 مارس", "mar15": "15 مارس", "mar18": "18 مارس", "mar21": "21 مارس", "mar25": "25 مارس", "mar28": "28 مارس" }
+    },
+    "status": { "pending": "قيد الانتظار", "inProgress": "قيد التنفيذ", "completed": "مكتمل", "rejected": "مرفوض" },
+    "rankings": {
+      "companies": "أفضل 5 شركات",
+      "workers": "أفضل 5 مستقلين نشطين",
+      "requests": "{count} طلب",
+      "completed": "{count} مكتملة"
+    },
+    "mock": {
+      "companies": { "techCorp": "حلول تك كورب", "retailHub": "ريتيل هب", "namaa": "أسواق نماء", "vision": "متاجر الرؤية", "supplyPoint": "نقطة التوريد" },
+      "workers": { "ibrahim": "إبراهيم إمام", "omar": "عمر علي", "sara": "سارة أحمد", "khaled": "خالد عادل", "mona": "منى علي" }
+    }
+  },
   "auth": {
     "login": {
       "visualAlt": "واجهة تسجيل الدخول",

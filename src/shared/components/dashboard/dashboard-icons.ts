@@ -28,6 +28,13 @@ export {
   Activity as ActivityIcon,
   MessageCircle as ScheduleIcon,
   X as CloseIcon,
+  Building2 as CompaniesIcon,
+  Users as WorkersIcon,
+  TicketPercent as PromoCodeIcon,
+  Settings as SettingsIcon,
+  BriefcaseBusiness as ServicesIcon,
+  PackageCheck as RequestsIcon,
+  HandCoins as RevenueIcon,
 } from "lucide-react";
 
 export const dashboardIconKeys = [
@@ -39,6 +46,11 @@ export const dashboardIconKeys = [
   "trash",
   "logout",
   "chevron",
+  "companies",
+  "workers",
+  "promoCode",
+  "settings",
+  "services",
 ] as const;
 
 export type DashboardIconKey = (typeof dashboardIconKeys)[number];

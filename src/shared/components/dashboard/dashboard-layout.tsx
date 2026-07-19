@@ -18,6 +18,7 @@ interface DashboardLayoutProps {
     notification: string;
     userMenu: string;
   };
+  primaryItemCount?: number;
 }
 
 export function DashboardLayout({
@@ -25,6 +26,7 @@ export function DashboardLayout({
   sidebarItems,
   user,
   labels,
+  primaryItemCount,
 }: DashboardLayoutProps) {
   return (
     <div className="flex h-dvh overflow-hidden bg-background">
@@ -32,6 +34,7 @@ export function DashboardLayout({
         items={sidebarItems}
         navigationLabel={labels.navigation}
         logoLabel={labels.logo}
+        primaryItemCount={primaryItemCount}
       />
       <div className="flex min-w-0 flex-1 flex-col overflow-y-auto">
         <DashboardTopbar

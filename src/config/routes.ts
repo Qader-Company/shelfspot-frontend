@@ -18,6 +18,7 @@ export const ROUTES = {
   dashboardCatalogProduct:     "/dashboard/catalog/product",
   dashboardAdmins: "/dashboard/admins",
   dashboardTrash: "/dashboard/trash",
+  adminDashboard: "/admin",
 } as const;
 
 export type AppRoute = (typeof ROUTES)[keyof typeof ROUTES];
