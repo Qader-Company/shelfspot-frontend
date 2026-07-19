@@ -12,6 +12,11 @@ import {
   PaymentIcon,
   SidebarChevronIcon,
   TrashIcon,
+  CompaniesIcon,
+  WorkersIcon,
+  PromoCodeIcon,
+  SettingsIcon,
+  ServicesIcon,
   type DashboardIconKey,
 } from "@/shared/components/dashboard/dashboard-icons";
 import { cn } from "@/shared/lib/utils";
@@ -33,6 +38,11 @@ const iconComponents = {
   trash: TrashIcon,
   logout: LogoutIcon,
   chevron: SidebarChevronIcon,
+  companies: CompaniesIcon,
+  workers: WorkersIcon,
+  promoCode: PromoCodeIcon,
+  settings: SettingsIcon,
+  services: ServicesIcon,
 } satisfies Record<DashboardIconKey, ComponentType<{ className?: string }>>;
 
 export function SidebarItem({
