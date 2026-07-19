@@ -1,4 +1,5 @@
-import { apiClient } from "@/shared/lib/api/client";
+import { apiClient, adminApiClient } from "@/shared/lib/api/client";
+import { getAuthContextConfig, type AuthContext } from "@/modules/auth/config/auth-context";
 
 export interface LoginPayload {
   email: string;
@@ -14,10 +15,9 @@ interface CompanyLoginResponse {
   message: string;
 }
 
-const LOGIN_ENDPOINT = "/api/auth/company/login";
-
-export async function loginService(payload: LoginPayload) {
-  const response = await apiClient.post<CompanyLoginResponse>(LOGIN_ENDPOINT, {
+export async function loginService(payload: LoginPayload, context: AuthContext = "company") {
+  const client = context === "admin" ? adminApiClient : apiClient;
+  const response = await client.post<CompanyLoginResponse>(getAuthContextConfig(context).loginEndpoint, {
     email: payload.email,
     password: payload.password,
   }, {

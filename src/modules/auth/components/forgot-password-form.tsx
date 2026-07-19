@@ -4,7 +4,6 @@ import { useTranslations } from "next-intl";
 import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 
-import { ROUTES } from "@/config/routes";
 import { useRouter } from "@/i18n/navigation";
 import { AuthEmailIcon } from "@/modules/auth/components/auth-field-icons";
 import { AuthInputField } from "@/modules/auth/components/auth-input-field";
@@ -18,15 +17,18 @@ import { normalizeApiError } from "@/shared/lib/api/errors";
 import { zodResolver } from "@/shared/lib/validation";
 import { Button } from "@/shared/ui/button";
 import { Form } from "@/shared/ui/form";
+import { getAuthContextConfig, type AuthContext } from "@/modules/auth/config/auth-context";
+import { setPasswordResetState } from "@/shared/lib/auth/password-reset-storage";
 
-export function ForgotPasswordForm() {
+export function ForgotPasswordForm({ authContext = "company" }: { authContext?: AuthContext }) {
   const t = useTranslations("auth.forgotPassword");
   const router = useRouter();
   const forgotPasswordSchema = useMemo(
     () => createForgotPasswordSchema(t),
     [t],
   );
-  const forgotPasswordMutation = useForgotPasswordMutation();
+  const forgotPasswordMutation = useForgotPasswordMutation(authContext);
+  const authConfig = getAuthContextConfig(authContext);
   const [successMessage, setSuccessMessage] = useState("");
   const form = useForm<ForgotPasswordFormValues>({
     defaultValues: forgotPasswordDefaultValues,
@@ -39,8 +41,9 @@ export function ForgotPasswordForm() {
 
     try {
       await forgotPasswordMutation.mutateAsync(values);
+      setPasswordResetState(authContext, { email: values.email });
       setSuccessMessage(t("states.success"));
-      router.push(ROUTES.otpVerification);
+      router.push(authConfig.otpRoute);
     } catch (error) {
       const apiError = normalizeApiError(error);
 

@@ -1,4 +1,5 @@
-import { apiClient } from "@/shared/lib/api/client";
+import { apiClient, adminApiClient } from "@/shared/lib/api/client";
+import { getAuthContextConfig, type AuthContext } from "@/modules/auth/config/auth-context";
 
 export interface ForgotPasswordPayload {
   email: string;
@@ -12,11 +13,10 @@ interface CompanyForgotPasswordResponse {
   message: string;
 }
 
-const FORGOT_PASSWORD_ENDPOINT = "/api/auth/company/forgot-password";
-
-export async function forgotPasswordService(payload: ForgotPasswordPayload) {
-  const response = await apiClient.post<CompanyForgotPasswordResponse>(
-    FORGOT_PASSWORD_ENDPOINT,
+export async function forgotPasswordService(payload: ForgotPasswordPayload, context: AuthContext = "company") {
+  const client = context === "admin" ? adminApiClient : apiClient;
+  const response = await client.post<CompanyForgotPasswordResponse>(
+    getAuthContextConfig(context).forgotPasswordEndpoint,
     {
       email: payload.email,
     },

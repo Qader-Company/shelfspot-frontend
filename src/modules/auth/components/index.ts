@@ -5,6 +5,7 @@ export { AuthOtpField } from "@/modules/auth/components/auth-otp-field";
 export { AuthSelectField } from "@/modules/auth/components/auth-select-field";
 export { AuthSocialButtons } from "@/modules/auth/components/auth-social-buttons";
 export { AuthSplitShell } from "@/modules/auth/components/auth-split-shell";
+export { AuthLoginShell } from "@/modules/auth/components/auth-login-shell";
 export { AuthWordmark } from "@/modules/auth/components/auth-wordmark";
 export { ForgotPasswordForm } from "@/modules/auth/components/forgot-password-form";
 export { ForgotPasswordPageView } from "@/modules/auth/components/forgot-password-page-view";

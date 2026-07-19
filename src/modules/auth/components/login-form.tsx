@@ -26,17 +26,22 @@ import { zodResolver } from "@/shared/lib/validation";
 import { cn } from "@/shared/lib/utils";
 import { Button } from "@/shared/ui/button";
 import { Form } from "@/shared/ui/form";
+import { getAuthContextConfig, type AuthContext } from "@/modules/auth/config/auth-context";
 
 interface LoginFormProps {
   showRegistrationSuccess?: boolean;
+  authContext?: AuthContext;
+  heading?: string;
+  description?: string;
 }
 
-export function LoginForm({ showRegistrationSuccess = false }: LoginFormProps) {
+export function LoginForm({ showRegistrationSuccess = false, authContext = "company", heading, description }: LoginFormProps) {
   const t = useTranslations("auth.login");
   const router = useRouter();
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const loginSchema = useMemo(() => createLoginSchema(t), [t]);
-  const loginMutation = useLoginMutation();
+  const loginMutation = useLoginMutation(authContext);
+  const authConfig = getAuthContextConfig(authContext);
   const form = useForm<LoginFormValues>({
     defaultValues: loginDefaultValues,
     resolver: zodResolver(loginSchema),
@@ -51,7 +56,7 @@ export function LoginForm({ showRegistrationSuccess = false }: LoginFormProps) {
 
     try {
       await loginMutation.mutateAsync(values);
-      router.replace(ROUTES.dashboard);
+      router.replace(authConfig.successRoute);
     } catch (error) {
       const apiError = normalizeApiError(error);
 
@@ -82,14 +87,14 @@ export function LoginForm({ showRegistrationSuccess = false }: LoginFormProps) {
     <div className="mx-auto flex w-full flex-col gap-5 sm:gap-6">
       <div className="space-y-1.5 text-center">
         <h1 className="text-display-xs font-semibold text-foreground sm:text-display-sm lg:text-display-md">
-          {t("title")}
+          {heading ?? t("title")}
         </h1>
         <p className="text-base font-normal text-muted-foreground sm:text-lg lg:text-xl">
-          {t("description")}
+          {description ?? t("description")}
         </p>
       </div>
 
-      <div>
+      {authConfig.registrationRoute ? <div>
         <AuthModeSwitch
           active="sign-in"
           signInHref={ROUTES.login}
@@ -97,7 +102,7 @@ export function LoginForm({ showRegistrationSuccess = false }: LoginFormProps) {
           signUpHref={ROUTES.register}
           signUpLabel={t("tabs.signUp")}
         />
-      </div>
+      </div> : null}
 
       {showRegistrationSuccess ? (
         <p className="rounded-[18px] border border-success/20 bg-success/10 px-4 py-3 text-sm text-success">
@@ -180,7 +185,7 @@ export function LoginForm({ showRegistrationSuccess = false }: LoginFormProps) {
             </label>
 
             <Link
-              href={ROUTES.forgotPassword}
+              href={authConfig.forgotPasswordRoute}
               className="text-sm font-medium text-primary"
             >
               {t("actions.forgotPassword")}
@@ -206,7 +211,7 @@ export function LoginForm({ showRegistrationSuccess = false }: LoginFormProps) {
         </form>
       </Form>
 
-      <div>
+      {authConfig.registrationRoute ? <div>
         <p className="text-center text-sm leading-6 text-muted-foreground">
           {t("states.noAccount")}{" "}
           <Link
@@ -216,7 +221,7 @@ export function LoginForm({ showRegistrationSuccess = false }: LoginFormProps) {
             {t("actions.createAccount")}
           </Link>
         </p>
-      </div>
+      </div> : null}
     </div>
   );
 }

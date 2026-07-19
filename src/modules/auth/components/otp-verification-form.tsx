@@ -1,10 +1,9 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 
-import { ROUTES } from "@/config/routes";
 import { useRouter } from "@/i18n/navigation";
 import { AuthOtpField } from "@/modules/auth/components/auth-otp-field";
 import {
@@ -15,20 +14,35 @@ import {
 import { zodResolver } from "@/shared/lib/validation";
 import { Button } from "@/shared/ui/button";
 import { Form } from "@/shared/ui/form";
+import { getAuthContextConfig, type AuthContext } from "@/modules/auth/config/auth-context";
+import { readPasswordResetToken, verifyPasswordResetOtp } from "@/modules/auth/services/password-reset-service";
+import { getPasswordResetState, setPasswordResetState } from "@/shared/lib/auth/password-reset-storage";
+import { normalizeApiError } from "@/shared/lib/api/errors";
 
-export function OtpVerificationForm() {
+export function OtpVerificationForm({ authContext = "company" }: { authContext?: AuthContext }) {
   const t = useTranslations("auth.otpVerification");
   const router = useRouter();
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const authConfig = getAuthContextConfig(authContext);
   const schema = useMemo(() => createOtpVerificationSchema(t), [t]);
   const form = useForm<OtpVerificationFormValues>({
     defaultValues: otpVerificationDefaultValues,
     resolver: zodResolver(schema),
   });
 
-  async function onSubmit() {
-    setIsSubmitting(true);
-    router.push(ROUTES.resetPassword);
+  async function onSubmit(values: OtpVerificationFormValues) {
+    form.clearErrors();
+    const state = getPasswordResetState(authContext);
+    if (!state?.email) { form.setError("root", { message: t("errors.missingEmail") }); return; }
+    try {
+      const response = await verifyPasswordResetOtp(authContext, { email: state.email, code: values.code });
+      const token = readPasswordResetToken(response);
+      if (!token) { form.setError("root", { message: t("errors.missingToken") }); return; }
+      setPasswordResetState(authContext, { email: state.email, token });
+      router.push(authConfig.resetPasswordRoute);
+    } catch (error) {
+      const apiError = normalizeApiError(error);
+      form.setError("root", { message: apiError.status === 422 ? t("errors.invalidCode") : t("errors.generic") });
+    }
   }
 
   return (
@@ -48,15 +62,17 @@ export function OtpVerificationForm() {
           className="space-y-5"
           noValidate
         >
-          <AuthOtpField control={form.control} />
+          <AuthOtpField control={form.control} digitLabel={(position) => t("digitLabel", { position })} />
+
+          {form.formState.errors.root?.message ? <p className="rounded-[18px] border border-destructive/20 bg-destructive/10 px-4 py-3 text-sm text-destructive">{form.formState.errors.root.message}</p> : null}
 
           <Button
             type="submit"
             size="lg"
             className="h-11 w-full rounded-md text-lg leading-none font-semibold text-background sm:text-xl"
-            disabled={isSubmitting}
+            disabled={form.formState.isSubmitting}
           >
-            {isSubmitting ? t("actions.submitting") : t("actions.submit")}
+            {form.formState.isSubmitting ? t("actions.submitting") : t("actions.submit")}
           </Button>
         </form>
       </Form>

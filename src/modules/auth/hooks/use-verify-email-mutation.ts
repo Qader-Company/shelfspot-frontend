@@ -16,6 +16,7 @@ export function useVerifyEmailMutation() {
       setSession({
         isAuthenticated: true,
         user: data.user,
+        context: "company",
       });
     },
   });

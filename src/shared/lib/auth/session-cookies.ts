@@ -9,6 +9,7 @@ export const ACCESS_TOKEN_COOKIE = `${productionPrefix}shelfspot-access`;
 export const REFRESH_TOKEN_COOKIE = `${productionPrefix}shelfspot-refresh`;
 export const PERSISTENT_SESSION_COOKIE = `${productionPrefix}shelfspot-persistent`;
 export const COMPANY_ID_COOKIE = `${productionPrefix}shelfspot-company-id`;
+export const AUTH_CONTEXT_COOKIE = `${productionPrefix}shelfspot-auth-context`;
 
 type TokenValue = string | { token: string; ttl?: number };
 
@@ -61,6 +62,7 @@ export function setSessionCookies(
   response: NextResponse,
   payload: TokenPayload,
   persistent: boolean,
+  context: "company" | "admin" = "company",
 ) {
   const access = readToken(payload.access_token);
   const refresh = readToken(payload.refresh_token);
@@ -70,6 +72,11 @@ export function setSessionCookies(
     ACCESS_TOKEN_COOKIE,
     access.token,
     cookieOptions(persistent && access.ttl ? access.ttl * 60 : undefined),
+  );
+  response.cookies.set(
+    AUTH_CONTEXT_COOKIE,
+    context,
+    cookieOptions(persistent && refresh.ttl ? refresh.ttl * 60 : undefined),
   );
   if (companyId) {
     response.cookies.set(
@@ -106,6 +113,10 @@ export function clearSessionCookies(response: NextResponse) {
     maxAge: 0,
   });
   response.cookies.set(COMPANY_ID_COOKIE, "", {
+    ...cookieOptions(),
+    maxAge: 0,
+  });
+  response.cookies.set(AUTH_CONTEXT_COOKIE, "", {
     ...cookieOptions(),
     maxAge: 0,
   });

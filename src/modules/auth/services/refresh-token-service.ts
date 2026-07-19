@@ -1,7 +1,10 @@
 import axios from "axios";
-
-const REFRESH_ENDPOINT = "/api/auth/company/refresh";
+import { getAuthContextConfig, type AuthContext } from "@/modules/auth/config/auth-context";
 
 export async function refreshCompanyTokens() {
-  await axios.post(REFRESH_ENDPOINT, undefined, { withCredentials: true });
+  await refreshTokens("company");
+}
+
+export async function refreshTokens(context: AuthContext) {
+  await axios.post(getAuthContextConfig(context).refreshEndpoint, undefined, { withCredentials: true });
 }
