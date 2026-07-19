@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import { AddIcon } from "@/shared/components/dashboard/dashboard-icons";
+import { DeleteConfirmDialog } from "@/shared/components/dashboard/delete-confirm-dialog";
 import { SearchInput } from "@/shared/components/dashboard/search-input";
 import { normalizeApiError } from "@/shared/lib/api/errors";
 import { cn } from "@/shared/lib/utils";
@@ -10,7 +11,6 @@ import { Button } from "@/shared/ui/button";
 import { AdminFormDialog } from "./admin-form-dialog";
 import type { Admin, Role } from "./access-control-api";
 import { AdminsTable } from "./admins-table";
-import { DeleteConfirmDialog } from "./delete-confirm-dialog";
 import { RoleFormDialog } from "./role-form-dialog";
 import { RolesTable } from "./roles-table";
 import { useAdmins, useCreateAdmin, useCreateRole, useDeleteAdmin, useDeleteRole, usePermissions, useRoles, useUpdateAdmin, useUpdateRole } from "./use-access-control";
