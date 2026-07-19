@@ -76,6 +76,7 @@ export default async function Layout({
         logo: t("navigation.logo"),
         search: t("topbar.searchLabel"),
         searchPlaceholder: t("topbar.searchPlaceholder"),
+        searchNoResults: t("topbar.searchNoResults"),
         menu: t("topbar.menu"),
         notification: t("topbar.notification"),
         userMenu: t("topbar.userMenu"),

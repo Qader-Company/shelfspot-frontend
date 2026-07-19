@@ -7,12 +7,14 @@ import { Button } from "@/shared/ui/button";
 import { NotificationButton } from "./notification-button";
 import { SearchInput } from "./search-input";
 import { UserMenu } from "./user-menu";
-import type { DashboardUser } from "./types";
+import type { DashboardSidebarItem, DashboardUser } from "./types";
 import { useUiStore } from "@/shared/stores/ui-store";
 
 interface DashboardTopbarProps {
+  searchItems: DashboardSidebarItem[];
   searchLabel: string;
   searchPlaceholder: string;
+  searchNoResults: string;
   menuLabel: string;
   notificationLabel: string;
   userMenuLabel: string;
@@ -20,8 +22,10 @@ interface DashboardTopbarProps {
 }
 
 export function DashboardTopbar({
+  searchItems,
   searchLabel,
   searchPlaceholder,
+  searchNoResults,
   menuLabel,
   notificationLabel,
   userMenuLabel,
@@ -42,8 +46,10 @@ export function DashboardTopbar({
           <Menu className="size-5" />
         </Button>
         <SearchInput
+          items={searchItems}
           label={searchLabel}
           placeholder={searchPlaceholder}
+          noResultsLabel={searchNoResults}
           className="max-w-[420px]"
         />
       </div>

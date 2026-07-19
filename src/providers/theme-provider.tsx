@@ -1,23 +1,32 @@
 "use client";
 
-import { ThemeProvider as NextThemesProvider } from "next-themes";
-import type { ComponentProps } from "react";
+import { useEffect, type ReactNode } from "react";
 
 import { APP_CONFIG } from "@/config/app";
 
-type ThemeProviderProps = ComponentProps<typeof NextThemesProvider>;
+type StoredTheme = "light" | "dark" | "system";
 
-export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
-  return (
-    <NextThemesProvider
-      attribute="class"
-      defaultTheme="system"
-      enableSystem
-      disableTransitionOnChange
-      storageKey={APP_CONFIG.themeStorageKey}
-      {...props}
-    >
-      {children}
-    </NextThemesProvider>
-  );
+function isStoredTheme(value: string | null): value is StoredTheme {
+  return value === "light" || value === "dark" || value === "system";
+}
+
+function applyTheme(theme: StoredTheme, prefersDark: boolean) {
+  const useDarkTheme = theme === "dark" || (theme === "system" && prefersDark);
+  document.documentElement.classList.toggle("dark", useDarkTheme);
+  document.documentElement.style.colorScheme = useDarkTheme ? "dark" : "light";
+}
+
+export function ThemeProvider({ children }: { children: ReactNode }) {
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    const storedTheme = window.localStorage.getItem(APP_CONFIG.themeStorageKey);
+    const theme = isStoredTheme(storedTheme) ? storedTheme : "system";
+    const updateTheme = () => applyTheme(theme, mediaQuery.matches);
+
+    updateTheme();
+    mediaQuery.addEventListener("change", updateTheme);
+    return () => mediaQuery.removeEventListener("change", updateTheme);
+  }, []);
+
+  return children;
 }

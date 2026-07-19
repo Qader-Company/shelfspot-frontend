@@ -168,7 +168,8 @@
     },
     "topbar": {
       "searchLabel": "Search",
-      "searchPlaceholder": "Search",
+      "searchPlaceholder": "Search dashboard",
+      "searchNoResults": "No matching dashboard pages",
       "menu": "Open dashboard navigation",
       "notification": "Notifications",
       "userMenu": "Open user profile menu"
