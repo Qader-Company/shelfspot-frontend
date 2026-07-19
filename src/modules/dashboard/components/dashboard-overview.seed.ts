@@ -7,6 +7,7 @@ export interface DashboardStatItem {
   titleKey: string;
   value: string;
   trendKey: string;
+  changePercentage?: number;
   tone: "info" | "success" | "danger" | "purple";
   iconSrc: string;
 }
@@ -38,6 +39,7 @@ export const dashboardStats: DashboardStatItem[] = [
     titleKey: "overview.stats.active.title",
     value: "124",
     trendKey: "overview.stats.active.trend",
+    changePercentage: 0,
     tone: "info",
     iconSrc: "/company/folders.svg",
   },
@@ -46,6 +48,7 @@ export const dashboardStats: DashboardStatItem[] = [
     titleKey: "overview.stats.completed.title",
     value: "124",
     trendKey: "overview.stats.completed.trend",
+    changePercentage: 0,
     tone: "success",
     iconSrc: "/company/rightsign.svg",
   },
@@ -54,6 +57,7 @@ export const dashboardStats: DashboardStatItem[] = [
     titleKey: "overview.stats.delayed.title",
     value: "124",
     trendKey: "overview.stats.delayed.trend",
+    changePercentage: 0,
     tone: "danger",
     iconSrc: "/company/alert.svg",
   },
@@ -62,6 +66,7 @@ export const dashboardStats: DashboardStatItem[] = [
     titleKey: "overview.stats.acceptance.title",
     value: "94.2%",
     trendKey: "overview.stats.acceptance.trend",
+    changePercentage: 0,
     tone: "purple",
     iconSrc: "/company/star.svg",
   },

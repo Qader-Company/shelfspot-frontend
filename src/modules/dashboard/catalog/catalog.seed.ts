@@ -11,6 +11,7 @@ export interface CatalogBaseRow {
   id: string;
   name: string;
   thumbnailAlt: string;
+  thumbnailUrl?: string | null;
   isActive: boolean;
   statusDisplay: CatalogStatusDisplay;
   /** Only used when statusDisplay === "badge" */

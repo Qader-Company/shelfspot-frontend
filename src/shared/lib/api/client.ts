@@ -3,7 +3,6 @@ import type { InternalAxiosRequestConfig } from "axios";
 
 import { API_CONFIG } from "@/config/api";
 import { refreshCompanyTokens } from "@/modules/auth/services/refresh-token-service";
-import { getStoredAccessToken } from "@/shared/lib/auth/token-storage";
 import { useAuthStore } from "@/shared/stores/auth-store";
 
 export const apiClient = axios.create({
@@ -40,24 +39,18 @@ function isPublicAuthRequest(url?: string) {
   );
 }
 
+function redirectToLogin() {
+  if (typeof window === "undefined") return;
+  const locale = window.location.pathname.split("/")[1];
+  const loginPath = locale === "en" || locale === "ar" ? `/${locale}/login` : "/ar/login";
+
+  window.location.replace(loginPath);
+}
+
 export function setupApiClient() {
   if (isApiClientReady) {
     return;
   }
-
-  apiClient.interceptors.request.use((config: AuthRequestConfig) => {
-    config.headers.set("Accept", "application/json");
-
-    if (!isPublicAuthRequest(config.url)) {
-      const accessToken = getStoredAccessToken();
-
-      if (accessToken) {
-        config.headers.set("Authorization", `Bearer ${accessToken}`);
-      }
-    }
-
-    return config;
-  });
 
   apiClient.interceptors.response.use(
     (response) => response,
@@ -86,15 +79,12 @@ export function setupApiClient() {
           refreshPromise = null;
         });
 
-        const tokens = await refreshPromise;
-
-        useAuthStore.getState().updateTokens(tokens);
-
-        config.headers.set("Authorization", `Bearer ${tokens.accessToken}`);
+        await refreshPromise;
 
         return apiClient(config);
       } catch (refreshError) {
         useAuthStore.getState().clearSession();
+        redirectToLogin();
         throw refreshError;
       }
     },

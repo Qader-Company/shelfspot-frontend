@@ -23,6 +23,10 @@ function jsonToFormData(json: Record<string, unknown>): FormData {
 export async function proxyAuthRequest(
   request: NextRequest,
   upstreamPath: string,
+  options?: {
+    authorization?: string;
+    transformResponse?: (body: unknown, response: NextResponse) => unknown;
+  },
 ) {
   const apiClient = await createServerApiClient();
 
@@ -48,8 +52,8 @@ export async function proxyAuthRequest(
       method: request.method,
       data,
       headers: {
-        ...(request.headers.get("authorization")
-          ? { Authorization: request.headers.get("authorization")! }
+        ...(options?.authorization || request.headers.get("authorization")
+          ? { Authorization: options?.authorization ?? request.headers.get("authorization")! }
           : {}),
         // Let axios set Content-Type automatically when sending FormData
         // (it needs to include the multipart boundary)
@@ -57,9 +61,19 @@ export async function proxyAuthRequest(
       validateStatus: () => true,
     });
 
-    return NextResponse.json(response.data, {
+    const nextResponse = NextResponse.json(response.data, {
       status: response.status,
     });
+
+    if (options?.transformResponse) {
+      const body = options.transformResponse(response.data, nextResponse);
+      return NextResponse.json(body, {
+        status: response.status,
+        headers: nextResponse.headers,
+      });
+    }
+
+    return nextResponse;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {
       return NextResponse.json(error.response.data, {

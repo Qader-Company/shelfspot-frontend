@@ -9,10 +9,14 @@ interface RequestsChartProps {
   months: string[];
 }
 
-const yAxisLabels = [140, 150, 70, 35, 0];
-
 export function RequestsChart({ data, months }: RequestsChartProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const maxValue = Math.max(1, ...data.map((point) => point.value));
+  const roundedMax = Math.max(4, Math.ceil(maxValue / 4) * 4);
+  const yAxisLabels = Array.from(
+    { length: 5 },
+    (_, index) => roundedMax - (roundedMax / 4) * index,
+  );
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -32,18 +36,19 @@ export function RequestsChart({ data, months }: RequestsChartProps) {
       const pixelRatio = window.devicePixelRatio || 1;
       const width = rect.width;
       const height = rect.height;
-      const maxValue = 140;
       const styles = getComputedStyle(document.documentElement);
       const primary = styles.getPropertyValue("--primary").trim() || "#56cbf2";
       const points = data.map((point, index) => ({
-        x: (index / (data.length - 1)) * width,
-        y: height - (point.value / maxValue) * height,
+        x: data.length === 1 ? width / 2 : (index / (data.length - 1)) * width,
+        y: height - (point.value / roundedMax) * height,
       }));
 
       canvas.width = width * pixelRatio;
       canvas.height = height * pixelRatio;
       context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
       context.clearRect(0, 0, width, height);
+
+      if (points.length === 0) return;
       context.lineWidth = 3;
       context.lineCap = "round";
       context.lineJoin = "round";
@@ -69,7 +74,12 @@ export function RequestsChart({ data, months }: RequestsChartProps) {
 
       context.stroke();
 
-      const focusPoint = points[3];
+      const focusIndex = data.reduce(
+        (highest, point, index) =>
+          point.value > data[highest].value ? index : highest,
+        0,
+      );
+      const focusPoint = points[focusIndex];
       context.globalAlpha = 1;
       context.fillStyle = primary;
       context.beginPath();
@@ -88,7 +98,7 @@ export function RequestsChart({ data, months }: RequestsChartProps) {
     resizeObserver.observe(canvas);
 
     return () => resizeObserver.disconnect();
-  }, [data]);
+  }, [data, roundedMax]);
 
   return (
     <div className="grid h-56 grid-cols-[2.5rem_1fr] gap-3">
@@ -107,8 +117,8 @@ export function RequestsChart({ data, months }: RequestsChartProps) {
           <canvas ref={canvasRef} className="size-full" aria-hidden="true" />
         </div>
         <div className="absolute inset-x-0 bottom-0 flex justify-between text-[11px] text-muted-foreground">
-          {months.map((month) => (
-            <span key={month}>{month}</span>
+          {months.map((month, index) => (
+            <span key={`${month}-${index}`}>{month}</span>
           ))}
         </div>
       </div>

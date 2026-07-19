@@ -1,7 +1,23 @@
-import { isServer, QueryClient } from "@tanstack/react-query";
+import {
+  isServer,
+  MutationCache,
+  QueryClient,
+} from "@tanstack/react-query";
 
 function createQueryClient() {
-  return new QueryClient({
+  const queryClient = new QueryClient({
+    mutationCache: new MutationCache({
+      onSuccess: async () => {
+        // Every dashboard mutation can affect a visible list, its filters,
+        // hierarchy options, trash counts, or related catalog resources.
+        // Refetch active app queries immediately so no manual page reload is
+        // needed after create, update, delete, restore, or import actions.
+        await queryClient.invalidateQueries({
+          queryKey: ["app"],
+          refetchType: "active",
+        });
+      },
+    }),
     defaultOptions: {
       queries: {
         staleTime: 60_000,
@@ -13,6 +29,8 @@ function createQueryClient() {
       },
     },
   });
+
+  return queryClient;
 }
 
 let browserQueryClient: QueryClient | undefined;

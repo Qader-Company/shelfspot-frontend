@@ -23,7 +23,7 @@ interface AdminsTableProps {
   rows: AdminRow[];
   labels: AdminsTableLabels;
   onDelete: (id: string) => void;
-  onEdit: () => void;
+  onEdit: (id: string) => void;
 }
 
 export function AdminsTable({
@@ -97,7 +97,7 @@ export function AdminsTable({
                       size="icon-xs"
                       aria-label={labels.edit}
                       className="text-muted-foreground hover:text-foreground"
-                      onClick={() => onEdit()}
+                      onClick={() => onEdit(row.id)}
                     >
                       <EditIcon className="size-4" />
                     </Button>

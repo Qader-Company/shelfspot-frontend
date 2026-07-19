@@ -13,6 +13,7 @@ interface DashboardLayoutProps {
     logo: string;
     search: string;
     searchPlaceholder: string;
+    searchNoResults: string;
     menu: string;
     notification: string;
     userMenu: string;
@@ -34,8 +35,10 @@ export function DashboardLayout({
       />
       <div className="flex min-w-0 flex-1 flex-col overflow-y-auto">
         <DashboardTopbar
+          searchItems={sidebarItems}
           searchLabel={labels.search}
           searchPlaceholder={labels.searchPlaceholder}
+          searchNoResults={labels.searchNoResults}
           menuLabel={labels.menu}
           notificationLabel={labels.notification}
           userMenuLabel={labels.userMenu}

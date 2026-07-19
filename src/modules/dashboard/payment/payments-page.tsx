@@ -1,148 +1,29 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
-
-import {
-  AddIcon,
-  FilterIcon,
-  PaginationNextIcon,
-  PaginationPreviousIcon,
-} from "@/shared/components/dashboard/dashboard-icons";
+import { AddIcon } from "@/shared/components/dashboard/dashboard-icons";
 import { SearchInput } from "@/shared/components/dashboard/search-input";
-import { cn } from "@/shared/lib/utils";
+import { normalizeApiError } from "@/shared/lib/api/errors";
 import { Button } from "@/shared/ui/button";
-
 import { AddFundDialog } from "./add-fund-dialog";
 import { PaymentSummaryCard } from "./payment-summary-card";
-import {
-  paymentPagination,
-  paymentSummaryData,
-  paymentTransactions,
-} from "./payments.seed";
-import type {
-  PaymentTransactionStatus,
-  PaymentTransactionType,
-} from "./payments.seed";
 import { PaymentsTable } from "./payments-table";
+import type { PaymentTransaction, PaymentTransactionStatus, PaymentTransactionType } from "./payments.seed";
+import { useRechargeWallet, useTransactionTypes, useWallet } from "./use-wallet";
 
+const money = (value: string | number | undefined) => new Intl.NumberFormat(undefined, { style: "currency", currency: "USD" }).format(Number(value ?? 0));
 export function PaymentsPage() {
-  const t = useTranslations("dashboard");
-  const [isAddFundOpen, setIsAddFundOpen] = useState(false);
-
-  return (
-    <div className="space-y-6 px-4 py-8 lg:px-8">
-      {/* Page header */}
-      <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-        <div>
-          <h1 className="text-3xl font-bold leading-tight text-foreground">
-            {t("paymentPage.title")}
-          </h1>
-          <p className="mt-2 text-lg font-medium text-muted-foreground">
-            {t("paymentPage.subtitle")}
-          </p>
-        </div>
-        <Button
-          type="button"
-          className="h-12 rounded-lg px-6 text-sm font-semibold text-white hover:text-white"
-          onClick={() => setIsAddFundOpen(true)}
-        >
-          <AddIcon className="size-5" />
-          {t("paymentPage.actions.addFund")}
-        </Button>
-      </div>
-
-      {/* Account summary card */}
-      <PaymentSummaryCard data={paymentSummaryData} />
-
-      {/* Search + filters */}
-      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-        <SearchInput
-          label={t("paymentPage.search.label")}
-          placeholder={t("paymentPage.search.placeholder")}
-          className="max-w-[420px]"
-        />
-        <div className="flex items-center gap-2">
-          <Button
-            type="button"
-            variant="outline"
-            className="h-10 gap-3 rounded-lg border-border bg-card px-5 text-sm font-medium text-foreground shadow-none"
-          >
-            <FilterIcon className="size-4" />
-            {t("paymentPage.filters.date")}
-          </Button>
-          <Button
-            type="button"
-            variant="outline"
-            className="h-10 gap-3 rounded-lg border-border bg-card px-5 text-sm font-medium text-foreground shadow-none"
-          >
-            <FilterIcon className="size-4" />
-            {t("paymentPage.filters.allStatuses")}
-          </Button>
-        </div>
-      </div>
-
-      {/* Transactions table */}
-      <PaymentsTable
-        rows={paymentTransactions}
-        labels={{
-          types:         t("paymentPage.table.columns.types"),
-          totalSpending: t("paymentPage.table.columns.totalSpending"),
-          date:          t("paymentPage.table.columns.date"),
-          status:        t("paymentPage.table.columns.status"),
-          action:        t("paymentPage.table.columns.action"),
-          delete:        t("paymentPage.table.actions.delete"),
-        }}
-        resolveType={(typeKey: PaymentTransactionType) =>
-          t(`paymentPage.types.${typeKey}` as Parameters<typeof t>[0])
-        }
-        resolveStatus={(status: PaymentTransactionStatus) =>
-          t(`paymentPage.status.${status}` as Parameters<typeof t>[0])
-        }
-      />
-
-      {/* Pagination */}
-      <div className="flex flex-col items-center justify-between gap-4 px-5 pb-2 md:flex-row">
-        <Button
-          type="button"
-          variant="outline"
-          className="h-10 gap-2 rounded-lg border-border bg-card px-4 text-sm font-semibold shadow-none"
-        >
-          <PaginationPreviousIcon className="size-4 rtl:rotate-180" />
-          {t("paymentPage.pagination.previous")}
-        </Button>
-        <div className="flex items-center gap-2">
-          {paymentPagination.pages.map((page) => (
-            <Button
-              key={page}
-              type="button"
-              variant="ghost"
-              size="icon-sm"
-              className={cn(
-                "rounded-lg text-sm text-muted-foreground",
-                page === paymentPagination.activePage &&
-                  "bg-primary/20 text-foreground hover:bg-primary/20",
-              )}
-            >
-              {page}
-            </Button>
-          ))}
-        </div>
-        <Button
-          type="button"
-          variant="outline"
-          className="h-10 gap-2 rounded-lg border-border bg-card px-4 text-sm font-semibold shadow-none"
-        >
-          {t("paymentPage.pagination.next")}
-          <PaginationNextIcon className="size-4 rtl:rotate-180" />
-        </Button>
-      </div>
-
-      {/* Add Fund dialog */}
-      <AddFundDialog
-        isOpen={isAddFundOpen}
-        onClose={() => setIsAddFundOpen(false)}
-      />
-    </div>
-  );
+  const t = useTranslations("dashboard"); const [open, setOpen] = useState(false); const [search, setSearch] = useState(""); const [type, setType] = useState("");
+  const wallet = useWallet({ per_page: 100 }); const types = useTransactionTypes(); const recharge = useRechargeWallet();
+  const rows = useMemo<PaymentTransaction[]>(() => (wallet.data?.transactions ?? []).filter(item => { const itemType = item.transaction_type ?? item.type ?? ""; return (!type || itemType === type) && `${itemType} ${item.amount ?? ""}`.toLowerCase().includes(search.toLowerCase()); }).map(item => { const rawStatus = String(item.status ?? "completed").toLowerCase(); const status: PaymentTransactionStatus = rawStatus === "failed" ? "failed" : rawStatus === "refunded" ? "refunded" : "completed"; return { id: String(item.id), typeKey: String(item.transaction_type ?? item.type ?? "manualWalletRecharge") as PaymentTransactionType, amount: money(item.amount), direction: item.direction ?? (Number(item.amount ?? 0) < 0 ? "debit" : "credit"), date: item.created_at ?? item.date ? new Date(String(item.created_at ?? item.date)).toLocaleString() : "-", status }; }), [wallet.data, search, type]);
+  const error = wallet.error ?? types.error;
+  return <div className="space-y-6 px-4 py-8 lg:px-8">
+    <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between"><div><h1 className="text-3xl font-bold">{t("paymentPage.title")}</h1><p className="mt-2 text-lg font-medium text-muted-foreground">{t("paymentPage.subtitle")}</p></div><Button className="h-12 px-6 text-white" onClick={() => setOpen(true)}><AddIcon className="size-5"/>{t("paymentPage.actions.addFund")}</Button></div>
+    <PaymentSummaryCard data={{ balance: money(wallet.data?.balance ?? wallet.data?.current_balance), accountId: String(wallet.data?.id ?? "-"), monthlySpending: money(wallet.data?.monthly_spending), pendingAmount: money(wallet.data?.pending_amount), pendingMethodCount: wallet.data?.pending_count ?? 0 }}/>
+    <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"><SearchInput label={t("paymentPage.search.label")} placeholder={t("paymentPage.search.placeholder")} value={search} onChange={e => setSearch(e.target.value)} className="max-w-[420px]"/><select value={type} onChange={e => setType(e.target.value)} className="h-10 rounded-lg border bg-card px-4 text-sm"><option value="">{t("paymentPage.filters.allStatuses")}</option>{types.data?.map(option => <option key={option.value} value={option.value}>{option.label}</option>)}</select></div>
+    {error && <p className="rounded-xl border border-destructive/20 bg-destructive/10 p-4 text-destructive">{normalizeApiError(error).message}</p>}
+    <PaymentsTable rows={rows} labels={{ types:t("paymentPage.table.columns.types"), totalSpending:t("paymentPage.table.columns.totalSpending"), date:t("paymentPage.table.columns.date"), status:t("paymentPage.table.columns.status"), action:t("paymentPage.table.columns.action"), delete:t("paymentPage.table.actions.delete") }} resolveType={key => types.data?.find(x => x.value === key)?.label ?? key} resolveStatus={status => t(`paymentPage.status.${status}` as Parameters<typeof t>[0])}/>
+    <AddFundDialog isOpen={open} onClose={() => setOpen(false)} onRecharge={amount => recharge.mutateAsync({ amount })}/>
+  </div>;
 }

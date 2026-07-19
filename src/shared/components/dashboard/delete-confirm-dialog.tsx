@@ -9,6 +9,9 @@ interface DeleteConfirmDialogProps {
   cancelLabel: string;
   confirmLabel: string;
   onClose: () => void;
+  onConfirm?: () => void;
+  isPending?: boolean;
+  errorMessage?: string;
 }
 
 export function DeleteConfirmDialog({
@@ -19,6 +22,9 @@ export function DeleteConfirmDialog({
   cancelLabel,
   confirmLabel,
   onClose,
+  onConfirm,
+  isPending = false,
+  errorMessage,
 }: DeleteConfirmDialogProps) {
   if (!isOpen) return null;
 
@@ -49,19 +55,30 @@ export function DeleteConfirmDialog({
           {descriptionLine2}
         </p>
 
+        {errorMessage ? (
+          <p
+            className="mt-4 rounded-xl border border-destructive/20 bg-destructive/10 px-4 py-3 text-sm text-destructive"
+            role="alert"
+          >
+            {errorMessage}
+          </p>
+        ) : null}
+
         <div className="mt-6 flex items-center gap-3">
           <Button
             type="button"
             variant="outline"
             className="h-11 flex-1 rounded-xl border-border text-sm font-semibold shadow-none"
             onClick={onClose}
+            disabled={isPending}
           >
             {cancelLabel}
           </Button>
           <Button
             type="button"
             className="h-11 flex-1 rounded-xl bg-destructive text-sm font-semibold text-white hover:bg-destructive/90"
-            onClick={onClose}
+            onClick={onConfirm ?? onClose}
+            disabled={isPending}
           >
             {confirmLabel}
           </Button>

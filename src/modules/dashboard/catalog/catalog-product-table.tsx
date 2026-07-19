@@ -1,3 +1,11 @@
+"use client";
+
+import { useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
+import { useUpdateCatalogStatusMutation } from "@/modules/dashboard/hooks/use-update-catalog-status-mutation";
+import type { CatalogStatusResource } from "@/modules/dashboard/services/update-catalog-status-service";
+import { normalizeApiError } from "@/shared/lib/api/errors";
+
 import { StatusBadge } from "@/modules/dashboard/components/status-badge";
 import {
   EditIcon,
@@ -34,6 +42,10 @@ interface CatalogProductTableProps {
   labels: CatalogProductTableLabels;
   onDelete: (id: string) => void;
   onEdit: (id: string) => void;
+  onToggleStatus?: (id: string, isActive: boolean) => void;
+  statusResource?: CatalogStatusResource;
+  selectedIds?: string[];
+  onSelectionChange?: (ids: string[]) => void;
 }
 
 export function CatalogProductTable({
@@ -41,16 +53,32 @@ export function CatalogProductTable({
   labels,
   onDelete,
   onEdit,
+  onToggleStatus,
+  statusResource,
+  selectedIds = [],
+  onSelectionChange,
 }: CatalogProductTableProps) {
+  const queryClient = useQueryClient();
+  const statusMutation = useUpdateCatalogStatusMutation();
+  const [statusError, setStatusError] = useState("");
+  const resolvedResource = statusResource ?? "products";
+  const allSelected = rows.length > 0 && rows.every((row) => selectedIds.includes(row.id));
+  async function toggleStatus(id: string, isActive: boolean) {
+    if (onToggleStatus) return onToggleStatus(id, isActive);
+    if (!resolvedResource) return;
+    setStatusError("");
+    try { await statusMutation.mutateAsync({ resource: resolvedResource, id, isActive }); await queryClient.invalidateQueries({ queryKey: ["app", resolvedResource] }); }
+    catch (error) { setStatusError(normalizeApiError(error).message); }
+  }
   return (
-    <div className="overflow-hidden rounded-lg border border-border bg-card shadow-sm">
+    <div className="space-y-3">{statusError ? <p className="rounded-xl border border-destructive/20 bg-destructive/10 px-4 py-3 text-sm text-destructive" role="alert">{statusError}</p> : null}<div className="overflow-hidden rounded-lg border border-border bg-card shadow-sm">
       <div className="overflow-x-auto">
         <table className="w-full min-w-[900px] border-separate border-spacing-0 text-start">
           <thead>
             <tr className="text-xs font-medium text-foreground">
               <th className="w-10 border-b border-e border-border px-4 py-3 text-start">
                 <span className="sr-only">{labels.selectAll}</span>
-                <span className="block size-4 rounded border border-border bg-card" />
+                <input type="checkbox" checked={allSelected} onChange={() => onSelectionChange?.(allSelected ? selectedIds.filter((id) => !rows.some((row) => row.id === id)) : Array.from(new Set([...selectedIds, ...rows.map((row) => row.id)])))} />
               </th>
               <th className="border-b border-e border-border px-5 py-3 text-start">
                 {labels.products}
@@ -80,13 +108,14 @@ export function CatalogProductTable({
               <tr key={`${row.id}-${index}`} className="text-sm">
                 <td className="border-b border-border px-4 py-4">
                   <span className="sr-only">{labels.selectRow}</span>
-                  <span className="block size-4 rounded border border-border bg-card" />
+                  <input type="checkbox" checked={selectedIds.includes(row.id)} onChange={() => onSelectionChange?.(selectedIds.includes(row.id) ? selectedIds.filter((id) => id !== row.id) : [...selectedIds, row.id])} />
                 </td>
 
                 <td className="border-b border-border px-5 py-3">
                   <ProductCell
                     name={row.name}
                     thumbnailAlt={row.thumbnailAlt}
+                    thumbnailUrl={row.thumbnailUrl}
                   />
                 </td>
 
@@ -113,10 +142,17 @@ export function CatalogProductTable({
                       }
                     />
                   ) : (
-                    <StatusToggle
-                      isActive={row.isActive}
-                      ariaLabel={labels.toggleStatus}
-                    />
+                    <button
+                      type="button"
+                      className="rounded-full"
+                      onClick={() => toggleStatus(row.id, !row.isActive)}
+                      disabled={(!onToggleStatus && !resolvedResource) || statusMutation.isPending}
+                    >
+                      <StatusToggle
+                        isActive={row.isActive}
+                        ariaLabel={labels.toggleStatus}
+                      />
+                    </button>
                   )}
                 </td>
 
@@ -153,6 +189,6 @@ export function CatalogProductTable({
           </tbody>
         </table>
       </div>
-    </div>
+    </div></div>
   );
 }
