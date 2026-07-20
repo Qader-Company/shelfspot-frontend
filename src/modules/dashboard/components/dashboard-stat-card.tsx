@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
+import type { ReactNode } from "react";
 
 import type { DashboardStatItem } from "@/modules/dashboard/components/dashboard-overview.seed";
 import { cn } from "@/shared/lib/utils";
@@ -18,7 +19,7 @@ const toneClasses = {
     trend: "text-destructive",
   },
   purple: {
-    icon: "bg-[var(--dashboard-avatar-background)]",
+    icon: "bg-[var(--dashboard-avatar-background)] text-accent-foreground",
     trend: "text-accent-foreground",
   },
 } satisfies Record<DashboardStatItem["tone"], { icon: string; trend: string }>;
@@ -27,12 +28,14 @@ interface DashboardStatCardProps {
   item: DashboardStatItem;
   title: string;
   trend: string;
+  icon?: ReactNode;
 }
 
 export function DashboardStatCard({
   item,
   title,
   trend,
+  icon,
 }: DashboardStatCardProps) {
   const tone = toneClasses[item.tone];
   const changePercentage = item.changePercentage ?? 0;
@@ -45,7 +48,7 @@ export function DashboardStatCard({
           tone.icon,
         )}
       >
-        <Image src={item.iconSrc} alt="" width={24} height={24} className="size-6" />
+        {icon ?? <Image src={item.iconSrc} alt="" width={24} height={24} className="size-6" />}
       </span>
       <div className="min-w-0 flex-1">
         <p className="truncate text-xs font-normal text-muted-foreground">

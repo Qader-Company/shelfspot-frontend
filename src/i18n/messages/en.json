@@ -1050,6 +1050,68 @@
       }
     }
   },
+  "adminDashboard": {
+    "title": "Dashboard",
+    "welcome": "Welcome back, here's what's happening today",
+    "summaryLabel": "Platform summary",
+    "navigation": {
+      "label": "Admin dashboard navigation",
+      "logo": "Go to the Admin dashboard",
+      "dashboard": "Dashboard",
+      "companies": "Companies",
+      "merchandisers": "Merchandisers",
+      "requests": "Requests",
+      "promoCode": "Promo Code",
+      "admins": "Admins",
+      "payments": "Payments",
+      "settings": "Settings",
+      "services": "Services",
+      "trash": "Trash",
+      "logout": "Logout"
+    },
+    "header": {
+      "searchLabel": "Search Admin dashboard",
+      "searchPlaceholder": "Search",
+      "searchNoResults": "No matching Admin pages",
+      "menu": "Open Admin navigation",
+      "notification": "Notifications",
+      "userMenu": "Open Admin profile menu"
+    },
+    "user": { "name": "ShelfSpot", "role": "Admin" },
+    "stats": {
+      "totalCompanies": "Total Companies",
+      "activeCompanies": "Active Companies",
+      "requestsToday": "Requests Today",
+      "totalWorkers": "Total Freelancers",
+      "activeWorkers": "Active Freelancers",
+      "platformRevenue": "Platform Revenue"
+    },
+    "trends": {
+      "monthlyIncrease": "+12% this month",
+      "weeklyIncrease": "+8% this week",
+      "weeklyDecrease": "-2% this week",
+      "workersIncrease": "+18% this week",
+      "activeWorkersIncrease": "+15% this week",
+      "revenueIncrease": "+24% this week"
+    },
+    "chart": {
+      "requestsOverTime": "Requests Over Time",
+      "statusDistribution": "Request Status Distribution",
+      "thisWeek": "This week",
+      "dates": { "mar3": "Mar 3", "mar9": "Mar 9", "mar15": "Mar 15", "mar18": "Mar 18", "mar21": "Mar 21", "mar25": "Mar 25", "mar28": "Mar 28" }
+    },
+    "status": { "pending": "Pending", "inProgress": "In Progress", "completed": "Completed", "rejected": "Rejected" },
+    "rankings": {
+      "companies": "Top 5 Companies",
+      "workers": "Top 5 Active Freelancers",
+      "requests": "{count, plural, one {# Request} other {# Requests}}",
+      "completed": "{count} Completed"
+    },
+    "mock": {
+      "companies": { "techCorp": "TechCorp Solutions", "retailHub": "Retail Hub", "namaa": "Namaa Markets", "vision": "Vision Stores", "supplyPoint": "Supply Point" },
+      "workers": { "ibrahim": "Ibrahim Emam", "omar": "Omar Aly", "sara": "Sara Ahmed", "khaled": "Khaled Adel", "mona": "Mona Ali" }
+    }
+  },
   "auth": {
     "login": {
       "visualAlt": "ShelfSpot login visual",

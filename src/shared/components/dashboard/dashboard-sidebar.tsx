@@ -18,6 +18,7 @@ interface DashboardSidebarProps {
   navigationLabel: string;
   logoLabel: string;
   activeItemKey?: string;
+  primaryItemCount?: number;
 }
 
 export function DashboardSidebar({
@@ -25,13 +26,14 @@ export function DashboardSidebar({
   navigationLabel,
   logoLabel,
   activeItemKey,
+  primaryItemCount = 4,
 }: DashboardSidebarProps) {
   const locale = useLocale();
   const pathname = usePathname();
   const isSidebarOpen = useUiStore((state) => state.isSidebarOpen);
   const closeSidebar = useUiStore((state) => state.closeSidebar);
-  const primaryItems = items.slice(0, 4);
-  const secondaryItems = items.slice(4);
+  const primaryItems = items.slice(0, primaryItemCount);
+  const secondaryItems = items.slice(primaryItemCount);
 
   useEffect(() => {
     closeSidebar();
