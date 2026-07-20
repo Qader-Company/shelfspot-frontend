@@ -6,9 +6,13 @@ import { getProductsService } from "@/modules/company/catalog/products/get-servi
 import type { GetProductsParams } from "@/modules/company/catalog/products/types";
 import { QUERY_KEYS } from "@/shared/lib/query/keys";
 
-export function useProductsQuery(params?: GetProductsParams) {
+export function useProductsQuery(
+  params?: GetProductsParams,
+  options?: { enabled?: boolean },
+) {
   return useQuery({
     queryKey: QUERY_KEYS.products(params as Record<string, unknown>),
     queryFn: () => getProductsService(params),
+    enabled: options?.enabled,
   });
 }

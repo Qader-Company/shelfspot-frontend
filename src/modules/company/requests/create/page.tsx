@@ -9,6 +9,10 @@ import { z } from "zod";
 import { useCreateTaskMutation } from "@/modules/company/requests/create/use-create-mutation";
 import { useServicesQuery } from "@/modules/company/requests/create/use-query";
 import { useProductsQuery } from "@/modules/company/catalog/products/use-query";
+import { useBrandsQuery } from "@/modules/company/catalog/brands/use-query";
+import { useSubBrandsQuery } from "@/modules/company/catalog/sub-brands/use-query";
+import { useCategoriesQuery } from "@/modules/company/catalog/categories/hooks";
+import { useSubCategoriesQuery } from "@/modules/company/catalog/sub-categories/hooks";
 import type { CompanyService } from "@/modules/company/requests/create/types";
 import type { CompanyProduct, GetProductsParams } from "@/modules/company/catalog/products/types";
 import { normalizeApiError } from "@/shared/lib/api/errors";
@@ -159,15 +163,48 @@ export function CreateRequestPage() {
   const selectedProductIds = (values.productIds ?? []) as number[];
 
   const productFilters: GetProductsParams = useMemo(() => ({
-    brand: values.brand || undefined,
-    sub_brand: values.subBrand || undefined,
-    category: values.category || undefined,
-    sub_category: values.subCategory || undefined,
+    brand_id: values.brand || undefined,
+    sub_brand_id: values.subBrand || undefined,
+    category_id: values.category || undefined,
+    sub_category_id: values.subCategory || undefined,
     search: values.search || undefined,
     page: productPage,
   }), [values.brand, values.subBrand, values.category, values.subCategory, values.search, productPage]);
 
-  const productsQuery = useProductsQuery(productFilters);
+  const productsQuery = useProductsQuery(productFilters, {
+    enabled: Boolean(values.subCategory),
+  });
+
+  // Dedicated queries for each level — mirrors the catalog ProductPage approach.
+  // Each level is only fetched once its parent is selected.
+  const brandsQuery = useBrandsQuery({ per_page: 100, page: 1 });
+
+  const subBrandsQuery = useSubBrandsQuery({
+    per_page: 100,
+    page: 1,
+    brand_id: values.brand || undefined,
+  });
+
+  const categoriesQuery = useCategoriesQuery({
+    per_page: 100,
+    page: 1,
+    brand_id: values.brand || undefined,
+    sub_brand_id: values.subBrand || undefined,
+  });
+
+  const subCategoriesQuery = useSubCategoriesQuery({
+    per_page: 100,
+    page: 1,
+    brand_id: values.brand || undefined,
+    sub_brand_id: values.subBrand || undefined,
+    category_id: values.category || undefined,
+  });
+
+  const brandOptions = brandsQuery.data?.data ?? [];
+  const subBrandOptions = values.brand ? (subBrandsQuery.data?.data ?? []) : [];
+  const categoryOptions = values.subBrand ? (categoriesQuery.data?.data ?? []) : [];
+  const subCategoryOptions = values.category ? (subCategoriesQuery.data?.data ?? []) : [];
+
   const products = productsQuery.data?.data ?? [];
   const productsMeta = productsQuery.data?.meta;
 
@@ -547,11 +584,21 @@ export function CreateRequestPage() {
                                 {t("createRequest.fields.brand.label")}
                               </FormLabel>
                               <FormControl>
-                                <Input
-                                  className="h-12 rounded-lg"
-                                  placeholder={t("createRequest.fields.brand.placeholder")}
+                                <select
                                   {...field}
-                                />
+                                  className="h-12 w-full rounded-lg border border-border bg-card px-3 text-sm"
+                                  onChange={(event) => {
+                                    field.onChange(event);
+                                    form.setValue("subBrand", "");
+                                    form.setValue("category", "");
+                                    form.setValue("subCategory", "");
+                                    form.setValue("productIds", []);
+                                    setProductPage(1);
+                                  }}
+                                >
+                                  <option value="">{t("createRequest.fields.brand.placeholder")}</option>
+                                  {brandOptions.map((option) => <option key={option.id} value={String(option.id)}>{option.name}</option>)}
+                                </select>
                               </FormControl>
                             </FormItem>
                           )}
@@ -565,11 +612,21 @@ export function CreateRequestPage() {
                                 {t("createRequest.fields.subBrand.label")}
                               </FormLabel>
                               <FormControl>
-                                <Input
-                                  className="h-12 rounded-lg"
-                                  placeholder={t("createRequest.fields.subBrand.placeholder")}
+                                <select
                                   {...field}
-                                />
+                                  disabled={!values.brand}
+                                  className="h-12 w-full rounded-lg border border-border bg-card px-3 text-sm disabled:cursor-not-allowed disabled:opacity-50"
+                                  onChange={(event) => {
+                                    field.onChange(event);
+                                    form.setValue("category", "");
+                                    form.setValue("subCategory", "");
+                                    form.setValue("productIds", []);
+                                    setProductPage(1);
+                                  }}
+                                >
+                                  <option value="">{t("createRequest.fields.subBrand.placeholder")}</option>
+                                  {subBrandOptions.map((option) => <option key={option.id} value={String(option.id)}>{option.name}</option>)}
+                                </select>
                               </FormControl>
                             </FormItem>
                           )}
@@ -583,11 +640,20 @@ export function CreateRequestPage() {
                                 {t("createRequest.fields.category.label")}
                               </FormLabel>
                               <FormControl>
-                                <Input
-                                  className="h-12 rounded-lg"
-                                  placeholder={t("createRequest.fields.category.placeholder")}
+                                <select
                                   {...field}
-                                />
+                                  disabled={!values.subBrand}
+                                  className="h-12 w-full rounded-lg border border-border bg-card px-3 text-sm disabled:cursor-not-allowed disabled:opacity-50"
+                                  onChange={(event) => {
+                                    field.onChange(event);
+                                    form.setValue("subCategory", "");
+                                    form.setValue("productIds", []);
+                                    setProductPage(1);
+                                  }}
+                                >
+                                  <option value="">{t("createRequest.fields.category.placeholder")}</option>
+                                  {categoryOptions.map((option) => <option key={option.id} value={String(option.id)}>{option.name}</option>)}
+                                </select>
                               </FormControl>
                             </FormItem>
                           )}
@@ -601,11 +667,19 @@ export function CreateRequestPage() {
                                 {t("createRequest.fields.subCategory.label")}
                               </FormLabel>
                               <FormControl>
-                                <Input
-                                  className="h-12 rounded-lg"
-                                  placeholder={t("createRequest.fields.subCategory.placeholder")}
+                                <select
                                   {...field}
-                                />
+                                  disabled={!values.category}
+                                  className="h-12 w-full rounded-lg border border-border bg-card px-3 text-sm disabled:cursor-not-allowed disabled:opacity-50"
+                                  onChange={(event) => {
+                                    field.onChange(event);
+                                    form.setValue("productIds", []);
+                                    setProductPage(1);
+                                  }}
+                                >
+                                  <option value="">{t("createRequest.fields.subCategory.placeholder")}</option>
+                                  {subCategoryOptions.map((option) => <option key={option.id} value={String(option.id)}>{option.name}</option>)}
+                                </select>
                               </FormControl>
                             </FormItem>
                           )}
