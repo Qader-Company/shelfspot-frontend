@@ -1,5 +1,5 @@
-import type { DashboardStatItem } from "@/modules/dashboard/components/dashboard-overview.seed";
-import type { StatusBadgeStatus } from "@/modules/dashboard/components/status-badge";
+import type { StatusBadgeStatus } from "@/shared/components/dashboard/status-badge";
+import type { DashboardStatItem } from "@/shared/components/dashboard/widgets/types";
 
 export interface DashboardRequestRow {
   id: string;

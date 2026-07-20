@@ -1,6 +1,6 @@
 import { ArrowDownRight, ArrowUpRight } from "lucide-react";
 
-import { StatusBadge } from "@/modules/dashboard/components/status-badge";
+import { StatusBadge } from "@/shared/components/dashboard/status-badge";
 import { TrashIcon } from "@/shared/components/dashboard/dashboard-icons";
 import { Button } from "@/shared/ui/button";
 

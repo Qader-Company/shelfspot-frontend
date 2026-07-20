@@ -6,7 +6,7 @@ import { useUpdateCatalogStatusMutation } from "@/modules/dashboard/hooks/use-up
 import type { CatalogStatusResource } from "@/modules/dashboard/services/update-catalog-status-service";
 import { normalizeApiError } from "@/shared/lib/api/errors";
 
-import { StatusBadge } from "@/modules/dashboard/components/status-badge";
+import { StatusBadge } from "@/shared/components/dashboard/status-badge";
 import {
   EditIcon,
   TrashIcon,

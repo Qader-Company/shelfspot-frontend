@@ -12,7 +12,6 @@ import {
 } from "@/modules/dashboard/components/dashboard-requests.seed";
 import type { DashboardRequestRow } from "@/modules/dashboard/components/dashboard-requests.seed";
 import { DashboardRequestsTable } from "@/modules/dashboard/components/dashboard-requests-table";
-import { DashboardStatCard } from "@/modules/dashboard/components/dashboard-stat-card";
 import { RequestDeleteDialog } from "@/modules/dashboard/requests/request-delete-dialog";
 import {
   AddIcon,
@@ -21,6 +20,7 @@ import {
   PaginationPreviousIcon,
 } from "@/shared/components/dashboard/dashboard-icons";
 import { SearchInput } from "@/shared/components/dashboard/search-input";
+import { DashboardStatCard } from "@/shared/components/dashboard/widgets/dashboard-stat-card";
 import { cn } from "@/shared/lib/utils";
 import { Button } from "@/shared/ui/button";
 

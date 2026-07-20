@@ -1,8 +1,8 @@
-import Image from "next/image";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
+import Image from "next/image";
 import type { ReactNode } from "react";
 
-import type { DashboardStatItem } from "@/modules/dashboard/components/dashboard-overview.seed";
+import type { DashboardStatItem } from "@/shared/components/dashboard/widgets/types";
 import { cn } from "@/shared/lib/utils";
 
 const toneClasses = {
@@ -48,7 +48,15 @@ export function DashboardStatCard({
           tone.icon,
         )}
       >
-        {icon ?? <Image src={item.iconSrc} alt="" width={24} height={24} className="size-6" />}
+        {icon ?? (
+          <Image
+            src={item.iconSrc}
+            alt=""
+            width={24}
+            height={24}
+            className="size-6"
+          />
+        )}
       </span>
       <div className="min-w-0 flex-1">
         <p className="truncate text-xs font-normal text-muted-foreground">

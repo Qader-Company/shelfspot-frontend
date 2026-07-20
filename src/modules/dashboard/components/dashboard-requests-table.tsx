@@ -1,6 +1,6 @@
 import { Link } from "@/i18n/navigation";
 import type { DashboardRequestRow } from "@/modules/dashboard/components/dashboard-requests.seed";
-import { StatusBadge } from "@/modules/dashboard/components/status-badge";
+import { StatusBadge } from "@/shared/components/dashboard/status-badge";
 import { EditIcon, TrashIcon } from "@/shared/components/dashboard/dashboard-icons";
 import { Button } from "@/shared/ui/button";
 

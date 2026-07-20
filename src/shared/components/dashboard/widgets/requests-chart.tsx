@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 
-import type { RequestsChartPoint } from "@/modules/dashboard/components/dashboard-overview.seed";
+import type { RequestsChartPoint } from "@/shared/components/dashboard/widgets/types";
 
 interface RequestsChartProps {
   data: RequestsChartPoint[];
@@ -20,16 +20,10 @@ export function RequestsChart({ data, months }: RequestsChartProps) {
 
   useEffect(() => {
     const canvas = canvasRef.current;
-
-    if (!canvas) {
-      return;
-    }
+    if (!canvas) return;
 
     const context = canvas.getContext("2d");
-
-    if (!context) {
-      return;
-    }
+    if (!context) return;
 
     const draw = () => {
       const rect = canvas.getBoundingClientRect();
@@ -61,7 +55,6 @@ export function RequestsChart({ data, months }: RequestsChartProps) {
         const point = points[index];
         const next = points[index + 1];
         const controlX = (point.x + next.x) / 2;
-
         context.bezierCurveTo(
           controlX,
           point.y,
@@ -93,10 +86,8 @@ export function RequestsChart({ data, months }: RequestsChartProps) {
     };
 
     draw();
-
     const resizeObserver = new ResizeObserver(draw);
     resizeObserver.observe(canvas);
-
     return () => resizeObserver.disconnect();
   }, [data, roundedMax]);
 

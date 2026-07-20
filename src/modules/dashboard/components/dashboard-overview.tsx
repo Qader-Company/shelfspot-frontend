@@ -4,20 +4,22 @@ import { useTranslations } from "next-intl";
 
 import { ROUTES } from "@/config/routes";
 import { Link } from "@/i18n/navigation";
-import { ChartCard } from "@/modules/dashboard/components/chart-card";
 import {
   requestRows,
-  type DashboardStatItem,
-  type RequestsChartPoint,
   type RequestStatus,
-  type StatusDonutItem,
 } from "@/modules/dashboard/components/dashboard-overview.seed";
-import { DashboardStatCard } from "@/modules/dashboard/components/dashboard-stat-card";
-import { RequestsChart } from "@/modules/dashboard/components/requests-chart";
 import { RequestsTable } from "@/modules/dashboard/components/requests-table";
-import { StatusDonutChart } from "@/modules/dashboard/components/status-donut-chart";
 import { useDashboardReportQuery } from "@/modules/dashboard/hooks/use-dashboard-report-query";
 import { AddIcon, SidebarChevronIcon } from "@/shared/components/dashboard/dashboard-icons";
+import { ChartCard } from "@/shared/components/dashboard/widgets/chart-card";
+import { DashboardStatCard } from "@/shared/components/dashboard/widgets/dashboard-stat-card";
+import { RequestsChart } from "@/shared/components/dashboard/widgets/requests-chart";
+import { StatusDonutChart } from "@/shared/components/dashboard/widgets/status-donut-chart";
+import type {
+  DashboardStatItem,
+  RequestsChartPoint,
+  StatusDonutItem,
+} from "@/shared/components/dashboard/widgets/types";
 import { Button } from "@/shared/ui/button";
 
 export function DashboardOverview() {

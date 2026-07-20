@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 
-import { StatusBadge } from "@/modules/dashboard/components/status-badge";
+import { StatusBadge } from "@/shared/components/dashboard/status-badge";
 import {
   ActivityIcon,
   CalendarIcon,

@@ -30,7 +30,6 @@ export async function getWallet(params: Record<string, unknown>): Promise<Wallet
   const wallet = Array.isArray(first.data) ? object(first.wallet ?? root.wallet) : payload;
   return { id: wallet.id as string | number | undefined, balance: (wallet.balance ?? first.balance ?? root.balance) as string | number | undefined, current_balance: wallet.current_balance as string | number | undefined, monthly_spending: wallet.monthly_spending as string | number | undefined, pending_amount: wallet.pending_amount as string | number | undefined, pending_count: Number(wallet.pending_count ?? 0), transactions: transactionSource as WalletTransaction[], meta: object(first.meta ?? root.meta) };
 }
-export const getWalletById = (id: string | number) => apiClient.get(`/api/company/wallets/${id}`).then(response => response.data);
 export async function getTransactionTypes(): Promise<Array<{ value: string; label: string }>> {
   const response = await apiClient.get("/api/enums/transactions-types"); const root = object(response.data); const data = root.data ?? response.data;
   if (Array.isArray(data)) return data.map(item => typeof item === "string" ? { value: item, label: item } : { value: String(object(item).value ?? object(item).id ?? object(item).key ?? object(item).name), label: String(object(item).label ?? object(item).name ?? object(item).value) });

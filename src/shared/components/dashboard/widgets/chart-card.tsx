@@ -17,7 +17,7 @@ export function ChartCard({ title, action, children, className }: ChartCardProps
         className,
       )}
     >
-      {(title || action) ? (
+      {title || action ? (
         <div className="mb-6 flex items-center justify-between gap-4">
           {title ? (
             <h2 className="text-sm font-bold text-foreground">{title}</h2>

@@ -22,9 +22,9 @@ const statusClasses = {
   failed: "bg-[var(--error-50)] text-[var(--error-700)]",
   rejected: "bg-[var(--error-50)] text-[var(--error-700)]",
   canceled: "bg-[var(--error-50)] text-[var(--error-700)]",
-  pending:  "bg-[var(--warning-50)] text-[var(--warning-700)]",
+  pending: "bg-[var(--warning-50)] text-[var(--warning-700)]",
   refunded: "bg-[var(--warning-50)] text-[var(--warning-700)]",
-  active:   "bg-[var(--info-50)] text-[var(--info-700)]",
+  active: "bg-[var(--info-50)] text-[var(--info-700)]",
   inactive: "bg-[var(--error-50)] text-[var(--error-700)]",
   reopened: "bg-[var(--success-50)] text-[var(--success-700)]",
 } satisfies Record<StatusBadgeStatus, string>;

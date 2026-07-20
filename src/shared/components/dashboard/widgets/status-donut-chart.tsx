@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 
-import type { StatusDonutItem } from "@/modules/dashboard/components/dashboard-overview.seed";
+import type { StatusDonutItem } from "@/shared/components/dashboard/widgets/types";
 import { cn } from "@/shared/lib/utils";
 
 interface StatusDonutChartProps {
@@ -21,16 +21,10 @@ export function StatusDonutChart({ items }: StatusDonutChartProps) {
 
   useEffect(() => {
     const canvas = canvasRef.current;
-
-    if (!canvas) {
-      return;
-    }
+    if (!canvas) return;
 
     const context = canvas.getContext("2d");
-
-    if (!context) {
-      return;
-    }
+    if (!context) return;
 
     const draw = () => {
       const rect = canvas.getBoundingClientRect();
@@ -42,7 +36,8 @@ export function StatusDonutChart({ items }: StatusDonutChartProps) {
       const colorByTone = {
         warning:
           styles.getPropertyValue("--warning").trim() || "rgb(249, 115, 22)",
-        info: styles.getPropertyValue("--primary").trim() || "rgb(86, 203, 242)",
+        info:
+          styles.getPropertyValue("--primary").trim() || "rgb(86, 203, 242)",
         success:
           styles.getPropertyValue("--success").trim() || "rgb(34, 197, 94)",
         danger:
@@ -60,10 +55,7 @@ export function StatusDonutChart({ items }: StatusDonutChartProps) {
         .filter((item): item is StatusDonutItem & { label: string } =>
           Boolean(item),
         );
-      const total = orderedItems.reduce(
-        (sum, item) => sum + item.value,
-        0,
-      );
+      const total = orderedItems.reduce((sum, item) => sum + item.value, 0);
       const centerX = width / 2;
       const centerY = height / 2;
       const radius = size * 0.28;
@@ -80,7 +72,8 @@ export function StatusDonutChart({ items }: StatusDonutChartProps) {
       context.lineCap = "round";
 
       if (total === 0) {
-        context.strokeStyle = styles.getPropertyValue("--muted").trim() || "rgb(229, 231, 235)";
+        context.strokeStyle =
+          styles.getPropertyValue("--muted").trim() || "rgb(229, 231, 235)";
         context.beginPath();
         context.arc(centerX, centerY, radius, 0, Math.PI * 2);
         context.stroke();
@@ -103,16 +96,18 @@ export function StatusDonutChart({ items }: StatusDonutChartProps) {
     };
 
     draw();
-
     const resizeObserver = new ResizeObserver(draw);
     resizeObserver.observe(canvas);
-
     return () => resizeObserver.disconnect();
   }, [items]);
 
   return (
     <div className="flex h-full flex-col items-center justify-center gap-7">
-      <canvas ref={canvasRef} className="h-48 w-full max-w-64" aria-hidden="true" />
+      <canvas
+        ref={canvasRef}
+        className="h-48 w-full max-w-64"
+        aria-hidden="true"
+      />
       <div className="flex flex-wrap justify-center gap-x-5 gap-y-3 text-[10px] text-foreground">
         {items.map((item) => (
           <span key={item.key} className="inline-flex items-center gap-1.5">

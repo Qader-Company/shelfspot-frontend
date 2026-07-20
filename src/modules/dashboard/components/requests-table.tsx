@@ -1,6 +1,6 @@
 import type { RequestTableRow } from "@/modules/dashboard/components/dashboard-overview.seed";
 import { requestActions } from "@/modules/dashboard/components/dashboard-overview.seed";
-import { StatusBadge } from "@/modules/dashboard/components/status-badge";
+import { StatusBadge } from "@/shared/components/dashboard/status-badge";
 import { Button } from "@/shared/ui/button";
 
 interface RequestsTableProps {

@@ -1,29 +1,11 @@
 import { EditIcon, TrashIcon } from "@/shared/components/dashboard/dashboard-icons";
+import type {
+  DashboardStatItem,
+  RequestsChartPoint,
+  StatusDonutItem,
+} from "@/shared/components/dashboard/widgets/types";
 
 export type RequestStatus = "inProgress" | "completed" | "failed" | "pending";
-
-export interface DashboardStatItem {
-  key: string;
-  titleKey: string;
-  value: string;
-  trendKey: string;
-  changePercentage?: number;
-  tone: "info" | "success" | "danger" | "purple";
-  iconSrc: string;
-}
-
-export interface RequestsChartPoint {
-  key: string;
-  monthKey: string;
-  value: number;
-}
-
-export interface StatusDonutItem {
-  key: RequestStatus;
-  labelKey: string;
-  value: number;
-  tone: "warning" | "info" | "success" | "danger";
-}
 
 export interface RequestTableRow {
   id: string;

@@ -1,4 +1,4 @@
-import type { StatusBadgeStatus } from "@/modules/dashboard/components/status-badge";
+import type { StatusBadgeStatus } from "@/shared/components/dashboard/status-badge";
 
 // ─── Types ─────────────────────────────────────────────────────────────────
 
@@ -123,41 +123,3 @@ export const mockRequestDetails: RequestDetail[] = [
 export function getRequestById(id: string): RequestDetail {
   return mockRequestDetails.find((r) => r.id === id) ?? mockRequestDetails[0];
 }
-
-// ─── Deletion reason options ────────────────────────────────────────────────
-
-export const deletionReasons = [
-  "duplicate",
-  "cancelled",
-  "error",
-  "other",
-] as const;
-
-// ─── Trash requests rows ─────────────────────────────────────────────────
-
-export type TrashRequestStatus = Extract<
-  StatusBadgeStatus,
-  "completed" | "failed" | "pending" | "inProgress" | "inReview"
->;
-
-export interface TrashRequestRow {
-  id: string;
-  requestId: string;
-  location: string;
-  assignedBy: string;
-  deletedAt: string;
-  status: TrashRequestStatus;
-}
-
-export const trashRequestRows: TrashRequestRow[] = [
-  { id: "tr-req-1",  requestId: "REQ-4521", location: "Dammam", assignedBy: "Mohamed Ali", deletedAt: "22 May 2026, 15:43PM", status: "completed" },
-  { id: "tr-req-2",  requestId: "REQ-4521", location: "Dammam", assignedBy: "Mohamed Ali", deletedAt: "22 May 2026, 15:43PM", status: "completed" },
-  { id: "tr-req-3",  requestId: "REQ-4521", location: "Dammam", assignedBy: "Mohamed Ali", deletedAt: "22 May 2026, 15:43PM", status: "failed"    },
-  { id: "tr-req-4",  requestId: "REQ-4521", location: "Dammam", assignedBy: "Mohamed Ali", deletedAt: "22 May 2026, 15:43PM", status: "pending"   },
-  { id: "tr-req-5",  requestId: "REQ-4521", location: "Dammam", assignedBy: "Mohamed Ali", deletedAt: "22 May 2026, 15:43PM", status: "completed" },
-  { id: "tr-req-6",  requestId: "REQ-4521", location: "Dammam", assignedBy: "Mohamed Ali", deletedAt: "22 May 2026, 15:43PM", status: "completed" },
-  { id: "tr-req-7",  requestId: "REQ-4521", location: "Dammam", assignedBy: "Mohamed Ali", deletedAt: "22 May 2026, 15:43PM", status: "failed"    },
-  { id: "tr-req-8",  requestId: "REQ-4521", location: "Dammam", assignedBy: "Mohamed Ali", deletedAt: "22 May 2026, 15:43PM", status: "completed" },
-  { id: "tr-req-9",  requestId: "REQ-4521", location: "Dammam", assignedBy: "Mohamed Ali", deletedAt: "22 May 2026, 15:43PM", status: "pending"   },
-  { id: "tr-req-10", requestId: "REQ-4521", location: "Dammam", assignedBy: "Mohamed Ali", deletedAt: "22 May 2026, 15:43PM", status: "failed"    },
-];
