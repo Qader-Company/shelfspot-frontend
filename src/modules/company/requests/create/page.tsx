@@ -171,8 +171,9 @@ export function CreateRequestPage() {
     sub_brand_id: values.subBrand || undefined,
     category_id: values.category || undefined,
     sub_category_id: values.subCategory || undefined,
-    search: values.search || undefined,
+    name: values.search || undefined,
     page: productPage,
+    per_page: 15,
   }), [values.brand, values.subBrand, values.category, values.subCategory, values.search, productPage]);
 
   const productsQuery = useProductsQuery(productFilters, {
