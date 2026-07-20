@@ -7,9 +7,9 @@ import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 
 import { useCreateTaskMutation } from "@/modules/company/requests/create/use-create-mutation";
-import { useServicesQuery } from "@/modules/company/requests/create/use-services-query";
+import { useServicesQuery } from "@/modules/company/requests/create/use-query";
 import { useProductsQuery } from "@/modules/company/catalog/products/use-query";
-import type { CompanyService } from "@/modules/company/requests/create/service-types";
+import type { CompanyService } from "@/modules/company/requests/create/types";
 import type { CompanyProduct, GetProductsParams } from "@/modules/company/catalog/products/types";
 import { normalizeApiError } from "@/shared/lib/api/errors";
 import { useDialogPresence } from "@/shared/hooks/use-dialog-presence";

@@ -14,6 +14,8 @@ interface RequestDeleteDialogProps {
     confirm: string;
   };
   onClose: () => void;
+  onConfirm?: () => void;
+  isPending?: boolean;
 }
 
 export function RequestDeleteDialog({
@@ -21,6 +23,8 @@ export function RequestDeleteDialog({
   requestId,
   labels,
   onClose,
+  onConfirm,
+  isPending = false,
 }: RequestDeleteDialogProps) {
   if (!isOpen) return null;
 
@@ -92,7 +96,8 @@ export function RequestDeleteDialog({
             type="button"
             variant="outline"
             className="h-11 flex-1 rounded-xl border-border text-sm font-semibold shadow-none"
-            onClick={onClose}
+            onClick={onConfirm ?? onClose}
+            disabled={isPending}
           >
             {labels.cancel}
           </Button>

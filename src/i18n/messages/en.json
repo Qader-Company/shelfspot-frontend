@@ -214,6 +214,13 @@
     "overview": {
       "title": "Dashboard",
       "subtitle": "Welcome back, here's what's happening today",
+      "states": {
+        "errorTitle": "Requests unavailable",
+        "errorDescription": "We couldn't load your requests.",
+        "retry": "Try again",
+        "emptyTitle": "No requests found",
+        "emptyDescription": "Create a request or adjust the current filters."
+      },
       "filters": {
         "thisWeek": "This Week"
       },

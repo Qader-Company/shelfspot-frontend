@@ -214,6 +214,13 @@
     "overview": {
       "title": "لوحة التحكم",
       "subtitle": "مرحبًا بعودتك، إليك ما يحدث اليوم",
+      "states": {
+        "errorTitle": "الطلبات غير متاحة",
+        "errorDescription": "تعذر تحميل طلباتك.",
+        "retry": "إعادة المحاولة",
+        "emptyTitle": "لا توجد طلبات",
+        "emptyDescription": "أنشئ طلبًا أو عدّل عوامل التصفية الحالية."
+      },
       "filters": {
         "thisWeek": "هذا الأسبوع"
       },

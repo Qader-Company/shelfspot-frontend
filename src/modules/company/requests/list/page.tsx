@@ -1,166 +1,103 @@
 "use client";
 
-import { useState } from "react";
-import { useTranslations } from "next-intl";
+import { useMemo, useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
 
 import { ROUTES } from "@/config/routes";
 import { Link } from "@/i18n/navigation";
-import {
-  dashboardRequestPagination,
-  dashboardRequestRows,
-  dashboardRequestStats,
-} from "@/modules/company/requests/list/seed";
-import type { DashboardRequestRow } from "@/modules/company/requests/list/seed";
-import { DashboardRequestsTable } from "@/modules/company/requests/list/table";
+import { useDeleteTaskMutation } from "@/modules/company/requests/delete/use-mutation";
 import { RequestDeleteDialog } from "@/modules/company/requests/delete/dialog";
-import {
-  AddIcon,
-  FilterIcon,
-  PaginationNextIcon,
-  PaginationPreviousIcon,
-} from "@/shared/components/dashboard/dashboard-icons";
+import type { CompanyTaskListItem } from "@/modules/company/requests/list/types";
+import { useTasksQuery } from "@/modules/company/requests/list/use-query";
+import { dashboardRequestStats, type DashboardRequestRow } from "@/modules/company/requests/list/seed";
+import { DashboardRequestsTable } from "@/modules/company/requests/list/table";
+import { AddIcon, PaginationNextIcon, PaginationPreviousIcon } from "@/shared/components/dashboard/dashboard-icons";
 import { SearchInput } from "@/shared/components/dashboard/search-input";
+import type { StatusBadgeStatus } from "@/shared/components/dashboard/status-badge";
 import { DashboardStatCard } from "@/shared/components/dashboard/widgets/dashboard-stat-card";
-import { cn } from "@/shared/lib/utils";
+import { EmptyState, ErrorState, PageLoadingSkeleton } from "@/shared/components/feedback";
 import { Button } from "@/shared/ui/button";
+
+function badgeStatus(status: CompanyTaskListItem["status"]): StatusBadgeStatus {
+  if (status === "started" || status === "in_progress") return "inProgress";
+  if (status === "worker_cancelled" || status === "company_cancelled") return "canceled";
+  if (status === "draft") return "pending";
+  return status;
+}
+
+function formatCreatedAt(value: string, locale: string) {
+  const date = new Date(value.replace(" ", "T"));
+  return Number.isNaN(date.getTime())
+    ? value
+    : new Intl.DateTimeFormat(locale, { dateStyle: "medium", timeStyle: "short" }).format(date);
+}
 
 export function DashboardRequestsPage() {
   const t = useTranslations("dashboard");
+  const locale = useLocale();
+  const [page, setPage] = useState(1);
+  const [status, setStatus] = useState("");
+  const [search, setSearch] = useState("");
   const [deleteTarget, setDeleteTarget] = useState("");
-  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const tasksQuery = useTasksQuery({ page, status: status || undefined });
+  const deleteMutation = useDeleteTaskMutation();
+  const tasks = useMemo(() => tasksQuery.data?.data ?? [], [tasksQuery.data?.data]);
 
-  const handleDeleteClick = (id: string) => {
-    setDeleteTarget(id);
-    setIsDeleteOpen(true);
-  };
+  const rows = useMemo<DashboardRequestRow[]>(() => tasks
+    .filter((task) => {
+      const term = search.trim().toLocaleLowerCase();
+      return !term || String(task.id).includes(term) || task.location.location_name?.toLocaleLowerCase().includes(term) || task.location.address?.toLocaleLowerCase().includes(term);
+    })
+    .map((task) => ({
+      id: `REQ-${task.id}`,
+      taskId: task.id,
+      locationKey: task.location.location_name || task.location.address || "—",
+      assigneeKey: task.assigned_worker?.name || "—",
+      time: formatCreatedAt(task.created_at, locale),
+      status: badgeStatus(task.status),
+      statusLabel: task.status_label,
+    })), [locale, search, tasks]);
 
-  const deletionReasons = [
-    { value: "duplicate",  label: t("requestsPage.deleteDialog.reasons.duplicate")  },
-    { value: "cancelled",  label: t("requestsPage.deleteDialog.reasons.cancelled")  },
-    { value: "error",      label: t("requestsPage.deleteDialog.reasons.error")      },
-    { value: "other",      label: t("requestsPage.deleteDialog.reasons.other")      },
-  ];
+  const completed = tasks.filter((task) => task.status === "completed").length;
+  const delayed = tasks.filter((task) => task.status === "failed").length;
+  const decided = tasks.filter((task) => !["draft", "pending"].includes(task.status));
+  const accepted = decided.filter((task) => ["accepted", "started", "in_progress", "completed"].includes(task.status)).length;
+  const stats = dashboardRequestStats.map((item) => ({
+    ...item,
+    value: item.key === "total" ? String(tasksQuery.data?.meta?.total ?? tasks.length)
+      : item.key === "completed" ? String(completed)
+      : item.key === "delayed" ? String(delayed)
+      : `${decided.length ? Math.round((accepted / decided.length) * 100) : 0}%`,
+  }));
+  const meta = tasksQuery.data?.meta;
+
+  if (tasksQuery.isPending) return <PageLoadingSkeleton actionCount={1} cardCount={4} tableRows={6} tableColumns={7} />;
+  if (tasksQuery.isError) return <ErrorState className="m-8" title={t("requestsPage.states.errorTitle")} description={t("requestsPage.states.errorDescription")} retryLabel={t("requestsPage.states.retry")} onRetry={() => void tasksQuery.refetch()} />;
 
   return (
     <div className="space-y-6 px-4 py-8 lg:px-8">
       <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-        <div>
-          <h1 className="text-3xl font-bold leading-tight text-foreground">
-            {t("requestsPage.title")}
-          </h1>
-          <p className="mt-2 text-lg font-medium text-muted-foreground">
-            {t("requestsPage.subtitle")}
-          </p>
-        </div>
-        <Button
-          asChild
-          className="h-12 rounded-lg px-6 text-sm font-semibold text-white hover:text-white"
-        >
-          <Link href={ROUTES.dashboardCreateRequest}>
-            <AddIcon className="size-5" />
-            {t("requestsPage.actions.createRequest")}
-          </Link>
-        </Button>
+        <div><h1 className="text-3xl font-bold leading-tight text-foreground">{t("requestsPage.title")}</h1><p className="mt-2 text-lg font-medium text-muted-foreground">{t("requestsPage.subtitle")}</p></div>
+        <Button asChild className="h-12 rounded-lg px-6 text-sm font-semibold text-white hover:text-white"><Link href={ROUTES.dashboardCreateRequest}><AddIcon className="size-5" />{t("requestsPage.actions.createRequest")}</Link></Button>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        {dashboardRequestStats.map((item) => (
-          <DashboardStatCard
-            key={item.key}
-            item={item}
-            title={t(item.titleKey)}
-            trend={t(item.trendKey)}
-          />
-        ))}
+        {stats.map((item) => <DashboardStatCard key={item.key} item={item} title={t(item.titleKey)} trend="" />)}
       </div>
 
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-        <SearchInput
-          label={t("requestsPage.search.label")}
-          placeholder={t("requestsPage.search.placeholder")}
-          className="max-w-[420px]"
-        />
-        <Button
-          type="button"
-          variant="outline"
-          className="h-10 gap-3 rounded-lg border-border bg-card px-5 text-sm font-medium text-foreground shadow-none"
-        >
-          <FilterIcon className="size-4" />
-          {t("requestsPage.filters.allStatuses")}
-        </Button>
+        <SearchInput value={search} onChange={(event) => setSearch(event.target.value)} label={t("requestsPage.search.label")} placeholder={t("requestsPage.search.placeholder")} className="max-w-[420px]" />
+        <select value={status} onChange={(event) => { setStatus(event.target.value); setPage(1); }} aria-label={t("requestsPage.filters.allStatuses")} className="h-10 rounded-lg border border-border bg-card px-4 text-sm text-foreground">
+          <option value="">{t("requestsPage.filters.allStatuses")}</option>
+          {["draft", "pending", "accepted", "started", "in_progress", "completed", "rejected", "failed", "company_cancelled"].map((value) => <option key={value} value={value}>{value.replaceAll("_", " ")}</option>)}
+        </select>
       </div>
 
-      <DashboardRequestsTable
-        rows={dashboardRequestRows}
-        labels={{
-          requestId: t("requestsPage.table.columns.requestId"),
-          location: t("requestsPage.table.columns.location"),
-          assignedBy: t("requestsPage.table.columns.assignedBy"),
-          time: t("requestsPage.table.columns.time"),
-          status: t("requestsPage.table.columns.status"),
-          action: t("requestsPage.table.columns.action"),
-          selectAll: t("requestsPage.table.actions.selectAll"),
-          selectRow: t("requestsPage.table.actions.selectRow"),
-          delete: t("requestsPage.table.actions.delete"),
-          edit: t("requestsPage.table.actions.edit"),
-        }}
-        resolveText={(key) => t(key)}
-        resolveStatus={(status: DashboardRequestRow["status"]) =>
-          t(`requestsPage.status.${status}`)
-        }
-        onDelete={handleDeleteClick}
-      />
+      {rows.length ? <DashboardRequestsTable rows={rows} labels={{ requestId: t("requestsPage.table.columns.requestId"), location: t("requestsPage.table.columns.location"), assignedBy: t("requestsPage.table.columns.assignedBy"), time: t("requestsPage.table.columns.time"), status: t("requestsPage.table.columns.status"), action: t("requestsPage.table.columns.action"), selectAll: t("requestsPage.table.actions.selectAll"), selectRow: t("requestsPage.table.actions.selectRow"), delete: t("requestsPage.table.actions.delete"), edit: t("requestsPage.table.actions.edit") }} resolveText={(value) => value} resolveStatus={(value) => t(`requestsPage.status.${value}`)} onDelete={setDeleteTarget} /> : <EmptyState title={t("requestsPage.states.emptyTitle")} description={t("requestsPage.states.emptyDescription")} />}
 
-      <RequestDeleteDialog
-        isOpen={isDeleteOpen}
-        requestId={deleteTarget}
-        labels={{
-          title:               t("requestsPage.deleteDialog.title"),
-          description:        t("requestsPage.deleteDialog.description"),
-          reasonLabel:        t("requestsPage.deleteDialog.reasonLabel"),
-          reasonPlaceholder:  t("requestsPage.deleteDialog.reasonPlaceholder"),
-          reasons:            deletionReasons,
-          cancel:             t("requestsPage.deleteDialog.cancel"),
-          confirm:            t("requestsPage.deleteDialog.confirm"),
-        }}
-        onClose={() => setIsDeleteOpen(false)}
-      />
+      <RequestDeleteDialog isOpen={Boolean(deleteTarget)} requestId={deleteTarget} labels={{ title: t("requestsPage.deleteDialog.title"), description: t("requestsPage.deleteDialog.description", { id: deleteTarget }), reasonLabel: t("requestsPage.deleteDialog.reasonLabel"), reasonPlaceholder: t("requestsPage.deleteDialog.reasonPlaceholder"), reasons: [], cancel: t("requestsPage.deleteDialog.cancel"), confirm: t("requestsPage.deleteDialog.confirm") }} onClose={() => setDeleteTarget("")} isPending={deleteMutation.isPending} onConfirm={() => deleteMutation.mutate(deleteTarget, { onSuccess: () => setDeleteTarget("") })} />
 
-      <div className="flex flex-col items-center justify-between gap-4 px-5 pb-2 md:flex-row">
-        <Button
-          type="button"
-          variant="outline"
-          className="h-10 gap-2 rounded-lg border-border bg-card px-4 text-sm font-semibold shadow-none"
-        >
-          <PaginationPreviousIcon className="size-4 rtl:rotate-180" />
-          {t("requestsPage.pagination.previous")}
-        </Button>
-        <div className="flex items-center gap-2">
-          {dashboardRequestPagination.pages.map((page) => (
-            <Button
-              key={page}
-              type="button"
-              variant="ghost"
-              size="icon-sm"
-              className={cn(
-                "rounded-lg text-sm text-muted-foreground",
-                page === dashboardRequestPagination.activePage &&
-                  "bg-primary/20 text-foreground hover:bg-primary/20",
-              )}
-            >
-              {page}
-            </Button>
-          ))}
-        </div>
-        <Button
-          type="button"
-          variant="outline"
-          className="h-10 gap-2 rounded-lg border-border bg-card px-4 text-sm font-semibold shadow-none"
-        >
-          {t("requestsPage.pagination.next")}
-          <PaginationNextIcon className="size-4 rtl:rotate-180" />
-        </Button>
-      </div>
+      {meta && meta.last_page > 1 ? <div className="flex items-center justify-between gap-4"><Button variant="outline" disabled={page <= 1} onClick={() => setPage((value) => value - 1)}><PaginationPreviousIcon className="size-4 rtl:rotate-180" />{t("requestsPage.pagination.previous")}</Button><span className="text-sm text-muted-foreground">{page} / {meta.last_page}</span><Button variant="outline" disabled={page >= meta.last_page} onClick={() => setPage((value) => value + 1)}>{t("requestsPage.pagination.next")}<PaginationNextIcon className="size-4 rtl:rotate-180" /></Button></div> : null}
     </div>
   );
 }
