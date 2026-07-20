@@ -1017,15 +1017,22 @@
     "requestDetails": {
       "title": "تفاصيل الطلب",
       "subtitle": "معلومات كاملة حول طلب التنفيذ {id}",
+      "back": "رجوع",
       "createdOn": "تاريخ الإنشاء",
+      "errorTitle": "فشل تحميل الطلب",
+      "errorDescription": "حدث خطأ أثناء تحميل هذا الطلب. يرجى المحاولة مجدداً.",
+      "retry": "إعادة المحاولة",
       "info": {
         "location": "الموقع",
         "assignedBy": "المسؤول",
         "executionDate": "تاريخ التنفيذ",
-        "timeWindow": "النافذة الزمنية"
+        "expiresAt": "تاريخ الانتهاء",
+        "notes": "ملاحظات"
       },
       "stats": {
         "totalCost": "إجمالي التكلفة",
+        "servicesCount": "{count} خدمة",
+        "progress": "التقدم",
         "totalProducts": "إجمالي المنتجات",
         "unitsSubtitle": "وحدات عبر جميع الخدمات",
         "timeRemaining": "الوقت المتبقي",
@@ -1038,6 +1045,12 @@
         "repeatRequest": "تكرار الطلب",
         "viewExecution": "عرض تفاصيل التنفيذ",
         "cancelReopening": "إلغاء إعادة الفتح"
+      },
+      "cancelDialog": {
+        "title": "إلغاء الطلب",
+        "description": "هل أنت متأكد من رغبتك في إلغاء هذا الطلب؟ لا يمكن التراجع عن هذا الإجراء.",
+        "cancel": "رجوع",
+        "confirm": "نعم، إلغاء"
       },
       "status": {
         "inProgress": "قيد التنفيذ",
@@ -1052,15 +1065,19 @@
       },
       "services": {
         "heading": "تفاصيل الخدمات ({count})",
-        "productHeading": "المنتج",
-        "executionGuidelines": "إرشادات التنفيذ",
+        "productHeading": "المنتجات",
+        "executionGuidelines": "تعليمات التنفيذ",
+        "attachments": "المرفقات",
         "brand": "العلامة التجارية",
         "subBrand": "العلامة الفرعية",
         "category": "الفئة",
         "subCategory": "الفئة الفرعية",
+        "noProducts": "لا توجد منتجات.",
+        "download": "تنزيل المرفق",
         "columns": {
-          "products": "المنتجات",
+          "products": "المنتج",
           "skuCode": "رمز SKU",
+          "minQuantity": "الحد الأدنى للكمية",
           "quantity": "الكمية",
           "expiryDate": "تاريخ الانتهاء"
         }

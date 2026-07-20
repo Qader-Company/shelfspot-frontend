@@ -1,113 +1,103 @@
 "use client";
 
 import { useState } from "react";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
+import { useRouter } from "@/i18n/navigation";
 
 import { StatusBadge } from "@/shared/components/dashboard/status-badge";
+import type { StatusBadgeStatus } from "@/shared/components/dashboard/status-badge";
 import {
   ActivityIcon,
+  BoxIcon,
   CalendarIcon,
   ClockIcon,
   CloseIcon,
   CostIcon,
   MapPinIcon,
   PaginationPreviousIcon,
-  ScheduleIcon,
+  PaymentIcon,
   WarningIcon,
 } from "@/shared/components/dashboard/dashboard-icons";
-import { cn } from "@/shared/lib/utils";
 import { Button } from "@/shared/ui/button";
+import { ErrorState, PageLoadingSkeleton } from "@/shared/components/feedback";
 
-import type { RequestDetail, RequestDetailStatus } from "./seed";
 import { ServiceDetailCard } from "./service-card";
+import { useTaskQuery, useTaskMutations } from "./use-query";
+import type { CompanyTask } from "./types";
 
-// ─── Reschedule date picker (visual only) ────────────────────────────────
+// ─── Helpers ─────────────────────────────────────────────────────────────
 
-function RescheduleDateDialog({
-  isOpen,
-  title,
-  closeLabel,
-  onClose,
-}: {
-  isOpen: boolean;
-  title: string;
-  closeLabel: string;
-  onClose: () => void;
-}) {
-  if (!isOpen) return null;
-
-  const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-  const weeks = [
-    [28, 29, 30, 31, 1, 2, 3],
-    [4, 5, 6, 7, 8, 9, 10],
-    [11, 12, 13, 14, 15, 16, 17],
-    [18, 19, 20, 21, 22, 23, 24],
-    [25, 26, 27, 28, 29, 30, 31],
+function toStatusBadge(status: string): StatusBadgeStatus {
+  if (status === "in_progress") return "inProgress";
+  if (status === "in_review")   return "inReview";
+  if (status === "worker_cancelled" || status === "company_cancelled") return "canceled";
+  if (status === "started")     return "inProgress";
+  if (status === "draft")       return "pending";
+  const known: StatusBadgeStatus[] = [
+    "pending","accepted","completed","failed","rejected","canceled","reopened",
+    "active","inactive","refunded","inProgress","inReview",
   ];
+  return known.includes(status as StatusBadgeStatus) ? (status as StatusBadgeStatus) : "pending";
+}
 
+function formatDate(value: string | null | undefined, locale: string): string {
+  if (!value) return "—";
+  const d = new Date(value.replace(" ", "T"));
+  if (Number.isNaN(d.getTime())) return value;
+  return new Intl.DateTimeFormat(locale, { dateStyle: "medium", timeStyle: "short" }).format(d);
+}
+
+function formatDateOnly(value: string | null | undefined, locale: string): string {
+  if (!value) return "—";
+  const d = new Date(value);
+  if (Number.isNaN(d.getTime())) return value;
+  return new Intl.DateTimeFormat(locale, { dateStyle: "medium" }).format(d);
+}
+
+function timeRemaining(expiresAt: string | null | undefined): { label: string; expired: boolean } {
+  if (!expiresAt) return { label: "—", expired: false };
+  const diff = new Date(expiresAt.replace(" ", "T")).getTime() - Date.now();
+  if (diff <= 0) return { label: "0h 0m", expired: true };
+  const h = Math.floor(diff / 3_600_000);
+  const m = Math.floor((diff % 3_600_000) / 60_000);
+  return { label: `${h}h ${m}m`, expired: false };
+}
+
+// ─── Progress bar ─────────────────────────────────────────────────────────
+
+function ProgressBar({ percentage }: { percentage: number }) {
   return (
-    <div
-      role="presentation"
-      className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/30 p-4"
-    >
-      <section
-        role="dialog"
-        aria-modal="true"
-        aria-label={title}
-        className="w-full max-w-sm rounded-2xl border border-border bg-card p-6 shadow-xl"
-      >
-        <div className="flex items-center justify-between gap-4">
-          <h2 className="text-lg font-bold text-foreground">{title}</h2>
-          <Button type="button" variant="ghost" size="icon-sm" aria-label={closeLabel} onClick={onClose} className="rounded-full text-muted-foreground">
-            <CloseIcon className="size-4" />
-          </Button>
-        </div>
-
-        <div className="mt-4 text-center">
-          <p className="text-xl font-bold text-foreground">May 2026</p>
-          <div className="mt-4 grid grid-cols-7 gap-1 text-xs font-medium text-muted-foreground">
-            {days.map((d) => <span key={d} className="py-1">{d}</span>)}
-          </div>
-          {weeks.map((week, wi) => (
-            <div key={wi} className="grid grid-cols-7 gap-1 mt-1">
-              {week.map((day, di) => (
-                <button
-                  key={di}
-                  type="button"
-                  className={cn(
-                    "rounded-full py-1.5 text-sm transition-colors hover:bg-primary/10",
-                    (wi === 0 && di < 3) || (wi === 4 && di > 4)
-                      ? "text-muted-foreground/40"
-                      : "text-foreground",
-                    wi === 1 && di === 6 && "bg-primary font-bold text-white hover:bg-primary",
-                  )}
-                >
-                  {day}
-                </button>
-              ))}
-            </div>
-          ))}
-        </div>
-      </section>
+    <div className="h-2 w-full overflow-hidden rounded-full bg-muted">
+      <div
+        className="h-full rounded-full bg-primary transition-all"
+        style={{ width: `${Math.min(100, percentage)}%` }}
+      />
     </div>
   );
 }
 
-// ─── Reschedule time picker (visual only) ────────────────────────────────
+// ─── Cancel confirm dialog ────────────────────────────────────────────────
 
-function RescheduleTimeDialog({
+function CancelConfirmDialog({
   isOpen,
   title,
-  closeLabel,
+  description,
+  cancelLabel,
+  confirmLabel,
+  isPending,
   onClose,
+  onConfirm,
 }: {
   isOpen: boolean;
   title: string;
-  closeLabel: string;
+  description: string;
+  cancelLabel: string;
+  confirmLabel: string;
+  isPending: boolean;
   onClose: () => void;
+  onConfirm: () => void;
 }) {
   if (!isOpen) return null;
-
   return (
     <div
       role="presentation"
@@ -119,182 +109,113 @@ function RescheduleTimeDialog({
         aria-label={title}
         className="w-full max-w-sm rounded-2xl border border-border bg-card p-6 shadow-xl"
       >
-        <div className="flex items-center justify-between gap-4">
-          <h2 className="text-lg font-bold text-foreground">{title} <span className="text-destructive">*</span></h2>
-          <Button type="button" variant="ghost" size="icon-sm" aria-label={closeLabel} onClick={onClose} className="rounded-full text-muted-foreground">
-            <CloseIcon className="size-4" />
+        <h2 className="text-lg font-bold text-foreground">{title}</h2>
+        <p className="mt-2 text-sm text-muted-foreground">{description}</p>
+        <div className="mt-6 flex gap-3">
+          <Button type="button" variant="outline" className="h-11 flex-1" onClick={onClose} disabled={isPending}>
+            {cancelLabel}
           </Button>
-        </div>
-        <div className="relative mt-4">
-          <input
-            type="text"
-            placeholder="--:-- --"
-            readOnly
-            className="h-12 w-full rounded-lg border border-border bg-secondary px-4 text-sm text-muted-foreground focus:outline-none"
-          />
-          <ClockIcon className="pointer-events-none absolute end-3 top-1/2 size-5 -translate-y-1/2 text-primary" />
+          <Button
+            type="button"
+            className="h-11 flex-1 bg-destructive text-white hover:bg-destructive/90"
+            onClick={onConfirm}
+            disabled={isPending}
+          >
+            {isPending ? "…" : confirmLabel}
+          </Button>
         </div>
       </section>
     </div>
   );
 }
 
-// ─── Action buttons per status ───────────────────────────────────────────
+// ─── Inner page (receives resolved task) ─────────────────────────────────
 
-type DialogType = "date" | "time" | null;
-
-interface ActionButtonsProps {
-  status: RequestDetailStatus;
-  t: ReturnType<typeof useTranslations<"dashboard">>;
-  onRescheduleDate: () => void;
-}
-
-function ActionButtons({ status, t, onRescheduleDate }: ActionButtonsProps) {
-  const hasPrimary =
-    status !== "completed" && status !== "canceled";
-
-  if (!hasPrimary) return null;
-
-  const primaryLabel = (s: RequestDetailStatus): string => {
-    if (s === "inProgress" || s === "failed") return t("requestDetails.actions.reschedule");
-    if (s === "reopened") return t("requestDetails.actions.cancelReopening");
-    return t("requestDetails.actions.repeatRequest");
-  };
-
-  const primaryVariant = (s: RequestDetailStatus) =>
-    s === "pending" || s === "reopened" ? "destructive" : "default";
-
-  const primaryIcon = (s: RequestDetailStatus) =>
-    s === "reopened" || s === "pending"
-      ? <CloseIcon className="size-4" />
-      : s === "inProgress" || s === "failed"
-        ? <ScheduleIcon className="size-4" />
-        : <ScheduleIcon className="size-4" />;
-
-  const hasSecondary = status !== "inProgress" && status !== "pending";
-  const secondaryIsCancel = status === "failed";
-
-  const handlePrimaryClick = () => {
-    if (status === "inProgress" || status === "failed") {
-      onRescheduleDate();
-    }
-  };
-
-  if (status === "pending") {
-    return (
-      <Button
-        type="button"
-        className="h-12 w-full gap-2 rounded-xl bg-destructive text-sm font-semibold text-white hover:bg-destructive/90"
-      >
-        <CloseIcon className="size-4" />
-        {t("requestDetails.actions.cancelRequest")}
-      </Button>
-    );
-  }
-
-  return (
-    <div className={cn("grid gap-3", hasSecondary ? "grid-cols-2" : "grid-cols-1")}>
-      {/* Primary */}
-      <Button
-        type="button"
-        className={cn(
-          "h-12 gap-2 rounded-xl text-sm font-semibold",
-          primaryVariant(status) === "destructive"
-            ? "bg-destructive text-white hover:bg-destructive/90"
-            : "text-white hover:text-white",
-        )}
-        onClick={handlePrimaryClick}
-      >
-        {primaryIcon(status)}
-        {primaryLabel(status)}
-      </Button>
-
-      {/* Secondary */}
-      {hasSecondary && (
-        <Button
-          type="button"
-          variant="outline"
-          className={cn(
-            "h-12 gap-2 rounded-xl text-sm font-semibold shadow-none",
-            secondaryIsCancel && "border-destructive text-destructive hover:text-destructive",
-          )}
-        >
-          {secondaryIsCancel ? (
-            <>
-              <CloseIcon className="size-4" />
-              {t("requestDetails.actions.cancelRequest")}
-            </>
-          ) : (
-            <>
-              <ActivityIcon className="size-4" />
-              {t("requestDetails.actions.viewExecution")}
-            </>
-          )}
-        </Button>
-      )}
-    </div>
-  );
-}
-
-// ─── Main page ───────────────────────────────────────────────────────────
-
-interface RequestDetailsPageProps {
-  request: RequestDetail;
-}
-
-export function RequestDetailsPage({ request }: RequestDetailsPageProps) {
+function RequestDetailsView({ task, id }: { task: CompanyTask; id: string | number }) {
   const t = useTranslations("dashboard");
-  const [openDialog, setOpenDialog] = useState<DialogType>(null);
+  const locale = useLocale();
+  const router = useRouter();
+  const { act } = useTaskMutations();
+  const [showCancel, setShowCancel] = useState(false);
+
+  const remaining = timeRemaining(task.expires_at);
+  const locationName = task.location.location_name || task.location.address || "—";
+  const badgeStatus = toStatusBadge(task.status);
+
+  const totalProducts = task.services.reduce(
+    (sum, svc) => sum + svc.products.length,
+    0,
+  );
+
+  const canCancel = ["draft", "pending"].includes(task.status);
 
   const serviceLabels = {
-    productHeading: `${t("requestDetails.services.productHeading")}(${request.services[0]?.products.length ?? 0})`,
-    products:       t("requestDetails.services.columns.products"),
-    skuCode:        t("requestDetails.services.columns.skuCode"),
-    quantity:       t("requestDetails.services.columns.quantity"),
-    expiryDate:     t("requestDetails.services.columns.expiryDate"),
+    productHeading:      t("requestDetails.services.productHeading"),
+    products:            t("requestDetails.services.columns.products"),
+    skuCode:             t("requestDetails.services.columns.skuCode"),
+    minQuantity:         t("requestDetails.services.columns.minQuantity"),
     executionGuidelines: t("requestDetails.services.executionGuidelines"),
-    brandLabel:       t("requestDetails.services.brand"),
-    subBrandLabel:    t("requestDetails.services.subBrand"),
-    categoryLabel:    t("requestDetails.services.category"),
-    subCategoryLabel: t("requestDetails.services.subCategory"),
+    attachments:         t("requestDetails.services.attachments"),
+    brand:               t("requestDetails.services.brand"),
+    subBrand:            t("requestDetails.services.subBrand"),
+    category:            t("requestDetails.services.category"),
+    subCategory:         t("requestDetails.services.subCategory"),
+    noProducts:          t("requestDetails.services.noProducts"),
+    download:            t("requestDetails.services.download"),
   };
 
   return (
     <div className="space-y-6 px-4 py-8 lg:px-8">
+
       {/* Page header */}
-      <div>
-        <h1 className="text-3xl font-bold leading-tight text-foreground">
-          {t("requestDetails.title")}
-        </h1>
-        <p className="mt-1 text-lg font-medium text-muted-foreground">
-          {t("requestDetails.subtitle", { id: request.id })}
-        </p>
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            className="mb-2 -ms-2 gap-1 text-muted-foreground"
+            onClick={() => router.back()}
+          >
+            <PaginationPreviousIcon className="size-4 rtl:rotate-180" />
+            {t("requestDetails.back")}
+          </Button>
+          <h1 className="text-3xl font-bold leading-tight text-foreground">
+            {t("requestDetails.title")}
+          </h1>
+          <p className="mt-1 text-lg font-medium text-muted-foreground">
+            {t("requestDetails.subtitle", { id: `REQ-${task.id}` })}
+          </p>
+        </div>
       </div>
 
       {/* Request card */}
       <div className="rounded-xl border border-border bg-card p-5 shadow-sm">
-        {/* Top row: ID + status + created date */}
+        {/* Top row */}
         <div className="flex flex-wrap items-start justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <span className="text-2xl font-bold text-foreground">{request.id}</span>
+          <div className="flex flex-wrap items-center gap-3">
+            <span className="text-2xl font-bold text-foreground">REQ-{task.id}</span>
+            <StatusBadge status={badgeStatus} label={task.status_label} />
             <StatusBadge
-              status={request.status}
-              label={t(`requestDetails.status.${request.status}` as Parameters<typeof t>[0])}
+              status={task.payment_status === "charged" ? "completed" : "pending"}
+              label={task.payment_status_label}
             />
           </div>
           <div className="text-end">
             <p className="text-xs text-muted-foreground">{t("requestDetails.createdOn")}</p>
-            <p className="text-sm font-semibold text-foreground">{request.createdAt}</p>
+            <p className="text-sm font-semibold text-foreground">
+              {formatDate(task.created_at, locale)}
+            </p>
           </div>
         </div>
 
         {/* Info grid */}
         <div className="mt-4 grid grid-cols-2 gap-4 rounded-lg border border-border bg-muted/20 p-4 sm:grid-cols-4">
           {[
-            { icon: MapPinIcon, label: t("requestDetails.info.location"),      value: request.location      },
-            { icon: WarningIcon, label: t("requestDetails.info.assignedBy"),    value: request.assignedBy    },
-            { icon: CalendarIcon, label: t("requestDetails.info.executionDate"), value: request.executionDate },
-            { icon: ClockIcon, label: t("requestDetails.info.timeWindow"),    value: request.timeWindow    },
+            { icon: MapPinIcon,  label: t("requestDetails.info.location"),      value: locationName },
+            { icon: WarningIcon, label: t("requestDetails.info.assignedBy"),     value: task.assigned_worker?.name ?? task.created_by },
+            { icon: CalendarIcon, label: t("requestDetails.info.executionDate"), value: formatDateOnly(task.date, locale) },
+            { icon: ClockIcon,   label: t("requestDetails.info.expiresAt"),      value: formatDate(task.expires_at, locale) },
           ].map(({ icon: Icon, label, value }) => (
             <div key={label} className="flex items-center gap-3">
               <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary/10">
@@ -307,6 +228,14 @@ export function RequestDetailsPage({ request }: RequestDetailsPageProps) {
             </div>
           ))}
         </div>
+
+        {/* Notes */}
+        {task.notes && (
+          <p className="mt-4 rounded-lg border border-border bg-muted/20 px-4 py-3 text-sm text-foreground">
+            <span className="font-semibold">{t("requestDetails.info.notes")}: </span>
+            {task.notes}
+          </p>
+        )}
       </div>
 
       {/* Stats row */}
@@ -318,20 +247,25 @@ export function RequestDetailsPage({ request }: RequestDetailsPageProps) {
           </span>
           <div>
             <p className="text-xs text-muted-foreground">{t("requestDetails.stats.totalCost")}</p>
-            <p className="text-2xl font-bold text-foreground">{request.totalCost}</p>
-            <p className="text-xs text-success">{request.totalCostSubtitle}</p>
+            <p className="text-2xl font-bold text-foreground">{task.total_price} SAR</p>
+            <p className="text-xs text-muted-foreground">
+              {t("requestDetails.stats.servicesCount", { count: task.services.length })}
+            </p>
           </div>
         </div>
 
-        {/* Total Products */}
+        {/* Progress */}
         <div className="flex items-center gap-4 rounded-xl border border-border bg-card p-5 shadow-sm">
           <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-primary/15">
-            <PaginationPreviousIcon className="size-5 text-primary rotate-180" />
+            <ActivityIcon className="size-5 text-primary" />
           </span>
-          <div>
-            <p className="text-xs text-muted-foreground">{t("requestDetails.stats.totalProducts")}</p>
-            <p className="text-2xl font-bold text-foreground">{request.totalProducts}</p>
-            <p className="text-xs text-muted-foreground">{t("requestDetails.stats.unitsSubtitle")}</p>
+          <div className="flex-1">
+            <p className="text-xs text-muted-foreground">{t("requestDetails.stats.progress")}</p>
+            <p className="text-2xl font-bold text-foreground">{task.progress.percentage}%</p>
+            <ProgressBar percentage={task.progress.percentage} />
+            <p className="mt-1 text-xs text-muted-foreground">
+              {task.progress.completed_services} / {task.progress.total_services}
+            </p>
           </div>
         </div>
 
@@ -343,10 +277,8 @@ export function RequestDetailsPage({ request }: RequestDetailsPageProps) {
           <div>
             <p className="text-xs text-muted-foreground">{t("requestDetails.stats.timeRemaining")}</p>
             <div className="flex items-center gap-2">
-              <p className={cn("text-2xl font-bold", request.isExpired ? "text-foreground" : "text-foreground")}>
-                {request.timeRemaining}
-              </p>
-              {request.isExpired && (
+              <p className="text-2xl font-bold text-foreground">{remaining.label}</p>
+              {remaining.expired && (
                 <span className="rounded px-1.5 py-0.5 text-xs font-bold bg-destructive/10 text-destructive">
                   {t("requestDetails.stats.expired")}
                 </span>
@@ -357,41 +289,99 @@ export function RequestDetailsPage({ request }: RequestDetailsPageProps) {
         </div>
       </div>
 
+      {/* Total products chip */}
+      {totalProducts > 0 && (
+        <div className="flex items-center gap-2 rounded-xl border border-border bg-card px-5 py-4 shadow-sm">
+          <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary/10">
+            <ScheduleIcon className="size-4 text-primary" />
+          </span>
+          <div>
+            <p className="text-xs text-muted-foreground">{t("requestDetails.stats.totalProducts")}</p>
+            <p className="text-lg font-bold text-foreground">{totalProducts}</p>
+          </div>
+        </div>
+      )}
+
       {/* Action buttons */}
-      <ActionButtons
-        status={request.status}
-        t={t}
-        onRescheduleDate={() => setOpenDialog("date")}
-      />
+      {canCancel && (
+        <Button
+          type="button"
+          className="h-12 w-full gap-2 rounded-xl bg-destructive text-sm font-semibold text-white hover:bg-destructive/90"
+          onClick={() => setShowCancel(true)}
+        >
+          <CloseIcon className="size-4" />
+          {t("requestDetails.actions.cancelRequest")}
+        </Button>
+      )}
 
       {/* Services section */}
       <div className="space-y-4">
         <h2 className="text-xl font-bold text-foreground">
-          {t("requestDetails.services.heading", { count: request.services.length })}
+          {t("requestDetails.services.heading", { count: task.services.length })}
         </h2>
-        {request.services.map((svc, index) => (
+        {task.services.map((svc, index) => (
           <ServiceDetailCard
             key={svc.id}
             service={svc}
             labels={serviceLabels}
+            index={index}
             defaultExpanded={index === 0}
           />
         ))}
       </div>
 
-      {/* Reschedule dialogs */}
-      <RescheduleDateDialog
-        isOpen={openDialog === "date"}
-        title={t("requestDetails.reschedule.dateTitle")}
-        closeLabel={t("requestDetails.reschedule.close")}
-        onClose={() => setOpenDialog("time")}
-      />
-      <RescheduleTimeDialog
-        isOpen={openDialog === "time"}
-        title={t("requestDetails.reschedule.timeTitle")}
-        closeLabel={t("requestDetails.reschedule.close")}
-        onClose={() => setOpenDialog(null)}
+      {/* Cancel confirm dialog */}
+      <CancelConfirmDialog
+        isOpen={showCancel}
+        title={t("requestDetails.cancelDialog.title")}
+        description={t("requestDetails.cancelDialog.description")}
+        cancelLabel={t("requestDetails.cancelDialog.cancel")}
+        confirmLabel={t("requestDetails.cancelDialog.confirm")}
+        isPending={act.isPending}
+        onClose={() => setShowCancel(false)}
+        onConfirm={() =>
+          act.mutate(
+            { id, action: "cancel" },
+            { onSuccess: () => { setShowCancel(false); router.back(); } },
+          )
+        }
       />
     </div>
   );
+}
+
+// ─── Public export — handles loading / error states ──────────────────────
+
+interface RequestDetailsPageProps {
+  id: string | number;
+}
+
+export function RequestDetailsPage({ id }: RequestDetailsPageProps) {
+  const t = useTranslations("dashboard");
+  const { data, isPending, isError, refetch } = useTaskQuery(id);
+
+  if (isPending) {
+    return (
+      <PageLoadingSkeleton
+        actionCount={1}
+        cardCount={3}
+        tableRows={4}
+        tableColumns={3}
+      />
+    );
+  }
+
+  if (isError || !data?.data) {
+    return (
+      <ErrorState
+        className="m-8"
+        title={t("requestDetails.errorTitle")}
+        description={t("requestDetails.errorDescription")}
+        retryLabel={t("requestDetails.retry")}
+        onRetry={() => void refetch()}
+      />
+    );
+  }
+
+  return <RequestDetailsView task={data.data} id={id} />;
 }

@@ -1018,15 +1018,22 @@
     "requestDetails": {
       "title": "Request Details",
       "subtitle": "Complete information about execution request {id}",
+      "back": "Back",
       "createdOn": "Created on",
+      "errorTitle": "Failed to load request",
+      "errorDescription": "Something went wrong while loading this request. Please try again.",
+      "retry": "Retry",
       "info": {
         "location": "Location",
         "assignedBy": "Assigned By",
         "executionDate": "Execution Date",
-        "timeWindow": "Time Window"
+        "expiresAt": "Expires At",
+        "notes": "Notes"
       },
       "stats": {
         "totalCost": "Total Cost",
+        "servicesCount": "{count} service(s)",
+        "progress": "Progress",
         "totalProducts": "Total Products",
         "unitsSubtitle": "Units across all services",
         "timeRemaining": "Time Remaining",
@@ -1039,6 +1046,12 @@
         "repeatRequest": "Repeat This Request",
         "viewExecution": "View Execution Details",
         "cancelReopening": "Cancel reopening task"
+      },
+      "cancelDialog": {
+        "title": "Cancel Request",
+        "description": "Are you sure you want to cancel this request? This action cannot be undone.",
+        "cancel": "Go Back",
+        "confirm": "Yes, Cancel"
       },
       "status": {
         "inProgress": "In Progress",
@@ -1053,15 +1066,19 @@
       },
       "services": {
         "heading": "Services Details ({count})",
-        "productHeading": "Product",
-        "executionGuidelines": "Execution Guidelines",
+        "productHeading": "Products",
+        "executionGuidelines": "Execution Instructions",
+        "attachments": "Attachments",
         "brand": "Brand",
         "subBrand": "Sub-Brand",
         "category": "Category",
         "subCategory": "Sub-Category",
+        "noProducts": "No products added.",
+        "download": "Download attachment",
         "columns": {
-          "products": "Products",
+          "products": "Product",
           "skuCode": "SKU Code",
+          "minQuantity": "Min. Quantity",
           "quantity": "Quantity",
           "expiryDate": "Expiry Date"
         }
