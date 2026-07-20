@@ -213,18 +213,20 @@ export function CreateRequestPage() {
   const productsMeta = productsQuery.data?.meta;
 
   // Derive the single extra column driven by the selected service's product_details_form.
-  // The form can live at the root level OR inside request_form (checked in that order).
-  // An empty array [] at root means "no extra fields".
-  // Examples: { key: "minimum_quantity", type: "integer" } or { key: "expected_expiry_date", type: "date" }
+  // Checks root-level first, then request_form-level.
+  // Root-level empty array [] means no fields.
   const extraColumn: { key: string; type: string } | null = useMemo(() => {
     if (!selectedService) return null;
-    // Prefer root-level, fall back to request_form-level
-    const form =
-      (!Array.isArray(selectedService.product_details_form) && selectedService.product_details_form)
-      ?? selectedService.request_form?.product_details_form
-      ?? null;
-    if (!form) return null;
-    const entry = Object.entries(form.fields)[0];
+    // 1. Root-level (skip if empty array)
+    const rootForm = selectedService.product_details_form;
+    const rootFields = !Array.isArray(rootForm) && rootForm && typeof rootForm === "object"
+      ? rootForm.fields
+      : null;
+    // 2. Inside request_form
+    const nestedFields = selectedService.request_form?.product_details_form?.fields ?? null;
+    const fields = rootFields ?? nestedFields;
+    if (!fields) return null;
+    const entry = Object.entries(fields)[0];
     if (!entry) return null;
     return { key: entry[0], type: entry[1].type };
   }, [selectedService]);
@@ -938,7 +940,6 @@ function ProductTable({
   control: import("react-hook-form").Control<CreateRequestFormValues>;
 }) {
   const totalPages = meta?.last_page ?? 1;
-  // Track which product row is being edited (by id)
   const [editingId, setEditingId] = useState<number | null>(null);
 
   const extraColumnLabel = extraColumn
@@ -1052,25 +1053,25 @@ function ProductTable({
                     <td className={cn("px-4 py-4 text-center text-muted-foreground", extraColumn && "border-e border-border")}>
                       {product.barcode ?? "—"}
                     </td>
-                    {/* Extra column: display value + edit icon, inline input when editing */}
+                    {/* Extra column: value + pencil → click pencil → inline input */}
                     {extraColumn ? (
                       <td className="px-4 py-4 text-center">
                         {isEditing ? (
-                          <div className="flex items-center justify-center gap-2">
-                            <input
-                              autoFocus
-                              type={extraColumn.type === "integer" ? "number" : "date"}
-                              min={extraColumn.type === "integer" ? 1 : undefined}
-                              value={detailValue}
-                              onChange={(e) => onDetailChange(product.id, extraColumn.key, e.target.value)}
-                              onBlur={() => setEditingId(null)}
-                              onKeyDown={(e) => { if (e.key === "Enter" || e.key === "Escape") setEditingId(null); }}
-                              className="h-8 w-28 rounded-md border border-primary bg-background px-2 text-center text-sm outline-none focus:ring-2 focus:ring-primary/40"
-                            />
-                          </div>
+                          <input
+                            autoFocus
+                            type={extraColumn.type === "integer" ? "number" : "date"}
+                            min={extraColumn.type === "integer" ? 1 : undefined}
+                            value={detailValue}
+                            onChange={(e) => onDetailChange(product.id, extraColumn.key, e.target.value)}
+                            onBlur={() => setEditingId(null)}
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter" || e.key === "Escape") setEditingId(null);
+                            }}
+                            className="h-9 w-32 rounded-lg border border-primary bg-background px-3 text-center text-sm outline-none focus:ring-2 focus:ring-primary/30"
+                          />
                         ) : (
-                          <div className="flex items-center justify-center gap-2 text-muted-foreground">
-                            <span className="font-medium">
+                          <div className="flex items-center justify-center gap-2">
+                            <span className="font-medium text-foreground">
                               {detailValue || "—"}
                             </span>
                             <button
