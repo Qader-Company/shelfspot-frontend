@@ -38,5 +38,10 @@ export async function createTask({ payload, companySlug }: CreateTaskServicePara
     });
   });
 
-  return (await apiClient.post<CreateTaskResponse>(TASKS_ENDPOINT, formData, { headers: { "X-Company-Slug": companySlug } })).data;
+  return (await apiClient.post<CreateTaskResponse>(TASKS_ENDPOINT, formData, {
+    headers: {
+      "X-Company-Slug": companySlug,
+      "Content-Type": undefined, // let axios set multipart/form-data with boundary automatically
+    },
+  })).data;
 }

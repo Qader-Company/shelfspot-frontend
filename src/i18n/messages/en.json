@@ -315,6 +315,7 @@
         "closeDialog": "Close dialog",
         "toggleSection": "Toggle section",
         "addService": "Add Service",
+        "removeService": "Remove service",
         "deleteService": "Delete service",
         "removeServiceDraft": "Remove service draft",
         "save": "Save",

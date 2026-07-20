@@ -1,5 +1,5 @@
 export interface CreateRequestStep {
-  key: "location" | "service" | "guidelines";
+  key: "location" | "service";
   titleKey: string;
   placeholderTitleKey: string;
   placeholderDescriptionKey: string;
@@ -17,11 +17,5 @@ export const createRequestSteps: CreateRequestStep[] = [
     titleKey: "createRequest.steps.service",
     placeholderTitleKey: "createRequest.placeholders.service.title",
     placeholderDescriptionKey: "createRequest.placeholders.service.description",
-  },
-  {
-    key: "guidelines",
-    titleKey: "createRequest.steps.guidelines",
-    placeholderTitleKey: "createRequest.placeholders.guidelines.title",
-    placeholderDescriptionKey: "createRequest.placeholders.guidelines.description",
   },
 ];
