@@ -2,7 +2,7 @@ import type {
   DashboardStatItem,
   RequestsChartPoint,
   StatusDonutItem,
-} from "@/modules/dashboard/components/dashboard-overview.seed";
+} from "@/shared/components/dashboard/widgets/types";
 
 export type AdminStatIcon = "company" | "request" | "worker" | "revenue";
 

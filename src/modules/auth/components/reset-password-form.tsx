@@ -6,7 +6,6 @@ import { useTranslations } from "next-intl";
 import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 
-import { ROUTES } from "@/config/routes";
 import { useRouter } from "@/i18n/navigation";
 import { AuthPasswordIcon } from "@/modules/auth/components/auth-field-icons";
 import { AuthInputField } from "@/modules/auth/components/auth-input-field";
@@ -18,6 +17,10 @@ import {
 import { zodResolver } from "@/shared/lib/validation";
 import { Button } from "@/shared/ui/button";
 import { Form } from "@/shared/ui/form";
+import { getAuthContextConfig, type AuthContext } from "@/modules/auth/config/auth-context";
+import { resetPassword } from "@/modules/auth/services/password-reset-api";
+import { clearPasswordResetState, getPasswordResetState } from "@/shared/lib/auth/password-reset-storage";
+import { normalizeApiError } from "@/shared/lib/api/errors";
 
 function PasswordToggle({
   visible,
@@ -51,21 +54,30 @@ function PasswordToggle({
   );
 }
 
-export function ResetPasswordForm() {
+export function ResetPasswordForm({ authContext = "company" }: { authContext?: AuthContext }) {
   const t = useTranslations("auth.resetPassword");
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const authConfig = getAuthContextConfig(authContext);
   const schema = useMemo(() => createResetPasswordSchema(t), [t]);
   const form = useForm<ResetPasswordFormValues>({
     defaultValues: resetPasswordDefaultValues,
     resolver: zodResolver(schema),
   });
 
-  async function onSubmit() {
-    setIsSubmitting(true);
-    router.push(ROUTES.login);
+  async function onSubmit(values: ResetPasswordFormValues) {
+    form.clearErrors();
+    const state = getPasswordResetState(authContext);
+    if (!state?.token) { form.setError("root", { message: t("errors.missingToken") }); return; }
+    try {
+      await resetPassword(authContext, { ...values, token: state.token });
+      clearPasswordResetState(authContext);
+      router.push(authConfig.loginRoute);
+    } catch (error) {
+      const apiError = normalizeApiError(error);
+      form.setError("root", { message: apiError.status === 422 ? t("errors.validation") : t("errors.generic") });
+    }
   }
 
   return (
@@ -133,13 +145,15 @@ export function ResetPasswordForm() {
             </ul>
           </div>
 
+          {form.formState.errors.root?.message ? <p className="rounded-[18px] border border-destructive/20 bg-destructive/10 px-4 py-3 text-sm text-destructive">{form.formState.errors.root.message}</p> : null}
+
           <Button
             type="submit"
             size="lg"
             className="h-11 w-full rounded-md text-lg leading-none font-semibold text-background sm:text-xl"
-            disabled={isSubmitting}
+            disabled={form.formState.isSubmitting}
           >
-            {isSubmitting ? t("actions.submitting") : t("actions.submit")}
+            {form.formState.isSubmitting ? t("actions.submitting") : t("actions.submit")}
           </Button>
         </form>
       </Form>

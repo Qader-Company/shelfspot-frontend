@@ -3,10 +3,10 @@
 import { Building2, HandCoins, PackageCheck, Users } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 
-import { ChartCard } from "@/modules/dashboard/components/chart-card";
-import { DashboardStatCard } from "@/modules/dashboard/components/dashboard-stat-card";
-import { RequestsChart } from "@/modules/dashboard/components/requests-chart";
-import { StatusDonutChart } from "@/modules/dashboard/components/status-donut-chart";
+import { ChartCard } from "@/shared/components/dashboard/widgets/chart-card";
+import { DashboardStatCard } from "@/shared/components/dashboard/widgets/dashboard-stat-card";
+import { RequestsChart } from "@/shared/components/dashboard/widgets/requests-chart";
+import { StatusDonutChart } from "@/shared/components/dashboard/widgets/status-donut-chart";
 import { Button } from "@/shared/ui/button";
 
 import { adminDashboardStats, adminRequestsOverTime, adminRequestStatus, topActiveWorkers, topCompanies, type AdminStatIcon } from "./admin-dashboard.seed";

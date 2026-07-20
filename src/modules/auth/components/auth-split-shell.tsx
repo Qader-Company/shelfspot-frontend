@@ -1,7 +1,6 @@
 import Image from "next/image";
 import type { ReactNode } from "react";
 
-import { AuthWordmark } from "@/modules/auth/components/auth-wordmark";
 import { cn } from "@/shared/lib/utils";
 
 interface AuthSplitShellProps {
@@ -9,6 +8,14 @@ interface AuthSplitShellProps {
   className?: string;
   visualAlt: string;
   visualSrc: string;
+}
+
+function AuthWordmark() {
+  return (
+    <span className="font-brand text-brand-mark font-normal leading-none text-auth-visual-foreground">
+      ShelfSpot
+    </span>
+  );
 }
 
 export function AuthSplitShell({

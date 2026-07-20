@@ -66,6 +66,7 @@ export default async function Layout({
 
   return (
     <DashboardLayout
+      authContext="company"
       sidebarItems={sidebarItems}
       user={{
         name: t("user.name"),

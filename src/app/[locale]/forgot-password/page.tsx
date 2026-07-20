@@ -8,5 +8,10 @@ export default async function ForgotPasswordPage({
 }) {
   const { locale } = await params;
 
-  return <ForgotPasswordPageView direction={getLocaleDirection(locale)} />;
+  return (
+    <ForgotPasswordPageView
+      authContext="company"
+      direction={getLocaleDirection(locale)}
+    />
+  );
 }

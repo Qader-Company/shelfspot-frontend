@@ -19,6 +19,10 @@ export const ROUTES = {
   dashboardAdmins: "/dashboard/admins",
   dashboardTrash: "/dashboard/trash",
   adminDashboard: "/admin",
+  adminLogin: "/admin/login",
+  adminForgotPassword: "/admin/forgot-password",
+  adminOtpVerification: "/admin/otp-verification",
+  adminResetPassword: "/admin/reset-password",
 } as const;
 
 export type AppRoute = (typeof ROUTES)[keyof typeof ROUTES];

@@ -8,5 +8,10 @@ export default async function OtpVerificationPage({
 }) {
   const { locale } = await params;
 
-  return <OtpVerificationPageView direction={getLocaleDirection(locale)} />;
+  return (
+    <OtpVerificationPageView
+      authContext="company"
+      direction={getLocaleDirection(locale)}
+    />
+  );
 }

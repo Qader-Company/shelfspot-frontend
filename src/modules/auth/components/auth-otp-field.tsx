@@ -14,11 +14,13 @@ import { Input } from "@/shared/ui/input";
 interface AuthOtpFieldProps {
   control: Control<{ code: string }>;
   length?: number;
+  digitLabel?: (position: number) => string;
 }
 
 export function AuthOtpField({
   control,
   length = 6,
+  digitLabel,
 }: AuthOtpFieldProps) {
   const slots = useMemo(() => Array.from({ length }), [length]);
 
@@ -60,7 +62,7 @@ export function AuthOtpField({
                     }}
                     className="h-12 rounded-lg border-0 bg-secondary px-0 py-0 text-center text-xl font-medium shadow-none focus-visible:ring-0"
                     maxLength={1}
-                    aria-label={`OTP digit ${index + 1}`}
+                    aria-label={digitLabel?.(index + 1)}
                   />
                 ))}
               </div>
