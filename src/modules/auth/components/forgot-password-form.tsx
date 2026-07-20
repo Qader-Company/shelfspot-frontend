@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form";
 import { useRouter } from "@/i18n/navigation";
 import { AuthEmailIcon } from "@/modules/auth/components/auth-field-icons";
 import { AuthInputField } from "@/modules/auth/components/auth-input-field";
-import { useForgotPasswordMutation } from "@/modules/auth/hooks/use-forgot-password-mutation";
+import { useForgotPasswordMutation } from "@/modules/auth/hooks/use-auth-mutations";
 import {
   createForgotPasswordSchema,
   forgotPasswordDefaultValues,

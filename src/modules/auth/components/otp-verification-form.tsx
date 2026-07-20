@@ -15,7 +15,7 @@ import { zodResolver } from "@/shared/lib/validation";
 import { Button } from "@/shared/ui/button";
 import { Form } from "@/shared/ui/form";
 import { getAuthContextConfig, type AuthContext } from "@/modules/auth/config/auth-context";
-import { readPasswordResetToken, verifyPasswordResetOtp } from "@/modules/auth/services/password-reset-service";
+import { readPasswordResetToken, verifyPasswordResetOtp } from "@/modules/auth/services/password-reset-api";
 import { getPasswordResetState, setPasswordResetState } from "@/shared/lib/auth/password-reset-storage";
 import { normalizeApiError } from "@/shared/lib/api/errors";
 

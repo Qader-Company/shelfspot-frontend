@@ -2,7 +2,6 @@ import { getTranslations } from "next-intl/server";
 
 import { AuthSplitShell } from "@/modules/auth/components/auth-split-shell";
 import { LoginForm } from "@/modules/auth/components/login-form";
-import { AuthLoginShell } from "@/modules/auth/components/auth-login-shell";
 import type { AuthContext } from "@/modules/auth/config/auth-context";
 
 interface LoginPageViewProps {
@@ -18,7 +17,17 @@ export async function LoginPageView({
 
   if (authContext === "admin") {
     const adminT = await getTranslations("auth.adminLogin");
-    return <AuthLoginShell><LoginForm authContext="admin" heading={adminT("title")} description={adminT("description")} /></AuthLoginShell>;
+    return (
+      <main className="flex min-h-dvh items-center justify-center bg-background px-4 py-12 sm:px-6">
+        <div className="w-full max-w-[580px]">
+          <LoginForm
+            authContext="admin"
+            heading={adminT("title")}
+            description={adminT("description")}
+          />
+        </div>
+      </main>
+    );
   }
   return (
     <AuthSplitShell

@@ -9,7 +9,7 @@ import {
   getAuthContextConfig,
   type AuthContext,
 } from "@/modules/auth/config/auth-context";
-import { useLogoutMutation } from "@/modules/auth/hooks/use-logout-mutation";
+import { useLogoutMutation } from "@/modules/auth/hooks/use-auth-mutations";
 import { cn } from "@/shared/lib/utils";
 import { Logo } from "@/shared/ui/logo";
 import { Button } from "@/shared/ui/button";

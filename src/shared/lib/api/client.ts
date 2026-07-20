@@ -2,9 +2,8 @@ import axios from "axios";
 import type { InternalAxiosRequestConfig } from "axios";
 
 import { API_CONFIG } from "@/config/api";
-import { refreshTokens } from "@/modules/auth/services/refresh-token-service";
+import { refreshTokens } from "@/modules/auth/services/session-api";
 import { getAuthContextConfig, type AuthContext } from "@/modules/auth/config/auth-context";
-import { useAuthStore } from "@/shared/stores/auth-store";
 
 export const apiClient = axios.create({
   baseURL: undefined,
@@ -70,7 +69,10 @@ function setupClient(context: AuthContext) {
         await refreshPromises[context];
         return client(config);
       } catch (refreshError) {
-        useAuthStore.getState().clearSession();
+        await fetch(getAuthContextConfig(context).logoutEndpoint, {
+          method: "POST",
+          credentials: "include",
+        }).catch(() => undefined);
         redirectToLogin(context);
         throw refreshError;
       }

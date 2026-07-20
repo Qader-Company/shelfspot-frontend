@@ -13,7 +13,7 @@ import {
 } from "@/modules/auth/components/auth-field-icons";
 import { AuthInputField } from "@/modules/auth/components/auth-input-field";
 import { AuthModeSwitch } from "@/modules/auth/components/auth-mode-switch";
-import { useLoginMutation } from "@/modules/auth/hooks/use-login-mutation";
+import { useLoginMutation } from "@/modules/auth/hooks/use-auth-mutations";
 import { Link, useRouter } from "@/i18n/navigation";
 import { ROUTES } from "@/config/routes";
 import {
