@@ -387,6 +387,18 @@
           "label": "تعليمات التنفيذ",
           "description": "أضف ملاحظات تنفيذ واضحة أو متطلبات ترتيب أو تفاصيل توقيت أو تعليمات خاصة.",
           "placeholder": "اكتب تعليمات تفصيلية للمنفذ الميداني..."
+        },
+        "planogramFiles": {
+          "label": "رفع البلانوجرام",
+          "accept": "PDF / صورة"
+        },
+        "jobOrderFiles": {
+          "label": "رفع أمر التشغيل",
+          "accept": "PDF / صورة / Excel"
+        },
+        "files": {
+          "uploadHint": "انقر لرفع الملفات",
+          "replaceHint": "تم اختيار {count} ملف — انقر لإضافة المزيد"
         }
       },
       "options": {
@@ -415,9 +427,12 @@
         "columns": {
           "products": "المنتجات",
           "sku": "رمز SKU",
+          "barcode": "الباركود",
           "details": "تفاصيل المنتج",
-          "expiryDate": "تاريخ الانتهاء"
-        }
+          "expiryDate": "تاريخ الانتهاء",
+          "minQuantity": "الحد الأدنى للكمية"
+        },
+        "editDetail": "تعديل القيمة"
       },
       "pagination": {
         "previous": "السابق",

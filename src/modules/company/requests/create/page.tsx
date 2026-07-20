@@ -94,7 +94,8 @@ function createRequestSchema(t: DashboardTranslate, selectedService: CompanyServ
     search: z.string().optional(),
     productIds: z.array(z.number()).min(1, t("createRequest.validation.productsRequired")),
     instructions: z.string().min(10, t("createRequest.validation.instructionsRequired")),
-    documentFiles: z.array(z.instanceof(File)).optional(),
+    planogramFiles: z.array(z.instanceof(File)).optional(),
+    jobOrderFiles: z.array(z.instanceof(File)).optional(),
   });
 }
 
@@ -126,7 +127,8 @@ const defaultValues: CreateRequestFormValues = {
   search: "",
   productIds: [],
   instructions: "",
-  documentFiles: [],
+  planogramFiles: [],
+  jobOrderFiles: [],
 };
 
 export function CreateRequestPage() {
@@ -137,6 +139,8 @@ export function CreateRequestPage() {
   const [isServiceExpanded, setIsServiceExpanded] = useState(true);
   const [isGuidelinesExpanded, setIsGuidelinesExpanded] = useState(true);
   const [productPage, setProductPage] = useState(1);
+  // Per-product detail values keyed by product id: { [productId]: { [fieldKey]: value } }
+  const [productDetails, setProductDetails] = useState<Record<number, Record<string, string>>>({});
 
   const locationSectionRef = useRef<HTMLElement | null>(null);
   const serviceSectionRef = useRef<HTMLElement | null>(null);
@@ -208,6 +212,36 @@ export function CreateRequestPage() {
   const products = productsQuery.data?.data ?? [];
   const productsMeta = productsQuery.data?.meta;
 
+  // Derive the single extra column driven by the selected service's product_details_form.
+  // The form can live at the root level OR inside request_form (checked in that order).
+  // An empty array [] at root means "no extra fields".
+  // Examples: { key: "minimum_quantity", type: "integer" } or { key: "expected_expiry_date", type: "date" }
+  const extraColumn: { key: string; type: string } | null = useMemo(() => {
+    if (!selectedService) return null;
+    // Prefer root-level, fall back to request_form-level
+    const form =
+      (!Array.isArray(selectedService.product_details_form) && selectedService.product_details_form)
+      ?? selectedService.request_form?.product_details_form
+      ?? null;
+    if (!form) return null;
+    const entry = Object.entries(form.fields)[0];
+    if (!entry) return null;
+    return { key: entry[0], type: entry[1].type };
+  }, [selectedService]);
+
+  // Derive which file upload fields to show from request_form.fields.
+  // attachment_type drives which form field name to use:
+  //   "planogram"  → planogramFiles
+  //   "job_order"  → jobOrderFiles
+  const showPlanogramUpload = useMemo(
+    () => Object.values(selectedService?.request_form?.fields ?? {}).some((f) => f.attachment_type === "planogram"),
+    [selectedService],
+  );
+  const showJobOrderUpload = useMemo(
+    () => Object.values(selectedService?.request_form?.fields ?? {}).some((f) => f.attachment_type === "job_order"),
+    [selectedService],
+  );
+
   const sectionRefs = useMemo(() => [locationSectionRef, serviceSectionRef, guidelinesSectionRef], []);
 
   useEffect(() => {
@@ -232,6 +266,7 @@ export function CreateRequestPage() {
     createTaskMutation.reset();
     setSelectedService(null);
     setProductPage(1);
+    setProductDetails({});
     setIsLocationExpanded(true);
     setIsServiceExpanded(true);
     setIsGuidelinesExpanded(true);
@@ -262,8 +297,9 @@ export function CreateRequestPage() {
     const svc = servicesQuery.data?.data.find((s) => s.key === serviceKey) ?? null;
     setSelectedService(svc);
     form.setValue("serviceKey", serviceKey, { shouldDirty: true, shouldValidate: true });
-    // clear products when service changes
+    // clear products and their details when service changes
     form.setValue("productIds", [], { shouldDirty: true });
+    setProductDetails({});
   }
 
   function toggleProduct(productId: number) {
@@ -298,10 +334,14 @@ export function CreateRequestPage() {
               price: vals.price,
               execution_time_minutes: vals.executionTimeMins,
               execution_instructions: vals.instructions || null,
-              products: (vals.productIds as number[]).map((id) => ({ product_id: id })),
+              products: (vals.productIds as number[]).map((id) => ({
+                product_id: id,
+                product_details: productDetails[id] ?? {},
+              })),
+              planogramFiles: vals.planogramFiles ?? [],
+              jobOrderFiles: vals.jobOrderFiles ?? [],
             },
           ],
-          documentFiles: vals.documentFiles ?? [],
         },
       });
       setOpenDialog("success");
@@ -693,6 +733,14 @@ export function CreateRequestPage() {
                         isLoading={productsQuery.isPending}
                         isError={productsQuery.isError}
                         selectedProductIds={selectedProductIds}
+                        extraColumn={extraColumn}
+                        productDetails={productDetails}
+                        onDetailChange={(productId, fieldKey, value) => {
+                          setProductDetails((prev) => ({
+                            ...prev,
+                            [productId]: { ...(prev[productId] ?? {}), [fieldKey]: value },
+                          }));
+                        }}
                         meta={productsMeta}
                         page={productPage}
                         onPageChange={setProductPage}
@@ -726,7 +774,12 @@ export function CreateRequestPage() {
               toggleLabel={t("createRequest.actions.toggleSection")}
               onToggle={() => setIsGuidelinesExpanded((c) => !c)}
             >
-              <GuidelinesFields t={t} control={form.control} />
+              <GuidelinesFields
+                t={t}
+                control={form.control}
+                showPlanogramUpload={showPlanogramUpload}
+                showJobOrderUpload={showJobOrderUpload}
+              />
             </SectionCard>
           </form>
         </Form>
@@ -866,14 +919,17 @@ function SectionCard({
 }
 
 function ProductTable({
-  t, products, isLoading, isError, selectedProductIds, meta, page,
-  onPageChange, onToggle, onShowProducts, control,
+  t, products, isLoading, isError, selectedProductIds, extraColumn, productDetails,
+  onDetailChange, meta, page, onPageChange, onToggle, onShowProducts, control,
 }: {
   t: DashboardTranslate;
   products: CompanyProduct[];
   isLoading: boolean;
   isError: boolean;
   selectedProductIds: number[];
+  extraColumn: { key: string; type: string } | null;
+  productDetails: Record<number, Record<string, string>>;
+  onDetailChange: (productId: number, fieldKey: string, value: string) => void;
   meta?: { current_page: number; last_page: number; per_page: number; total: number };
   page: number;
   onPageChange: (p: number) => void;
@@ -882,6 +938,18 @@ function ProductTable({
   control: import("react-hook-form").Control<CreateRequestFormValues>;
 }) {
   const totalPages = meta?.last_page ?? 1;
+  // Track which product row is being edited (by id)
+  const [editingId, setEditingId] = useState<number | null>(null);
+
+  const extraColumnLabel = extraColumn
+    ? extraColumn.key === "minimum_quantity"
+      ? t("createRequest.productTable.columns.minQuantity")
+      : extraColumn.key === "expected_expiry_date"
+        ? t("createRequest.productTable.columns.expiryDate")
+        : extraColumn.key.replace(/_/g, " ")
+    : null;
+  // total visible columns: checkbox + products + sku + barcode + optional extra
+  const totalCols = extraColumn ? 5 : 4;
 
   return (
     <div>
@@ -903,18 +971,18 @@ function ProductTable({
         />
         <button
           type="button"
-          className="text-sm font-bold text-primary underline-offset-4 hover:underline"
+          className="flex items-center gap-1.5 text-sm font-bold text-primary underline-offset-4 hover:underline"
           onClick={onShowProducts}
         >
-          {t("createRequest.productTable.showProducts")}
-          {meta ? ` (${meta.total})` : ""}
+          <svg className="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><circle cx="12" cy="12" r="10" /><path d="M12 8v4m0 4h.01" /></svg>
+          {meta ? `${meta.total} ` : ""}{t("createRequest.productTable.showProducts")}
         </button>
       </div>
       <div className="mt-3 overflow-hidden rounded-lg border border-border">
-        <table className="w-full min-w-[760px] border-collapse text-sm">
-          <thead className="bg-muted/20 text-xs font-bold text-muted-foreground">
+        <table className="w-full min-w-[640px] border-collapse text-sm">
+          <thead className="bg-muted/30 text-xs font-semibold text-muted-foreground">
             <tr>
-              <th className="w-16 border-b border-e border-border px-4 py-3 text-start">
+              <th className="w-12 border-b border-e border-border px-4 py-3 text-start">
                 <input type="checkbox" className="size-4 accent-primary" readOnly />
               </th>
               <th className="border-b border-e border-border px-4 py-3 text-start">
@@ -923,38 +991,44 @@ function ProductTable({
               <th className="border-b border-e border-border px-4 py-3 text-center">
                 {t("createRequest.productTable.columns.sku")}
               </th>
-              <th className="border-b border-e border-border px-4 py-3 text-center">
-                {t("createRequest.productTable.columns.details")}
+              <th className={cn("border-b border-border px-4 py-3 text-center", extraColumn && "border-e")}>
+                {t("createRequest.productTable.columns.barcode")}
               </th>
-              <th className="border-b border-border px-4 py-3 text-center">
-                {t("createRequest.productTable.columns.expiryDate")}
-              </th>
+              {extraColumnLabel ? (
+                <th className="border-b border-border px-4 py-3 text-center">
+                  {extraColumnLabel}
+                </th>
+              ) : null}
             </tr>
           </thead>
           <tbody>
             {isLoading ? (
               <tr>
-                <td colSpan={5} className="px-4 py-8 text-center text-sm text-muted-foreground">
+                <td colSpan={totalCols} className="px-4 py-8 text-center text-sm text-muted-foreground">
                   {t("createRequest.states.loading")}
                 </td>
               </tr>
             ) : isError ? (
               <tr>
-                <td colSpan={5} className="px-4 py-8 text-center text-sm text-destructive">
+                <td colSpan={totalCols} className="px-4 py-8 text-center text-sm text-destructive">
                   {t("createRequest.errors.loadProducts")}
                 </td>
               </tr>
             ) : products.length === 0 ? (
               <tr>
-                <td colSpan={5} className="px-4 py-8 text-center text-sm text-muted-foreground">
+                <td colSpan={totalCols} className="px-4 py-8 text-center text-sm text-muted-foreground">
                   {t("createRequest.productTable.noProducts")}
                 </td>
               </tr>
             ) : (
               products.map((product) => {
                 const isSelected = selectedProductIds.includes(product.id);
+                const detailValue = productDetails[product.id]?.[extraColumn?.key ?? ""] ?? "";
+                const isEditing = editingId === product.id;
+
                 return (
                   <tr key={product.id} className="border-b border-border last:border-b-0">
+                    {/* Checkbox */}
                     <td className="border-e border-border px-4 py-4">
                       <input
                         type="checkbox"
@@ -963,24 +1037,54 @@ function ProductTable({
                         onChange={() => onToggle(product.id)}
                       />
                     </td>
+                    {/* Product name + thumbnail */}
                     <td className="border-e border-border px-4 py-4">
                       <div className="flex items-center gap-3">
                         <ProductThumbnail imageUrl={product.image_url} />
-                        <span className="font-bold text-foreground">{product.name}</span>
+                        <span className="font-semibold text-foreground">{product.name}</span>
                       </div>
                     </td>
-                    <td className="border-e border-border px-4 py-4 text-center font-medium text-muted-foreground">
+                    {/* SKU */}
+                    <td className="border-e border-border px-4 py-4 text-center text-muted-foreground">
                       {product.sku}
                     </td>
-                    <td className="border-e border-border px-4 py-4 text-center font-medium text-muted-foreground">
-                      {t("createRequest.productTable.emptyDetail")}
+                    {/* Barcode */}
+                    <td className={cn("px-4 py-4 text-center text-muted-foreground", extraColumn && "border-e border-border")}>
+                      {product.barcode ?? "—"}
                     </td>
-                    <td className="px-4 py-4">
-                      <div className="flex items-center justify-center gap-3 font-medium text-muted-foreground">
-                        {product.expiry_date ?? "—"}
-                        <EditIcon className="size-4 text-primary" />
-                      </div>
-                    </td>
+                    {/* Extra column: display value + edit icon, inline input when editing */}
+                    {extraColumn ? (
+                      <td className="px-4 py-4 text-center">
+                        {isEditing ? (
+                          <div className="flex items-center justify-center gap-2">
+                            <input
+                              autoFocus
+                              type={extraColumn.type === "integer" ? "number" : "date"}
+                              min={extraColumn.type === "integer" ? 1 : undefined}
+                              value={detailValue}
+                              onChange={(e) => onDetailChange(product.id, extraColumn.key, e.target.value)}
+                              onBlur={() => setEditingId(null)}
+                              onKeyDown={(e) => { if (e.key === "Enter" || e.key === "Escape") setEditingId(null); }}
+                              className="h-8 w-28 rounded-md border border-primary bg-background px-2 text-center text-sm outline-none focus:ring-2 focus:ring-primary/40"
+                            />
+                          </div>
+                        ) : (
+                          <div className="flex items-center justify-center gap-2 text-muted-foreground">
+                            <span className="font-medium">
+                              {detailValue || "—"}
+                            </span>
+                            <button
+                              type="button"
+                              aria-label={t("createRequest.productTable.editDetail")}
+                              onClick={() => setEditingId(product.id)}
+                              className="text-primary transition hover:text-primary/70"
+                            >
+                              <EditIcon className="size-4" />
+                            </button>
+                          </div>
+                        )}
+                      </td>
+                    ) : null}
                   </tr>
                 );
               })
@@ -1019,83 +1123,113 @@ function ProductTable({
   );
 }
 
-function GuidelinesFields({
-  t, control,
+// ─── Reusable file-upload field (planogram / job order) ──────────────────────
+
+function ServiceFileUpload({
+  t, control, name, label, accept, acceptLabel,
 }: {
   t: DashboardTranslate;
   control: import("react-hook-form").Control<CreateRequestFormValues>;
+  name: "planogramFiles" | "jobOrderFiles";
+  label: string;
+  accept: string;
+  acceptLabel: string;
 }) {
   return (
-    <div className="space-y-4">
-      <FormField
-        control={control}
-        name="documentFiles"
-        render={({ field }) => {
-          const files: File[] = field.value ?? [];
+    <FormField
+      control={control}
+      name={name}
+      render={({ field }) => {
+        const files: File[] = (field.value as File[]) ?? [];
 
-          function handleFilesSelected(e: React.ChangeEvent<HTMLInputElement>) {
-            const selected = Array.from(e.target.files ?? []);
-            const merged = [
-              ...files,
-              ...selected.filter((inc) => !files.some((ex) => ex.name === inc.name)),
-            ];
-            field.onChange(merged);
-            e.target.value = "";
-          }
+        function handleSelect(e: React.ChangeEvent<HTMLInputElement>) {
+          const selected = Array.from(e.target.files ?? []);
+          const merged = [...files, ...selected.filter((inc) => !files.some((ex) => ex.name === inc.name))];
+          field.onChange(merged);
+          e.target.value = "";
+        }
 
-          function removeFile(name: string) {
-            field.onChange(files.filter((f) => f.name !== name));
-          }
+        function remove(fileName: string) {
+          field.onChange(files.filter((f) => f.name !== fileName));
+        }
 
-          return (
-            <FormItem>
-              <FormLabel className="text-base font-bold">
-                {t("createRequest.guidelines.documents")}
-              </FormLabel>
-              <FormControl>
-                <label className="mt-3 flex cursor-pointer flex-col items-center rounded-lg border border-dashed border-border px-5 py-8 text-center transition hover:border-primary/50 hover:bg-primary/5">
-                  <UploadIcon className="mx-auto size-5 text-muted-foreground" />
-                  <p className="mt-2 text-base font-bold text-muted-foreground">
-                    {t("createRequest.guidelines.uploadTitle")}
-                  </p>
-                  <p className="mt-1 text-xs font-medium text-muted-foreground">
-                    {t("createRequest.guidelines.uploadDescription")}
-                  </p>
-                  <p className="mt-2 text-xs font-semibold text-primary">
-                    {t("createRequest.guidelines.supportedFormats")}
-                  </p>
-                  <input
-                    type="file"
-                    className="sr-only"
-                    multiple
-                    accept="image/png,image/jpeg,application/pdf"
-                    onChange={handleFilesSelected}
-                  />
-                </label>
-              </FormControl>
-              {files.length > 0 ? (
-                <ul className="mt-3 space-y-2">
-                  {files.map((file) => (
-                    <li key={file.name} className="flex items-center justify-between gap-3 rounded-lg border border-border bg-muted/20 px-4 py-2.5">
-                      <span className="truncate text-sm font-medium text-foreground">{file.name}</span>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon-sm"
-                        className="shrink-0 rounded-full text-muted-foreground hover:text-destructive"
-                        aria-label={t("createRequest.guidelines.removeFile")}
-                        onClick={() => removeFile(file.name)}
-                      >
-                        <CloseIcon className="size-4" />
-                      </Button>
-                    </li>
-                  ))}
-                </ul>
-              ) : null}
-            </FormItem>
-          );
-        }}
-      />
+        return (
+          <FormItem>
+            <FormLabel className="text-base font-bold">{label}</FormLabel>
+            <FormControl>
+              <label className="mt-2 flex cursor-pointer flex-col items-center rounded-lg border border-dashed border-border px-5 py-6 text-center transition hover:border-primary/50 hover:bg-primary/5">
+                <UploadIcon className="size-5 text-foreground" />
+                <p className="mt-2 text-sm font-bold text-foreground">
+                  {t("createRequest.guidelines.uploadTitle")}
+                </p>
+                <p className="mt-1 text-xs font-medium text-muted-foreground">
+                  {t("createRequest.guidelines.uploadDescription")}
+                </p>
+                <p className="mt-1.5 text-xs font-semibold text-primary">{acceptLabel}</p>
+                <input type="file" className="sr-only" multiple accept={accept} onChange={handleSelect} />
+              </label>
+            </FormControl>
+            {files.length > 0 ? (
+              <ul className="mt-2 space-y-1.5">
+                {files.map((file) => (
+                  <li key={file.name} className="flex items-center justify-between gap-3 rounded-lg border border-border bg-muted/20 px-4 py-2">
+                    <span className="truncate text-sm font-medium text-foreground">{file.name}</span>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon-sm"
+                      className="shrink-0 rounded-full text-muted-foreground hover:text-destructive"
+                      aria-label={t("createRequest.guidelines.removeFile")}
+                      onClick={() => remove(file.name)}
+                    >
+                      <CloseIcon className="size-4" />
+                    </Button>
+                  </li>
+                ))}
+              </ul>
+            ) : null}
+          </FormItem>
+        );
+      }}
+    />
+  );
+}
+
+function GuidelinesFields({
+  t, control, showPlanogramUpload, showJobOrderUpload,
+}: {
+  t: DashboardTranslate;
+  control: import("react-hook-form").Control<CreateRequestFormValues>;
+  showPlanogramUpload: boolean;
+  showJobOrderUpload: boolean;
+}) {
+  return (
+    <div className="space-y-6">
+      {/* Planogram upload */}
+      {showPlanogramUpload ? (
+        <ServiceFileUpload
+          t={t}
+          control={control}
+          name="planogramFiles"
+          label={t("createRequest.fields.planogramFiles.label")}
+          accept="application/pdf,image/*"
+          acceptLabel={t("createRequest.fields.planogramFiles.accept")}
+        />
+      ) : null}
+
+      {/* Job order upload — secondary display only */}
+      {showJobOrderUpload ? (
+        <ServiceFileUpload
+          t={t}
+          control={control}
+          name="jobOrderFiles"
+          label={t("createRequest.fields.jobOrderFiles.label")}
+          accept="application/pdf,image/*,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+          acceptLabel={t("createRequest.fields.jobOrderFiles.accept")}
+        />
+      ) : null}
+
+      {/* Instructions */}
       <FormField
         control={control}
         name="instructions"

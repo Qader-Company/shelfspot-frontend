@@ -30,10 +30,12 @@ export async function createTask({ payload, companySlug }: CreateTaskServicePara
         if (value != null) formData.append(`services[${serviceIndex}][products][${productIndex}][product_details][${key}]`, String(value));
       });
     });
-  });
-
-  payload.documentFiles?.forEach((file, fileIndex) => {
-    formData.append(`services[0][request_files][${fileIndex}]`, file, file.name);
+    service.planogramFiles?.forEach((file, i) => {
+      formData.append(`services[${serviceIndex}][request_files][planogram][${i}]`, file, file.name);
+    });
+    service.jobOrderFiles?.forEach((file, i) => {
+      formData.append(`services[${serviceIndex}][request_files][job_order][${i}]`, file, file.name);
+    });
   });
 
   return (await apiClient.post<CreateTaskResponse>(TASKS_ENDPOINT, formData, { headers: { "X-Company-Slug": companySlug } })).data;

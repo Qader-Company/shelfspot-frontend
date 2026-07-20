@@ -387,6 +387,18 @@
           "label": "Execution Instructions",
           "description": "Add clear execution notes, placement requirements, timing details, or special instructions.",
           "placeholder": "Write detailed instructions for the assigned merchandiser..."
+        },
+        "planogramFiles": {
+          "label": "Upload Planogram",
+          "accept": "PDF / Image"
+        },
+        "jobOrderFiles": {
+          "label": "Upload Job Order",
+          "accept": "PDF / Image / Excel"
+        },
+        "files": {
+          "uploadHint": "Click to upload files",
+          "replaceHint": "{count} file(s) selected — click to add more"
         }
       },
       "options": {
@@ -415,9 +427,12 @@
         "columns": {
           "products": "Products",
           "sku": "SKU Code",
+          "barcode": "Barcode",
           "details": "Product Details",
-          "expiryDate": "Expiry Date"
-        }
+          "expiryDate": "Expiry Date",
+          "minQuantity": "Min Quantity"
+        },
+        "editDetail": "Edit value"
       },
       "pagination": {
         "previous": "Previous",
