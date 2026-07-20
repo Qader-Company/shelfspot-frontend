@@ -1,5 +1,5 @@
-export { BrandPage } from "./brand-page";
-export { SubBrandPage } from "./sub-brand-page";
-export { CategoryPage } from "./category-page";
-export { SubCategoryPage } from "./sub-category-page";
-export { ProductPage } from "./product-page";
+export { BrandPage } from "./brands/page";
+export { SubBrandPage } from "./sub-brands/page";
+export { CategoryPage } from "./categories/page";
+export { SubCategoryPage } from "./sub-categories/page";
+export { ProductPage } from "./products/page";
