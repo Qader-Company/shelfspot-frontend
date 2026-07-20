@@ -1,4 +1,4 @@
-import { DashboardRequestsPage } from "@/modules/dashboard/components/dashboard-requests-page";
+import { DashboardRequestsPage } from "@/modules/company/dashboard/components/dashboard-requests-page";
 
 export default function RequestsPage() {
   return <DashboardRequestsPage />;

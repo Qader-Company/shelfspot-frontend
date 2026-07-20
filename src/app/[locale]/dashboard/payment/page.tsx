@@ -1,4 +1,4 @@
-import { PaymentsPage } from "@/modules/dashboard/payment";
+import { PaymentsPage } from "@/modules/company/payment";
 
 export default function PaymentPage() {
   return <PaymentsPage />;
