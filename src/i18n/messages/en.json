@@ -528,6 +528,11 @@
           "completed": "If Completed: Money is transferred to shelfspot",
           "refund": "If Not Completed: Full refund to your wallet"
         },
+        "insufficientBalance": "Insufficient balance. Please top up your wallet before proceeding.",
+        "pendingStatus": {
+          "title": "Status: Pending",
+          "description": "The request will appear in your dashboard with Pending status until a merchandiser accepts it."
+        },
         "status": {
           "title": "Status: Pending",
           "description": "The request will appear in your dashboard with “Pending” status until a merchandiser accepts it."
@@ -1043,6 +1048,7 @@
       "actions": {
         "reschedule": "Reschedule This Request",
         "cancelRequest": "Cancel Request",
+        "pay": "Pay Now",
         "repeatRequest": "Repeat This Request",
         "viewExecution": "View Execution Details",
         "cancelReopening": "Cancel reopening task"

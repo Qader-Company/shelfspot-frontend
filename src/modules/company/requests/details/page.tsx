@@ -24,6 +24,7 @@ import { ErrorState, PageLoadingSkeleton } from "@/shared/components/feedback";
 import { ServiceDetailCard } from "./service-card";
 import { useTaskQuery, useTaskMutations } from "./use-query";
 import type { CompanyTask } from "./types";
+import { PaymentConfirmDialog } from "@/modules/company/requests/shared/payment-confirm-dialog";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────
 
@@ -135,8 +136,9 @@ function RequestDetailsView({ task, id }: { task: CompanyTask; id: string | numb
   const t = useTranslations("dashboard");
   const locale = useLocale();
   const router = useRouter();
-  const { act } = useTaskMutations();
+  const { act, pay } = useTaskMutations();
   const [showCancel, setShowCancel] = useState(false);
+  const [showPay, setShowPay] = useState(false);
 
   const remaining = timeRemaining(task.expires_at);
   const locationName = task.location.location_name || task.location.address || "—";
@@ -147,7 +149,8 @@ function RequestDetailsView({ task, id }: { task: CompanyTask; id: string | numb
     0,
   );
 
-  const canCancel = ["draft", "pending"].includes(task.status);
+  const isDraft = task.status === "draft";
+  const canCancel = task.status === "pending";
 
   const serviceLabels = {
     productHeading:      t("requestDetails.services.productHeading"),
@@ -254,20 +257,33 @@ function RequestDetailsView({ task, id }: { task: CompanyTask; id: string | numb
           </div>
         </div>
 
-        {/* Progress */}
-        <div className="flex items-center gap-4 rounded-xl border border-border bg-card p-5 shadow-sm">
-          <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-primary/15">
-            <ActivityIcon className="size-5 text-primary" />
-          </span>
-          <div className="flex-1">
-            <p className="text-xs text-muted-foreground">{t("requestDetails.stats.progress")}</p>
-            <p className="text-2xl font-bold text-foreground">{task.progress.percentage}%</p>
-            <ProgressBar percentage={task.progress.percentage} />
-            <p className="mt-1 text-xs text-muted-foreground">
-              {task.progress.completed_services} / {task.progress.total_services}
-            </p>
+        {/* Progress (non-draft) / Total Products (draft) */}
+        {isDraft ? (
+          <div className="flex items-center gap-4 rounded-xl border border-border bg-card p-5 shadow-sm">
+            <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-primary/15">
+              <BoxIcon className="size-5 text-primary" />
+            </span>
+            <div>
+              <p className="text-xs text-muted-foreground">{t("requestDetails.stats.totalProducts")}</p>
+              <p className="text-2xl font-bold text-foreground">{totalProducts}</p>
+              <p className="text-xs text-muted-foreground">{t("requestDetails.stats.unitsSubtitle")}</p>
+            </div>
           </div>
-        </div>
+        ) : (
+          <div className="flex items-center gap-4 rounded-xl border border-border bg-card p-5 shadow-sm">
+            <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-primary/15">
+              <ActivityIcon className="size-5 text-primary" />
+            </span>
+            <div className="flex-1">
+              <p className="text-xs text-muted-foreground">{t("requestDetails.stats.progress")}</p>
+              <p className="text-2xl font-bold text-foreground">{task.progress.percentage}%</p>
+              <ProgressBar percentage={task.progress.percentage} />
+              <p className="mt-1 text-xs text-muted-foreground">
+                {task.progress.completed_services} / {task.progress.total_services}
+              </p>
+            </div>
+          </div>
+        )}
 
         {/* Time Remaining */}
         <div className="flex items-center gap-4 rounded-xl border border-border bg-card p-5 shadow-sm">
@@ -289,11 +305,11 @@ function RequestDetailsView({ task, id }: { task: CompanyTask; id: string | numb
         </div>
       </div>
 
-      {/* Total products chip */}
-      {totalProducts > 0 && (
+      {/* Total products chip — non-draft only (draft shows it in stats) */}
+      {!isDraft && totalProducts > 0 && (
         <div className="flex items-center gap-2 rounded-xl border border-border bg-card px-5 py-4 shadow-sm">
           <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary/10">
-            <ScheduleIcon className="size-4 text-primary" />
+            <BoxIcon className="size-4 text-primary" />
           </span>
           <div>
             <p className="text-xs text-muted-foreground">{t("requestDetails.stats.totalProducts")}</p>
@@ -303,6 +319,16 @@ function RequestDetailsView({ task, id }: { task: CompanyTask; id: string | numb
       )}
 
       {/* Action buttons */}
+      {isDraft && (
+        <Button
+          type="button"
+          className="h-12 w-full gap-2 rounded-xl text-sm font-semibold text-white hover:text-white"
+          onClick={() => setShowPay(true)}
+        >
+          <PaymentIcon className="size-4" />
+          {t("requestDetails.actions.pay")}
+        </Button>
+      )}
       {canCancel && (
         <Button
           type="button"
@@ -344,6 +370,19 @@ function RequestDetailsView({ task, id }: { task: CompanyTask; id: string | numb
             { id, action: "cancel" },
             { onSuccess: () => { setShowCancel(false); router.back(); } },
           )
+        }
+      />
+
+      {/* Payment dialog */}
+      <PaymentConfirmDialog
+        isOpen={showPay}
+        isPending={pay.isPending}
+        totalPrice={task.total_price}
+        onClose={() => setShowPay(false)}
+        onConfirm={() =>
+          pay.mutate(id, {
+            onSuccess: () => { setShowPay(false); router.back(); },
+          })
         }
       />
     </div>
