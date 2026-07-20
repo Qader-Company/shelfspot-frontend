@@ -25,6 +25,7 @@ export async function proxyAuthRequest(
   upstreamPath: string,
   options?: {
     authorization?: string;
+    method?: string;
     transformResponse?: (body: unknown, response: NextResponse) => unknown;
   },
 ) {
@@ -49,7 +50,7 @@ export async function proxyAuthRequest(
   try {
     const response = await apiClient.request({
       url: `${upstreamPath}${request.nextUrl.search}`,
-      method: request.method,
+      method: options?.method ?? request.method,
       data,
       headers: {
         ...(options?.authorization || request.headers.get("authorization")

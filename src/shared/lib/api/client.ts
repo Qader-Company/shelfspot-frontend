@@ -2,8 +2,8 @@ import axios from "axios";
 import type { InternalAxiosRequestConfig } from "axios";
 
 import { API_CONFIG } from "@/config/api";
-import { refreshCompanyTokens } from "@/modules/auth/services/refresh-token-service";
-import { useAuthStore } from "@/shared/stores/auth-store";
+import { refreshTokens } from "@/modules/auth/services/session-api";
+import { getAuthContextConfig, type AuthContext } from "@/modules/auth/config/auth-context";
 
 export const apiClient = axios.create({
   baseURL: undefined,
@@ -14,45 +14,34 @@ export const apiClient = axios.create({
     "Content-Type": "application/json",
   },
 });
+export const adminApiClient = axios.create({
+  baseURL: undefined,
+  timeout: API_CONFIG.timeoutMs,
+  withCredentials: true,
+  headers: { Accept: "application/json", "Content-Type": "application/json" },
+});
 
 type AuthRequestConfig = InternalAxiosRequestConfig & {
   _retry?: boolean;
   authTokenType?: "access" | "refresh";
 };
 
-let refreshPromise: Promise<
-  Awaited<ReturnType<typeof refreshCompanyTokens>>
-> | null = null;
-let isApiClientReady = false;
+const refreshPromises: Partial<Record<AuthContext, Promise<void>>> = {};
+const readyContexts = new Set<AuthContext>();
 
-function isRefreshRequest(url?: string) {
-  return url?.includes("/auth/company/refresh");
-}
-
-function isPublicAuthRequest(url?: string) {
-  return (
-    url?.includes("/auth/company/login") ||
-    url?.includes("/auth/company/register") ||
-    url?.includes("/auth/company/forgot-password") ||
-    url?.includes("/auth/company/email-verification") ||
-    url?.includes("/auth/company/email-verification/send-otp")
-  );
-}
-
-function redirectToLogin() {
+function redirectToLogin(context: AuthContext) {
   if (typeof window === "undefined") return;
   const locale = window.location.pathname.split("/")[1];
-  const loginPath = locale === "en" || locale === "ar" ? `/${locale}/login` : "/ar/login";
+  const route = getAuthContextConfig(context).loginRoute;
+  const loginPath = locale === "en" || locale === "ar" ? `/${locale}${route}` : `/ar${route}`;
 
   window.location.replace(loginPath);
 }
 
-export function setupApiClient() {
-  if (isApiClientReady) {
-    return;
-  }
-
-  apiClient.interceptors.response.use(
+function setupClient(context: AuthContext) {
+  if (readyContexts.has(context)) return;
+  const client = context === "admin" ? adminApiClient : apiClient;
+  client.interceptors.response.use(
     (response) => response,
     async (error) => {
       if (!axios.isAxiosError(error)) {
@@ -66,8 +55,7 @@ export function setupApiClient() {
         !config ||
         config._retry ||
         status !== 401 ||
-        isPublicAuthRequest(config.url) ||
-        isRefreshRequest(config.url)
+        config.url?.startsWith("/api/auth/")
       ) {
         throw error;
       }
@@ -75,20 +63,23 @@ export function setupApiClient() {
       config._retry = true;
 
       try {
-        refreshPromise ??= refreshCompanyTokens().finally(() => {
-          refreshPromise = null;
+        refreshPromises[context] ??= refreshTokens(context).finally(() => {
+          delete refreshPromises[context];
         });
-
-        await refreshPromise;
-
-        return apiClient(config);
+        await refreshPromises[context];
+        return client(config);
       } catch (refreshError) {
-        useAuthStore.getState().clearSession();
-        redirectToLogin();
+        await fetch(getAuthContextConfig(context).logoutEndpoint, {
+          method: "POST",
+          credentials: "include",
+        }).catch(() => undefined);
+        redirectToLogin(context);
         throw refreshError;
       }
     },
   );
 
-  isApiClientReady = true;
+  readyContexts.add(context);
 }
+
+export function setupApiClient() { setupClient("company"); setupClient("admin"); }

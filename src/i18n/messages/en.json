@@ -1113,6 +1113,10 @@
     }
   },
   "auth": {
+    "adminLogin": {
+      "title": "Hello!",
+      "description": "Enter your credentials to access your account"
+    },
     "login": {
       "visualAlt": "ShelfSpot login visual",
       "title": "Welcome Back",
@@ -1264,6 +1268,13 @@
       "visualAlt": "OTP verification visual",
       "title": "OTP Verification",
       "description": "Enter the verification code we just sent on your email address.",
+      "digitLabel": "OTP digit {position}",
+      "errors": {
+        "missingEmail": "Start the password reset flow again and enter your email.",
+        "missingToken": "The verification response did not include a password reset token.",
+        "invalidCode": "The verification code is invalid or expired.",
+        "generic": "Unable to verify the code right now. Please try again."
+      },
       "actions": {
         "back": "Back",
         "submit": "Verify code",
@@ -1278,6 +1289,11 @@
       "visualAlt": "Reset password visual",
       "title": "Reset password",
       "description": "Your new password must be unique from those previously used.",
+      "errors": {
+        "missingToken": "Verify your code before resetting the password.",
+        "validation": "Please check the highlighted fields.",
+        "generic": "Unable to reset the password right now. Please try again."
+      },
       "fields": {
         "password": {
           "label": "New Password",

@@ -1,5 +1,5 @@
-import { getRequestById } from "@/modules/dashboard/requests/request-details.seed";
-import { RequestDetailsPage } from "@/modules/dashboard/requests/request-details-page";
+import { getRequestById } from "@/modules/company/requests/details/seed";
+import { RequestDetailsPage } from "@/modules/company/requests/details/page";
 
 interface Props {
   params: { id: string };

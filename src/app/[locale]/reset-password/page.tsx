@@ -8,5 +8,10 @@ export default async function ResetPasswordPage({
 }) {
   const { locale } = await params;
 
-  return <ResetPasswordPageView direction={getLocaleDirection(locale)} />;
+  return (
+    <ResetPasswordPageView
+      authContext="company"
+      direction={getLocaleDirection(locale)}
+    />
+  );
 }
