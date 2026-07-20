@@ -1,10 +1,13 @@
 import type { ReactNode } from "react";
 
+import type { AuthContext } from "@/modules/auth/config/auth-context";
+
 import { DashboardSidebar } from "./dashboard-sidebar";
 import { DashboardTopbar } from "./dashboard-topbar";
 import type { DashboardSidebarItem, DashboardUser } from "./types";
 
 interface DashboardLayoutProps {
+  authContext: AuthContext;
   children: ReactNode;
   sidebarItems: DashboardSidebarItem[];
   user: DashboardUser;
@@ -22,6 +25,7 @@ interface DashboardLayoutProps {
 }
 
 export function DashboardLayout({
+  authContext,
   children,
   sidebarItems,
   user,
@@ -31,6 +35,7 @@ export function DashboardLayout({
   return (
     <div className="flex h-dvh overflow-hidden bg-background">
       <DashboardSidebar
+        authContext={authContext}
         items={sidebarItems}
         navigationLabel={labels.navigation}
         logoLabel={labels.logo}

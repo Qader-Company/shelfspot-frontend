@@ -27,6 +27,7 @@ export default async function AdminDashboardShellLayout({
 
   return (
     <DashboardLayout
+      authContext="admin"
       sidebarItems={sidebarItems}
       primaryItemCount={5}
       user={{ name: t("user.name"), description: t("user.role") }}
