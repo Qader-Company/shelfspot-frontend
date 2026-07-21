@@ -9,6 +9,7 @@ export interface DashboardRequestRow {
   time: string;
   status: StatusBadgeStatus;
   statusLabel?: string;
+  canEdit?: boolean;
 }
 
 export const dashboardRequestStats: DashboardStatItem[] = [

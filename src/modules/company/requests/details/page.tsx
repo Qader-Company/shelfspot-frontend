@@ -136,9 +136,11 @@ function RequestDetailsView({ task, id }: { task: CompanyTask; id: string | numb
   const t = useTranslations("dashboard");
   const locale = useLocale();
   const router = useRouter();
-  const { act, pay } = useTaskMutations();
+  const { act, pay, update } = useTaskMutations();
   const [showCancel, setShowCancel] = useState(false);
   const [showPay, setShowPay] = useState(false);
+  const [showReschedule, setShowReschedule] = useState(false);
+  const [editDate, setEditDate] = useState(task.date.slice(0, 10));
 
   const remaining = timeRemaining(task.expires_at);
   const locationName = task.location.location_name || task.location.address || "—";
@@ -150,7 +152,8 @@ function RequestDetailsView({ task, id }: { task: CompanyTask; id: string | numb
   );
 
   const isDraft = task.status === "draft";
-  const canCancel = task.status === "pending";
+  const canCancel = task.status === "pending" || task.status === "failed";
+  const canReschedule = task.status === "failed";
 
   const serviceLabels = {
     productHeading:      t("requestDetails.services.productHeading"),
@@ -199,10 +202,6 @@ function RequestDetailsView({ task, id }: { task: CompanyTask; id: string | numb
           <div className="flex flex-wrap items-center gap-3">
             <span className="text-2xl font-bold text-foreground">REQ-{task.id}</span>
             <StatusBadge status={badgeStatus} label={task.status_label} />
-            <StatusBadge
-              status={task.payment_status === "charged" ? "completed" : "pending"}
-              label={task.payment_status_label}
-            />
           </div>
           <div className="text-end">
             <p className="text-xs text-muted-foreground">{t("requestDetails.createdOn")}</p>
@@ -320,16 +319,12 @@ function RequestDetailsView({ task, id }: { task: CompanyTask; id: string | numb
 
       {/* Action buttons */}
       {isDraft && (
-        <Button
-          type="button"
-          className="h-12 w-full gap-2 rounded-xl text-sm font-semibold text-white hover:text-white"
-          onClick={() => setShowPay(true)}
-        >
-          <PaymentIcon className="size-4" />
-          {t("requestDetails.actions.pay")}
-        </Button>
+        <Button type="button" className="h-12 w-full gap-2 rounded-xl text-sm font-semibold text-white hover:text-white" onClick={() => setShowPay(true)}><PaymentIcon className="size-4" />{t("requestDetails.actions.pay")}</Button>
       )}
-      {canCancel && (
+      {(canCancel || canReschedule) && (
+        <div className="grid gap-3 sm:grid-cols-2">
+        {canReschedule ? <Button type="button" variant="outline" className="h-12 gap-2 rounded-xl" onClick={() => setShowReschedule(true)}><CalendarIcon className="size-4" />{t("requestDetails.actions.reschedule")}</Button> : null}
+        {canCancel ? (
         <Button
           type="button"
           className="h-12 w-full gap-2 rounded-xl bg-destructive text-sm font-semibold text-white hover:bg-destructive/90"
@@ -338,6 +333,8 @@ function RequestDetailsView({ task, id }: { task: CompanyTask; id: string | numb
           <CloseIcon className="size-4" />
           {t("requestDetails.actions.cancelRequest")}
         </Button>
+        ) : null}
+        </div>
       )}
 
       {/* Services section */}
@@ -385,6 +382,20 @@ function RequestDetailsView({ task, id }: { task: CompanyTask; id: string | numb
           })
         }
       />
+      {showReschedule ? (
+        <div role="presentation" className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/30 p-4">
+          <section role="dialog" aria-modal="true" aria-label={t("requestDetails.reschedule.dateTitle")} className="w-full max-w-md rounded-2xl border border-border bg-card p-6 shadow-xl">
+            <h2 className="text-lg font-bold text-foreground">{t("requestDetails.reschedule.dateTitle")}</h2>
+            <div className="mt-5 space-y-4">
+              <label className="block text-sm font-medium text-foreground">{t("requestDetails.editDialog.date")}<input type="date" value={editDate} min={new Date().toISOString().slice(0, 10)} onChange={(event) => setEditDate(event.target.value)} className="mt-2 h-11 w-full rounded-lg border border-border bg-background px-3" /></label>
+            </div>
+            <div className="mt-6 flex gap-3">
+              <Button type="button" variant="outline" className="flex-1" disabled={update.isPending} onClick={() => setShowReschedule(false)}>{t("requestDetails.editDialog.cancel")}</Button>
+              <Button type="button" className="flex-1 text-white" disabled={!editDate || update.isPending} onClick={() => { const payload = new FormData(); payload.append("date", editDate); update.mutate({ id, payload }, { onSuccess: () => setShowReschedule(false) }); }}>{t("requestDetails.editDialog.save")}</Button>
+            </div>
+          </section>
+        </div>
+      ) : null}
     </div>
   );
 }

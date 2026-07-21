@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 
 import { proxyCompanyRequest } from "@/shared/lib/api/proxy";
 
-const allowedActions = new Set(["cancel", "accept", "reject"]);
+const allowedActions = new Set(["cancel", "accept", "reject", "pay"]);
 
 export async function POST(
   request: NextRequest,

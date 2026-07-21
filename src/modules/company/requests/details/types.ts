@@ -17,10 +17,10 @@ export interface CompanyTaskProduct {
     name: string;
     sku: string;
     image?: string | null;
-    brand?: { name: string } | null;
-    sub_brand?: { name: string } | null;
-    category?: { name: string } | null;
-    sub_category?: { name: string } | null;
+    brand?: { id?: number; name: string } | null;
+    sub_brand?: { id?: number; name: string } | null;
+    category?: { id?: number; name: string } | null;
+    sub_category?: { id?: number; name: string } | null;
   };
 }
 
@@ -37,6 +37,7 @@ export interface CompanyTaskService {
     name: string;
     description: string;
     price: string;
+    minimum_execution_time?: number;
     is_active: boolean;
   };
   products: CompanyTaskProduct[];

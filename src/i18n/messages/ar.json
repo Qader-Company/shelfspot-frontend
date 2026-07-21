@@ -965,6 +965,13 @@
       "filters": {
         "allStatuses": "كل الحالات"
       },
+      "states": {
+        "errorTitle": "الطلبات غير متاحة",
+        "errorDescription": "تعذر تحميل الطلبات.",
+        "retry": "حاول مرة أخرى",
+        "emptyTitle": "لا توجد طلبات",
+        "emptyDescription": "أنشئ طلبًا أو عدل عوامل التصفية الحالية."
+      },
       "status": {
         "inProgress": "قيد التنفيذ",
         "completed": "مكتمل",
@@ -1045,12 +1052,20 @@
         "untilDeadline": "حتى الموعد"
       },
       "actions": {
+        "edit": "تعديل المسودة",
         "reschedule": "إعادة جدولة الطلب",
         "cancelRequest": "إلغاء الطلب",
         "pay": "ادفع الآن",
         "repeatRequest": "تكرار الطلب",
         "viewExecution": "عرض تفاصيل التنفيذ",
         "cancelReopening": "إلغاء إعادة الفتح"
+      },
+      "editDialog": {
+        "title": "تعديل مسودة الطلب",
+        "date": "تاريخ التنفيذ",
+        "notes": "ملاحظات",
+        "cancel": "إلغاء",
+        "save": "حفظ التغييرات"
       },
       "cancelDialog": {
         "title": "إلغاء الطلب",

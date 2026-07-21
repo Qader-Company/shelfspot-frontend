@@ -46,7 +46,11 @@ export function DashboardRequestsPage() {
   const rows = useMemo<DashboardRequestRow[]>(() => tasks
     .filter((task) => {
       const term = search.trim().toLocaleLowerCase();
-      return !term || String(task.id).includes(term) || task.location.location_name?.toLocaleLowerCase().includes(term) || task.location.address?.toLocaleLowerCase().includes(term);
+      if (!term) return true;
+      return [String(task.id), `req-${task.id}`, task.location.location_name,
+        task.location.address, task.assigned_worker?.name, task.created_by,
+        task.status, task.status_label]
+        .some((value) => value?.toLocaleLowerCase().includes(term));
     })
     .map((task) => ({
       id: `REQ-${task.id}`,
@@ -56,6 +60,7 @@ export function DashboardRequestsPage() {
       time: formatCreatedAt(task.created_at, locale),
       status: badgeStatus(task.status),
       statusLabel: task.status_label,
+      canEdit: task.status === "draft",
     })), [locale, search, tasks]);
 
   const completed = tasks.filter((task) => task.status === "completed").length;

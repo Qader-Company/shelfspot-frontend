@@ -99,15 +99,11 @@ export function DashboardRequestsTable({
                     >
                       <TrashIcon className="size-4" />
                     </Button>
-                    <Button
-                      aria-label={labels.edit}
-                      type="button"
-                      variant="ghost"
-                      size="icon-xs"
-                      className="text-muted-foreground hover:text-foreground"
-                    >
-                      <EditIcon className="size-4" />
-                    </Button>
+                    {row.canEdit ? (
+                      <Button asChild aria-label={labels.edit} variant="ghost" size="icon-xs" className="text-muted-foreground hover:text-foreground">
+                        <Link href={`/dashboard/requests/${row.taskId ?? row.id}/edit`}><EditIcon className="size-4" /></Link>
+                      </Button>
+                    ) : null}
                   </div>
                 </td>
               </tr>

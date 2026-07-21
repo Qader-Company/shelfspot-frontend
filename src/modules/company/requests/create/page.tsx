@@ -7,6 +7,8 @@ import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 
 import { useCreateTaskMutation } from "@/modules/company/requests/create/use-create-mutation";
+import { toTaskFormData } from "@/modules/company/requests/create/service";
+import { useTaskMutations, useTaskQuery } from "@/modules/company/requests/details/use-query";
 import { useServicesQuery } from "@/modules/company/requests/create/use-query";
 import { useProductsQuery } from "@/modules/company/catalog/products/use-query";
 import { useBrandsQuery } from "@/modules/company/catalog/brands/use-query";
@@ -111,7 +113,7 @@ const defaultValues: CreateRequestFormValues = {
 
 // ─── Main component ───────────────────────────────────────────────────────────
 
-export function CreateRequestPage() {
+export function CreateRequestPage({ taskId }: { taskId?: string | number }) {
   const t = useTranslations("dashboard");
   const [openDialog, setOpenDialog] = useState<DialogName>(null);
   const [activeStepIndex, setActiveStepIndex] = useState(0);
@@ -123,6 +125,9 @@ export function CreateRequestPage() {
   const serviceSectionRef = useRef<HTMLElement | null>(null);
 
   const createTaskMutation = useCreateTaskMutation();
+  const taskQuery = useTaskQuery(taskId ?? "");
+  const { update: updateTaskMutation } = useTaskMutations();
+  const hydratedTaskId = useRef<string | number | null>(null);
   const servicesQuery = useServicesQuery();
   const allServices = servicesQuery.data?.data ?? [];
 
@@ -135,6 +140,25 @@ export function CreateRequestPage() {
   const brandOptions = brandsQuery.data?.data ?? [];
 
   const sectionRefs = useMemo(() => [locationSectionRef, serviceSectionRef], []);
+
+  useEffect(() => {
+    const task = taskQuery.data?.data;
+    if (!taskId || !task || task.status !== "draft" || hydratedTaskId.current === task.id) return;
+    hydratedTaskId.current = task.id;
+    const address = task.location.address ?? "";
+    form.reset({
+      executionDate: task.date.slice(0, 10), executionDateIso: task.date.slice(0, 10), executionTime: "09:00 AM",
+      storeName: task.location.location_name ?? address, streetAddress: address,
+      state: address || "-", region: address || "-", city: address || "-", district: "",
+      latitude: Number(task.location.latitude), longitude: Number(task.location.longitude),
+    });
+    setServiceEntries(task.services.map((item) => ({
+      ...makeEmptyEntry(), id: String(item.id), serviceKey: item.service.key,
+      price: Number(item.unit_price), executionTimeMins: item.service.minimum_execution_time ?? 0,
+      instructions: item.execution_instructions ?? "", productIds: item.products.map((product) => product.product.id),
+      productDetails: Object.fromEntries(item.products.map((product) => [product.product.id, Array.isArray(product.product_details) ? {} : Object.fromEntries(Object.entries(product.product_details).map(([key, value]) => [key, value == null ? "" : String(value)]))])),
+    })));
+  }, [form, taskId, taskQuery.data]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -182,9 +206,7 @@ export function CreateRequestPage() {
   async function confirmPayment() {
     const vals = form.getValues();
     try {
-      await createTaskMutation.mutateAsync({
-        companySlug: "",
-        payload: {
+      const payload = {
           date: vals.executionDateIso,
           location: { latitude: vals.latitude, longitude: vals.longitude, location_name: vals.storeName || null, address: vals.streetAddress || null },
           notes: serviceEntries[0]?.instructions || null,
@@ -194,8 +216,9 @@ export function CreateRequestPage() {
             products: entry.productIds.map((id) => ({ product_id: id, product_details: entry.productDetails[id] ?? {} })),
             planogramFiles: entry.planogramFiles, jobOrderFiles: entry.jobOrderFiles,
           })),
-        },
-      });
+        };
+      if (taskId) await updateTaskMutation.mutateAsync({ id: taskId, payload: toTaskFormData(payload) });
+      else await createTaskMutation.mutateAsync({ companySlug: "", payload });
       setOpenDialog("success");
     } catch (error) {
       const apiError = normalizeApiError(error);
@@ -319,7 +342,7 @@ export function CreateRequestPage() {
       {openDialog === "location" ? (
         <LocationDialog t={t} isOpen initialValues={{ storeName: values.storeName ?? "", streetAddress: values.streetAddress ?? "", state: values.state ?? "", region: values.region ?? "", city: values.city ?? "", district: values.district ?? "", latitude: values.latitude ?? 0, longitude: values.longitude ?? 0 }} onClose={() => setOpenDialog(null)} onSave={saveLocation} />
       ) : null}
-      <PaymentDialog t={t} isOpen={openDialog === "payment"} isPending={createTaskMutation.isPending} onClose={() => setOpenDialog(null)} onConfirm={confirmPayment} />
+      <PaymentDialog t={t} isOpen={openDialog === "payment"} isPending={createTaskMutation.isPending || updateTaskMutation.isPending} onClose={() => setOpenDialog(null)} onConfirm={confirmPayment} />
       <FlowDialog title={t("createRequest.success.title")} closeLabel={t("createRequest.actions.closeDialog")} isOpen={openDialog === "success"} onClose={() => setOpenDialog(null)} footer={<Button type="button" className="h-11 w-full rounded-lg text-sm font-semibold" onClick={() => setOpenDialog(null)}>{t("createRequest.success.action")}</Button>}>
         <div className="text-center">
           <span className="mx-auto flex size-14 items-center justify-center rounded-full bg-primary/10 text-primary"><CheckCircleIcon className="size-7" /></span>
