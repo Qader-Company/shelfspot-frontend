@@ -752,22 +752,12 @@ function PaymentDialog({ t, isOpen, isPending, onClose, onConfirm }: { t: Dashbo
 
 function LocationDialog({ t, isOpen, initialValues, onClose, onSave }: {
   t: DashboardTranslate; isOpen: boolean;
-  initialValues: { storeName: string; streetAddress: string; state: string; region: string; city: string; district: string; latitude: number; longitude: number };
+  initialValues: LocationFormValues;
   onClose: () => void; onSave: (values: typeof initialValues) => void;
 }) {
   const [activeTab, setActiveTab] = useState<"map" | "manual">("manual");
   const [locationValues, setLocationValues] = useState(initialValues);
-  const [pinPosition, setPinPosition] = useState({ x: 50, y: 50 });
   function updateField(key: keyof typeof initialValues, val: string) { setLocationValues((prev) => ({ ...prev, [key]: val })); }
-  function selectMapPoint(e: React.MouseEvent<HTMLButtonElement>) {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = Math.min(92, Math.max(8, ((e.clientX - rect.left) / rect.width) * 100));
-    const y = Math.min(85, Math.max(15, ((e.clientY - rect.top) / rect.height) * 100));
-    setPinPosition({ x, y });
-    const lat = Math.round((32.2 - (y / 100) * (32.2 - 16.3)) * 10000) / 10000;
-    const lng = Math.round((34.4 + (x / 100) * (55.7 - 34.4)) * 10000) / 10000;
-    setLocationValues((prev) => ({ ...prev, latitude: lat, longitude: lng, storeName: prev.storeName || t("createRequest.mock.location.storeName"), streetAddress: prev.streetAddress || t("createRequest.mock.location.streetAddress"), state: prev.state || t("createRequest.mock.location.state"), region: prev.region || t("createRequest.mock.location.region"), city: prev.city || t("createRequest.mock.location.city"), district: prev.district || t("createRequest.mock.location.district") }));
-  }
   return (
     <FlowDialog title={t("createRequest.locationDialog.title")} closeLabel={t("createRequest.actions.closeDialog")} isOpen={isOpen} onClose={onClose} footer={<Button type="button" className="h-12 w-full rounded-lg text-sm font-semibold" onClick={() => onSave(locationValues)}>{t("createRequest.actions.save")}</Button>}>
       <div className="mb-4 flex gap-6 border-b border-border">
@@ -777,24 +767,77 @@ function LocationDialog({ t, isOpen, initialValues, onClose, onSave }: {
       </div>
       {activeTab === "map" ? (
         <div className="space-y-4">
-          <button type="button" className="relative min-h-44 w-full overflow-hidden rounded-lg bg-muted text-start" aria-label={t("createRequest.locationDialog.mapLabel")} onClick={selectMapPoint}>
-            <span className="absolute inset-0 bg-[linear-gradient(90deg,transparent_0,transparent_46%,hsl(var(--background))_46%,hsl(var(--background))_54%,transparent_54%),linear-gradient(0deg,transparent_0,transparent_42%,hsl(var(--background))_42%,hsl(var(--background))_50%,transparent_50%)] opacity-80" />
-            <span className="absolute flex size-12 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg" style={{ left: `${pinPosition.x}%`, top: `${pinPosition.y}%` }}><MapPinIcon className="size-5" /></span>
-            <span className="absolute bottom-3 start-3 rounded-full bg-background/90 px-3 py-1 text-xs font-semibold text-muted-foreground">{t("createRequest.locationDialog.mapHint")}</span>
-          </button>
+          <LocationMap
+            latitude={locationValues.latitude}
+            longitude={locationValues.longitude}
+            label={t("createRequest.locationDialog.mapLabel")}
+            hint={t("createRequest.locationDialog.mapHint")}
+            onSelect={(latitude, longitude) => setLocationValues((prev) => ({ ...prev, latitude, longitude }))}
+          />
           <DialogInput label={t("createRequest.locationDialog.fields.storeName.label")} placeholder={t("createRequest.locationDialog.fields.storeName.placeholder")} value={locationValues.storeName} onChange={(v) => updateField("storeName", v)} />
+          <DialogInput label={t("createRequest.locationDialog.fields.streetAddress.label")} placeholder={t("createRequest.locationDialog.fields.streetAddress.placeholder")} value={locationValues.streetAddress} onChange={(v) => updateField("streetAddress", v)} />
         </div>
       ) : (
-        <div className="grid gap-4 md:grid-cols-2">
-          <DialogInput className="md:col-span-2" label={t("createRequest.locationDialog.fields.storeName.label")} placeholder={t("createRequest.locationDialog.fields.storeName.placeholder")} value={locationValues.storeName} onChange={(v) => updateField("storeName", v)} />
-          <DialogInput className="md:col-span-2" label={t("createRequest.locationDialog.fields.streetAddress.label")} placeholder={t("createRequest.locationDialog.fields.streetAddress.placeholder")} value={locationValues.streetAddress} onChange={(v) => updateField("streetAddress", v)} />
-          <DialogInput label={t("createRequest.locationDialog.fields.state.label")} placeholder={t("createRequest.locationDialog.fields.state.placeholder")} value={locationValues.state} onChange={(v) => updateField("state", v)} />
-          <DialogInput label={t("createRequest.locationDialog.fields.region.label")} placeholder={t("createRequest.locationDialog.fields.region.placeholder")} value={locationValues.region} onChange={(v) => updateField("region", v)} />
-          <DialogInput label={t("createRequest.locationDialog.fields.city.label")} placeholder={t("createRequest.locationDialog.fields.city.placeholder")} value={locationValues.city} onChange={(v) => updateField("city", v)} />
-          <DialogInput label={t("createRequest.locationDialog.fields.district.label")} placeholder={t("createRequest.locationDialog.fields.district.placeholder")} value={locationValues.district ?? ""} onChange={(v) => updateField("district", v)} />
+        <div className="grid gap-4">
+          <DialogInput label={t("createRequest.locationDialog.fields.storeName.label")} placeholder={t("createRequest.locationDialog.fields.storeName.placeholder")} value={locationValues.storeName} onChange={(v) => updateField("storeName", v)} />
+          <DialogInput label={t("createRequest.locationDialog.fields.streetAddress.label")} placeholder={t("createRequest.locationDialog.fields.streetAddress.placeholder")} value={locationValues.streetAddress} onChange={(v) => updateField("streetAddress", v)} />
         </div>
       )}
     </FlowDialog>
+  );
+}
+
+function LocationMap({ latitude, longitude, label, hint, onSelect }: {
+  latitude: number;
+  longitude: number;
+  label: string;
+  hint: string;
+  onSelect: (latitude: number, longitude: number) => void;
+}) {
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const onSelectRef = useRef(onSelect);
+  onSelectRef.current = onSelect;
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    const hasSelection = latitude !== 0 || longitude !== 0;
+    const initialPosition: L.LatLngExpression = hasSelection
+      ? [latitude, longitude]
+      : [23.8859, 45.0792];
+    const map = L.map(containerRef.current, {
+      center: initialPosition,
+      zoom: hasSelection ? 13 : 5,
+      zoomControl: true,
+    });
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 19,
+      attribution: "&copy; OpenStreetMap contributors",
+    }).addTo(map);
+
+    let marker: L.CircleMarker | null = hasSelection
+      ? L.circleMarker(initialPosition, { radius: 9, color: "#fff", weight: 3, fillColor: "#7c3aed", fillOpacity: 1 }).addTo(map)
+      : null;
+    map.on("click", ({ latlng }: L.LeafletMouseEvent) => {
+      marker?.remove();
+      marker = L.circleMarker(latlng, { radius: 9, color: "#fff", weight: 3, fillColor: "#7c3aed", fillOpacity: 1 }).addTo(map);
+      onSelectRef.current(
+        Math.round(latlng.lat * 1_000_000) / 1_000_000,
+        Math.round(latlng.lng * 1_000_000) / 1_000_000,
+      );
+    });
+
+    window.requestAnimationFrame(() => map.invalidateSize());
+    return () => map.remove();
+  }, [latitude, longitude]);
+
+  return (
+    <div className="relative overflow-hidden rounded-lg border border-border">
+      <div ref={containerRef} className="h-72 w-full" role="application" aria-label={label} />
+      <span className="pointer-events-none absolute bottom-3 start-3 z-[500] rounded-full bg-background/90 px-3 py-1 text-xs font-semibold text-muted-foreground shadow-sm">
+        {hint}
+      </span>
+    </div>
   );
 }
 
