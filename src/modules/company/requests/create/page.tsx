@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
 import { useForm, useWatch } from "react-hook-form";
@@ -24,6 +26,7 @@ import { createRequestSteps } from "@/modules/company/requests/create/seed";
 import { CreateRequestLayout } from "@/modules/company/requests/create/layout";
 import { CreateRequestStepper } from "@/modules/company/requests/create/stepper";
 import { FlowDialog } from "@/modules/company/requests/create/flow-dialog";
+import { PaymentConfirmDialog } from "@/modules/company/requests/shared/payment-confirm-dialog";
 import { AnalogClockFace } from "@/shared/components/analog-clock-face";
 import {
   CalendarIcon,
@@ -43,11 +46,8 @@ import { cn } from "@/shared/lib/utils";
 import { Button } from "@/shared/ui/button";
 import {
   Form,
-  FormControl,
-  FormDescription,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/shared/ui/form";
 import { Input } from "@/shared/ui/input";
@@ -64,10 +64,6 @@ function createRequestSchema(t: DashboardTranslate) {
     executionTime: z.string().min(1, t("createRequest.validation.executionTimeRequired")),
     storeName: z.string().min(1, t("createRequest.validation.storeRequired")),
     streetAddress: z.string().min(1, t("createRequest.validation.streetAddressRequired")),
-    state: z.string().min(1, t("createRequest.validation.stateRequired")),
-    region: z.string().min(1, t("createRequest.validation.regionRequired")),
-    city: z.string().min(1, t("createRequest.validation.cityRequired")),
-    district: z.string().optional(),
     latitude: z.number({ error: t("createRequest.validation.storeRequired") }).min(-90).max(90),
     longitude: z.number({ error: t("createRequest.validation.storeRequired") }).min(-180).max(180),
   });
@@ -102,12 +98,12 @@ function makeEmptyEntry(): ServiceEntry {
 
 type CreateRequestFormValues = z.infer<ReturnType<typeof createRequestSchema>>;
 type LocationFormValues = Pick<CreateRequestFormValues,
-  "storeName" | "streetAddress" | "state" | "region" | "city" | "district" | "latitude" | "longitude"
+  "storeName" | "streetAddress" | "latitude" | "longitude"
 >;
 
 const defaultValues: CreateRequestFormValues = {
   executionDate: "", executionDateIso: "", executionTime: "",
-  storeName: "", streetAddress: "", state: "", region: "", city: "", district: "",
+  storeName: "", streetAddress: "",
   latitude: 0, longitude: 0,
 };
 
@@ -149,7 +145,6 @@ export function CreateRequestPage({ taskId }: { taskId?: string | number }) {
     form.reset({
       executionDate: task.date.slice(0, 10), executionDateIso: task.date.slice(0, 10), executionTime: "09:00 AM",
       storeName: task.location.location_name ?? address, streetAddress: address,
-      state: address || "-", region: address || "-", city: address || "-", district: "",
       latitude: Number(task.location.latitude), longitude: Number(task.location.longitude),
     });
     setServiceEntries(task.services.map((item) => ({
@@ -340,9 +335,15 @@ export function CreateRequestPage({ taskId }: { taskId?: string | number }) {
         <TimeDialog t={t} isOpen onClose={() => setOpenDialog(null)} value={values.executionTime ?? ""} onSelect={(time) => { form.setValue("executionTime", time, { shouldDirty: true, shouldValidate: true }); }} />
       ) : null}
       {openDialog === "location" ? (
-        <LocationDialog t={t} isOpen initialValues={{ storeName: values.storeName ?? "", streetAddress: values.streetAddress ?? "", state: values.state ?? "", region: values.region ?? "", city: values.city ?? "", district: values.district ?? "", latitude: values.latitude ?? 0, longitude: values.longitude ?? 0 }} onClose={() => setOpenDialog(null)} onSave={saveLocation} />
+        <LocationDialog t={t} isOpen initialValues={{ storeName: values.storeName ?? "", streetAddress: values.streetAddress ?? "", latitude: values.latitude ?? 0, longitude: values.longitude ?? 0 }} onClose={() => setOpenDialog(null)} onSave={saveLocation} />
       ) : null}
-      <PaymentDialog t={t} isOpen={openDialog === "payment"} isPending={createTaskMutation.isPending || updateTaskMutation.isPending} onClose={() => setOpenDialog(null)} onConfirm={confirmPayment} />
+      <PaymentConfirmDialog
+        isOpen={openDialog === "payment"}
+        isPending={createTaskMutation.isPending || updateTaskMutation.isPending}
+        totalPrice={totalPrice}
+        onClose={() => setOpenDialog(null)}
+        onConfirm={confirmPayment}
+      />
       <FlowDialog title={t("createRequest.success.title")} closeLabel={t("createRequest.actions.closeDialog")} isOpen={openDialog === "success"} onClose={() => setOpenDialog(null)} footer={<Button type="button" className="h-11 w-full rounded-lg text-sm font-semibold" onClick={() => setOpenDialog(null)}>{t("createRequest.success.action")}</Button>}>
         <div className="text-center">
           <span className="mx-auto flex size-14 items-center justify-center rounded-full bg-primary/10 text-primary"><CheckCircleIcon className="size-7" /></span>
@@ -406,7 +407,14 @@ function ServiceEntryCard({
   const productsMeta = productsQuery.data?.meta;
 
   function handleServiceKeyChange(key: string) {
-    onUpdate({ serviceKey: key, productIds: [], productDetails: {}, brand: "", subBrand: "", category: "", subCategory: "", search: "", page: 1 });
+    const service = allServices.find((item) => item.key === key);
+    onUpdate({
+      serviceKey: key,
+      price: Number(service?.price ?? service?.minimum_price ?? 0),
+      executionTimeMins: Number(service?.minimum_execution_time ?? 0),
+      productIds: [], productDetails: {},
+      brand: "", subBrand: "", category: "", subCategory: "", search: "", page: 1,
+    });
   }
   function toggleProduct(productId: number) {
     const next = entry.productIds.includes(productId)
@@ -445,24 +453,6 @@ function ServiceEntryCard({
               <option value="">{isLoadingServices ? t("createRequest.states.loading") : t("createRequest.fields.serviceType.placeholder")}</option>
               {allServices.map((svc) => <option key={svc.key} value={svc.key}>{svc.name}</option>)}
             </select>
-          </div>
-
-          {/* Price + time */}
-          <div className="grid gap-4 md:grid-cols-2">
-            <div>
-              <label className="mb-1.5 block text-base font-bold text-foreground">
-                {t("createRequest.fields.price.label")}
-                {selectedService ? <span className="ms-2 text-xs font-normal text-muted-foreground">(min: {selectedService.minimum_price})</span> : null}
-              </label>
-              <Input type="number" min={selectedService?.minimum_price ?? 0} placeholder={t("createRequest.fields.price.placeholder")} className="h-12 rounded-lg" disabled={!selectedService} value={entry.price || ""} onChange={(e) => onUpdate({ price: e.target.valueAsNumber || 0 })} />
-            </div>
-            <div>
-              <label className="mb-1.5 block text-base font-bold text-foreground">
-                {t("createRequest.fields.estimatedTime.label")}
-                {selectedService ? <span className="ms-2 text-xs font-normal text-muted-foreground">(min: {selectedService.minimum_execution_time})</span> : null}
-              </label>
-              <Input type="number" min={selectedService?.minimum_execution_time ?? 0} placeholder="60" className="h-12 rounded-lg" disabled={!selectedService} value={entry.executionTimeMins || ""} onChange={(e) => onUpdate({ executionTimeMins: e.target.valueAsNumber || 0 })} />
-            </div>
           </div>
 
           {/* Brand / SubBrand / Category / SubCategory */}
@@ -528,21 +518,26 @@ function EntryFileUpload({ t, label, accept, acceptLabel, files, onChange }: {
   t: DashboardTranslate; label: string; accept: string; acceptLabel: string;
   files: File[]; onChange: (files: File[]) => void;
 }) {
+  const inputRef = useRef<HTMLInputElement>(null);
   function handleSelect(e: React.ChangeEvent<HTMLInputElement>) {
-    const selected = Array.from(e.target.files ?? []);
-    const merged = [...files, ...selected.filter((inc) => !files.some((ex) => ex.name === inc.name))];
-    onChange(merged); e.target.value = "";
+    const input = e.currentTarget;
+    const selected = Array.from(input.files ?? []).filter((file) => file.size <= 10 * 1024 * 1024);
+    const merged = [...files, ...selected.filter((incoming) =>
+      !files.some((existing) => existing.name === incoming.name && existing.size === incoming.size),
+    )];
+    input.value = "";
+    onChange(merged);
   }
   return (
     <div>
       <label className="mb-1.5 block text-base font-bold text-foreground">{label}</label>
-      <label className="flex cursor-pointer flex-col items-center rounded-lg border border-dashed border-border px-5 py-5 text-center transition hover:border-primary/50 hover:bg-primary/5">
+      <button type="button" className="flex w-full cursor-pointer flex-col items-center rounded-lg border border-dashed border-border px-5 py-5 text-center transition hover:border-primary/50 hover:bg-primary/5" onClick={() => inputRef.current?.click()}>
         <UploadIcon className="size-5 text-foreground" />
         <p className="mt-2 text-sm font-bold text-foreground">{t("createRequest.guidelines.uploadTitle")}</p>
         <p className="mt-1 text-xs text-muted-foreground">{t("createRequest.guidelines.uploadDescription")}</p>
         <p className="mt-1.5 text-xs font-semibold text-primary">{acceptLabel}</p>
-        <input type="file" className="sr-only" multiple accept={accept} onChange={handleSelect} />
-      </label>
+      </button>
+      <input ref={inputRef} type="file" className="hidden" multiple accept={accept} onClick={(event) => { event.currentTarget.value = ""; }} onChange={handleSelect} />
       {files.length > 0 ? (
         <ul className="mt-2 space-y-1.5">
           {files.map((file) => (
@@ -878,7 +873,6 @@ function TimeDialog({ t, isOpen, onClose, value, onSelect }: { t: DashboardTrans
   const [timeParts, setTimeParts] = useState(() => getTimePartsFromInput(initialInputValue));
   const [activeClockStep, setActiveClockStep] = useState<"hour" | "minute" | "period">("hour");
   const { isExiting, isMounted } = useDialogPresence(isOpen);
-  useEffect(() => { if (!isOpen) return; setTimeParts(getTimePartsFromInput(parseDisplayTime(value) || "09:00")); setActiveClockStep("hour"); }, [isOpen, value]);
   function updateTimeParts(next: TimeParts) { setTimeParts(next); onSelect(formatTimeValue(getInputFromTimeParts(next))); }
   function updatePeriod(period: TimeParts["period"]) { updateTimeParts({ ...timeParts, period }); onClose(); }
   function updateTimeFromClock(e: React.PointerEvent<HTMLDivElement>) { if (activeClockStep === "period") return; updateTimeParts(getTimePartsFromClockPointer(e.currentTarget, e.clientX, e.clientY, timeParts, activeClockStep)); }

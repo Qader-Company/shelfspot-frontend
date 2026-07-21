@@ -10,8 +10,9 @@ export interface CompanyService {
   id: number;
   key: string;
   name: string;
-  minimum_price: number;
-  minimum_execution_time: number;
+  price: string | number;
+  minimum_price?: number;
+  minimum_execution_time?: number;
   description?: string | null;
   /** Root-level product_details_form — may be an empty array (no fields) or an object with fields */
   product_details_form?: { fields: Record<string, { type: string; required?: boolean; min?: number }> } | [] | null;

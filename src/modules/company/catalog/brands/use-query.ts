@@ -10,5 +10,6 @@ export function useBrandsQuery(params: GetBrandsParams) {
   return useQuery({
     queryKey: QUERY_KEYS.brands(params as Record<string, unknown>),
     queryFn: () => getBrandsService(params),
+    placeholderData: (previousData) => previousData,
   });
 }

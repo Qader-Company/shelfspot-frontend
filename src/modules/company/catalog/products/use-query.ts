@@ -14,5 +14,6 @@ export function useProductsQuery(
     queryKey: QUERY_KEYS.products(params as Record<string, unknown>),
     queryFn: () => getProductsService(params),
     enabled: options?.enabled,
+    placeholderData: (previousData) => previousData,
   });
 }
