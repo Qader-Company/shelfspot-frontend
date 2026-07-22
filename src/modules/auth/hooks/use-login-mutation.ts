@@ -2,14 +2,17 @@
 
 import { useMutation } from "@tanstack/react-query";
 
-import { loginService } from "@/modules/auth/services/login-service";
+import {
+  loginService,
+  type AuthContext,
+} from "@/modules/auth/services/login-service";
 import { useAuthStore } from "@/shared/stores/auth-store";
 
-export function useLoginMutation() {
+export function useLoginMutation(authContext: AuthContext = "company") {
   const setSession = useAuthStore((state) => state.setSession);
 
   return useMutation({
-    mutationFn: loginService,
+    mutationFn: (payload) => loginService(payload, authContext),
     onSuccess: () => {
       setSession({
         isAuthenticated: true,

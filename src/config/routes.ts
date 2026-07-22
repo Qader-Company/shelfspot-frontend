@@ -18,6 +18,7 @@ export const ROUTES = {
   dashboardCatalogProduct:     "/dashboard/catalog/product",
   dashboardAdmins: "/dashboard/admins",
   dashboardTrash: "/dashboard/trash",
+  adminLogin: "/admin/login",
   adminDashboard: "/admin",
 } as const;
 

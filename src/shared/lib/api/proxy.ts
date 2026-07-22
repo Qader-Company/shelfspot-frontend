@@ -21,6 +21,20 @@ export async function proxyCompanyRequest(
   options?: { responseType?: "arraybuffer" },
 ) {
   upstreamPath = upstreamPath.replace(/\/{2,}/g, "/");
+  const referer = request.headers.get("referer");
+  const adminCompanyMatch = referer?.match(
+    /\/admin\/companies\/([^/?#]+)\/catalog(?:\/|$)/,
+  );
+  const adminCompanyId = adminCompanyMatch?.[1]
+    ? decodeURIComponent(adminCompanyMatch[1])
+    : null;
+
+  if (adminCompanyId && upstreamPath.startsWith("/company/")) {
+    upstreamPath = upstreamPath.replace(
+      "/company/",
+      `/admin/companies/${encodeURIComponent(adminCompanyId)}/`,
+    );
+  }
   const apiClient = await createServerApiClient();
 
   const isMultipart = request.headers
@@ -55,7 +69,7 @@ export async function proxyCompanyRequest(
   }
 
   const companyId = request.cookies.get(COMPANY_ID_COOKIE)?.value;
-  if (companyId) {
+  if (companyId && !adminCompanyId) {
     forwardedHeaders["X-Company-id"] = companyId;
   }
 

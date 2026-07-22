@@ -15,9 +15,17 @@ interface CompanyLoginResponse {
 }
 
 const LOGIN_ENDPOINT = "/api/auth/company/login";
+const ADMIN_LOGIN_ENDPOINT = "/api/auth/admin/login";
 
-export async function loginService(payload: LoginPayload) {
-  const response = await apiClient.post<CompanyLoginResponse>(LOGIN_ENDPOINT, {
+export type AuthContext = "company" | "admin";
+
+export async function loginService(
+  payload: LoginPayload,
+  authContext: AuthContext = "company",
+) {
+  const endpoint =
+    authContext === "admin" ? ADMIN_LOGIN_ENDPOINT : LOGIN_ENDPOINT;
+  const response = await apiClient.post<CompanyLoginResponse>(endpoint, {
     email: payload.email,
     password: payload.password,
   }, {

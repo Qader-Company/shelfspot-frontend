@@ -267,6 +267,8 @@
         "report": "We couldn't load the dashboard statistics. Please try again."
       },
       "table": {
+        "loading": "Loading catalog items…",
+        "empty": "No catalog items found.",
         "title": "Requests",
         "columns": {
           "requestId": "Request ID",

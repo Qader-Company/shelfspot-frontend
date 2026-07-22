@@ -14,6 +14,7 @@ import {
 import { AuthInputField } from "@/modules/auth/components/auth-input-field";
 import { AuthModeSwitch } from "@/modules/auth/components/auth-mode-switch";
 import { useLoginMutation } from "@/modules/auth/hooks/use-login-mutation";
+import type { AuthContext } from "@/modules/auth/services/login-service";
 import { Link, useRouter } from "@/i18n/navigation";
 import { ROUTES } from "@/config/routes";
 import {
@@ -29,14 +30,19 @@ import { Form } from "@/shared/ui/form";
 
 interface LoginFormProps {
   showRegistrationSuccess?: boolean;
+  authContext?: AuthContext;
 }
 
-export function LoginForm({ showRegistrationSuccess = false }: LoginFormProps) {
+export function LoginForm({
+  showRegistrationSuccess = false,
+  authContext = "company",
+}: LoginFormProps) {
   const t = useTranslations("auth.login");
   const router = useRouter();
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const loginSchema = useMemo(() => createLoginSchema(t), [t]);
-  const loginMutation = useLoginMutation();
+  const loginMutation = useLoginMutation(authContext);
+  const isAdmin = authContext === "admin";
   const form = useForm<LoginFormValues>({
     defaultValues: loginDefaultValues,
     resolver: zodResolver(loginSchema),
@@ -51,7 +57,7 @@ export function LoginForm({ showRegistrationSuccess = false }: LoginFormProps) {
 
     try {
       await loginMutation.mutateAsync(values);
-      router.replace(ROUTES.dashboard);
+      router.replace(isAdmin ? ROUTES.adminDashboard : ROUTES.dashboard);
     } catch (error) {
       const apiError = normalizeApiError(error);
 
@@ -89,7 +95,7 @@ export function LoginForm({ showRegistrationSuccess = false }: LoginFormProps) {
         </p>
       </div>
 
-      <div>
+      {!isAdmin ? <div>
         <AuthModeSwitch
           active="sign-in"
           signInHref={ROUTES.login}
@@ -97,7 +103,7 @@ export function LoginForm({ showRegistrationSuccess = false }: LoginFormProps) {
           signUpHref={ROUTES.register}
           signUpLabel={t("tabs.signUp")}
         />
-      </div>
+      </div> : null}
 
       {showRegistrationSuccess ? (
         <p className="rounded-[18px] border border-success/20 bg-success/10 px-4 py-3 text-sm text-success">
@@ -206,7 +212,7 @@ export function LoginForm({ showRegistrationSuccess = false }: LoginFormProps) {
         </form>
       </Form>
 
-      <div>
+      {!isAdmin ? <div>
         <p className="text-center text-sm leading-6 text-muted-foreground">
           {t("states.noAccount")}{" "}
           <Link
@@ -216,7 +222,7 @@ export function LoginForm({ showRegistrationSuccess = false }: LoginFormProps) {
             {t("actions.createAccount")}
           </Link>
         </p>
-      </div>
+      </div> : null}
     </div>
   );
 }

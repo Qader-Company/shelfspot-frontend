@@ -373,6 +373,8 @@ export function BrandPage() {
     toggleStatus: t("catalogPage.table.actions.toggleStatus"),
     activeLabel:  t("catalogPage.status.active"),
     inactiveLabel: t("catalogPage.status.inactive"),
+    loading: t("catalogPage.table.loading"),
+    empty: t("catalogPage.table.empty"),
   };
 
   return (
@@ -464,6 +466,7 @@ export function BrandPage() {
             rows={brandRows}
             labels={tableLabels}
             extraColumns={[]}
+            isLoading={brandsQuery.isLoading}
             onDelete={handleDelete}
             onEdit={handleEdit}
           />
