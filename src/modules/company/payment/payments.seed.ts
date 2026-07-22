@@ -11,8 +11,4 @@ export interface PaymentTransaction {
 
 export interface PaymentSummaryData {
   balance: string;
-  accountId: string;
-  monthlySpending: string;
-  pendingAmount: string;
-  pendingMethodCount: number;
 }
