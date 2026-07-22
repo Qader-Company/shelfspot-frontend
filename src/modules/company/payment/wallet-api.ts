@@ -3,12 +3,18 @@ import { apiClient } from "@/shared/lib/api/client";
 export interface WalletTransaction {
   id: string | number;
   type?: string;
+  type_label?: string;
   transaction_type?: string;
   amount?: string | number;
   direction?: "credit" | "debit";
   status?: string;
   created_at?: string;
   date?: string;
+  performed_by?: {
+    id: string | number;
+    name: string;
+    email?: string;
+  } | null;
 }
 export interface WalletData {
   id?: string | number;
@@ -35,4 +41,4 @@ export async function getTransactionTypes(): Promise<Array<{ value: string; labe
   if (Array.isArray(data)) return data.map(item => typeof item === "string" ? { value: item, label: item } : { value: String(object(item).value ?? object(item).id ?? object(item).key ?? object(item).name), label: String(object(item).label ?? object(item).name ?? object(item).value) });
   return Object.entries(object(data)).map(([value, label]) => ({ value, label: String(label) }));
 }
-export const rechargeWallet = (payload: { amount: number }) => apiClient.post("/api/company/wallets/recharge", payload).then(r => r.data);
+export const redeemWalletCoupon = (payload: { code: string }) => apiClient.post("/api/company/wallets/coupons/redeem", payload).then(r => r.data);

@@ -69,7 +69,7 @@ export function DashboardRequestsTable({
                 </td>
                 <td className="border-b border-border px-5 py-4 font-semibold text-foreground">
                   <Link
-                    href={`/dashboard/requests/${row.id}`}
+                    href={`/dashboard/requests/${row.taskId ?? row.id}`}
                     className="text-primary hover:underline"
                   >
                     {row.id}
@@ -85,7 +85,7 @@ export function DashboardRequestsTable({
                   {row.time}
                 </td>
                 <td className="border-b border-border px-7 py-4">
-                  <StatusBadge status={row.status} label={resolveStatus(row.status)} />
+                  <StatusBadge status={row.status} label={row.statusLabel ?? resolveStatus(row.status)} />
                 </td>
                 <td className="border-b border-border px-7 py-4">
                   <div className="flex items-center gap-3">
@@ -95,19 +95,15 @@ export function DashboardRequestsTable({
                       variant="ghost"
                       size="icon-xs"
                       className="text-muted-foreground hover:text-destructive"
-                      onClick={() => onDelete?.(row.id)}
+                      onClick={() => onDelete?.(String(row.taskId ?? row.id))}
                     >
                       <TrashIcon className="size-4" />
                     </Button>
-                    <Button
-                      aria-label={labels.edit}
-                      type="button"
-                      variant="ghost"
-                      size="icon-xs"
-                      className="text-muted-foreground hover:text-foreground"
-                    >
-                      <EditIcon className="size-4" />
-                    </Button>
+                    {row.canEdit ? (
+                      <Button asChild aria-label={labels.edit} variant="ghost" size="icon-xs" className="text-muted-foreground hover:text-foreground">
+                        <Link href={`/dashboard/requests/${row.taskId ?? row.id}/edit`}><EditIcon className="size-4" /></Link>
+                      </Button>
+                    ) : null}
                   </div>
                 </td>
               </tr>

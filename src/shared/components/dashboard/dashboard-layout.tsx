@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 
 import type { AuthContext } from "@/modules/auth/config/auth-context";
 
+import { DashboardBodyLock } from "./dashboard-body-lock";
 import { DashboardSidebar } from "./dashboard-sidebar";
 import { DashboardTopbar } from "./dashboard-topbar";
 import type { DashboardSidebarItem, DashboardUser } from "./types";
@@ -34,6 +35,7 @@ export function DashboardLayout({
 }: DashboardLayoutProps) {
   return (
     <div className="flex h-dvh overflow-hidden bg-background">
+      <DashboardBodyLock />
       <DashboardSidebar
         authContext={authContext}
         items={sidebarItems}
@@ -43,6 +45,7 @@ export function DashboardLayout({
       />
       <div className="flex min-w-0 flex-1 flex-col overflow-y-auto">
         <DashboardTopbar
+          authContext={authContext}
           searchItems={sidebarItems}
           searchLabel={labels.search}
           searchPlaceholder={labels.searchPlaceholder}

@@ -111,9 +111,11 @@ export function CatalogImportDialog({
               type="file"
               accept=".csv,.xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/csv"
               className="sr-only"
-              onChange={(event) =>
-                onFileChange?.(event.target.files?.[0] ?? null)
-              }
+              onClick={(event) => { event.currentTarget.value = ""; }}
+              onChange={(event) => {
+                const selected = event.currentTarget.files?.[0] ?? null;
+                onFileChange?.(selected && selected.size <= 10 * 1024 * 1024 ? selected : null);
+              }}
             />
             <UploadIcon className="size-7 text-primary" />
             <p className="text-sm font-medium text-foreground">{uploadLabel}</p>

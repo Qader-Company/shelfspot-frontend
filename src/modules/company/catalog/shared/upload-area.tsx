@@ -1,5 +1,3 @@
-import { useEffect, useMemo } from "react";
-
 import { UploadIcon } from "@/shared/components/dashboard/dashboard-icons";
 
 interface CatalogUploadAreaProps {
@@ -17,18 +15,7 @@ export function CatalogUploadArea({
   onFileChange,
   existingImageUrl,
 }: CatalogUploadAreaProps) {
-  const localPreview = useMemo(
-    () => (file ? URL.createObjectURL(file) : null),
-    [file],
-  );
-  const previewUrl = localPreview ?? existingImageUrl;
-
-  useEffect(
-    () => () => {
-      if (localPreview) URL.revokeObjectURL(localPreview);
-    },
-    [localPreview],
-  );
+  const previewUrl = file ? null : existingImageUrl;
 
   return (
     <label className="flex min-h-28 cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border border-dashed border-border p-6 transition-colors hover:border-primary/60">
@@ -36,7 +23,11 @@ export function CatalogUploadArea({
         type="file"
         accept="image/*"
         className="sr-only"
-        onChange={(event) => onFileChange?.(event.target.files?.[0] ?? null)}
+        onClick={(event) => { event.currentTarget.value = ""; }}
+        onChange={(event) => {
+          const selected = event.currentTarget.files?.[0] ?? null;
+          onFileChange?.(selected && selected.size <= 10 * 1024 * 1024 ? selected : null);
+        }}
       />
       {previewUrl ? (
         // Catalog image hosts are supplied by the API at runtime.

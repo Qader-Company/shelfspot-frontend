@@ -3,10 +3,13 @@ import type { DashboardStatItem } from "@/shared/components/dashboard/widgets/ty
 
 export interface DashboardRequestRow {
   id: string;
+  taskId?: number;
   locationKey: string;
   assigneeKey: string;
   time: string;
   status: StatusBadgeStatus;
+  statusLabel?: string;
+  canEdit?: boolean;
 }
 
 export const dashboardRequestStats: DashboardStatItem[] = [
