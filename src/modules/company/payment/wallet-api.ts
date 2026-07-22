@@ -3,12 +3,18 @@ import { apiClient } from "@/shared/lib/api/client";
 export interface WalletTransaction {
   id: string | number;
   type?: string;
+  type_label?: string;
   transaction_type?: string;
   amount?: string | number;
   direction?: "credit" | "debit";
   status?: string;
   created_at?: string;
   date?: string;
+  performed_by?: {
+    id: string | number;
+    name: string;
+    email?: string;
+  } | null;
 }
 export interface WalletData {
   id?: string | number;

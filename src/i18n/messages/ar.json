@@ -874,8 +874,7 @@
           "types": "النوع",
           "totalSpending": "إجمالي الإنفاق",
           "date": "التاريخ",
-          "status": "الحالة",
-          "action": "الإجراء"
+          "performedBy": "تم الاسترداد بواسطة"
         },
         "actions": {
           "delete": "حذف المعاملة"

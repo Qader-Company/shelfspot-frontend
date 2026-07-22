@@ -882,8 +882,7 @@
           "types": "Types",
           "totalSpending": "Total Spending",
           "date": "Date",
-          "status": "Status",
-          "action": "Action"
+          "performedBy": "Refunded By"
         },
         "actions": {
           "delete": "Delete transaction"
