@@ -641,6 +641,8 @@
       "actions": { "import": "استيراد" },
       "status": { "active": "نشط", "inactive": "غير نشط" },
       "table": {
+        "loading": "جارٍ تحميل عناصر الكتالوج",
+        "empty": "لا توجد عناصر في الكتالوج",
         "columns": { "status": "الحالة", "createdDate": "تاريخ الإنشاء", "action": "الإجراء" },
         "actions": { "selectAll": "تحديد الكل", "selectRow": "تحديد الصف", "delete": "حذف العنصر", "edit": "تعديل العنصر", "toggleStatus": "تبديل الحالة" }
       },

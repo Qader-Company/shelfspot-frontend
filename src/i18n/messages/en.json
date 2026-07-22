@@ -642,6 +642,8 @@
       "actions": { "import": "Import" },
       "status": { "active": "Active", "inactive": "In Active" },
       "table": {
+        "loading": "Loading catalog items",
+        "empty": "No catalog items found",
         "columns": { "status": "Status", "createdDate": "Created Date", "action": "Action" },
         "actions": { "selectAll": "Select all", "selectRow": "Select row", "delete": "Delete item", "edit": "Edit item", "toggleStatus": "Toggle status" }
       },

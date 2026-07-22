@@ -2,11 +2,14 @@
 
 import { useDeferredValue, useMemo, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { ArrowLeft, Download, Pencil, Plus, Trash2, Upload, X } from "lucide-react";
+import { ArrowLeft, Pencil, Plus, Trash2, Upload } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { notFound } from "next/navigation";
 
 import { Link } from "@/i18n/navigation";
+import { CatalogFormDialog, CatalogStatusField } from "@/shared/components/catalog/form-dialog";
+import { CatalogImportDialog } from "@/shared/components/catalog/import-dialog";
+import { CatalogUploadArea } from "@/shared/components/catalog/upload-area";
 import { DeleteConfirmDialog } from "@/shared/components/dashboard/delete-confirm-dialog";
 import { SearchInput } from "@/shared/components/dashboard/search-input";
 import { StatusToggle } from "@/shared/components/dashboard/status-toggle";
@@ -357,34 +360,80 @@ function CatalogForm({ resource, item, brands, subBrands, categories, subCategor
     <div className="space-y-2"><Label>{label}</Label><select value={form[field]} onChange={(event) => setForm({ ...form, [field]: event.target.value })} className="h-11 w-full rounded-lg border border-border bg-background px-3"><option value="">{label}</option>{values.map((value) => <option key={value.id} value={value.id}>{value.name ?? translated(value, "en")}</option>)}</select></div>
   );
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/30 p-4" role="dialog" aria-modal="true">
-      <div className="max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-2xl bg-card p-6 shadow-xl">
-        <div className="flex items-center justify-between"><h2 className="text-2xl font-bold">{t(`${key}.dialog.${item ? "editTitle" : "title"}`)}</h2><Button variant="ghost" size="icon-sm" onClick={onClose}><X className="size-5" /></Button></div>
-        <div className="mt-6 grid gap-4 sm:grid-cols-2">
-          {relationRequired ? select(t("dialog.parentBrand"), "brandId", brands) : null}
-          {resource === "category" || resource === "sub-category" || resource === "product" ? select(t("dialog.subBrand"), "subBrandId", subBrands.filter((value) => !form.brandId || String(value.brand_id) === form.brandId)) : null}
-          {resource === "sub-category" || resource === "product" ? select(t(`${key}.dialog.categoryLabel`), "categoryId", categories.filter((value) => !form.subBrandId || String(value.sub_brand_id) === form.subBrandId)) : null}
-          {resource === "product" ? select(t(`${key}.dialog.subCategoryLabel`), "subCategoryId", subCategories.filter((value) => !form.categoryId || String(value.category_id) === form.categoryId)) : null}
-          <div className="space-y-2"><Label>{t(`${key}.dialog.nameLabel`)} ({t("fields.english")})</Label><Input value={form.nameEn} onChange={(event) => setForm({ ...form, nameEn: event.target.value })} /></div>
-          <div className="space-y-2"><Label>{t(`${key}.dialog.nameLabel`)} ({t("fields.arabic")})</Label><Input dir="rtl" value={form.nameAr} onChange={(event) => setForm({ ...form, nameAr: event.target.value })} /></div>
-          {resource === "product" ? <>
-            <div className="space-y-2 sm:col-span-2"><Label>{t(`${key}.dialog.skuLabel`)}</Label><Input value={form.sku} onChange={(event) => setForm({ ...form, sku: event.target.value })} /></div>
-            <div className="space-y-2 sm:col-span-2"><Label>{t("fields.barcode")}</Label><Input value={form.barcode} onChange={(event) => setForm({ ...form, barcode: event.target.value })} /></div>
-            <div className="space-y-2"><Label>{t(`${key}.dialog.descriptionLabel`)} ({t("fields.english")})</Label><textarea className="min-h-28 w-full rounded-lg border border-border bg-background p-3" value={form.descriptionEn} onChange={(event) => setForm({ ...form, descriptionEn: event.target.value })} /></div>
-            <div className="space-y-2"><Label>{t(`${key}.dialog.descriptionLabel`)} ({t("fields.arabic")})</Label><textarea dir="rtl" className="min-h-28 w-full rounded-lg border border-border bg-background p-3" value={form.descriptionAr} onChange={(event) => setForm({ ...form, descriptionAr: event.target.value })} /></div>
-          </> : null}
-          <div className="space-y-2 sm:col-span-2"><Label>{t(`${key}.dialog.uploadLabel`)}</Label><Input type="file" accept="image/png,image/jpeg" onChange={(event) => setForm({ ...form, image: event.target.files?.[0] })} /></div>
-          <label className="flex items-center justify-between rounded-lg border border-border bg-muted/40 p-4 sm:col-span-2"><span><strong>{t("dialog.statusActive")}</strong><small className="block text-muted-foreground">{t(`${key}.dialog.statusDescription`)}</small></span><input type="checkbox" checked={form.isActive} onChange={(event) => setForm({ ...form, isActive: event.target.checked })} /></label>
-        </div>
-        {error ? <p className="mt-4 text-sm text-destructive">{error}</p> : null}
-        <div className="mt-6 grid grid-cols-2 gap-3"><Button variant="outline" onClick={onClose}>{t("dialog.cancel")}</Button><Button disabled={pending} onClick={submit}>{t("dialog.save")}</Button></div>
+    <CatalogFormDialog
+      isOpen
+      title={t(`${key}.dialog.${item ? "editTitle" : "title"}`)}
+      closeLabel={t("dialog.close")}
+      cancelLabel={t("dialog.cancel")}
+      saveLabel={t("dialog.save")}
+      onClose={onClose}
+      onSubmit={submit}
+      isPending={pending}
+      errorMessage={error}
+    >
+      {relationRequired ? select(t("dialog.parentBrand"), "brandId", brands) : null}
+      {resource === "category" || resource === "sub-category" || resource === "product"
+        ? select(t("dialog.subBrand"), "subBrandId", subBrands.filter((value) => !form.brandId || String(value.brand_id) === form.brandId))
+        : null}
+      {resource === "sub-category" || resource === "product"
+        ? select(t(`${key}.dialog.categoryLabel`), "categoryId", categories.filter((value) => !form.subBrandId || String(value.sub_brand_id) === form.subBrandId))
+        : null}
+      {resource === "product"
+        ? select(t(`${key}.dialog.subCategoryLabel`), "subCategoryId", subCategories.filter((value) => !form.categoryId || String(value.category_id) === form.categoryId))
+        : null}
+      <div className="grid gap-4">
+        <div className="space-y-2"><Label>{t(`${key}.dialog.nameLabel`)} ({t("fields.english")})</Label><Input value={form.nameEn} onChange={(event) => setForm({ ...form, nameEn: event.target.value })} /></div>
+        <div className="space-y-2"><Label>{t(`${key}.dialog.nameLabel`)} ({t("fields.arabic")})</Label><Input dir="rtl" value={form.nameAr} onChange={(event) => setForm({ ...form, nameAr: event.target.value })} /></div>
       </div>
-    </div>
+      {resource === "product" ? <>
+        <div className="space-y-2"><Label>{t(`${key}.dialog.skuLabel`)}</Label><Input value={form.sku} onChange={(event) => setForm({ ...form, sku: event.target.value })} /></div>
+        <div className="space-y-2"><Label>{t("fields.barcode")}</Label><Input value={form.barcode} onChange={(event) => setForm({ ...form, barcode: event.target.value })} /></div>
+        <div className="grid gap-4">
+          <div className="space-y-2"><Label>{t(`${key}.dialog.descriptionLabel`)} ({t("fields.english")})</Label><textarea className="min-h-28 w-full rounded-lg border border-border bg-background p-3" value={form.descriptionEn} onChange={(event) => setForm({ ...form, descriptionEn: event.target.value })} /></div>
+          <div className="space-y-2"><Label>{t(`${key}.dialog.descriptionLabel`)} ({t("fields.arabic")})</Label><textarea dir="rtl" className="min-h-28 w-full rounded-lg border border-border bg-background p-3" value={form.descriptionAr} onChange={(event) => setForm({ ...form, descriptionAr: event.target.value })} /></div>
+        </div>
+      </> : null}
+      <CatalogUploadArea
+        label={t(`${key}.dialog.uploadLabel`)}
+        hint={t("dialog.uploadHint")}
+        file={form.image}
+        existingImageUrl={item?.logo_url ?? item?.logo ?? item?.image_url ?? item?.image}
+        onFileChange={(image) => setForm({ ...form, image: image ?? undefined })}
+      />
+      <CatalogStatusField
+        activeLabel={t("dialog.statusActive")}
+        description={t(`${key}.dialog.statusDescription`)}
+        ariaLabel={t("table.actions.toggleStatus")}
+        isActive={form.isActive}
+        onChange={(isActive) => setForm({ ...form, isActive })}
+      />
+    </CatalogFormDialog>
   );
 }
 
 function ImportDialog({ pending, onClose, onTemplate, onImport }: { pending: boolean; onClose: () => void; onTemplate: () => Promise<void>; onImport: (file: File) => Promise<void> }) {
   const t = useTranslations("dashboard.catalogPage.import");
-  const [file, setFile] = useState<File>();
-  return <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/30 p-4" role="dialog" aria-modal="true"><div className="w-full max-w-lg rounded-2xl bg-card p-6"><div className="flex items-center justify-between"><h2 className="text-xl font-bold">{t("title")}</h2><Button variant="ghost" size="icon-sm" onClick={onClose}><X className="size-5" /></Button></div><p className="mt-2 text-sm text-muted-foreground">{t("description")}</p><Input className="mt-6" type="file" accept=".xlsx,.xls" onChange={(event) => setFile(event.target.files?.[0])} /><div className="mt-6 grid grid-cols-2 gap-3"><Button variant="outline" disabled={pending} onClick={onTemplate}><Download className="size-4" />{t("downloadLabel")}</Button><Button disabled={pending || !file} onClick={() => file && onImport(file)}><Upload className="size-4" />{t("uploadLabel")}</Button></div></div></div>;
+  const shared = useTranslations("dashboard.catalogPage");
+  const [file, setFile] = useState<File | null>(null);
+  return (
+    <CatalogImportDialog
+      isOpen
+      title={t("title")}
+      description={t("description")}
+      downloadLabel={t("downloadLabel")}
+      uploadLabel={t("uploadLabel")}
+      uploadHint={t("uploadHint")}
+      uploadFormat={t("uploadFormat")}
+      cancelLabel={shared("dialog.cancel")}
+      saveLabel={shared("dialog.save")}
+      closeLabel={shared("dialog.close")}
+      onClose={onClose}
+      onDownload={onTemplate}
+      isDownloading={pending}
+      selectedFile={file}
+      onFileChange={setFile}
+      onImport={() => file && onImport(file)}
+      isImporting={pending}
+    />
+  );
 }

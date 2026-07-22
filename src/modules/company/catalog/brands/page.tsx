@@ -30,10 +30,10 @@ import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
 
 import { DeleteConfirmDialog } from "@/shared/components/dashboard/delete-confirm-dialog";
-import { CatalogFormDialog, CatalogStatusField } from "@/modules/company/catalog/shared/form-dialog";
-import { CatalogImportDialog } from "@/modules/company/catalog/shared/import-dialog";
+import { CatalogFormDialog, CatalogStatusField } from "@/shared/components/catalog/form-dialog";
+import { CatalogImportDialog } from "@/shared/components/catalog/import-dialog";
 import { CatalogItemsTable } from "@/modules/company/catalog/shared/items-table";
-import { CatalogUploadArea } from "@/modules/company/catalog/shared/upload-area";
+import { CatalogUploadArea } from "@/shared/components/catalog/upload-area";
 import type { BrandRow } from "@/modules/company/catalog/shared/seed";
 
 type BrandDialog = "add" | "edit" | "delete" | "import" | null;
