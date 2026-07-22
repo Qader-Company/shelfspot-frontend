@@ -1,21 +1,23 @@
 import { getTranslations } from "next-intl/server";
 
-import { ROUTES } from "@/config/routes";
 import { AuthCenteredShell } from "@/modules/auth/components/auth-centered-shell";
 import { ResetPasswordForm } from "@/modules/auth/components/reset-password-form";
+import { getAuthContextConfig, type AuthContext } from "@/modules/auth/config/auth-context";
 
 interface ResetPasswordPageViewProps {
   direction: "rtl" | "ltr";
+  authContext?: AuthContext;
 }
 
 export async function ResetPasswordPageView({
   direction,
+  authContext = "company",
 }: ResetPasswordPageViewProps) {
   const t = await getTranslations("auth.resetPassword");
 
   return (
     <AuthCenteredShell
-      backHref={ROUTES.otpVerification}
+      backHref={getAuthContextConfig(authContext).otpRoute}
       backLabel={t("actions.back")}
       direction={direction}
       imageClassName="h-[157px] w-[226px]"
@@ -24,7 +26,7 @@ export async function ResetPasswordPageView({
       visualSrc="/auth/screens/reset-password.svg"
       visualWidth={226}
     >
-      <ResetPasswordForm />
+      <ResetPasswordForm authContext={authContext} />
     </AuthCenteredShell>
   );
 }

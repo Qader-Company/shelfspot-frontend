@@ -4,7 +4,12 @@ import { useEffect } from "react";
 import { X } from "lucide-react";
 import { useLocale } from "next-intl";
 import { ROUTES } from "@/config/routes";
-import { Link, usePathname } from "@/i18n/navigation";
+import { Link, usePathname, useRouter } from "@/i18n/navigation";
+import {
+  getAuthContextConfig,
+  type AuthContext,
+} from "@/modules/auth/config/auth-context";
+import { useLogoutMutation } from "@/modules/auth/hooks/use-auth-mutations";
 import { cn } from "@/shared/lib/utils";
 import { Logo } from "@/shared/ui/logo";
 import { Button } from "@/shared/ui/button";
@@ -14,6 +19,7 @@ import { SidebarItem } from "./sidebar-item";
 import type { DashboardSidebarItem } from "./types";
 
 interface DashboardSidebarProps {
+  authContext: AuthContext;
   items: DashboardSidebarItem[];
   navigationLabel: string;
   logoLabel: string;
@@ -22,6 +28,7 @@ interface DashboardSidebarProps {
 }
 
 export function DashboardSidebar({
+  authContext,
   items,
   navigationLabel,
   logoLabel,
@@ -30,10 +37,24 @@ export function DashboardSidebar({
 }: DashboardSidebarProps) {
   const locale = useLocale();
   const pathname = usePathname();
+  const router = useRouter();
+  const logoutMutation = useLogoutMutation(authContext);
   const isSidebarOpen = useUiStore((state) => state.isSidebarOpen);
   const closeSidebar = useUiStore((state) => state.closeSidebar);
   const primaryItems = items.slice(0, primaryItemCount);
   const secondaryItems = items.slice(primaryItemCount);
+
+  async function handleLogout() {
+    if (logoutMutation.isPending) return;
+
+    try {
+      await logoutMutation.mutateAsync();
+      closeSidebar();
+      router.replace(getAuthContextConfig(authContext).loginRoute);
+    } catch {
+      // Keep the current authenticated view when the BFF cannot be reached.
+    }
+  }
 
   useEffect(() => {
     closeSidebar();
@@ -77,7 +98,13 @@ export function DashboardSidebar({
 
       return (
         <div key={item.key}>
-          <SidebarItem item={item} isActive={isParentActive && !item.children} isExpanded={isExpanded} />
+          <SidebarItem
+            item={item}
+            isActive={isParentActive && !item.children}
+            isExpanded={isExpanded}
+            isPending={item.key === "logout" && logoutMutation.isPending}
+            onAction={item.key === "logout" ? () => void handleLogout() : undefined}
+          />
           {/* Render children when this parent is expanded */}
           {item.children && isExpanded && (
             <div className="mt-1 space-y-0.5 ps-7">

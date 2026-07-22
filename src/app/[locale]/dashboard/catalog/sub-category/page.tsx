@@ -1,4 +1,4 @@
-import { SubCategoryPage } from "@/modules/dashboard/catalog";
+import { SubCategoryPage } from "@/modules/company/catalog";
 
 export default function CatalogSubCategoryPage() {
   return <SubCategoryPage />;
