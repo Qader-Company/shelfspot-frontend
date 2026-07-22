@@ -928,6 +928,14 @@
           "availableTitle": "Available Promo Code",
           "apply": "Apply Promo Code"
         },
+        "errors": {
+          "invalid": "This promo code is invalid. Check the code and try again.",
+          "expired": "This promo code has expired.",
+          "alreadyUsed": "This promo code has already been used.",
+          "tooManyAttempts": "Too many attempts. Please wait a moment and try again.",
+          "network": "Unable to connect. Check your internet connection and try again.",
+          "server": "We could not apply this promo code right now. Please try again later or contact support."
+        },
         "promoCodes": {
           "welcomeBonus": {
             "title": "$50 welcome Bonus",

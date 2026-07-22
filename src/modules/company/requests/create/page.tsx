@@ -828,7 +828,9 @@ function LocationMap({ latitude, longitude, label, hint, onSelect }: {
     });
 
     window.requestAnimationFrame(() => map.invalidateSize());
-    return () => map.remove();
+    return () => {
+      map.remove();
+    };
   }, [latitude, longitude]);
 
   return (
