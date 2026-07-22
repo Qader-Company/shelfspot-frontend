@@ -13,10 +13,14 @@ import type { PaymentTransaction } from "./payments.seed";
 import { useRedeemWalletCoupon, useTransactionTypes, useWallet } from "./use-wallet";
 
 const money = (value: string | number | undefined) => new Intl.NumberFormat(undefined, { style: "currency", currency: "SAR" }).format(Number(value ?? 0));
+const transactionDirection = (type: string, direction?: "credit" | "debit"): "credit" | "debit" => {
+  if (direction) return direction;
+  return type === "task_payment" || type === "taskPayment" ? "debit" : "credit";
+};
 export function PaymentsPage() {
   const t = useTranslations("dashboard"); const [open, setOpen] = useState(false); const [search, setSearch] = useState(""); const [type, setType] = useState("");
   const wallet = useWallet({ per_page: 100 }); const types = useTransactionTypes(); const redeemCoupon = useRedeemWalletCoupon();
-  const rows = useMemo<PaymentTransaction[]>(() => (wallet.data?.transactions ?? []).filter(item => { const itemType = item.transaction_type ?? item.type ?? ""; return (!type || itemType === type) && `${item.type_label ?? itemType} ${item.amount ?? ""} ${item.performed_by?.name ?? ""}`.toLowerCase().includes(search.toLowerCase()); }).map(item => ({ id: String(item.id), typeLabel: item.type_label ?? String(item.transaction_type ?? item.type ?? "-"), amount: money(item.amount), direction: item.direction ?? (Number(item.amount ?? 0) < 0 ? "debit" : "credit"), date: item.created_at ?? item.date ? new Date(String(item.created_at ?? item.date)).toLocaleDateString() : "-", performedBy: item.performed_by?.name ?? "-" })), [wallet.data, search, type]);
+  const rows = useMemo<PaymentTransaction[]>(() => (wallet.data?.transactions ?? []).filter(item => { const itemType = item.transaction_type ?? item.type ?? ""; return (!type || itemType === type) && `${item.type_label ?? itemType} ${item.amount ?? ""} ${item.performed_by?.name ?? ""}`.toLowerCase().includes(search.toLowerCase()); }).map(item => { const itemType = String(item.transaction_type ?? item.type ?? ""); return { id: String(item.id), typeLabel: item.type_label ?? (itemType || "-"), amount: money(item.amount), direction: transactionDirection(itemType, item.direction), date: item.created_at ?? item.date ? new Date(String(item.created_at ?? item.date)).toLocaleDateString() : "-", performedBy: item.performed_by?.name ?? "-" }; }), [wallet.data, search, type]);
   const error = wallet.error ?? types.error;
   return <div className="space-y-6 px-4 py-8 lg:px-8">
     <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between"><div><h1 className="text-3xl font-bold">{t("paymentPage.title")}</h1><p className="mt-2 text-lg font-medium text-muted-foreground">{t("paymentPage.subtitle")}</p></div><Button className="h-12 px-6 text-white" onClick={() => setOpen(true)}><AddIcon className="size-5"/>{t("paymentPage.actions.addFund")}</Button></div>
