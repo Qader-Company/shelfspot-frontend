@@ -9,7 +9,7 @@ export default async function AdminLayout({ children }: Readonly<{ children: Rea
   const sidebarItems: DashboardSidebarItem[] = [
     { key: "dashboard", label: t("navigation.dashboard"), href: ROUTES.adminDashboard, icon: "dashboard" },
     { key: "companies", label: t("navigation.companies"), href: "/admin/companies", icon: "companies" },
-    { key: "workers", label: t("navigation.merchandisers"), href: unavailable, icon: "workers", disabled: true },
+    { key: "workers", label: t("navigation.merchandisers"), href: "/admin/merchandisers", icon: "workers" },
     { key: "requests", label: t("navigation.requests"), href: unavailable, icon: "box", disabled: true },
     { key: "promoCode", label: t("navigation.promoCode"), href: unavailable, icon: "promoCode", disabled: true },
     { key: "admins", label: t("navigation.admins"), href: unavailable, icon: "admins", disabled: true },

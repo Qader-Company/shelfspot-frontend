@@ -1149,6 +1149,38 @@
     }
   },
   "adminDashboard": {
+    "merchandisers": {
+      "title": "Merchandiser Management",
+      "subtitle": "Monitor and manage platform merchandisers",
+      "searchLabel": "Search merchandisers",
+      "searchPlaceholder": "Search for merchandisers",
+      "statusFilterLabel": "Filter merchandisers by status",
+      "add": "Add New Merchandiser",
+      "loading": "Loading merchandisers…",
+      "retry": "Try again",
+      "emptyTitle": "No merchandisers found",
+      "emptyDescription": "Try changing the search or status filter.",
+      "toggleStatus": "Change status for {name}",
+      "edit": "Edit {name}",
+      "delete": "Delete {name}",
+      "stats": { "total": "Total Merchandisers", "active": "Active Merchandisers", "inactive": "Inactive Merchandisers" },
+      "statuses": { "all": "All Statuses", "active": "Active", "inactive": "Inactive" },
+      "columns": { "name": "Merchandiser Name", "phone": "Phone Number", "email": "Email", "completed": "Completed Tasks", "status": "Status", "action": "Action" },
+      "pagination": { "previous": "Previous", "next": "Next" },
+      "errors": { "load": "Unable to load merchandisers", "loadDescription": "The merchandisers could not be loaded.", "status": "Unable to update merchandiser status.", "delete": "Unable to delete the merchandiser." },
+      "deleteDialog": { "title": "Delete Merchandiser?", "description": "Are you sure you want to delete {name}?", "warning": "This action cannot be undone.", "cancel": "No, keep it", "confirm": "Yes, delete" },
+      "form": {
+        "createTitle": "Add New Merchandiser", "createSubtitle": "Fill in the information below to add a new team member", "editTitle": "Update Merchandiser Info", "editSubtitle": "Fill in the information below to update merchandiser information", "back": "Back to merchandisers", "personalInfo": "Personal Info", "uploadPhoto": "Upload Photo", "optional": "(Optional)", "fullName": "Full Name", "fullNamePlaceholder": "Enter full name", "email": "Email Address", "emailPlaceholder": "name@company.com", "phone": "Phone Number", "phonePlaceholder": "+966 XX XXX XXXX", "jobDetails": "Job Details", "jobTitle": "Job Title", "merchandiser": "Merchandiser", "startDate": "Start Date", "systemPermissions": "System Permissions", "credentials": "System Login Credentials", "credentialsDescription": "Configure access permissions for this employee", "enabled": "Enabled", "temporaryPassword": "Temporary Password", "copyPassword": "Copy temporary password", "credentialsNotice": "Login credentials will be automatically sent to the employee's email upon account creation.", "cancel": "Cancel", "save": "Save", "saving": "Saving…", "saveError": "Unable to save the merchandiser.",
+        "validation": { "name": "Enter at least two characters.", "email": "Enter a valid email address.", "phone": "Enter a valid phone number.", "startDate": "Select a start date.", "password": "The password must contain at least eight characters." }
+      },
+      "details": {
+        "title": "Merchandiser Management", "subtitle": "Monitor and manage platform merchandisers", "back": "Back to merchandisers", "loading": "Loading merchandiser details…", "error": "Unable to load merchandiser", "errorDescription": "The merchandiser details could not be loaded.", "retry": "Try again", "notFound": "Merchandiser not found", "notFoundDescription": "This merchandiser is unavailable or has been removed.", "active": "Active", "inactive": "Inactive", "email": "Email", "phone": "Phone Number", "inProgress": "In Progress", "due": "Due: {date}", "filterDate": "Filter by date", "history": "Request History", "emptyHistory": "No requests found", "emptyHistoryDescription": "No requests match the selected filters.", "editRequest": "Edit request", "deleteRequest": "Delete request", "requestApiMissing": "The Admin Requests API was not provided.",
+        "stats": { "total": "Total Tasks", "completed": "Completed", "canceled": "Canceled" },
+        "tabs": { "all": "All", "completed": "Completed", "failed": "Failed", "canceled": "Canceled" },
+        "columns": { "id": "Request ID", "location": "Location", "time": "Time", "status": "Status", "action": "Action" },
+        "deleteDialog": { "title": "Delete Request?", "description": "Are you sure you want to delete this request?", "warning": "This action cannot be undone.", "cancel": "No, keep it", "confirm": "Yes, delete" }
+      }
+    },
     "companies": {
       "title": "Companies Management",
       "subtitle": "Manage and monitor all registered companies",
