@@ -214,6 +214,13 @@
     "overview": {
       "title": "Dashboard",
       "subtitle": "Welcome back, here's what's happening today",
+      "states": {
+        "errorTitle": "Requests unavailable",
+        "errorDescription": "We couldn't load your requests.",
+        "retry": "Try again",
+        "emptyTitle": "No requests found",
+        "emptyDescription": "Create a request or adjust the current filters."
+      },
       "filters": {
         "thisWeek": "This Week"
       },
@@ -310,6 +317,7 @@
         "closeDialog": "Close dialog",
         "toggleSection": "Toggle section",
         "addService": "Add Service",
+        "removeService": "Remove service",
         "deleteService": "Delete service",
         "removeServiceDraft": "Remove service draft",
         "save": "Save",
@@ -382,6 +390,18 @@
           "label": "Execution Instructions",
           "description": "Add clear execution notes, placement requirements, timing details, or special instructions.",
           "placeholder": "Write detailed instructions for the assigned merchandiser..."
+        },
+        "planogramFiles": {
+          "label": "Upload Planogram",
+          "accept": "PDF / Image"
+        },
+        "jobOrderFiles": {
+          "label": "Upload Job Order",
+          "accept": "PDF / Image / Excel"
+        },
+        "files": {
+          "uploadHint": "Click to upload files",
+          "replaceHint": "{count} file(s) selected — click to add more"
         }
       },
       "options": {
@@ -410,9 +430,12 @@
         "columns": {
           "products": "Products",
           "sku": "SKU Code",
+          "barcode": "Barcode",
           "details": "Product Details",
-          "expiryDate": "Expiry Date"
-        }
+          "expiryDate": "Expiry Date",
+          "minQuantity": "Min Quantity"
+        },
+        "editDetail": "Edit value"
       },
       "pagination": {
         "previous": "Previous",
@@ -506,6 +529,11 @@
           "hold": "Hold: Amount is held in your wallet (not transferred yet)",
           "completed": "If Completed: Money is transferred to shelfspot",
           "refund": "If Not Completed: Full refund to your wallet"
+        },
+        "insufficientBalance": "Insufficient balance. Please top up your wallet before proceeding.",
+        "pendingStatus": {
+          "title": "Status: Pending",
+          "description": "The request will appear in your dashboard with Pending status until a merchandiser accepts it."
         },
         "status": {
           "title": "Status: Pending",
@@ -682,6 +710,13 @@
       "filters": {
         "allStatuses": "All Statuses"
       },
+      "states": {
+        "errorTitle": "Requests unavailable",
+        "errorDescription": "We couldn't load your requests.",
+        "retry": "Try again",
+        "emptyTitle": "No requests found",
+        "emptyDescription": "Create a request or adjust the current filters."
+      },
       "actions": {
         "addNew": "Add New admin"
       },
@@ -849,8 +884,7 @@
           "types": "Types",
           "totalSpending": "Total Spending",
           "date": "Date",
-          "status": "Status",
-          "action": "Action"
+          "performedBy": "Refunded By"
         },
         "actions": {
           "delete": "Delete transaction"
@@ -895,6 +929,14 @@
           "availableTitle": "Available Promo Code",
           "apply": "Apply Promo Code"
         },
+        "errors": {
+          "invalid": "This promo code is invalid. Check the code and try again.",
+          "expired": "This promo code has expired.",
+          "alreadyUsed": "This promo code has already been used.",
+          "tooManyAttempts": "Too many attempts. Please wait a moment and try again.",
+          "network": "Unable to connect. Check your internet connection and try again.",
+          "server": "We could not apply this promo code right now. Please try again later or contact support."
+        },
         "promoCodes": {
           "welcomeBonus": {
             "title": "$50 welcome Bonus",
@@ -908,6 +950,30 @@
           }
         }
       }
+    },
+    "profilePage": {
+      "title": "Company Profile",
+      "subtitle": "Manage your company account information and security",
+      "owner": "Account Owner",
+      "companyId": "Company ID: {id}",
+      "active": "Active",
+      "inactive": "Inactive",
+      "personalInfo": "Profile Information",
+      "personalInfoDescription": "Update the details used for your company account.",
+      "fields": {
+        "name": "Company Name",
+        "email": "Email Address",
+        "password": "New Password",
+        "passwordHint": "Leave blank to keep your current password.",
+        "passwordPlaceholder": "Enter a new password",
+        "passwordConfirmation": "Confirm New Password",
+        "passwordConfirmationPlaceholder": "Re-enter the new password",
+        "status": "Account Status",
+        "roles": "Roles"
+      },
+      "passwordMismatch": "The password confirmation does not match.",
+      "save": "Save Changes",
+      "success": "Your company profile has been updated successfully."
     },
     "requestsPage": {
       "title": "Requests",
@@ -997,15 +1063,22 @@
     "requestDetails": {
       "title": "Request Details",
       "subtitle": "Complete information about execution request {id}",
+      "back": "Back",
       "createdOn": "Created on",
+      "errorTitle": "Failed to load request",
+      "errorDescription": "Something went wrong while loading this request. Please try again.",
+      "retry": "Retry",
       "info": {
         "location": "Location",
         "assignedBy": "Assigned By",
         "executionDate": "Execution Date",
-        "timeWindow": "Time Window"
+        "expiresAt": "Expires At",
+        "notes": "Notes"
       },
       "stats": {
         "totalCost": "Total Cost",
+        "servicesCount": "{count} service(s)",
+        "progress": "Progress",
         "totalProducts": "Total Products",
         "unitsSubtitle": "Units across all services",
         "timeRemaining": "Time Remaining",
@@ -1013,11 +1086,26 @@
         "untilDeadline": "Until deadline"
       },
       "actions": {
+        "edit": "Edit Draft",
         "reschedule": "Reschedule This Request",
         "cancelRequest": "Cancel Request",
+        "pay": "Pay Now",
         "repeatRequest": "Repeat This Request",
         "viewExecution": "View Execution Details",
         "cancelReopening": "Cancel reopening task"
+      },
+      "editDialog": {
+        "title": "Edit Draft Request",
+        "date": "Execution Date",
+        "notes": "Notes",
+        "cancel": "Cancel",
+        "save": "Save Changes"
+      },
+      "cancelDialog": {
+        "title": "Cancel Request",
+        "description": "Are you sure you want to cancel this request? This action cannot be undone.",
+        "cancel": "Go Back",
+        "confirm": "Yes, Cancel"
       },
       "status": {
         "inProgress": "In Progress",
@@ -1032,15 +1120,19 @@
       },
       "services": {
         "heading": "Services Details ({count})",
-        "productHeading": "Product",
-        "executionGuidelines": "Execution Guidelines",
+        "productHeading": "Products",
+        "executionGuidelines": "Execution Instructions",
+        "attachments": "Attachments",
         "brand": "Brand",
         "subBrand": "Sub-Brand",
         "category": "Category",
         "subCategory": "Sub-Category",
+        "noProducts": "No products added.",
+        "download": "Download attachment",
         "columns": {
-          "products": "Products",
+          "products": "Product",
           "skuCode": "SKU Code",
+          "minQuantity": "Min. Quantity",
           "quantity": "Quantity",
           "expiryDate": "Expiry Date"
         }
@@ -1115,6 +1207,10 @@
     }
   },
   "auth": {
+    "adminLogin": {
+      "title": "Hello!",
+      "description": "Enter your credentials to access your account"
+    },
     "login": {
       "visualAlt": "ShelfSpot login visual",
       "title": "Welcome Back",
@@ -1266,6 +1362,13 @@
       "visualAlt": "OTP verification visual",
       "title": "OTP Verification",
       "description": "Enter the verification code we just sent on your email address.",
+      "digitLabel": "OTP digit {position}",
+      "errors": {
+        "missingEmail": "Start the password reset flow again and enter your email.",
+        "missingToken": "The verification response did not include a password reset token.",
+        "invalidCode": "The verification code is invalid or expired.",
+        "generic": "Unable to verify the code right now. Please try again."
+      },
       "actions": {
         "back": "Back",
         "submit": "Verify code",
@@ -1280,6 +1383,11 @@
       "visualAlt": "Reset password visual",
       "title": "Reset password",
       "description": "Your new password must be unique from those previously used.",
+      "errors": {
+        "missingToken": "Verify your code before resetting the password.",
+        "validation": "Please check the highlighted fields.",
+        "generic": "Unable to reset the password right now. Please try again."
+      },
       "fields": {
         "password": {
           "label": "New Password",

@@ -10,6 +10,7 @@ export const ROUTES = {
   dashboardRequests: "/dashboard/requests",
   dashboardCreateRequest: "/dashboard/requests/create",
   dashboardPayment: "/dashboard/payment",
+  dashboardProfile: "/dashboard/profile",
   dashboardCatalog:            "/dashboard/catalog",
   dashboardCatalogBrand:       "/dashboard/catalog/brand",
   dashboardCatalogSubBrand:    "/dashboard/catalog/sub-brand",
@@ -18,8 +19,11 @@ export const ROUTES = {
   dashboardCatalogProduct:     "/dashboard/catalog/product",
   dashboardAdmins: "/dashboard/admins",
   dashboardTrash: "/dashboard/trash",
-  adminLogin: "/admin/login",
   adminDashboard: "/admin",
+  adminLogin: "/admin/login",
+  adminForgotPassword: "/admin/forgot-password",
+  adminOtpVerification: "/admin/otp-verification",
+  adminResetPassword: "/admin/reset-password",
 } as const;
 
 export type AppRoute = (typeof ROUTES)[keyof typeof ROUTES];

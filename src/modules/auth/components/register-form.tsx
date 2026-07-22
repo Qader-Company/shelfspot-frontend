@@ -20,7 +20,7 @@ import {
 import { AuthInputField } from "@/modules/auth/components/auth-input-field";
 import { AuthModeSwitch } from "@/modules/auth/components/auth-mode-switch";
 import { AuthSelectField } from "@/modules/auth/components/auth-select-field";
-import { useRegisterMutation } from "@/modules/auth/hooks/use-register-mutation";
+import { useRegisterMutation } from "@/modules/auth/hooks/use-auth-mutations";
 import {
   createRegisterSchema,
   registerDefaultValues,

@@ -6,8 +6,10 @@ import { useForm } from "react-hook-form";
 
 import { ROUTES } from "@/config/routes";
 import { useRouter } from "@/i18n/navigation";
-import { useResendVerificationOtpMutation } from "@/modules/auth/hooks/use-resend-verification-otp-mutation";
-import { useVerifyEmailMutation } from "@/modules/auth/hooks/use-verify-email-mutation";
+import {
+  useResendVerificationOtpMutation,
+  useVerifyEmailMutation,
+} from "@/modules/auth/hooks/use-auth-mutations";
 import { AuthOtpField } from "@/modules/auth/components/auth-otp-field";
 import {
   createOtpVerificationSchema,

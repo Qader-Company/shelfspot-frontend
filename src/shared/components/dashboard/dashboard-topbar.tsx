@@ -9,8 +9,10 @@ import { SearchInput } from "./search-input";
 import { UserMenu } from "./user-menu";
 import type { DashboardSidebarItem, DashboardUser } from "./types";
 import { useUiStore } from "@/shared/stores/ui-store";
+import type { AuthContext } from "@/modules/auth/config/auth-context";
 
 interface DashboardTopbarProps {
+  authContext: AuthContext;
   searchItems: DashboardSidebarItem[];
   searchLabel: string;
   searchPlaceholder: string;
@@ -22,6 +24,7 @@ interface DashboardTopbarProps {
 }
 
 export function DashboardTopbar({
+  authContext,
   searchItems,
   searchLabel,
   searchPlaceholder,
@@ -54,7 +57,7 @@ export function DashboardTopbar({
         />
       </div>
       <div className="flex shrink-0 items-center gap-4">
-        <UserMenu user={user} label={userMenuLabel} />
+        <UserMenu authContext={authContext} user={user} label={userMenuLabel} />
         <NotificationButton label={notificationLabel} />
       </div>
     </header>

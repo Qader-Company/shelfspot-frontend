@@ -6,7 +6,7 @@ import {
   ProductPage,
   SubBrandPage,
   SubCategoryPage,
-} from "@/modules/dashboard/catalog";
+} from "@/modules/company/catalog";
 
 const catalogPages = {
   brand: BrandPage,

@@ -7,5 +7,10 @@ export default async function LoginPage({
 }) {
   const { registered } = await searchParams;
 
-  return <LoginPageView showRegistrationSuccess={registered === "1"} />;
+  return (
+    <LoginPageView
+      authContext="company"
+      showRegistrationSuccess={registered === "1"}
+    />
+  );
 }

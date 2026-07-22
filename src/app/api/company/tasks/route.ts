@@ -5,3 +5,7 @@ import { proxyCompanyRequest } from "@/shared/lib/api/proxy";
 export async function POST(request: NextRequest) {
   return proxyCompanyRequest(request, "/company/tasks");
 }
+
+export async function GET(request: NextRequest) {
+  return proxyCompanyRequest(request, "/company/tasks");
+}

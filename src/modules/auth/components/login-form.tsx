@@ -13,8 +13,11 @@ import {
 } from "@/modules/auth/components/auth-field-icons";
 import { AuthInputField } from "@/modules/auth/components/auth-input-field";
 import { AuthModeSwitch } from "@/modules/auth/components/auth-mode-switch";
-import { useLoginMutation } from "@/modules/auth/hooks/use-login-mutation";
-import type { AuthContext } from "@/modules/auth/services/login-service";
+import { useLoginMutation } from "@/modules/auth/hooks/use-auth-mutations";
+import {
+  getAuthContextConfig,
+  type AuthContext,
+} from "@/modules/auth/config/auth-context";
 import { Link, useRouter } from "@/i18n/navigation";
 import { ROUTES } from "@/config/routes";
 import {
@@ -31,18 +34,22 @@ import { Form } from "@/shared/ui/form";
 interface LoginFormProps {
   showRegistrationSuccess?: boolean;
   authContext?: AuthContext;
+  heading?: string;
+  description?: string;
 }
 
 export function LoginForm({
   showRegistrationSuccess = false,
   authContext = "company",
+  heading,
+  description,
 }: LoginFormProps) {
   const t = useTranslations("auth.login");
   const router = useRouter();
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const loginSchema = useMemo(() => createLoginSchema(t), [t]);
   const loginMutation = useLoginMutation(authContext);
-  const isAdmin = authContext === "admin";
+  const authConfig = getAuthContextConfig(authContext);
   const form = useForm<LoginFormValues>({
     defaultValues: loginDefaultValues,
     resolver: zodResolver(loginSchema),
@@ -57,7 +64,7 @@ export function LoginForm({
 
     try {
       await loginMutation.mutateAsync(values);
-      router.replace(isAdmin ? ROUTES.adminDashboard : ROUTES.dashboard);
+      router.replace(authConfig.successRoute);
     } catch (error) {
       const apiError = normalizeApiError(error);
 
@@ -88,14 +95,14 @@ export function LoginForm({
     <div className="mx-auto flex w-full flex-col gap-5 sm:gap-6">
       <div className="space-y-1.5 text-center">
         <h1 className="text-display-xs font-semibold text-foreground sm:text-display-sm lg:text-display-md">
-          {t("title")}
+          {heading ?? t("title")}
         </h1>
         <p className="text-base font-normal text-muted-foreground sm:text-lg lg:text-xl">
-          {t("description")}
+          {description ?? t("description")}
         </p>
       </div>
 
-      {!isAdmin ? <div>
+      {authConfig.registrationRoute ? <div>
         <AuthModeSwitch
           active="sign-in"
           signInHref={ROUTES.login}
@@ -186,7 +193,7 @@ export function LoginForm({
             </label>
 
             <Link
-              href={ROUTES.forgotPassword}
+              href={authConfig.forgotPasswordRoute}
               className="text-sm font-medium text-primary"
             >
               {t("actions.forgotPassword")}
@@ -212,7 +219,7 @@ export function LoginForm({
         </form>
       </Form>
 
-      {!isAdmin ? <div>
+      {authConfig.registrationRoute ? <div>
         <p className="text-center text-sm leading-6 text-muted-foreground">
           {t("states.noAccount")}{" "}
           <Link

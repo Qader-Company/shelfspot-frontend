@@ -1,13 +1,5 @@
-import { AuthSplitShell } from "@/modules/auth/components/auth-split-shell";
-import { LoginForm } from "@/modules/auth/components/login-form";
+import { LoginPageView } from "@/modules/auth/components";
 
 export default function AdminLoginPage() {
-  return (
-    <AuthSplitShell
-      visualAlt="Admin login"
-      visualSrc="/auth/screens/login-screen.png"
-    >
-      <LoginForm authContext="admin" />
-    </AuthSplitShell>
-  );
+  return <LoginPageView authContext="admin" />;
 }

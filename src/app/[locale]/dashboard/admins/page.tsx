@@ -1,4 +1,4 @@
-import { AdminsPage } from "@/modules/dashboard/admins";
+import { AdminsPage } from "@/modules/company/admins";
 
 export default function DashboardAdminsPage() {
   return <AdminsPage />;
