@@ -10,6 +10,7 @@ export const ROUTES = {
   dashboardRequests: "/dashboard/requests",
   dashboardCreateRequest: "/dashboard/requests/create",
   dashboardPayment: "/dashboard/payment",
+  dashboardProfile: "/dashboard/profile",
   dashboardCatalog:            "/dashboard/catalog",
   dashboardCatalogBrand:       "/dashboard/catalog/brand",
   dashboardCatalogSubBrand:    "/dashboard/catalog/sub-brand",

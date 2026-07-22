@@ -1,18 +1,24 @@
 import { Button } from "@/shared/ui/button";
+import type { AuthContext } from "@/modules/auth/config/auth-context";
 
 import type { DashboardUser } from "./types";
+import { CompanyProfileUserMenu } from "./company-profile-user-menu";
 
 interface UserMenuProps {
+  authContext: AuthContext;
   user: DashboardUser;
   label: string;
 }
 
-export function UserMenu({ user, label }: UserMenuProps) {
+export function UserMenu({ authContext, user, label }: UserMenuProps) {
+  if (authContext === "company") {
+    return <CompanyProfileUserMenu fallbackUser={user} label={label} />;
+  }
+
   return (
     <Button
       aria-label={label}
       className="h-auto min-w-0 gap-3 rounded-full px-2 py-1 text-start hover:bg-muted"
-      type="button"
       variant="ghost"
     >
       <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-[var(--dashboard-avatar-background)]">

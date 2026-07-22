@@ -949,6 +949,30 @@
         }
       }
     },
+    "profilePage": {
+      "title": "Company Profile",
+      "subtitle": "Manage your company account information and security",
+      "owner": "Account Owner",
+      "companyId": "Company ID: {id}",
+      "active": "Active",
+      "inactive": "Inactive",
+      "personalInfo": "Profile Information",
+      "personalInfoDescription": "Update the details used for your company account.",
+      "fields": {
+        "name": "Company Name",
+        "email": "Email Address",
+        "password": "New Password",
+        "passwordHint": "Leave blank to keep your current password.",
+        "passwordPlaceholder": "Enter a new password",
+        "passwordConfirmation": "Confirm New Password",
+        "passwordConfirmationPlaceholder": "Re-enter the new password",
+        "status": "Account Status",
+        "roles": "Roles"
+      },
+      "passwordMismatch": "The password confirmation does not match.",
+      "save": "Save Changes",
+      "success": "Your company profile has been updated successfully."
+    },
     "requestsPage": {
       "title": "Requests",
       "subtitle": "Welcome back, here's what's happening today",

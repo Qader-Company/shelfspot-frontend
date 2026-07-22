@@ -45,6 +45,7 @@ export function DashboardLayout({
       />
       <div className="flex min-w-0 flex-1 flex-col overflow-y-auto">
         <DashboardTopbar
+          authContext={authContext}
           searchItems={sidebarItems}
           searchLabel={labels.search}
           searchPlaceholder={labels.searchPlaceholder}

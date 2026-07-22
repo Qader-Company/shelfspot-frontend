@@ -941,6 +941,30 @@
         }
       }
     },
+    "profilePage": {
+      "title": "الملف التعريفي للشركة",
+      "subtitle": "إدارة معلومات حساب الشركة والأمان",
+      "owner": "مالك الحساب",
+      "companyId": "رقم الشركة: {id}",
+      "active": "نشط",
+      "inactive": "غير نشط",
+      "personalInfo": "معلومات الملف التعريفي",
+      "personalInfoDescription": "حدّث البيانات المستخدمة في حساب شركتك.",
+      "fields": {
+        "name": "اسم الشركة",
+        "email": "البريد الإلكتروني",
+        "password": "كلمة المرور الجديدة",
+        "passwordHint": "اترك الحقل فارغًا للاحتفاظ بكلمة المرور الحالية.",
+        "passwordPlaceholder": "أدخل كلمة مرور جديدة",
+        "passwordConfirmation": "تأكيد كلمة المرور الجديدة",
+        "passwordConfirmationPlaceholder": "أعد إدخال كلمة المرور الجديدة",
+        "status": "حالة الحساب",
+        "roles": "الأدوار"
+      },
+      "passwordMismatch": "تأكيد كلمة المرور غير مطابق.",
+      "save": "حفظ التغييرات",
+      "success": "تم تحديث الملف التعريفي للشركة بنجاح."
+    },
     "requestsPage": {
       "title": "الطلبات",
       "subtitle": "مرحبًا بعودتك، إليك ما يحدث اليوم",
