@@ -1149,6 +1149,18 @@
     }
   },
   "adminDashboard": {
+    "requests": {
+      "title": "Requests Monitoring", "subtitle": "Real-time tracking of all platform requests", "searchLabel": "Search requests", "searchPlaceholder": "Search for requests", "statusFilter": "Filter requests by status", "loading": "Loading requests…", "error": "Unable to load requests", "errorDescription": "The requests could not be loaded.", "retry": "Try again", "empty": "No requests found", "emptyDescription": "Try changing the search or filters.", "previous": "Previous", "next": "Next",
+      "stats": { "total": "Total Requests", "pending": "Pending Requests", "inProgress": "In Progress Requests", "rejected": "Rejected Requests", "completed": "Completed This Week", "commission": "Total Commission" },
+      "tabs": { "all": "All", "deleted": "Company Deleted" },
+      "columns": { "id": "Request ID", "company": "Company Name", "created": "Created at", "store": "Store Name", "price": "Price", "status": "Status" },
+      "statuses": { "all": "All Statuses", "draft": "Draft", "pending": "Pending", "failed": "Failed", "in_progress": "In Progress", "canceled": "Canceled", "in_review": "In Review", "accepted": "Accepted", "rejected": "Rejected", "reopened": "Reopened" },
+      "details": {
+        "title": "Request Details", "subtitle": "Complete information about execution request {id}", "loading": "Loading request details…", "error": "Unable to load request", "errorDescription": "The request details could not be loaded.", "retry": "Try again", "notFound": "Request not found", "notFoundDescription": "This request is unavailable or has been removed.", "created": "Created on", "location": "Location", "assignedBy": "Assigned By", "executionDate": "Execution Date", "timeWindow": "Time Window", "worker": "Merchandiser", "totalCost": "Total Cost", "totalProducts": "Total Products", "timeRemaining": "Time Remaining", "calculatedTime": "Calculated from deadline", "assign": "Assign Merchandiser", "reassign": "Reassign Merchandiser", "services": "Services Details ({count})", "serviceNumber": "Service #{number}", "brand": "Brand", "subBrand": "Sub-Brand", "category": "Category", "subCategory": "Sub-Category", "product": "Products", "sku": "SKU Code", "quantity": "Quantity", "expiry": "Expiry Date", "guidelines": "Execution Guidelines",
+        "statuses": { "draft": "Draft", "pending": "Pending", "failed": "Failed", "in_progress": "In Progress", "canceled": "Canceled", "in_review": "In Review", "accepted": "Accepted", "rejected": "Rejected", "reopened": "Reopened" },
+        "assignDialog": { "title": "Reassign Nearby Merchandiser", "subtitle": "Showing merchandisers within the selected coverage area", "close": "Close dialog", "search": "Search by merchandiser", "available": "Available", "busy": "Busy", "tasks": "tasks", "assign": "Assign Merchandiser", "selectRequired": "Select an available merchandiser.", "unverified": "The reassign request could not be completed." }
+      }
+    },
     "merchandisers": {
       "title": "Merchandiser Management",
       "subtitle": "Monitor and manage platform merchandisers",

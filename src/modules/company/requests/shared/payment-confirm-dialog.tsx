@@ -2,7 +2,7 @@
 
 import { useTranslations } from "next-intl";
 
-import { FlowDialog } from "@/modules/company/requests/create/flow-dialog";
+import { FlowDialog } from "@/shared/components/flow-dialog";
 import { useWallet } from "@/modules/company/payment/use-wallet";
 import { Button } from "@/shared/ui/button";
 import { ClockIcon, CostIcon } from "@/shared/components/dashboard/dashboard-icons";

@@ -39,7 +39,6 @@ export function MerchandiserForm({ merchandiserId }: MerchandiserFormProps) {
   useEffect(() => {
     if (!details.data) return;
     form.reset({ fullName: details.data.fullName, email: details.data.email, phone: details.data.phone, photoUrl: details.data.photoUrl ?? "", jobTitle: details.data.jobTitle, startDate: details.data.startDate, loginEnabled: details.data.loginEnabled, temporaryPassword: details.data.temporaryPassword });
-    setPhotoPreview(details.data.photoUrl ?? "");
   }, [details.data, form]);
 
   async function submit(payload: MerchandiserPayload) {

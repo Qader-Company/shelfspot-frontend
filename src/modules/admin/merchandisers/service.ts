@@ -86,9 +86,10 @@ export async function updateMerchandiserStatus({ id, active }: { id: string; act
   return (await adminApiClient.put(`/api/admin/workers/${encodeURIComponent(id)}`, body, { headers: { "Content-Type": "application/x-www-form-urlencoded" } })).data;
 }
 
-export async function deleteMerchandiserRequest(_: {
+export async function deleteMerchandiserRequest(input: {
   merchandiserId: string;
   requestId: string;
 }) {
+  void input;
   throw new Error("The Admin Requests endpoint was not provided.");
 }

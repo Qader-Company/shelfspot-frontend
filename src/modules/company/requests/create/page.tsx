@@ -25,7 +25,7 @@ import { useDialogPresence } from "@/shared/hooks/use-dialog-presence";
 import { createRequestSteps } from "@/modules/company/requests/create/seed";
 import { CreateRequestLayout } from "@/modules/company/requests/create/layout";
 import { CreateRequestStepper } from "@/modules/company/requests/create/stepper";
-import { FlowDialog } from "@/modules/company/requests/create/flow-dialog";
+import { FlowDialog } from "@/shared/components/flow-dialog";
 import { PaymentConfirmDialog } from "@/modules/company/requests/shared/payment-confirm-dialog";
 import { AnalogClockFace } from "@/shared/components/analog-clock-face";
 import {
