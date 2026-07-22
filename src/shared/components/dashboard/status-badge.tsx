@@ -12,7 +12,8 @@ export type StatusBadgeStatus =
   | "refunded"
   | "active"
   | "inactive"
-  | "reopened";
+  | "reopened"
+  | "draft";
 
 const statusClasses = {
   inProgress: "bg-[var(--info-50)] text-[var(--info-700)]",
@@ -27,6 +28,7 @@ const statusClasses = {
   active: "bg-[var(--info-50)] text-[var(--info-700)]",
   inactive: "bg-[var(--error-50)] text-[var(--error-700)]",
   reopened: "bg-[var(--success-50)] text-[var(--success-700)]",
+  draft: "bg-muted text-muted-foreground",
 } satisfies Record<StatusBadgeStatus, string>;
 
 interface StatusBadgeProps {

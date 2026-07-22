@@ -634,6 +634,8 @@
       }
     },
     "catalogPage": {
+      "feedback": { "loading": "جارٍ تحميل الكتالوج", "error": "تعذر تحميل الكتالوج", "retry": "إعادة المحاولة", "empty": "لا توجد عناصر في الكتالوج", "required": "أكمل جميع الحقول المطلوبة", "saved": "تم حفظ عنصر الكتالوج بنجاح", "imported": "تم استيراد ملف الكتالوج بنجاح" },
+      "fields": { "barcode": "الباركود", "english": "الإنجليزية", "arabic": "العربية" },
       "search": { "label": "البحث في الكتالوج", "placeholder": "البحث بالعلامة التجارية" },
       "filters": { "allStatuses": "جميع الحالات" },
       "actions": { "import": "استيراد" },
@@ -1144,6 +1146,38 @@
     }
   },
   "adminDashboard": {
+    "companies": {
+      "title": "إدارة الشركات",
+      "subtitle": "إدارة ومتابعة جميع الشركات المسجلة",
+      "searchLabel": "البحث في الشركات",
+      "searchPlaceholder": "البحث عن الشركات",
+      "statusFilterLabel": "تصفية الشركات حسب الحالة",
+      "loading": "جارٍ تحميل الشركات…",
+      "emptyTitle": "لا توجد شركات",
+      "emptyDescription": "جرّب تغيير البحث أو تصفية الحالة.",
+      "retry": "إعادة المحاولة",
+      "toggleStatus": "تغيير حالة {name}",
+      "delete": "حذف {name}",
+      "stats": { "total": "إجمالي الشركات", "active": "الشركات النشطة", "inactive": "الشركات غير النشطة" },
+      "statuses": { "all": "جميع الحالات", "active": "نشط", "inactive": "غير نشط" },
+      "columns": { "name": "اسم الشركة", "industry": "المجال", "crNumber": "رقم السجل التجاري", "email": "بريد العمل", "status": "الحالة", "action": "الإجراء" },
+      "pagination": { "previous": "السابق", "next": "التالي" },
+      "errors": { "load": "تعذر تحميل الشركات", "status": "تعذر تحديث حالة الشركة.", "delete": "تعذر حذف الشركة." },
+      "deleteDialog": { "title": "حذف الشركة؟", "description": "هل أنت متأكد من حذف هذه الشركة؟", "warning": "لا يمكن التراجع عن هذا الإجراء.", "cancel": "لا، احتفظ بها", "confirm": "نعم، احذف" },
+      "details": {
+        "title": "تفاصيل الشركة", "back": "العودة إلى الشركات", "loading": "جارٍ تحميل تفاصيل الشركة…", "error": "تعذر تحميل تفاصيل الشركة", "retry": "إعادة المحاولة", "notFound": "الشركة غير موجودة", "active": "نشط", "inactive": "غير نشط", "createdOn": "تاريخ الإنشاء", "industry": "المجال", "email": "البريد الإلكتروني", "crNumber": "رقم السجل التجاري", "phone": "رقم الهاتف", "catalogTitle": "إدارة الكتالوج", "manage": "إدارة",
+        "stats": { "totalRequests": "إجمالي الطلبات", "completed": "المكتملة", "pending": "قيد الانتظار", "spending": "إجمالي الإنفاق", "products": "المنتجات" },
+        "history": { "title": "سجل الطلبات", "viewAll": "عرض جميع الطلبات", "empty": "لا توجد طلبات حديثة", "requestId": "رقم الطلب", "location": "الموقع", "time": "الوقت", "status": "الحالة", "requestNumber": "طلب-{id}" },
+        "statuses": { "draft": "مسودة", "pending": "قيد الانتظار", "completed": "مكتمل", "failed": "فشل", "cancelled": "ملغي", "rejected": "مرفوض", "inProgress": "قيد التنفيذ" },
+        "catalog": {
+          "brand": { "title": "العلامات التجارية", "description": "إدارة جميع العلامات" },
+          "sub-brand": { "title": "العلامات الفرعية", "description": "إدارة جميع العلامات الفرعية" },
+          "category": { "title": "الفئات", "description": "إدارة جميع الفئات" },
+          "sub-category": { "title": "الفئات الفرعية", "description": "إدارة جميع الفئات الفرعية" },
+          "product": { "title": "المنتجات", "description": "إدارة جميع المنتجات" }
+        }
+      }
+    },
     "title": "لوحة التحكم",
     "welcome": "مرحبًا بعودتك، إليك ما يحدث اليوم",
     "summaryLabel": "ملخص المنصة",

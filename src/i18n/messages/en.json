@@ -635,6 +635,8 @@
       }
     },
     "catalogPage": {
+      "feedback": { "loading": "Loading catalog", "error": "Unable to load catalog", "retry": "Try again", "empty": "No catalog items found", "required": "Complete all required fields", "saved": "Catalog item saved successfully", "imported": "Catalog file imported successfully" },
+      "fields": { "barcode": "Barcode", "english": "English", "arabic": "Arabic" },
       "search": { "label": "Search catalog", "placeholder": "Search by brand" },
       "filters": { "allStatuses": "All Statuses" },
       "actions": { "import": "Import" },
@@ -1145,6 +1147,38 @@
     }
   },
   "adminDashboard": {
+    "companies": {
+      "title": "Companies Management",
+      "subtitle": "Manage and monitor all registered companies",
+      "searchLabel": "Search companies",
+      "searchPlaceholder": "Search for companies",
+      "statusFilterLabel": "Filter companies by status",
+      "loading": "Loading companies…",
+      "emptyTitle": "No companies found",
+      "emptyDescription": "Try changing the search or status filter.",
+      "retry": "Try again",
+      "toggleStatus": "Change status for {name}",
+      "delete": "Delete {name}",
+      "stats": { "total": "Total Companies", "active": "Active Companies", "inactive": "Inactive Companies" },
+      "statuses": { "all": "All Statuses", "active": "Active", "inactive": "Inactive" },
+      "columns": { "name": "Company Name", "industry": "Industry", "crNumber": "CR Number", "email": "Work Email", "status": "Status", "action": "Action" },
+      "pagination": { "previous": "Previous", "next": "Next" },
+      "errors": { "load": "Unable to load companies", "status": "Unable to update company status.", "delete": "Unable to delete the company." },
+      "deleteDialog": { "title": "Delete Company?", "description": "Are you sure you want to delete this company?", "warning": "This action cannot be undone.", "cancel": "No, keep it", "confirm": "Yes, delete" },
+      "details": {
+        "title": "Company Details", "back": "Back to companies", "loading": "Loading company details…", "error": "Unable to load company details", "retry": "Try again", "notFound": "Company not found", "active": "Active", "inactive": "Inactive", "createdOn": "Created on", "industry": "Industry", "email": "Email", "crNumber": "CR Number", "phone": "Phone Number", "catalogTitle": "Catalog Management", "manage": "Manage",
+        "stats": { "totalRequests": "Total Requests", "completed": "Completed", "pending": "Pending", "spending": "Total Spending", "products": "Products" },
+        "history": { "title": "Request History", "viewAll": "View all requests", "empty": "No recent requests", "requestId": "Request ID", "location": "Location", "time": "Time", "status": "Status", "requestNumber": "REQ-{id}" },
+        "statuses": { "draft": "Draft", "pending": "Pending", "completed": "Completed", "failed": "Failed", "cancelled": "Cancelled", "rejected": "Rejected", "inProgress": "In Progress" },
+        "catalog": {
+          "brand": { "title": "Brands", "description": "Manage all brands" },
+          "sub-brand": { "title": "Sub-Brands", "description": "Manage all sub-brands" },
+          "category": { "title": "Category", "description": "Manage all category" },
+          "sub-category": { "title": "Sub-category", "description": "Manage all sub-category" },
+          "product": { "title": "Products", "description": "Manage all products" }
+        }
+      }
+    },
     "title": "Dashboard",
     "welcome": "Welcome back, here's what's happening today",
     "summaryLabel": "Platform summary",

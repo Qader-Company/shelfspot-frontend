@@ -153,7 +153,13 @@ export function CatalogItemsTable({
                   className="h-40 border-b border-border px-5 text-center text-sm text-muted-foreground"
                   role="status"
                 >
-                  {isLoading ? labels.loading : labels.empty}
+                  {isLoading ? (
+                    <span className="flex flex-col gap-4" aria-label={labels.loading}>
+                      {Array.from({ length: 4 }, (_, index) => (
+                        <span key={index} aria-hidden="true" className="h-4 w-full animate-pulse rounded bg-muted" />
+                      ))}
+                    </span>
+                  ) : labels.empty}
                 </td>
               </tr>
             ) : null}

@@ -8,6 +8,7 @@ interface PageLoadingSkeletonProps {
   chartCount?: number;
   tableRows?: number;
   tableColumns?: number;
+  label?: string;
 }
 
 function SkeletonBlock({ className }: { className?: string }) {
@@ -27,12 +28,13 @@ export function PageLoadingSkeleton({
   chartCount = 0,
   tableRows = 0,
   tableColumns = 5,
+  label = "Loading page",
 }: PageLoadingSkeletonProps) {
   return (
     <div
       className={cn("space-y-6 px-4 py-8 lg:px-8", className)}
       role="status"
-      aria-label="Loading page"
+      aria-label={label}
     >
       {showHeader ? (
         <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
