@@ -55,14 +55,12 @@ export async function getMerchandiser(id: string) {
 
 function payloadForm(payload: MerchandiserPayload, update = false) {
   const data = new FormData();
-  data.append("full_name", payload.fullName);
+  data.append("name", payload.fullName);
   data.append("email", payload.email);
   data.append("phone", payload.phone);
-  data.append("job_title", payload.jobTitle);
-  data.append("start_date", payload.startDate);
   data.append("login_enabled", payload.loginEnabled ? "1" : "0");
-  data.append("temporary_password", payload.temporaryPassword);
-  if (payload.photoUrl?.startsWith("data:")) data.append("photo", payload.photoUrl);
+  data.append("password", payload.temporaryPassword);
+  data.append("password_confirmation", payload.temporaryPassword);
   if (update) data.append("_method", "put");
   return data;
 }

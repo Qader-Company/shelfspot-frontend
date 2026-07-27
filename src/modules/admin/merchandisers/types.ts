@@ -32,9 +32,6 @@ export interface MerchandiserPayload {
   fullName: string;
   email: string;
   phone: string;
-  photoUrl?: string;
-  jobTitle: "merchandiser";
-  startDate: string;
   loginEnabled: boolean;
   temporaryPassword: string;
 }
