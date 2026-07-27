@@ -96,7 +96,7 @@ export function PromoCodesPage() {
   const [deleting, setDeleting] = useState<PromoCodeRecord | null>(null);
   const [actionError, setActionError] = useState("");
   const [formErrors, setFormErrors] = useState<PromoFieldErrors>({});
-  const [success, setSuccess] = useState<"created" | "updated" | null>(null);
+  const [success, setSuccess] = useState<"created" | "updated" | "deleted" | null>(null);
   const query = usePromoCodes({
     search: deferred,
     active:
@@ -228,6 +228,7 @@ export function PromoCodesPage() {
             : current,
       );
       setDeleting(null);
+      setSuccess("deleted");
     } catch (error) {
       setActionError(
         error instanceof Error ? error.message : t("deleteError"),
