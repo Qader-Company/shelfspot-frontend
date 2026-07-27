@@ -12,7 +12,7 @@ export default async function AdminLayout({ children }: Readonly<{ children: Rea
     { key: "workers", label: t("navigation.merchandisers"), href: "/admin/merchandisers", icon: "workers" },
     { key: "requests", label: t("navigation.requests"), href: ROUTES.adminRequests, icon: "box" },
     { key: "promoCode", label: t("navigation.promoCode"), href: "/admin/promo-codes", icon: "promoCode" },
-    { key: "admins", label: t("navigation.admins"), href: unavailable, icon: "admins", disabled: true },
+    { key: "admins", label: t("navigation.admins"), href: "/admin/admins", icon: "admins" },
     { key: "payments", label: t("navigation.payments"), href: unavailable, icon: "payment", disabled: true },
     { key: "settings", label: t("navigation.settings"), href: unavailable, icon: "settings", disabled: true },
     { key: "services", label: t("navigation.services"), href: unavailable, icon: "services", disabled: true },
