@@ -11,7 +11,7 @@ export function useMerchandisers(params: MerchandiserListParams) {
 }
 
 export function useMerchandiser(id: string) {
-  return useQuery({ queryKey: ["admin", "merchandisers", id], queryFn: () => getMerchandiser(id) });
+  return useQuery({ queryKey: ["admin", "merchandisers", id], queryFn: () => getMerchandiser(id), enabled: Boolean(id) });
 }
 
 export function useCreateMerchandiser() { return useMutation({ mutationFn: createMerchandiser }); }

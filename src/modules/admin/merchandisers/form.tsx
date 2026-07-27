@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useQueryClient } from "@tanstack/react-query";
 import { CheckCircle2, Copy, Eye, Mail, Phone, UserRound } from "lucide-react";
 import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
@@ -22,6 +23,7 @@ export function MerchandiserForm({ merchandiserId }: MerchandiserFormProps) {
   const authT = useTranslations("auth.register");
   const locale = useLocale();
   const router = useRouter();
+  const queryClient = useQueryClient();
   const details = useMerchandiser(merchandiserId ?? "");
   const createMutation = useCreateMerchandiser();
   const updateMutation = useUpdateMerchandiser();
@@ -75,6 +77,11 @@ export function MerchandiserForm({ merchandiserId }: MerchandiserFormProps) {
     } catch (error) { setSubmitError(error instanceof Error ? error.message : t("saveError")); }
   }
 
+  async function finishCreation() {
+    await queryClient.invalidateQueries({ queryKey: ["admin", "merchandisers"] });
+    router.push("/admin/merchandisers");
+  }
+
   const fieldClass = "h-12 w-full rounded-lg border border-transparent bg-muted px-11 text-sm outline-none placeholder:text-muted-foreground focus:border-primary";
   const pending = createMutation.isPending || updateMutation.isPending;
 
@@ -96,7 +103,7 @@ export function MerchandiserForm({ merchandiserId }: MerchandiserFormProps) {
           <div className="flex justify-end gap-3"><Button asChild variant="outline" className="min-w-32"><Link href="/admin/merchandisers">{t("cancel")}</Link></Button><Button type="submit" className="min-w-32" disabled={pending}>{pending ? t("saving") : t("save")}</Button></div>
         </form>
       </div>
-      {createdCredentials ? <CredentialsDialog credentials={createdCredentials} copiedCredential={copiedCredential} onCopy={async (field) => { await navigator.clipboard.writeText(createdCredentials[field]); setCopiedCredential(field); window.setTimeout(() => setCopiedCredential(null), 1500); }} onDone={() => router.push("/admin/merchandisers")} emailLabel={t("email")} passwordLabel={t("temporaryPassword")} title={locale === "ar" ? "تم إنشاء مسؤول العرض بنجاح" : "Worker created successfully"} description={t("credentialsNotice")} doneLabel={adminT("actions.confirm")} /> : null}
+      {createdCredentials ? <CredentialsDialog credentials={createdCredentials} copiedCredential={copiedCredential} onCopy={async (field) => { await navigator.clipboard.writeText(createdCredentials[field]); setCopiedCredential(field); window.setTimeout(() => setCopiedCredential(null), 1500); }} onDone={finishCreation} emailLabel={t("email")} passwordLabel={t("temporaryPassword")} title={locale === "ar" ? "تم إنشاء مسؤول العرض بنجاح" : "Worker created successfully"} description={t("credentialsNotice")} doneLabel={adminT("actions.confirm")} /> : null}
     </div>
   );
 }
@@ -113,7 +120,7 @@ function editableValue(value: string) {
   return value === "—" || value === "_" ? "" : value;
 }
 
-function CredentialsDialog({ credentials, copiedCredential, onCopy, onDone, emailLabel, passwordLabel, title, description, doneLabel }: { credentials: CreatedCredentials; copiedCredential: keyof CreatedCredentials | null; onCopy: (field: keyof CreatedCredentials) => Promise<void>; onDone: () => void; emailLabel: string; passwordLabel: string; title: string; description: string; doneLabel: string }) {
+function CredentialsDialog({ credentials, copiedCredential, onCopy, onDone, emailLabel, passwordLabel, title, description, doneLabel }: { credentials: CreatedCredentials; copiedCredential: keyof CreatedCredentials | null; onCopy: (field: keyof CreatedCredentials) => Promise<void>; onDone: () => void | Promise<void>; emailLabel: string; passwordLabel: string; title: string; description: string; doneLabel: string }) {
   return <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" role="presentation"><div role="dialog" aria-modal="true" aria-labelledby="created-worker-title" className="w-full max-w-md rounded-2xl bg-card p-6 shadow-xl"><div className="flex flex-col items-center text-center"><span className="flex size-16 items-center justify-center rounded-full bg-primary/10"><CheckCircle2 className="size-9 text-primary" /></span><h2 id="created-worker-title" className="mt-4 text-xl font-bold">{title}</h2><p className="mt-2 text-sm text-muted-foreground">{description}</p></div><div className="mt-6 space-y-3"><CredentialRow label={emailLabel} value={credentials.email} copied={copiedCredential === "email"} onCopy={() => onCopy("email")} /><CredentialRow label={passwordLabel} value={credentials.password} copied={copiedCredential === "password"} onCopy={() => onCopy("password")} /></div><Button type="button" className="mt-6 w-full" onClick={onDone}>{doneLabel}</Button></div></div>;
 }
 

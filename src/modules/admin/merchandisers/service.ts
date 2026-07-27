@@ -49,8 +49,18 @@ export async function getMerchandisers(params: MerchandiserListParams): Promise<
 }
 
 export async function getMerchandiser(id: string) {
-  const { data } = await adminApiClient.get<ApiResponse<ApiRecord>>(`/api/admin/workers/${encodeURIComponent(id)}`);
-  return normalize(data.data);
+  let page = 1;
+
+  while (true) {
+    const result = await getMerchandisers({ page, perPage: 100, status: "all" });
+    const record = result.data.find((worker) => worker.id === id);
+
+    if (record) return record;
+    if (page >= result.meta.lastPage) break;
+    page += 1;
+  }
+
+  throw new Error("Merchandiser not found.");
 }
 
 function payloadForm(payload: MerchandiserPayload, update = false) {
