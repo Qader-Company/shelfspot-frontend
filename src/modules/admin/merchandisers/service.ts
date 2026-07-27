@@ -40,7 +40,7 @@ function normalize(record: ApiRecord): AdminMerchandiser {
 }
 
 export async function getMerchandisers(params: MerchandiserListParams): Promise<MerchandiserListResult> {
-  const { data: response } = await adminApiClient.get<PaginatedResponse>("/api/admin/workers", { params: { search: params.search || undefined, status: params.status === "all" ? undefined : params.status, page: params.page, per_page: params.perPage } });
+  const { data: response } = await adminApiClient.get<PaginatedResponse>("/api/admin/workers/index", { params: { search: params.search || undefined, status: params.status === "all" ? undefined : params.status, page: params.page, per_page: params.perPage } });
   const nested = Array.isArray(response.data) ? null : response.data;
   const records = (Array.isArray(response.data) ? response.data : response.data.data).map(normalize);
   const total = response.meta?.total ?? nested?.total ?? records.length;
@@ -76,16 +76,29 @@ function payloadForm(payload: MerchandiserPayload, update = false) {
 }
 
 export async function createMerchandiser(payload: MerchandiserPayload) {
-  const { data } = await adminApiClient.post<ApiResponse<ApiRecord>>("/api/admin/workers", payloadForm(payload), { headers: { "Content-Type": "multipart/form-data" } });
-  return normalize(data.data);
+  const { data } = await adminApiClient.post<ApiResponse<ApiRecord>>("/api/admin/workers/index", payloadForm(payload), { headers: { "Content-Type": "multipart/form-data" } });
+  return normalize(data.data ?? {
+    name: payload.fullName,
+    email: payload.email,
+    phone: payload.phone,
+    login_enabled: payload.loginEnabled,
+  });
 }
 
 export async function updateMerchandiser({ id, payload }: { id: string; payload: MerchandiserPayload }) {
   const { data } = await adminApiClient.post<ApiResponse<ApiRecord>>(`/api/admin/workers/${encodeURIComponent(id)}`, payloadForm(payload, true), { headers: { "Content-Type": "multipart/form-data" } });
-  return normalize(data.data);
+  return normalize(data.data ?? {
+    id,
+    name: payload.fullName,
+    email: payload.email,
+    phone: payload.phone,
+    login_enabled: payload.loginEnabled,
+  });
 }
 
-export async function deleteMerchandiser(id: string) { return (await adminApiClient.delete(`/api/admin/workers/${encodeURIComponent(id)}`)).data; }
+export async function deleteMerchandiser(id: string) {
+  return (await adminApiClient.delete(`/api/admin/workers/${encodeURIComponent(id)}`)).data;
+}
 
 export async function deleteMerchandisers(ids: string[]) { return (await adminApiClient.delete("/api/admin/workers/bulk-delete", { data: { ids } })).data; }
 

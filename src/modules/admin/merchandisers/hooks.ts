@@ -1,7 +1,7 @@
 "use client";
 
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { createMerchandiser, deleteMerchandiser, deleteMerchandiserRequest, getMerchandiser, getMerchandisers, updateMerchandiser, updateMerchandiserStatus } from "./service";
+import { createMerchandiser, deleteMerchandiser, deleteMerchandisers, deleteMerchandiserRequest, getMerchandiser, getMerchandisers, updateMerchandiser, updateMerchandiserStatus } from "./service";
 import type { MerchandiserListParams } from "./types";
 
 export const merchandisersQueryKey = (params?: MerchandiserListParams) => ["admin", "merchandisers", params] as const;
@@ -17,5 +17,6 @@ export function useMerchandiser(id: string) {
 export function useCreateMerchandiser() { return useMutation({ mutationFn: createMerchandiser }); }
 export function useUpdateMerchandiser() { return useMutation({ mutationFn: updateMerchandiser }); }
 export function useDeleteMerchandiser() { return useMutation({ mutationFn: deleteMerchandiser }); }
+export function useDeleteMerchandisers() { return useMutation({ mutationFn: deleteMerchandisers }); }
 export function useUpdateMerchandiserStatus() { return useMutation({ mutationFn: updateMerchandiserStatus }); }
 export function useDeleteMerchandiserRequest() { return useMutation({ mutationFn: deleteMerchandiserRequest }); }
