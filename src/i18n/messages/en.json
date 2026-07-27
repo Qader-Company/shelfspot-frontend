@@ -174,7 +174,8 @@
       "searchNoResults": "No matching dashboard pages",
       "menu": "Open dashboard navigation",
       "notification": "Notifications",
-      "userMenu": "Open user profile menu"
+      "userMenu": "Open user profile menu",
+      "language": "Switch dashboard language to Arabic"
     },
     "user": {
       "name": "Alf Company",
@@ -1274,7 +1275,8 @@
       "searchNoResults": "No matching Admin pages",
       "menu": "Open Admin navigation",
       "notification": "Notifications",
-      "userMenu": "Open Admin profile menu"
+      "userMenu": "Open Admin profile menu",
+      "language": "Switch dashboard language to Arabic"
     },
     "user": { "name": "ShelfSpot", "role": "Admin" },
     "stats": {

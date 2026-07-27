@@ -20,5 +20,5 @@ export default async function AdminLayout({ children }: Readonly<{ children: Rea
     { key: "logout", label: t("navigation.logout"), href: ROUTES.login, icon: "logout" },
   ];
 
-  return <DashboardLayout authContext="admin" sidebarItems={sidebarItems} primaryItemCount={5} user={{ name: t("user.name"), description: t("user.role") }} labels={{ navigation: t("navigation.label"), logo: t("navigation.logo"), search: t("header.searchLabel"), searchPlaceholder: t("header.searchPlaceholder"), searchNoResults: t("header.searchNoResults"), menu: t("header.menu"), notification: t("header.notification"), userMenu: t("header.userMenu") }}>{children}</DashboardLayout>;
+  return <DashboardLayout authContext="admin" sidebarItems={sidebarItems} primaryItemCount={5} user={{ name: t("user.name"), description: t("user.role") }} labels={{ navigation: t("navigation.label"), logo: t("navigation.logo"), search: t("header.searchLabel"), searchPlaceholder: t("header.searchPlaceholder"), searchNoResults: t("header.searchNoResults"), menu: t("header.menu"), notification: t("header.notification"), userMenu: t("header.userMenu"), language: t("header.language") }}>{children}</DashboardLayout>;
 }
