@@ -1,3 +1,5 @@
+import type { StatusBadgeStatus } from "@/shared/components/dashboard/status-badge";
+
 export type CompanyTaskStatus =
   | "draft" | "pending" | "accepted" | "started" | "in_progress"
   | "worker_cancelled" | "company_cancelled" | "completed" | "rejected"
@@ -42,4 +44,15 @@ export interface PaginatedTaskData {
   per_page?: number;
   total?: number;
   meta?: TaskListResponse["meta"];
+}
+
+export interface DashboardRequestRow {
+  id: string;
+  taskId: number;
+  location: string;
+  assignee: string;
+  time: string;
+  status: StatusBadgeStatus;
+  statusLabel?: string;
+  canEdit?: boolean;
 }

@@ -1007,11 +1007,20 @@
         "label": "Search requests",
         "placeholder": "Search by brand"
       },
-      "filters": {
-        "allStatuses": "All Statuses"
-      },
-      "status": {
-        "inProgress": "In progress",
+    "filters": {
+      "allStatuses": "All Statuses"
+    },
+    "states": {
+      "errorTitle": "Unable to load requests",
+      "errorDescription": "Please try again.",
+      "retry": "Try again",
+      "emptyTitle": "No requests found",
+      "emptyDescription": "Try changing the search or status filter."
+    },
+    "status": {
+      "draft": "Draft",
+      "started": "Started",
+      "inProgress": "In progress",
         "completed": "Completed",
         "inReview": "In Review",
         "accepted": "Accepted",
@@ -1060,8 +1069,9 @@
           "error": "Created by error",
           "other": "Other reason"
         },
-        "cancel": "No, Keep it",
-        "confirm": "Yes, Delete!"
+      "cancel": "No, Keep it",
+      "confirm": "Yes, Delete!",
+      "error": "The request could not be deleted. Please try again."
       }
     },
     "requestDetails": {
@@ -1085,8 +1095,10 @@
         "progress": "Progress",
         "totalProducts": "Total Products",
         "unitsSubtitle": "Units across all services",
-        "timeRemaining": "Time Remaining",
-        "expired": "Expired",
+      "timeRemaining": "Time Remaining",
+      "timeRemainingValue": "{hours}h {minutes}m",
+      "currencyValue": "{amount} SAR",
+      "expired": "Expired",
         "untilDeadline": "Until deadline"
       },
       "actions": {
@@ -1107,12 +1119,15 @@
       },
       "cancelDialog": {
         "title": "Cancel Request",
-        "description": "Are you sure you want to cancel this request? This action cannot be undone.",
-        "cancel": "Go Back",
-        "confirm": "Yes, Cancel"
+      "description": "Are you sure you want to cancel this request? This action cannot be undone.",
+      "cancel": "Go Back",
+      "confirm": "Yes, Cancel",
+      "error": "The request could not be canceled. Please try again."
       },
-      "status": {
-        "inProgress": "In Progress",
+    "status": {
+      "draft": "Draft",
+      "started": "Started",
+      "inProgress": "In Progress",
         "pending": "Pending",
         "failed": "Failed",
         "rejected": "Rejected",

@@ -21,6 +21,7 @@ export const ROUTES = {
   dashboardTrash: "/dashboard/trash",
   adminDashboard: "/admin",
   adminMerchandisers: "/admin/merchandisers",
+  adminRequests: "/admin/requests",
   adminPromoCodes: "/admin/promo-codes",
   adminLogin: "/admin/login",
   adminForgotPassword: "/admin/forgot-password",

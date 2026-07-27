@@ -1009,8 +1009,10 @@
         "emptyTitle": "لا توجد طلبات",
         "emptyDescription": "أنشئ طلبًا أو عدل عوامل التصفية الحالية."
       },
-      "status": {
-        "inProgress": "قيد التنفيذ",
+    "status": {
+      "draft": "مسودة",
+      "started": "بدأ",
+      "inProgress": "قيد التنفيذ",
         "completed": "مكتمل",
         "inReview": "قيد المراجعة",
         "accepted": "مقبول",
@@ -1059,8 +1061,9 @@
           "error": "أُنشئ بالخطأ",
           "other": "سبب آخر"
         },
-        "cancel": "لا، احتفظ به",
-        "confirm": "نعم، احذفه!"
+      "cancel": "لا، احتفظ به",
+      "confirm": "نعم، احذفه!",
+      "error": "تعذر حذف الطلب. يرجى المحاولة مرة أخرى."
       }
     },
     "requestDetails": {
@@ -1084,8 +1087,10 @@
         "progress": "التقدم",
         "totalProducts": "إجمالي المنتجات",
         "unitsSubtitle": "وحدات عبر جميع الخدمات",
-        "timeRemaining": "الوقت المتبقي",
-        "expired": "منتهي",
+      "timeRemaining": "الوقت المتبقي",
+      "timeRemainingValue": "{hours} س {minutes} د",
+      "currencyValue": "{amount} ر.س",
+      "expired": "منتهي",
         "untilDeadline": "حتى الموعد"
       },
       "actions": {
@@ -1106,12 +1111,15 @@
       },
       "cancelDialog": {
         "title": "إلغاء الطلب",
-        "description": "هل أنت متأكد من رغبتك في إلغاء هذا الطلب؟ لا يمكن التراجع عن هذا الإجراء.",
-        "cancel": "رجوع",
-        "confirm": "نعم، إلغاء"
+      "description": "هل أنت متأكد من رغبتك في إلغاء هذا الطلب؟ لا يمكن التراجع عن هذا الإجراء.",
+      "cancel": "رجوع",
+      "confirm": "نعم، إلغاء",
+      "error": "تعذر إلغاء الطلب. يرجى المحاولة مرة أخرى."
       },
-      "status": {
-        "inProgress": "قيد التنفيذ",
+    "status": {
+      "draft": "مسودة",
+      "started": "بدأ",
+      "inProgress": "قيد التنفيذ",
         "pending": "قيد الانتظار",
         "failed": "فشل",
         "rejected": "مرفوض",
