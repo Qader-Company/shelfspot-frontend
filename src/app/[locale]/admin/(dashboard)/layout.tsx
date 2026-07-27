@@ -15,8 +15,8 @@ export default async function AdminLayout({ children }: Readonly<{ children: Rea
     { key: "admins", label: t("navigation.admins"), href: "/admin/admins", icon: "admins" },
     { key: "payments", label: t("navigation.payments"), href: "/admin/payments", icon: "payment" },
     { key: "settings", label: t("navigation.settings"), href: "/admin/settings", icon: "settings" },
-    { key: "services", label: t("navigation.services"), href: unavailable, icon: "services", disabled: true },
-    { key: "trash", label: t("navigation.trash"), href: unavailable, icon: "trash", disabled: true },
+    { key: "services", label: t("navigation.services"), href: "/admin/services", icon: "services" },
+    { key: "trash", label: t("navigation.trash"), href: "/admin/trash", icon: "trash" },
     { key: "logout", label: t("navigation.logout"), href: ROUTES.login, icon: "logout" },
   ];
 

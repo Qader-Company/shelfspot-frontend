@@ -1,0 +1,4 @@
+import {apiClient} from "@/shared/lib/api/client";import type {AdminService,ServicePayload} from "./types";
+function listFrom(value:unknown):AdminService[]{if(!value||typeof value!=="object")return[];const data=(value as{data?:unknown}).data;if(Array.isArray(data))return data as AdminService[];if(data&&typeof data==="object"){const nested=(data as{data?:unknown}).data;if(Array.isArray(nested))return nested as AdminService[]}return[]}
+export async function getServices(active?:boolean){const{data}=await apiClient.get("/admin/services",{params:{active:active==null?"":active?1:0}});return listFrom(data)}
+export async function updateService({id,payload}:{id:AdminService["id"];payload:ServicePayload}){return(await apiClient.put(`/admin/services/${id}`,{"translations[en][description]":payload.description,minimum_price:payload.minimum_price,minimum_execution_time:payload.minimum_execution_time,is_active:payload.is_active})).data}
