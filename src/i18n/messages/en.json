@@ -1178,7 +1178,7 @@
     "requests": {
       "title": "Requests Monitoring", "subtitle": "Real-time tracking of all platform requests", "searchLabel": "Search requests", "searchPlaceholder": "Search for requests", "statusFilter": "Filter requests by status", "loading": "Loading requests…", "error": "Unable to load requests", "errorDescription": "The requests could not be loaded.", "retry": "Try again", "empty": "No requests found", "emptyDescription": "Try changing the search or filters.", "previous": "Previous", "next": "Next",
       "stats": { "total": "Total Requests", "pending": "Pending Requests", "inProgress": "In Progress Requests", "rejected": "Rejected Requests", "completed": "Completed This Week", "commission": "Total Commission" },
-      "tabs": { "all": "All", "deleted": "Company Deleted" },
+      "tabs": { "all": "All", "deleted": " Deleted By Company" },
       "columns": { "id": "Request ID", "company": "Company Name", "created": "Created at", "store": "Store Name", "price": "Price", "status": "Status" },
       "statuses": { "all": "All Statuses", "draft": "Draft", "pending": "Pending", "failed": "Failed", "in_progress": "In Progress", "canceled": "Canceled", "in_review": "In Review", "accepted": "Accepted", "rejected": "Rejected", "reopened": "Reopened" },
       "details": {

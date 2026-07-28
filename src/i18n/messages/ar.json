@@ -1170,7 +1170,7 @@
     "requests": {
       "title": "مراقبة الطلبات", "subtitle": "متابعة فورية لجميع طلبات المنصة", "searchLabel": "البحث في الطلبات", "searchPlaceholder": "ابحث عن طلب", "statusFilter": "تصفية الطلبات حسب الحالة", "loading": "جارٍ تحميل الطلبات…", "error": "تعذر تحميل الطلبات", "errorDescription": "تعذر تحميل قائمة الطلبات.", "retry": "إعادة المحاولة", "empty": "لا توجد طلبات", "emptyDescription": "جرّب تغيير البحث أو عوامل التصفية.", "previous": "السابق", "next": "التالي",
       "stats": { "total": "إجمالي الطلبات", "pending": "الطلبات المعلقة", "inProgress": "الطلبات قيد التنفيذ", "rejected": "الطلبات المرفوضة", "completed": "المكتملة هذا الأسبوع", "commission": "إجمالي العمولة" },
-      "tabs": { "all": "الكل", "deleted": "المحذوفه" },
+      "tabs": { "all": "الكل", "deleted": "المحذوفه " },
       "columns": { "id": "رقم الطلب", "company": "اسم الشركة", "created": "تاريخ الإنشاء", "store": "اسم المتجر", "price": "السعر", "status": "الحالة" },
       "statuses": { "all": "كل الحالات", "draft": "مسودة", "pending": "معلق", "failed": "فشل", "in_progress": "قيد التنفيذ", "canceled": "ملغي", "in_review": "قيد المراجعة", "accepted": "مقبول", "rejected": "مرفوض", "reopened": "أعيد فتحه" },
       "details": {
