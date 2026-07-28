@@ -14,6 +14,10 @@ import {
 import { AuthInputField } from "@/modules/auth/components/auth-input-field";
 import { AuthModeSwitch } from "@/modules/auth/components/auth-mode-switch";
 import { useLoginMutation } from "@/modules/auth/hooks/use-auth-mutations";
+import {
+  getAuthContextConfig,
+  type AuthContext,
+} from "@/modules/auth/config/auth-context";
 import { Link, useRouter } from "@/i18n/navigation";
 import { ROUTES } from "@/config/routes";
 import {
@@ -26,7 +30,6 @@ import { zodResolver } from "@/shared/lib/validation";
 import { cn } from "@/shared/lib/utils";
 import { Button } from "@/shared/ui/button";
 import { Form } from "@/shared/ui/form";
-import { getAuthContextConfig, type AuthContext } from "@/modules/auth/config/auth-context";
 
 interface LoginFormProps {
   showRegistrationSuccess?: boolean;
@@ -35,7 +38,12 @@ interface LoginFormProps {
   description?: string;
 }
 
-export function LoginForm({ showRegistrationSuccess = false, authContext = "company", heading, description }: LoginFormProps) {
+export function LoginForm({
+  showRegistrationSuccess = false,
+  authContext = "company",
+  heading,
+  description,
+}: LoginFormProps) {
   const t = useTranslations("auth.login");
   const router = useRouter();
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);

@@ -81,6 +81,7 @@ export default async function Layout({
         menu: t("topbar.menu"),
         notification: t("topbar.notification"),
         userMenu: t("topbar.userMenu"),
+        language: t("topbar.language"),
       }}
     >
       {children}

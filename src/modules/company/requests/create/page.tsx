@@ -1,10 +1,9 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 
@@ -25,7 +24,7 @@ import { useDialogPresence } from "@/shared/hooks/use-dialog-presence";
 import { createRequestSteps } from "@/modules/company/requests/create/seed";
 import { CreateRequestLayout } from "@/modules/company/requests/create/layout";
 import { CreateRequestStepper } from "@/modules/company/requests/create/stepper";
-import { FlowDialog } from "@/modules/company/requests/create/flow-dialog";
+import { FlowDialog } from "@/shared/components/flow-dialog";
 import { PaymentConfirmDialog } from "@/modules/company/requests/shared/payment-confirm-dialog";
 import { AnalogClockFace } from "@/shared/components/analog-clock-face";
 import {
@@ -799,37 +798,54 @@ function LocationMap({ latitude, longitude, label, hint, onSelect }: {
   onSelectRef.current = onSelect;
 
   useEffect(() => {
-    if (!containerRef.current) return;
+    let disposed = false;
+    let map: import("leaflet").Map | undefined;
 
-    const hasSelection = latitude !== 0 || longitude !== 0;
-    const initialPosition: L.LatLngExpression = hasSelection
-      ? [latitude, longitude]
-      : [23.8859, 45.0792];
-    const map = L.map(containerRef.current, {
-      center: initialPosition,
-      zoom: hasSelection ? 13 : 5,
-      zoomControl: true,
-    });
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      maxZoom: 19,
-      attribution: "&copy; OpenStreetMap contributors",
-    }).addTo(map);
+    async function initializeMap() {
+      if (!containerRef.current) return;
+      const leaflet = await import("leaflet");
+      if (disposed || !containerRef.current) return;
 
-    let marker: L.CircleMarker | null = hasSelection
-      ? L.circleMarker(initialPosition, { radius: 9, color: "#fff", weight: 3, fillColor: "#7c3aed", fillOpacity: 1 }).addTo(map)
-      : null;
-    map.on("click", ({ latlng }: L.LeafletMouseEvent) => {
-      marker?.remove();
-      marker = L.circleMarker(latlng, { radius: 9, color: "#fff", weight: 3, fillColor: "#7c3aed", fillOpacity: 1 }).addTo(map);
-      onSelectRef.current(
-        Math.round(latlng.lat * 1_000_000) / 1_000_000,
-        Math.round(latlng.lng * 1_000_000) / 1_000_000,
-      );
-    });
+      const hasSelection = latitude !== 0 || longitude !== 0;
+      const initialPosition: import("leaflet").LatLngExpression = hasSelection
+        ? [latitude, longitude]
+        : [23.8859, 45.0792];
+      map = leaflet.map(containerRef.current, {
+        center: initialPosition,
+        zoom: hasSelection ? 13 : 5,
+        zoomControl: true,
+      });
+      leaflet.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 19,
+        attribution: "&copy; OpenStreetMap contributors",
+      }).addTo(map);
 
-    window.requestAnimationFrame(() => map.invalidateSize());
+      const markerStyle = {
+        radius: 9,
+        color: "var(--background)",
+        weight: 3,
+        fillColor: "var(--primary)",
+        fillOpacity: 1,
+      };
+      let marker: import("leaflet").CircleMarker | null = hasSelection
+        ? leaflet.circleMarker(initialPosition, markerStyle).addTo(map)
+        : null;
+      map.on("click", ({ latlng }: import("leaflet").LeafletMouseEvent) => {
+        marker?.remove();
+        marker = leaflet.circleMarker(latlng, markerStyle).addTo(map!);
+        onSelectRef.current(
+          Math.round(latlng.lat * 1_000_000) / 1_000_000,
+          Math.round(latlng.lng * 1_000_000) / 1_000_000,
+        );
+      });
+
+      window.requestAnimationFrame(() => map?.invalidateSize());
+    }
+
+    void initializeMap();
     return () => {
-      map.remove();
+      disposed = true;
+      map?.remove();
     };
   }, [latitude, longitude]);
 
@@ -853,11 +869,12 @@ function DialogInput({ label, placeholder, value, className, onChange }: { label
 }
 
 function DateDialog({ t, isOpen, onClose, onSelect }: { t: DashboardTranslate; isOpen: boolean; onClose: () => void; onSelect: (display: string, iso: string) => void }) {
+  const locale = useLocale();
   const [visibleDate, setVisibleDate] = useState(() => new Date());
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [isYearPickerOpen, setIsYearPickerOpen] = useState(false);
   const year = visibleDate.getFullYear(), month = visibleDate.getMonth();
-  const monthLabel = new Intl.DateTimeFormat(undefined, { month: "long", year: "numeric" }).format(visibleDate);
+  const monthLabel = new Intl.DateTimeFormat(locale, { month: "long", year: "numeric" }).format(visibleDate);
   const firstDay = new Date(year, month, 1).getDay(), daysInMonth = new Date(year, month + 1, 0).getDate();
   const leadingDays = (firstDay + 6) % 7;
   const calendarDays = [...Array.from({ length: leadingDays }, (_, i) => ({ date: new Date(year, month, i - leadingDays + 1), isCurrentMonth: false })), ...Array.from({ length: daysInMonth }, (_, i) => ({ date: new Date(year, month, i + 1), isCurrentMonth: true }))];
@@ -866,7 +883,7 @@ function DateDialog({ t, isOpen, onClose, onSelect }: { t: DashboardTranslate; i
   function moveMonth(dir: -1 | 1) { setVisibleDate((d) => new Date(d.getFullYear(), d.getMonth() + dir, 1)); }
   function selectDate(date: Date) {
     setSelectedDate(date);
-    const display = new Intl.DateTimeFormat(undefined, { day: "2-digit", month: "long", year: "numeric" }).format(date);
+    const display = new Intl.DateTimeFormat(locale, { day: "2-digit", month: "long", year: "numeric" }).format(date);
     const iso = [date.getFullYear(), String(date.getMonth() + 1).padStart(2, "0"), String(date.getDate()).padStart(2, "0")].join("-");
     onSelect(display, iso);
   }

@@ -154,7 +154,7 @@ export function DashboardSidebar({
           ? "translate-x-full"
           : "-translate-x-full",
     )}>
-      <div className="flex h-20 items-center justify-between px-6 lg:h-24 lg:px-12">
+      <div className="flex h-20 shrink-0 items-center justify-between px-6 lg:h-24 lg:px-12">
         <Link href={ROUTES.home} aria-label={logoLabel} className="block">
           <Logo className="h-auto w-36" width={292} height={108} />
         </Link>
@@ -162,7 +162,10 @@ export function DashboardSidebar({
           <X className="size-5" />
         </Button>
       </div>
-      <nav className="flex flex-1 flex-col" aria-label={navigationLabel}>
+      <nav
+        className="flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain pb-4"
+        aria-label={navigationLabel}
+      >
         <div className="space-y-3 px-2">{renderItems(primaryItems)}</div>
         <div className="mt-8 border-t border-border px-2 pt-4">
           <div className="space-y-3">{renderItems(secondaryItems)}</div>

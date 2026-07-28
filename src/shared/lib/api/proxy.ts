@@ -18,7 +18,7 @@ import {
 export async function proxyCompanyRequest(
   request: NextRequest,
   upstreamPath: string,
-  options?: { responseType?: "arraybuffer" },
+  options?: { responseType?: "arraybuffer"; omitCompanyHeader?: boolean },
 ) {
   upstreamPath = upstreamPath.replace(/\/{2,}/g, "/");
   const apiClient = await createServerApiClient();
@@ -55,7 +55,7 @@ export async function proxyCompanyRequest(
   }
 
   const companyId = request.cookies.get(COMPANY_ID_COOKIE)?.value;
-  if (companyId) {
+  if (companyId && !options?.omitCompanyHeader) {
     forwardedHeaders["X-Company-id"] = companyId;
   }
 
@@ -121,4 +121,15 @@ export async function proxyCompanyRequest(
       { status: 500 },
     );
   }
+}
+
+export function proxyAdminRequest(
+  request: NextRequest,
+  upstreamPath: string,
+  options?: { responseType?: "arraybuffer" },
+) {
+  return proxyCompanyRequest(request, upstreamPath, {
+    ...options,
+    omitCompanyHeader: true,
+  });
 }

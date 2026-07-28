@@ -23,8 +23,8 @@ export function AdminDashboardPage() {
   return (
     <div className="space-y-6 px-4 py-7 lg:px-8 lg:py-10">
       <header>
-        <h1 className="text-3xl font-bold text-foreground lg:text-4xl">{t("title")}</h1>
-        <p className="mt-2 text-base text-muted-foreground lg:text-lg">{t("welcome")}</p>
+        <h1 className="text-2xl font-bold text-foreground sm:text-3xl lg:text-4xl">{t("title")}</h1>
+        <p className="mt-2 text-sm text-muted-foreground sm:text-base lg:text-lg">{t("welcome")}</p>
       </header>
 
       <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3" aria-label={t("summaryLabel")}>

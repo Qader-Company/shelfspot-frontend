@@ -149,6 +149,8 @@
       }
     }
   },
+  "adminServices":{"title":"Services","subtitle":"Manage all available services and their configurations","searchLabel":"Search services","searchPlaceholder":"Search for services","statusLabel":"Filter services by status","statuses":{"all":"All Statuses","active":"Active","inactive":"Inactive"},"loading":"Loading services…","error":"Unable to load services","retry":"Try again","empty":"No services found","emptyDescription":"Try changing the search or status filter.","minutes":"min","toggle":"Change status for {name}","edit":"Edit {name}","columns":{"name":"Service Name","description":"Description","price":"Minimum Price","time":"Minimum Time","status":"Status","action":"Action"},"pagination":{"previous":"Previous","next":"Next","page":"Page {page} of {pages}"},"dialog":{"title":"Edit Service","close":"Close service editor","name":"Service Name","description":"Description","price":"Minimum Price","time":"Minimum Time","activeDescription":"Service is available and visible","cancel":"Cancel","save":"Save"}},
+  "adminTrash":{"title":"Trash","subtitle":"Recover deleted items or remove them permanently","tabsLabel":"Deleted item types","tabs":{"brands":"Brand","sub-brands":"Sub-Brand","categories":"Category","sub-categories":"Sub-Category","products":"Products","requests":"Requests","freelancers":"Freelancers","companies":"Companies"},"searchLabel":"Search deleted items","searchPlaceholder":"Search {entity}","statusLabel":"Filter by status","statuses":{"all":"All Statuses","active":"Active","inactive":"Inactive"},"loading":"Loading deleted items…","error":"Unable to load deleted items","retry":"Try again","empty":"Trash is empty","emptyDescription":"No deleted items match the current filters.","select":"Select","selectItem":"Select {name}","deleteItem":"Permanently delete {name}","restoreItem":"Restore {name}","columns":{"name":"Name","brand":"Brand","subBrand":"Sub-Brand","category":"Category","family":"Family","sku":"SKU","description":"Description","status":"Status","deletedAt":"Deleted Date","company":"Company Name","store":"Store Name","price":"Price","requestStatus":"Request Status","phone":"Phone Number","email":"Email","completed":"Completed Tasks","industry":"Industry","crNumber":"CR Number","action":"Action"},"pagination":{"previous":"Previous","next":"Next","page":"Page {page} of {pages}"},"dialog":{"close":"Close confirmation","deleteTitle":"Are you sure you want to delete this item?","deleteDescription":"Permanently delete {name}? This action cannot be undone.","restoreTitle":"Are you sure you want to restore this item?","restoreDescription":"Restore {name} to its original list?","keep":"No, Keep it","delete":"Yes, Delete!","restore":"Yes, restore"}},
   "dashboard": {
     "navigation": {
       "label": "Dashboard navigation",
@@ -172,7 +174,8 @@
       "searchNoResults": "No matching dashboard pages",
       "menu": "Open dashboard navigation",
       "notification": "Notifications",
-      "userMenu": "Open user profile menu"
+      "userMenu": "Open user profile menu",
+      "language": "Switch dashboard language to Arabic"
     },
     "user": {
       "name": "Alf Company",
@@ -274,6 +277,8 @@
         "report": "We couldn't load the dashboard statistics. Please try again."
       },
       "table": {
+        "loading": "Loading catalog items…",
+        "empty": "No catalog items found.",
         "title": "Requests",
         "columns": {
           "requestId": "Request ID",
@@ -633,11 +638,15 @@
       }
     },
     "catalogPage": {
+      "feedback": { "loading": "Loading catalog", "error": "Unable to load catalog", "retry": "Try again", "empty": "No catalog items found", "required": "Complete all required fields", "saved": "Catalog item saved successfully", "imported": "Catalog file imported successfully" },
+      "fields": { "barcode": "Barcode", "english": "English", "arabic": "Arabic" },
       "search": { "label": "Search catalog", "placeholder": "Search by brand" },
       "filters": { "allStatuses": "All Statuses" },
       "actions": { "import": "Import" },
       "status": { "active": "Active", "inactive": "In Active" },
       "table": {
+        "loading": "Loading catalog items",
+        "empty": "No catalog items found",
         "columns": { "status": "Status", "createdDate": "Created Date", "action": "Action" },
         "actions": { "selectAll": "Select all", "selectRow": "Select row", "delete": "Delete item", "edit": "Edit item", "toggleStatus": "Toggle status" }
       },
@@ -1001,11 +1010,20 @@
         "label": "Search requests",
         "placeholder": "Search by brand"
       },
-      "filters": {
-        "allStatuses": "All Statuses"
-      },
-      "status": {
-        "inProgress": "In progress",
+    "filters": {
+      "allStatuses": "All Statuses"
+    },
+    "states": {
+      "errorTitle": "Unable to load requests",
+      "errorDescription": "Please try again.",
+      "retry": "Try again",
+      "emptyTitle": "No requests found",
+      "emptyDescription": "Try changing the search or status filter."
+    },
+    "status": {
+      "draft": "Draft",
+      "started": "Started",
+      "inProgress": "In progress",
         "completed": "Completed",
         "inReview": "In Review",
         "accepted": "Accepted",
@@ -1054,8 +1072,9 @@
           "error": "Created by error",
           "other": "Other reason"
         },
-        "cancel": "No, Keep it",
-        "confirm": "Yes, Delete!"
+      "cancel": "No, Keep it",
+      "confirm": "Yes, Delete!",
+      "error": "The request could not be deleted. Please try again."
       }
     },
     "requestDetails": {
@@ -1079,8 +1098,10 @@
         "progress": "Progress",
         "totalProducts": "Total Products",
         "unitsSubtitle": "Units across all services",
-        "timeRemaining": "Time Remaining",
-        "expired": "Expired",
+      "timeRemaining": "Time Remaining",
+      "timeRemainingValue": "{hours}h {minutes}m",
+      "currencyValue": "{amount} SAR",
+      "expired": "Expired",
         "untilDeadline": "Until deadline"
       },
       "actions": {
@@ -1101,12 +1122,15 @@
       },
       "cancelDialog": {
         "title": "Cancel Request",
-        "description": "Are you sure you want to cancel this request? This action cannot be undone.",
-        "cancel": "Go Back",
-        "confirm": "Yes, Cancel"
+      "description": "Are you sure you want to cancel this request? This action cannot be undone.",
+      "cancel": "Go Back",
+      "confirm": "Yes, Cancel",
+      "error": "The request could not be canceled. Please try again."
       },
-      "status": {
-        "inProgress": "In Progress",
+    "status": {
+      "draft": "Draft",
+      "started": "Started",
+      "inProgress": "In Progress",
         "pending": "Pending",
         "failed": "Failed",
         "rejected": "Rejected",
@@ -1143,6 +1167,90 @@
     }
   },
   "adminDashboard": {
+    "promoCodes": {
+      "title":"Promo Codes","subtitle":"Manage promotional codes and track redemptions","add":"Add Promo Code","searchLabel":"Search promo codes","searchPlaceholder":"Search promo codes","filterLabel":"Filter promo codes by status","unlimited":"Unlimited","loading":"Loading promo codes…","retry":"Try again","loadError":"Unable to load promo codes","loadErrorDescription":"The promo codes could not be loaded.","saveError":"Unable to save the promo code.","deleteError":"Unable to delete the promo code.","empty":"No promo codes found","emptyDescription":"Try changing the search or status filter.","edit":"Edit promo code","delete":"Delete promo code","previous":"Previous","next":"Next",
+        "stats":{"active":"Active Promo Codes","expired":"Expired Promo Codes","redemptions":"Total Redemptions","revenue":"Revenue Impact"},"statuses":{"all":"All Statuses","active":"Active","inactive":"Inactive","expired":"Expired"},"columns":{"code":"Code","amount":"Amount","maxRedemptions":"Max Redemptions","used":"Used Count","expiry":"Expiry Date","status":"Status","action":"Action"},
+      "deleteDialog":{"title":"Delete Promo Code","description":"Are you sure you want to delete this promo code?","warning":"This action cannot be undone.","cancel":"No, keep it","confirm":"Yes, delete!"},
+        "form":{"createTitle":"Create New Promo Code","editTitle":"Update Promo Code","close":"Close promo code form","code":"Code","codePlaceholder":"e.g., WELCOME50","amount":"Amount","amountPlaceholder":"e.g., 500","maxRedemptions":"Max Redemptions","maxRedemptionsPlaceholder":"e.g., 10","expiry":"Expiry Date","assignedCompanyId":"Assigned Company ID","assignedCompanyIdPlaceholder":"e.g., 1","notes":"Notes","notesPlaceholder":"Add notes","optional":"(Optional)","status":"Promo Code Status","statusDescription":"Activate this promo code immediately upon creation","cancel":"Cancel","create":"Create Promo Code","save":"Save","saving":"Saving…","validation":{"code":"Enter a promo code.","amount":"Enter a positive amount.","maxRedemptions":"Enter a positive redemption limit.","expiry":"Select an expiry date.","active":"Select a valid status.","assignedCompanyId":"Enter a valid company ID.","notes":"Enter valid notes."}},
+        "success":{"close":"Close success dialog","done":"Done","created":{"title":"Promo Code Created","description":"The promo code was created successfully."},"updated":{"title":"Promo Code Updated","description":"The promo code was updated successfully."},"deleted":{"title":"Promo Code Deleted","description":"The promo code was deleted successfully."}},
+        "details":{"title":"Promo Code Details","close":"Close promo code details","code":"Code","amount":"Amount","used":"Used Count","limit":"Max Redemptions","remaining":"Remaining","expiry":"Expiry Date","company":"Company Name","usedDate":"Used Date","saved":"Amount Saved","total":"Total Discount Given"}
+    },
+    "requests": {
+      "title": "Requests Monitoring", "subtitle": "Real-time tracking of all platform requests", "searchLabel": "Search requests", "searchPlaceholder": "Search for requests", "statusFilter": "Filter requests by status", "loading": "Loading requests…", "error": "Unable to load requests", "errorDescription": "The requests could not be loaded.", "retry": "Try again", "empty": "No requests found", "emptyDescription": "Try changing the search or filters.", "previous": "Previous", "next": "Next",
+      "stats": { "total": "Total Requests", "pending": "Pending Requests", "inProgress": "In Progress Requests", "rejected": "Rejected Requests", "completed": "Completed This Week", "commission": "Total Commission" },
+      "tabs": { "all": "All", "deleted": " Deleted By Company" },
+      "columns": { "id": "Request ID", "company": "Company Name", "created": "Created at", "store": "Store Name", "price": "Price", "status": "Status" },
+      "statuses": { "all": "All Statuses", "draft": "Draft", "pending": "Pending", "failed": "Failed", "in_progress": "In Progress", "canceled": "Canceled", "in_review": "In Review", "accepted": "Accepted", "rejected": "Rejected", "reopened": "Reopened" },
+      "details": {
+        "title": "Request Details", "subtitle": "Complete information about execution request {id}", "loading": "Loading request details…", "error": "Unable to load request", "errorDescription": "The request details could not be loaded.", "retry": "Try again", "notFound": "Request not found", "notFoundDescription": "This request is unavailable or has been removed.", "created": "Created on", "location": "Location", "assignedBy": "Assigned By", "executionDate": "Execution Date", "timeWindow": "Time Window", "worker": "Merchandiser", "totalCost": "Total Cost", "totalProducts": "Total Products", "timeRemaining": "Time Remaining", "calculatedTime": "Calculated from deadline", "assign": "Assign Merchandiser", "reassign": "Reassign Merchandiser", "services": "Services Details ({count})", "serviceNumber": "Service #{number}", "brand": "Brand", "subBrand": "Sub-Brand", "category": "Category", "subCategory": "Sub-Category", "product": "Products", "sku": "SKU Code", "quantity": "Quantity", "expiry": "Expiry Date", "guidelines": "Execution Guidelines",
+        "statuses": { "draft": "Draft", "pending": "Pending", "failed": "Failed", "in_progress": "In Progress", "canceled": "Canceled", "in_review": "In Review", "accepted": "Accepted", "rejected": "Rejected", "reopened": "Reopened" },
+        "assignDialog": { "title": "Reassign Nearby Merchandiser", "subtitle": "Showing merchandisers within the selected coverage area", "close": "Close dialog", "search": "Search by merchandiser", "available": "Available", "busy": "Busy", "tasks": "tasks", "assign": "Assign Merchandiser", "selectRequired": "Select an available merchandiser.", "unverified": "The reassign request could not be completed." }
+      }
+    },
+    "merchandisers": {
+      "title": "Merchandiser Management",
+      "subtitle": "Monitor and manage platform merchandisers",
+      "searchLabel": "Search merchandisers",
+      "searchPlaceholder": "Search for merchandisers",
+      "statusFilterLabel": "Filter merchandisers by status",
+      "add": "Add New Merchandiser",
+      "loading": "Loading merchandisers…",
+      "retry": "Try again",
+      "emptyTitle": "No merchandisers found",
+      "emptyDescription": "Try changing the search or status filter.",
+      "toggleStatus": "Change status for {name}",
+      "edit": "Edit {name}",
+      "delete": "Delete {name}",
+      "stats": { "total": "Total Merchandisers", "active": "Active Merchandisers", "inactive": "Inactive Merchandisers" },
+      "statuses": { "all": "All Statuses", "active": "Active", "inactive": "Inactive" },
+      "columns": { "name": "Merchandiser Name", "phone": "Phone Number", "email": "Email", "completed": "Completed Tasks", "status": "Status", "action": "Action" },
+      "pagination": { "previous": "Previous", "next": "Next" },
+      "errors": { "load": "Unable to load merchandisers", "loadDescription": "The merchandisers could not be loaded.", "status": "Unable to update merchandiser status.", "delete": "Unable to delete the merchandiser." },
+      "deleteDialog": { "title": "Delete Merchandiser?", "description": "Are you sure you want to delete {name}?", "warning": "This action cannot be undone.", "cancel": "No, keep it", "confirm": "Yes, delete" },
+      "form": {
+        "createTitle": "Add New Merchandiser", "createSubtitle": "Fill in the information below to add a new team member", "editTitle": "Update Merchandiser Info", "editSubtitle": "Fill in the information below to update merchandiser information", "back": "Back to merchandisers", "personalInfo": "Personal Info", "uploadPhoto": "Upload Photo", "optional": "(Optional)", "fullName": "Full Name", "fullNamePlaceholder": "Enter full name", "email": "Email Address", "emailPlaceholder": "name@company.com", "phone": "Phone Number", "phonePlaceholder": "+966 XX XXX XXXX", "jobDetails": "Job Details", "jobTitle": "Job Title", "merchandiser": "Merchandiser", "startDate": "Start Date", "systemPermissions": "System Permissions", "credentials": "System Login Credentials", "credentialsDescription": "Configure access permissions for this employee", "enabled": "Enabled", "temporaryPassword": "Temporary Password", "copyPassword": "Copy temporary password", "credentialsNotice": "Login credentials will be automatically sent to the employee's email upon account creation.", "cancel": "Cancel", "save": "Save", "saving": "Saving…", "saveError": "Unable to save the merchandiser.",
+        "validation": { "name": "Enter at least two characters.", "email": "Enter a valid email address.", "phone": "Enter a valid phone number.", "startDate": "Select a start date.", "password": "The password must contain at least eight characters." }
+      },
+      "details": {
+        "title": "Merchandiser Management", "subtitle": "Monitor and manage platform merchandisers", "back": "Back to merchandisers", "loading": "Loading merchandiser details…", "error": "Unable to load merchandiser", "errorDescription": "The merchandiser details could not be loaded.", "retry": "Try again", "notFound": "Merchandiser not found", "notFoundDescription": "This merchandiser is unavailable or has been removed.", "active": "Active", "inactive": "Inactive", "email": "Email", "phone": "Phone Number", "inProgress": "In Progress", "due": "Due: {date}", "filterDate": "Filter by date", "history": "Request History", "emptyHistory": "No requests found", "emptyHistoryDescription": "No requests match the selected filters.", "editRequest": "Edit request", "deleteRequest": "Delete request", "requestApiMissing": "The Admin Requests API was not provided.",
+        "stats": { "total": "Total Tasks", "completed": "Completed", "canceled": "Canceled" },
+        "tabs": { "all": "All", "completed": "Completed", "failed": "Failed", "canceled": "Canceled" },
+        "columns": { "id": "Request ID", "location": "Location", "time": "Time", "status": "Status", "action": "Action" },
+        "deleteDialog": { "title": "Delete Request?", "description": "Are you sure you want to delete this request?", "warning": "This action cannot be undone.", "cancel": "No, keep it", "confirm": "Yes, delete" }
+      }
+    },
+    "companies": {
+      "title": "Companies Management",
+      "subtitle": "Manage and monitor all registered companies",
+      "searchLabel": "Search companies",
+      "searchPlaceholder": "Search for companies",
+      "statusFilterLabel": "Filter companies by status",
+      "loading": "Loading companies…",
+      "emptyTitle": "No companies found",
+      "emptyDescription": "Try changing the search or status filter.",
+      "retry": "Try again",
+      "toggleStatus": "Change status for {name}",
+      "delete": "Delete {name}",
+      "stats": { "total": "Total Companies", "active": "Active Companies", "inactive": "Inactive Companies" },
+      "statuses": { "all": "All Statuses", "active": "Active", "inactive": "Inactive" },
+      "columns": { "name": "Company Name", "industry": "Industry", "crNumber": "CR Number", "email": "Work Email", "status": "Status", "action": "Action" },
+      "pagination": { "previous": "Previous", "next": "Next" },
+      "errors": { "load": "Unable to load companies", "status": "Unable to update company status.", "delete": "Unable to delete the company." },
+      "deleteDialog": { "title": "Delete Company?", "description": "Are you sure you want to delete this company?", "warning": "This action cannot be undone.", "cancel": "No, keep it", "confirm": "Yes, delete" },
+      "details": {
+        "title": "Company Details", "back": "Back to companies", "loading": "Loading company details…", "error": "Unable to load company details", "retry": "Try again", "notFound": "Company not found", "active": "Active", "inactive": "Inactive", "createdOn": "Created on", "industry": "Industry", "email": "Email", "crNumber": "CR Number", "phone": "Phone Number", "catalogTitle": "Catalog Management", "manage": "Manage",
+        "stats": { "totalRequests": "Total Requests", "completed": "Completed", "pending": "Pending", "spending": "Total Spending", "products": "Products" },
+        "history": { "title": "Request History", "viewAll": "View all requests", "empty": "No recent requests", "requestId": "Request ID", "location": "Location", "time": "Time", "status": "Status", "requestNumber": "REQ-{id}" },
+        "statuses": { "draft": "Draft", "pending": "Pending", "completed": "Completed", "failed": "Failed", "cancelled": "Cancelled", "rejected": "Rejected", "inProgress": "In Progress" },
+        "catalog": {
+          "brand": { "title": "Brands", "description": "Manage all brands" },
+          "sub-brand": { "title": "Sub-Brands", "description": "Manage all sub-brands" },
+          "category": { "title": "Category", "description": "Manage all category" },
+          "sub-category": { "title": "Sub-category", "description": "Manage all sub-category" },
+          "product": { "title": "Products", "description": "Manage all products" }
+        }
+      }
+    },
     "title": "Dashboard",
     "welcome": "Welcome back, here's what's happening today",
     "summaryLabel": "Platform summary",
@@ -1167,7 +1275,8 @@
       "searchNoResults": "No matching Admin pages",
       "menu": "Open Admin navigation",
       "notification": "Notifications",
-      "userMenu": "Open Admin profile menu"
+      "userMenu": "Open Admin profile menu",
+      "language": "Switch dashboard language to Arabic"
     },
     "user": { "name": "ShelfSpot", "role": "Admin" },
     "stats": {
@@ -1437,5 +1546,6 @@
         "codeInvalid": "Verification code must be 6 digits."
       }
     }
-  }
-}
+  },
+  "adminAdmins":{"title":"Admins Management","subtitle":"Monitor and manage platform admins","tabs":{"admins":"Admins","roles":"Roles"},"searchLabel":"Search admins or roles","searchPlaceholder":"Search for admins","statusLabel":"Filter by status","statuses":{"all":"All Statuses","active":"Active","inactive":"Inactive"},"actions":{"addAdmin":"Add New admin","addRole":"Add New Role","toggle":"Change status","delete":"Delete","edit":"Edit","cancel":"Cancel","confirm":"Confirm"},"columns":{"name":"Admin Name","phone":"Phone Number","email":"Email","role":"Role Name","users":"Numbers of users","status":"Status","action":"Action"},"pagination":{"previous":"Previous","next":"Next","page":"Page {page} of {pages}"},"states":{"loading":"Loading admins…","error":"Unable to load admins","retry":"Try again","empty":"No records found","emptyDescription":"Try changing the search or status filter."},"adminForm":{"createTitle":"Create New Admin","editTitle":"Update Admin Details","activation":"Activation","name":"Name","role":"Role","selectRole":"Select role","email":"Email","phone":"Phone Number","password":"Password","confirmPassword":"Confirm Password"},"roleForm":{"createTitle":"Create New Role","editTitle":"Update Role","name":"Role","permissions":"Permissions"},"delete":{"warning":"This action cannot be undone.","cancel":"No, Keep it","confirm":"Yes, Delete!"},"deleteAdmin":{"title":"Delete Admin?","description":"Are you sure you want to delete {name}?"},"deleteRole":{"title":"Delete Role?","description":"Are you sure you want to delete {name}?"},"validation":{"required":"This field is required.","email":"Enter a valid email address.","password":"Password must contain at least 8 characters.","match":"Passwords do not match."},"errors":{"noRole":"This admin has no role and cannot be updated safely.","roleStatus":"Role activation is not supported by the supplied API contract.","phoneUnsupported":"Phone is read-only because it is absent from the supplied Admin API payload."},"success":{"close":"Close success dialog","done":"Done","adminCreated":{"title":"Admin Created","description":"The admin was created successfully."},"adminUpdated":{"title":"Admin Updated","description":"The admin was updated successfully."},"adminDeleted":{"title":"Admin Deleted","description":"The admin was deleted successfully."},"roleCreated":{"title":"Role Created","description":"The role was created successfully."},"roleUpdated":{"title":"Role Updated","description":"The role was updated successfully."},"roleDeleted":{"title":"Role Deleted","description":"The role was deleted successfully."}},"failure":{"close":"Close error dialog","done":"Close","adminCreated":{"title":"Unable to Create Admin","description":"The admin could not be created. Please try again."},"adminUpdated":{"title":"Unable to Update Admin","description":"The admin could not be updated. Please try again."},"adminDeleted":{"title":"Unable to Delete Admin","description":"The admin could not be deleted. Please try again."},"roleCreated":{"title":"Unable to Create Role","description":"The role could not be created. Please try again."},"roleUpdated":{"title":"Unable to Update Role","description":"The role could not be updated. Please try again."},"roleDeleted":{"title":"Unable to Delete Role","description":"The role could not be deleted. Please try again."}}}
+,"adminPayments":{"title":"Payments","subtitle":"Track incoming and outgoing financial transactions","summary":{"incoming":"Total Incoming","outgoing":"Total Outgoing","balance":"Net Balance"},"searchLabel":"Search companies","searchPlaceholder":"Search for companies","dateFilter":"Sort by date","statusFilter":"Filter by status","dates":{"newest":"Newest","oldest":"Oldest"},"statuses":{"all":"All Statuses","completed":"Completed","failed":"Failed","refunded":"Refunded"},"columns":{"company":"Company Name","spending":"Total Spending","date":"Date","status":"Status","action":"Action"},"selectAll":"Select all transactions","select":"Select {name}","view":"View {name}","delete":"Delete {name}","empty":"No transactions found","error":"Unable to load payments","pagination":{"previous":"Previous","next":"Next","page":"Page {page} of {pages}"},"deleteDialog":{"title":"Delete transaction?","description":"Remove the transaction for {name}?","previewWarning":"Preview only: no Payments API was supplied.","cancel":"No, keep it","confirm":"Remove"},"details":{"title":"Payment Details","back":"Back to Payments","loading":"Loading payment…","error":"Unable to load payment details","retry":"Try again","notFound":"Payment not found","companyTitle":"Company Information","transactionTitle":"Transaction Details","fields":{"company":"Company","email":"Email","phone":"Phone","country":"Country","date":"Date","chargedAt":"Charged At","transactionId":"Transaction ID","paymentStatus":"Payment Status"},"statuses":{"completed":"Completed","failed":"Failed","refunded":"Refunded"},"directionTitle":"Transaction Direction","direction":{"incoming":"Incoming","outgoing":"Outgoing","incomingDesc":"Funds received into the platform","outgoingDesc":"Funds sent out from the platform"}}},"adminSettings":{"title":"Settings","subtitle":"Manage your platform preferences and configurations","tabs":{"general":"General","profile":"Profile"},"save":"Save Change","saving":"Saving…","unverified":"Changes remain in this preview because no Admin Settings API was supplied.","general":{"title":"General Setting","platform":"Platform Name","email":"Email"},"profile":{"title":"Profile Settings","passwordSection":"Change Password (optional)","name":"Name","email":"Email","current":"Current Password","new":"New Password","confirm":"Confirm Password","success":"Profile updated successfully.","error":"Failed to update profile. Please try again.","loadError":"Unable to load profile.","validation":{"currentRequired":"Current password is required to set a new password.","mismatch":"New password and confirmation do not match."}}}}

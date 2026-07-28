@@ -30,10 +30,10 @@ import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
 
 import { DeleteConfirmDialog } from "@/shared/components/dashboard/delete-confirm-dialog";
-import { CatalogFormDialog, CatalogStatusField } from "@/modules/company/catalog/shared/form-dialog";
-import { CatalogImportDialog } from "@/modules/company/catalog/shared/import-dialog";
+import { CatalogFormDialog, CatalogStatusField } from "@/shared/components/catalog/form-dialog";
+import { CatalogImportDialog } from "@/shared/components/catalog/import-dialog";
 import { CatalogItemsTable } from "@/modules/company/catalog/shared/items-table";
-import { CatalogUploadArea } from "@/modules/company/catalog/shared/upload-area";
+import { CatalogUploadArea } from "@/shared/components/catalog/upload-area";
 import type { BrandRow } from "@/modules/company/catalog/shared/seed";
 
 type BrandDialog = "add" | "edit" | "delete" | "import" | null;
@@ -373,6 +373,8 @@ export function BrandPage() {
     toggleStatus: t("catalogPage.table.actions.toggleStatus"),
     activeLabel:  t("catalogPage.status.active"),
     inactiveLabel: t("catalogPage.status.inactive"),
+    loading: t("catalogPage.table.loading"),
+    empty: t("catalogPage.table.empty"),
   };
 
   return (
@@ -464,6 +466,7 @@ export function BrandPage() {
             rows={brandRows}
             labels={tableLabels}
             extraColumns={[]}
+            isLoading={brandsQuery.isLoading}
             onDelete={handleDelete}
             onEdit={handleEdit}
           />

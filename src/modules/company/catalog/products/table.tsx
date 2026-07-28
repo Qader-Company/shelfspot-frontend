@@ -24,6 +24,7 @@ interface CatalogProductTableLabels {
   products: string;
   family: string;
   sku: string;
+  barcode: string;
   description: string;
   status: string;
   createdDate: string;
@@ -35,6 +36,8 @@ interface CatalogProductTableLabels {
   toggleStatus: string;
   activeLabel: string;
   inactiveLabel: string;
+  loading: string;
+  empty: string;
 }
 
 interface CatalogProductTableProps {
@@ -46,6 +49,7 @@ interface CatalogProductTableProps {
   statusResource?: CatalogStatusResource;
   selectedIds?: string[];
   onSelectionChange?: (ids: string[]) => void;
+  isLoading?: boolean;
 }
 
 export function CatalogProductTable({
@@ -57,6 +61,7 @@ export function CatalogProductTable({
   statusResource,
   selectedIds = [],
   onSelectionChange,
+  isLoading = false,
 }: CatalogProductTableProps) {
   const queryClient = useQueryClient();
   const statusMutation = useUpdateCatalogStatusMutation();
@@ -90,6 +95,9 @@ export function CatalogProductTable({
                 {labels.sku}
               </th>
               <th className="border-b border-e border-border px-5 py-3 text-start">
+                {labels.barcode}
+              </th>
+              <th className="border-b border-e border-border px-5 py-3 text-start">
                 {labels.description}
               </th>
               <th className="border-b border-e border-border px-5 py-3 text-start">
@@ -104,6 +112,23 @@ export function CatalogProductTable({
             </tr>
           </thead>
           <tbody>
+            {isLoading || rows.length === 0 ? (
+              <tr>
+                <td
+                  colSpan={9}
+                  className="h-40 border-b border-border px-5 text-center text-sm text-muted-foreground"
+                  role="status"
+                >
+                  {isLoading ? (
+                    <span className="flex flex-col gap-4" aria-label={labels.loading}>
+                      {Array.from({ length: 4 }, (_, index) => (
+                        <span key={index} aria-hidden="true" className="h-4 w-full animate-pulse rounded bg-muted" />
+                      ))}
+                    </span>
+                  ) : labels.empty}
+                </td>
+              </tr>
+            ) : null}
             {rows.map((row, index) => (
               <tr key={`${row.id}-${index}`} className="text-sm">
                 <td className="border-b border-border px-4 py-4">
@@ -125,6 +150,10 @@ export function CatalogProductTable({
 
                 <td className="border-b border-border px-5 py-4 text-muted-foreground">
                   {row.sku}
+                </td>
+
+                <td className="border-b border-border px-5 py-4 text-muted-foreground">
+                  {row.barcode}
                 </td>
 
                 <td className="border-b border-border px-5 py-4 text-muted-foreground">

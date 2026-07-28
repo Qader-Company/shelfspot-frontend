@@ -62,6 +62,8 @@ interface CatalogItemsTableLabels {
   toggleStatus: string;
   activeLabel: string;
   inactiveLabel: string;
+  loading: string;
+  empty: string;
 }
 
 interface CatalogItemsTableProps {
@@ -72,6 +74,7 @@ interface CatalogItemsTableProps {
   onEdit: (id: string) => void;
   onToggleStatus?: (id: string, isActive: boolean) => void;
   statusResource?: CatalogStatusResource;
+  isLoading?: boolean;
 }
 
 export function CatalogItemsTable({
@@ -82,6 +85,7 @@ export function CatalogItemsTable({
   onEdit,
   onToggleStatus,
   statusResource,
+  isLoading = false,
 }: CatalogItemsTableProps) {
   const queryClient = useQueryClient();
   const pathname = usePathname();
@@ -142,6 +146,23 @@ export function CatalogItemsTable({
             </tr>
           </thead>
           <tbody>
+            {isLoading || rows.length === 0 ? (
+              <tr>
+                <td
+                  colSpan={extraColumns.length + 5}
+                  className="h-40 border-b border-border px-5 text-center text-sm text-muted-foreground"
+                  role="status"
+                >
+                  {isLoading ? (
+                    <span className="flex flex-col gap-4" aria-label={labels.loading}>
+                      {Array.from({ length: 4 }, (_, index) => (
+                        <span key={index} aria-hidden="true" className="h-4 w-full animate-pulse rounded bg-muted" />
+                      ))}
+                    </span>
+                  ) : labels.empty}
+                </td>
+              </tr>
+            ) : null}
             {rows.map((row, index) => (
               <tr key={`${row.id}-${index}`} className="text-sm">
                 {/* Checkbox */}

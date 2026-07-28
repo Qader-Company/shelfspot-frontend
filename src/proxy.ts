@@ -14,7 +14,9 @@ const adminDashboardPathPattern = /^\/(ar|en)\/admin\/?$/;
 
 export default function proxy(request: NextRequest) {
   const dashboardMatch = request.nextUrl.pathname.match(dashboardPathPattern);
-  const adminDashboardMatch = request.nextUrl.pathname.match(adminDashboardPathPattern);
+  const adminDashboardMatch = request.nextUrl.pathname.match(
+    adminDashboardPathPattern,
+  );
 
   if (dashboardMatch || adminDashboardMatch) {
     const hasSession =
@@ -22,10 +24,15 @@ export default function proxy(request: NextRequest) {
       request.cookies.has(refreshTokenCookie);
 
     const expectedContext = adminDashboardMatch ? "admin" : "company";
-    const hasCorrectContext = request.cookies.get(authContextCookie)?.value === expectedContext;
+    const hasCorrectContext =
+      request.cookies.get(authContextCookie)?.value === expectedContext;
+
     if (!hasSession || !hasCorrectContext) {
       const locale = (adminDashboardMatch ?? dashboardMatch)![1];
-      const loginUrl = new URL(adminDashboardMatch ? `/${locale}/admin/login` : `/${locale}/login`, request.url);
+      const loginUrl = new URL(
+        adminDashboardMatch ? `/${locale}/admin/login` : `/${locale}/login`,
+        request.url,
+      );
       return NextResponse.redirect(loginUrl);
     }
   }

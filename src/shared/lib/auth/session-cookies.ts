@@ -62,21 +62,21 @@ export function setSessionCookies(
   response: NextResponse,
   payload: TokenPayload,
   persistent: boolean,
-  context: "company" | "admin" = "company",
+  authContext: "company" | "admin" = "company",
 ) {
   const access = readToken(payload.access_token);
   const refresh = readToken(payload.refresh_token);
   const companyId = readCompanyId(payload);
 
   response.cookies.set(
+    AUTH_CONTEXT_COOKIE,
+    authContext,
+    cookieOptions(persistent && refresh.ttl ? refresh.ttl * 60 : undefined),
+  );
+  response.cookies.set(
     ACCESS_TOKEN_COOKIE,
     access.token,
     cookieOptions(persistent && access.ttl ? access.ttl * 60 : undefined),
-  );
-  response.cookies.set(
-    AUTH_CONTEXT_COOKIE,
-    context,
-    cookieOptions(persistent && refresh.ttl ? refresh.ttl * 60 : undefined),
   );
   if (companyId) {
     response.cookies.set(

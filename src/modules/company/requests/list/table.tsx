@@ -1,5 +1,5 @@
 import { Link } from "@/i18n/navigation";
-import type { DashboardRequestRow } from "@/modules/company/requests/list/seed";
+import type { DashboardRequestRow } from "@/modules/company/requests/list/types";
 import { StatusBadge } from "@/shared/components/dashboard/status-badge";
 import { EditIcon, TrashIcon } from "@/shared/components/dashboard/dashboard-icons";
 import { Button } from "@/shared/ui/button";
@@ -18,7 +18,6 @@ interface DashboardRequestsTableProps {
     delete: string;
     edit: string;
   };
-  resolveText: (key: string) => string;
   resolveStatus: (status: DashboardRequestRow["status"]) => string;
   onDelete?: (id: string) => void;
 }
@@ -26,7 +25,6 @@ interface DashboardRequestsTableProps {
 export function DashboardRequestsTable({
   rows,
   labels,
-  resolveText,
   resolveStatus,
   onDelete,
 }: DashboardRequestsTableProps) {
@@ -76,10 +74,10 @@ export function DashboardRequestsTable({
                   </Link>
                 </td>
                 <td className="border-b border-border px-7 py-4 text-muted-foreground">
-                  {resolveText(row.locationKey)}
+                  {row.location}
                 </td>
                 <td className="border-b border-border px-7 py-4 text-muted-foreground">
-                  {resolveText(row.assigneeKey)}
+                  {row.assignee}
                 </td>
                 <td className="border-b border-border px-7 py-4 text-muted-foreground">
                   {row.time}

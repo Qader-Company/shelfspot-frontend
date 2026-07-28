@@ -21,6 +21,7 @@ interface DashboardLayoutProps {
     menu: string;
     notification: string;
     userMenu: string;
+    language: string;
   };
   primaryItemCount?: number;
 }
@@ -43,7 +44,7 @@ export function DashboardLayout({
         logoLabel={labels.logo}
         primaryItemCount={primaryItemCount}
       />
-      <div className="flex min-w-0 flex-1 flex-col overflow-y-auto">
+      <div className="flex min-w-0 flex-1 flex-col overflow-x-hidden overflow-y-auto">
         <DashboardTopbar
           authContext={authContext}
           searchItems={sidebarItems}
@@ -53,9 +54,10 @@ export function DashboardLayout({
           menuLabel={labels.menu}
           notificationLabel={labels.notification}
           userMenuLabel={labels.userMenu}
+          languageLabel={labels.language}
           user={user}
         />
-        <main className="flex-1">{children}</main>
+        <main className="min-w-0 flex-1">{children}</main>
       </div>
     </div>
   );

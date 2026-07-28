@@ -85,17 +85,17 @@ export function DashboardOverview() {
   const statusItems = statusDonutData.map((item) => ({ ...item, label: t(item.labelKey) }));
 
   return (
-    <div className="space-y-4 px-1 py-4 sm:px-2 sm:py-5 lg:px-2 lg:py-6">
+    <div className="min-w-0 space-y-4 px-4 py-6 sm:py-7 lg:px-8 lg:py-8">
       <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
         <div>
-          <h1 className="text-3xl font-bold leading-tight text-foreground">{t("overview.title")}</h1>
-          <p className="mt-2 text-lg font-medium text-muted-foreground">{t("overview.subtitle")}</p>
+          <h1 className="text-2xl font-bold leading-tight text-foreground sm:text-3xl">{t("overview.title")}</h1>
+          <p className="mt-2 text-base font-medium text-muted-foreground sm:text-lg">{t("overview.subtitle")}</p>
         </div>
         <div className="flex flex-wrap items-center gap-3">
-          <Button type="button" variant="outline" className="h-10 gap-3 rounded-lg border-border bg-card px-5 text-sm font-medium text-muted-foreground shadow-none">
+          <Button type="button" variant="outline" className="h-10 flex-1 gap-3 rounded-lg border-border bg-card px-4 text-sm font-medium text-muted-foreground shadow-none sm:flex-none sm:px-5">
             {t("overview.filters.thisWeek")}<SidebarChevronIcon className="size-4" />
           </Button>
-          <Button asChild className="h-10 rounded-lg px-5 text-sm font-semibold text-white hover:text-white">
+          <Button asChild className="h-10 flex-1 rounded-lg px-4 text-sm font-semibold text-white hover:text-white sm:flex-none sm:px-5">
             <Link href={ROUTES.dashboardCreateRequest}><AddIcon className="size-4" />{t("overview.actions.createRequest")}</Link>
           </Button>
         </div>

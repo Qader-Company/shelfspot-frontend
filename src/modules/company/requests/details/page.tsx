@@ -6,6 +6,7 @@ import { useRouter } from "@/i18n/navigation";
 
 import { StatusBadge } from "@/shared/components/dashboard/status-badge";
 import type { StatusBadgeStatus } from "@/shared/components/dashboard/status-badge";
+import { DeleteConfirmDialog } from "@/shared/components/dashboard/delete-confirm-dialog";
 import {
   ActivityIcon,
   BoxIcon,
@@ -20,6 +21,7 @@ import {
 } from "@/shared/components/dashboard/dashboard-icons";
 import { Button } from "@/shared/ui/button";
 import { ErrorState, PageLoadingSkeleton } from "@/shared/components/feedback";
+import { normalizeApiError } from "@/shared/lib/api/errors";
 
 import { ServiceDetailCard } from "./service-card";
 import { useTaskQuery, useTaskMutations } from "./use-query";
@@ -55,13 +57,16 @@ function formatDateOnly(value: string | null | undefined, locale: string): strin
   return new Intl.DateTimeFormat(locale, { dateStyle: "medium" }).format(d);
 }
 
-function timeRemaining(expiresAt: string | null | undefined): { label: string; expired: boolean } {
-  if (!expiresAt) return { label: "—", expired: false };
+function timeRemaining(expiresAt: string | null | undefined): { hours: number; minutes: number; expired: boolean; missing: boolean } {
+  if (!expiresAt) return { hours: 0, minutes: 0, expired: false, missing: true };
   const diff = new Date(expiresAt.replace(" ", "T")).getTime() - Date.now();
-  if (diff <= 0) return { label: "0h 0m", expired: true };
-  const h = Math.floor(diff / 3_600_000);
-  const m = Math.floor((diff % 3_600_000) / 60_000);
-  return { label: `${h}h ${m}m`, expired: false };
+  if (diff <= 0) return { hours: 0, minutes: 0, expired: true, missing: false };
+  return {
+    hours: Math.floor(diff / 3_600_000),
+    minutes: Math.floor((diff % 3_600_000) / 60_000),
+    expired: false,
+    missing: false,
+  };
 }
 
 // ─── Progress bar ─────────────────────────────────────────────────────────
@@ -73,59 +78,6 @@ function ProgressBar({ percentage }: { percentage: number }) {
         className="h-full rounded-full bg-primary transition-all"
         style={{ width: `${Math.min(100, percentage)}%` }}
       />
-    </div>
-  );
-}
-
-// ─── Cancel confirm dialog ────────────────────────────────────────────────
-
-function CancelConfirmDialog({
-  isOpen,
-  title,
-  description,
-  cancelLabel,
-  confirmLabel,
-  isPending,
-  onClose,
-  onConfirm,
-}: {
-  isOpen: boolean;
-  title: string;
-  description: string;
-  cancelLabel: string;
-  confirmLabel: string;
-  isPending: boolean;
-  onClose: () => void;
-  onConfirm: () => void;
-}) {
-  if (!isOpen) return null;
-  return (
-    <div
-      role="presentation"
-      className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/30 p-4"
-    >
-      <section
-        role="dialog"
-        aria-modal="true"
-        aria-label={title}
-        className="w-full max-w-sm rounded-2xl border border-border bg-card p-6 shadow-xl"
-      >
-        <h2 className="text-lg font-bold text-foreground">{title}</h2>
-        <p className="mt-2 text-sm text-muted-foreground">{description}</p>
-        <div className="mt-6 flex gap-3">
-          <Button type="button" variant="outline" className="h-11 flex-1" onClick={onClose} disabled={isPending}>
-            {cancelLabel}
-          </Button>
-          <Button
-            type="button"
-            className="h-11 flex-1 bg-destructive text-white hover:bg-destructive/90"
-            onClick={onConfirm}
-            disabled={isPending}
-          >
-            {isPending ? "…" : confirmLabel}
-          </Button>
-        </div>
-      </section>
     </div>
   );
 }
@@ -249,7 +201,9 @@ function RequestDetailsView({ task, id }: { task: CompanyTask; id: string | numb
           </span>
           <div>
             <p className="text-xs text-muted-foreground">{t("requestDetails.stats.totalCost")}</p>
-            <p className="text-2xl font-bold text-foreground">{task.total_price} SAR</p>
+            <p className="text-2xl font-bold text-foreground">
+              {t("requestDetails.stats.currencyValue", { amount: task.total_price })}
+            </p>
             <p className="text-xs text-muted-foreground">
               {t("requestDetails.stats.servicesCount", { count: task.services.length })}
             </p>
@@ -292,7 +246,14 @@ function RequestDetailsView({ task, id }: { task: CompanyTask; id: string | numb
           <div>
             <p className="text-xs text-muted-foreground">{t("requestDetails.stats.timeRemaining")}</p>
             <div className="flex items-center gap-2">
-              <p className="text-2xl font-bold text-foreground">{remaining.label}</p>
+              <p className="text-2xl font-bold text-foreground">
+                {remaining.missing
+                  ? "—"
+                  : t("requestDetails.stats.timeRemainingValue", {
+                      hours: remaining.hours,
+                      minutes: remaining.minutes,
+                    })}
+              </p>
               {remaining.expired && (
                 <span className="rounded px-1.5 py-0.5 text-xs font-bold bg-destructive/10 text-destructive">
                   {t("requestDetails.stats.expired")}
@@ -354,13 +315,20 @@ function RequestDetailsView({ task, id }: { task: CompanyTask; id: string | numb
       </div>
 
       {/* Cancel confirm dialog */}
-      <CancelConfirmDialog
+      <DeleteConfirmDialog
         isOpen={showCancel}
         title={t("requestDetails.cancelDialog.title")}
-        description={t("requestDetails.cancelDialog.description")}
+        descriptionLine1={t("requestDetails.cancelDialog.description")}
+        descriptionLine2=""
         cancelLabel={t("requestDetails.cancelDialog.cancel")}
         confirmLabel={t("requestDetails.cancelDialog.confirm")}
         isPending={act.isPending}
+        errorMessage={
+          act.isError
+            ? normalizeApiError(act.error).message ||
+              t("requestDetails.cancelDialog.error")
+            : undefined
+        }
         onClose={() => setShowCancel(false)}
         onConfirm={() =>
           act.mutate(

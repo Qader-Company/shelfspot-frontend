@@ -149,6 +149,8 @@
       }
     }
   },
+  "adminServices":{"title":"الخدمات","subtitle":"إدارة جميع الخدمات المتاحة وإعداداتها","searchLabel":"البحث عن الخدمات","searchPlaceholder":"البحث عن خدمة","statusLabel":"تصفية الخدمات حسب الحالة","statuses":{"all":"كل الحالات","active":"نشط","inactive":"غير نشط"},"loading":"جارٍ تحميل الخدمات…","error":"تعذر تحميل الخدمات","retry":"إعادة المحاولة","empty":"لا توجد خدمات","emptyDescription":"جرّب تغيير البحث أو تصفية الحالة.","minutes":"دقيقة","toggle":"تغيير حالة {name}","edit":"تعديل {name}","columns":{"name":"اسم الخدمة","description":"الوصف","price":"الحد الأدنى للسعر","time":"الحد الأدنى للوقت","status":"الحالة","action":"الإجراء"},"pagination":{"previous":"السابق","next":"التالي","page":"الصفحة {page} من {pages}"},"dialog":{"title":"تعديل الخدمة","close":"إغلاق محرر الخدمة","name":"اسم الخدمة","description":"الوصف","price":"الحد الأدنى للسعر","time":"الحد الأدنى للوقت","activeDescription":"الخدمة متاحة وظاهرة","cancel":"إلغاء","save":"حفظ"}},
+  "adminTrash":{"title":"سلة المحذوفات","subtitle":"استعادة العناصر المحذوفة أو إزالتها نهائيًا","tabsLabel":"أنواع العناصر المحذوفة","tabs":{"brands":"العلامات التجارية","sub-brands":"العلامات الفرعية","categories":"الفئات","sub-categories":"الفئات الفرعية","products":"المنتجات","requests":"الطلبات","freelancers":"المستقلون","companies":"الشركات"},"searchLabel":"البحث في المحذوفات","searchPlaceholder":"البحث في {entity}","statusLabel":"تصفية حسب الحالة","statuses":{"all":"كل الحالات","active":"نشط","inactive":"غير نشط"},"loading":"جارٍ تحميل المحذوفات…","error":"تعذر تحميل المحذوفات","retry":"إعادة المحاولة","empty":"سلة المحذوفات فارغة","emptyDescription":"لا توجد عناصر محذوفة تطابق عوامل التصفية.","select":"تحديد","selectItem":"تحديد {name}","deleteItem":"حذف {name} نهائيًا","restoreItem":"استعادة {name}","columns":{"name":"الاسم","brand":"العلامة التجارية","subBrand":"العلامة الفرعية","category":"الفئة","family":"التصنيف","sku":"رمز SKU","description":"الوصف","status":"الحالة","deletedAt":"تاريخ الحذف","company":"اسم الشركة","store":"اسم المتجر","price":"السعر","requestStatus":"حالة الطلب","phone":"رقم الهاتف","email":"البريد الإلكتروني","completed":"المهام المكتملة","industry":"المجال","crNumber":"رقم السجل التجاري","action":"الإجراء"},"pagination":{"previous":"السابق","next":"التالي","page":"الصفحة {page} من {pages}"},"dialog":{"close":"إغلاق التأكيد","deleteTitle":"هل أنت متأكد من حذف هذا العنصر؟","deleteDescription":"حذف {name} نهائيًا؟ لا يمكن التراجع عن هذا الإجراء.","restoreTitle":"هل أنت متأكد من استعادة هذا العنصر؟","restoreDescription":"استعادة {name} إلى قائمته الأصلية؟","keep":"لا، احتفظ به","delete":"نعم، احذف!","restore":"نعم، استعد"}},
   "dashboard": {
     "navigation": {
       "label": "تنقل لوحة التحكم",
@@ -172,7 +174,8 @@
       "searchNoResults": "لا توجد صفحات مطابقة في لوحة التحكم",
       "menu": "فتح تنقل لوحة التحكم",
       "notification": "الإشعارات",
-      "userMenu": "فتح قائمة الملف الشخصي"
+      "userMenu": "فتح قائمة الملف الشخصي",
+      "language": "تغيير لغة لوحة التحكم إلى الإنجليزية"
     },
     "user": {
       "name": "شركة ألف",
@@ -274,6 +277,8 @@
         "report": "تعذر تحميل إحصائيات لوحة التحكم. يرجى المحاولة مرة أخرى."
       },
       "table": {
+        "loading": "جارٍ تحميل عناصر الكتالوج…",
+        "empty": "لم يتم العثور على عناصر في الكتالوج.",
         "title": "الطلبات",
         "columns": {
           "requestId": "رقم الطلب",
@@ -632,11 +637,15 @@
       }
     },
     "catalogPage": {
+      "feedback": { "loading": "جارٍ تحميل الكتالوج", "error": "تعذر تحميل الكتالوج", "retry": "إعادة المحاولة", "empty": "لا توجد عناصر في الكتالوج", "required": "أكمل جميع الحقول المطلوبة", "saved": "تم حفظ عنصر الكتالوج بنجاح", "imported": "تم استيراد ملف الكتالوج بنجاح" },
+      "fields": { "barcode": "الباركود", "english": "الإنجليزية", "arabic": "العربية" },
       "search": { "label": "البحث في الكتالوج", "placeholder": "البحث بالعلامة التجارية" },
       "filters": { "allStatuses": "جميع الحالات" },
       "actions": { "import": "استيراد" },
       "status": { "active": "نشط", "inactive": "غير نشط" },
       "table": {
+        "loading": "جارٍ تحميل عناصر الكتالوج",
+        "empty": "لا توجد عناصر في الكتالوج",
         "columns": { "status": "الحالة", "createdDate": "تاريخ الإنشاء", "action": "الإجراء" },
         "actions": { "selectAll": "تحديد الكل", "selectRow": "تحديد الصف", "delete": "حذف العنصر", "edit": "تعديل العنصر", "toggleStatus": "تبديل الحالة" }
       },
@@ -1003,8 +1012,10 @@
         "emptyTitle": "لا توجد طلبات",
         "emptyDescription": "أنشئ طلبًا أو عدل عوامل التصفية الحالية."
       },
-      "status": {
-        "inProgress": "قيد التنفيذ",
+    "status": {
+      "draft": "مسودة",
+      "started": "بدأ",
+      "inProgress": "قيد التنفيذ",
         "completed": "مكتمل",
         "inReview": "قيد المراجعة",
         "accepted": "مقبول",
@@ -1053,8 +1064,9 @@
           "error": "أُنشئ بالخطأ",
           "other": "سبب آخر"
         },
-        "cancel": "لا، احتفظ به",
-        "confirm": "نعم، احذفه!"
+      "cancel": "لا، احتفظ به",
+      "confirm": "نعم، احذفه!",
+      "error": "تعذر حذف الطلب. يرجى المحاولة مرة أخرى."
       }
     },
     "requestDetails": {
@@ -1078,8 +1090,10 @@
         "progress": "التقدم",
         "totalProducts": "إجمالي المنتجات",
         "unitsSubtitle": "وحدات عبر جميع الخدمات",
-        "timeRemaining": "الوقت المتبقي",
-        "expired": "منتهي",
+      "timeRemaining": "الوقت المتبقي",
+      "timeRemainingValue": "{hours} س {minutes} د",
+      "currencyValue": "{amount} ر.س",
+      "expired": "منتهي",
         "untilDeadline": "حتى الموعد"
       },
       "actions": {
@@ -1100,12 +1114,15 @@
       },
       "cancelDialog": {
         "title": "إلغاء الطلب",
-        "description": "هل أنت متأكد من رغبتك في إلغاء هذا الطلب؟ لا يمكن التراجع عن هذا الإجراء.",
-        "cancel": "رجوع",
-        "confirm": "نعم، إلغاء"
+      "description": "هل أنت متأكد من رغبتك في إلغاء هذا الطلب؟ لا يمكن التراجع عن هذا الإجراء.",
+      "cancel": "رجوع",
+      "confirm": "نعم، إلغاء",
+      "error": "تعذر إلغاء الطلب. يرجى المحاولة مرة أخرى."
       },
-      "status": {
-        "inProgress": "قيد التنفيذ",
+    "status": {
+      "draft": "مسودة",
+      "started": "بدأ",
+      "inProgress": "قيد التنفيذ",
         "pending": "قيد الانتظار",
         "failed": "فشل",
         "rejected": "مرفوض",
@@ -1142,6 +1159,64 @@
     }
   },
   "adminDashboard": {
+    "promoCodes": {
+      "title":"الرموز الترويجية","subtitle":"إدارة الرموز الترويجية ومتابعة استخدامها","add":"إضافة رمز ترويجي","searchLabel":"البحث في الرموز الترويجية","searchPlaceholder":"ابحث عن رمز ترويجي","filterLabel":"تصفية الرموز حسب الحالة","unlimited":"غير محدود","loading":"جارٍ تحميل الرموز الترويجية…","retry":"إعادة المحاولة","loadError":"تعذر تحميل الرموز الترويجية","loadErrorDescription":"تعذر تحميل قائمة الرموز الترويجية.","saveError":"تعذر حفظ الرمز الترويجي.","deleteError":"تعذر حذف الرمز الترويجي.","empty":"لا توجد رموز ترويجية","emptyDescription":"جرّب تغيير البحث أو تصفية الحالة.","edit":"تعديل الرمز الترويجي","delete":"حذف الرمز الترويجي","previous":"السابق","next":"التالي",
+      "stats":{"active":"الرموز النشطة","expired":"الرموز المنتهية","redemptions":"إجمالي الاستخدامات","revenue":"تأثير الإيرادات"},"statuses":{"all":"كل الحالات","active":"نشط","inactive":"غير نشط","expired":"منتهي"},"columns":{"code":"الرمز","amount":"القيمة","maxRedemptions":"الحد الأقصى للاستخدام","used":"عدد الاستخدامات","expiry":"تاريخ الانتهاء","status":"الحالة","action":"الإجراء"},
+      "deleteDialog":{"title":"حذف الرمز الترويجي","description":"هل أنت متأكد من حذف هذا الرمز الترويجي؟","warning":"لا يمكن التراجع عن هذا الإجراء.","cancel":"لا، احتفظ به","confirm":"نعم، احذف!"},
+      "form":{"createTitle":"إنشاء رمز ترويجي جديد","editTitle":"تحديث الرمز الترويجي","close":"إغلاق نموذج الرمز","code":"الرمز","codePlaceholder":"مثال: WELCOME50","amount":"القيمة","amountPlaceholder":"مثال: 500","maxRedemptions":"الحد الأقصى للاستخدام","maxRedemptionsPlaceholder":"مثال: 10","expiry":"تاريخ الانتهاء","assignedCompanyId":"معرّف الشركة المخصصة","assignedCompanyIdPlaceholder":"مثال: 1","notes":"ملاحظات","notesPlaceholder":"أضف ملاحظات","optional":"(اختياري)","status":"حالة الرمز","statusDescription":"تفعيل الرمز فور إنشائه","cancel":"إلغاء","create":"إنشاء الرمز","save":"حفظ","saving":"جارٍ الحفظ…","validation":{"code":"أدخل الرمز.","amount":"أدخل قيمة موجبة.","maxRedemptions":"أدخل حد استخدام موجبًا.","expiry":"اختر تاريخ الانتهاء.","active":"اختر حالة صحيحة.","assignedCompanyId":"أدخل معرّف شركة صحيحًا.","notes":"أدخل ملاحظات صحيحة."}},
+      "success":{"close":"إغلاق نافذة النجاح","done":"تم","created":{"title":"تم إنشاء الرمز الترويجي","description":"تم إنشاء الرمز الترويجي بنجاح."},"updated":{"title":"تم تحديث الرمز الترويجي","description":"تم تحديث الرمز الترويجي بنجاح."},"deleted":{"title":"تم حذف الرمز الترويجي","description":"تم حذف الرمز الترويجي بنجاح."}},
+      "details":{"title":"تفاصيل الرمز الترويجي","close":"إغلاق تفاصيل الرمز","code":"الرمز","amount":"القيمة","used":"عدد الاستخدامات","limit":"الحد الأقصى للاستخدام","remaining":"المتبقي","expiry":"تاريخ الانتهاء","company":"اسم الشركة","usedDate":"تاريخ الاستخدام","saved":"المبلغ الموفر","total":"إجمالي الخصم الممنوح"}
+    },
+    "requests": {
+      "title": "مراقبة الطلبات", "subtitle": "متابعة فورية لجميع طلبات المنصة", "searchLabel": "البحث في الطلبات", "searchPlaceholder": "ابحث عن طلب", "statusFilter": "تصفية الطلبات حسب الحالة", "loading": "جارٍ تحميل الطلبات…", "error": "تعذر تحميل الطلبات", "errorDescription": "تعذر تحميل قائمة الطلبات.", "retry": "إعادة المحاولة", "empty": "لا توجد طلبات", "emptyDescription": "جرّب تغيير البحث أو عوامل التصفية.", "previous": "السابق", "next": "التالي",
+      "stats": { "total": "إجمالي الطلبات", "pending": "الطلبات المعلقة", "inProgress": "الطلبات قيد التنفيذ", "rejected": "الطلبات المرفوضة", "completed": "المكتملة هذا الأسبوع", "commission": "إجمالي العمولة" },
+      "tabs": { "all": "الكل", "deleted": "المحذوفه " },
+      "columns": { "id": "رقم الطلب", "company": "اسم الشركة", "created": "تاريخ الإنشاء", "store": "اسم المتجر", "price": "السعر", "status": "الحالة" },
+      "statuses": { "all": "كل الحالات", "draft": "مسودة", "pending": "معلق", "failed": "فشل", "in_progress": "قيد التنفيذ", "canceled": "ملغي", "in_review": "قيد المراجعة", "accepted": "مقبول", "rejected": "مرفوض", "reopened": "أعيد فتحه" },
+      "details": {
+        "title": "تفاصيل الطلب", "subtitle": "المعلومات الكاملة لطلب التنفيذ {id}", "loading": "جارٍ تحميل تفاصيل الطلب…", "error": "تعذر تحميل الطلب", "errorDescription": "تعذر تحميل تفاصيل الطلب.", "retry": "إعادة المحاولة", "notFound": "الطلب غير موجود", "notFoundDescription": "هذا الطلب غير متاح أو تمت إزالته.", "created": "تاريخ الإنشاء", "location": "الموقع", "assignedBy": "تم التعيين بواسطة", "executionDate": "تاريخ التنفيذ", "timeWindow": "الفترة الزمنية", "worker": "مسؤول العرض", "totalCost": "التكلفة الإجمالية", "totalProducts": "إجمالي المنتجات", "timeRemaining": "الوقت المتبقي", "calculatedTime": "محسوب من الموعد النهائي", "assign": "تعيين مسؤول عرض", "reassign": "إعادة تعيين مسؤول العرض", "services": "تفاصيل الخدمات ({count})", "serviceNumber": "الخدمة رقم {number}", "brand": "العلامة التجارية", "subBrand": "العلامة الفرعية", "category": "الفئة", "subCategory": "الفئة الفرعية", "product": "المنتجات", "sku": "رمز SKU", "quantity": "الكمية", "expiry": "تاريخ الانتهاء", "guidelines": "تعليمات التنفيذ",
+        "statuses": { "draft": "مسودة", "pending": "معلق", "failed": "فشل", "in_progress": "قيد التنفيذ", "canceled": "ملغي", "in_review": "قيد المراجعة", "accepted": "مقبول", "rejected": "مرفوض", "reopened": "أعيد فتحه" },
+        "assignDialog": { "title": "إعادة تعيين مسؤول عرض قريب", "subtitle": "عرض مسؤولي العرض ضمن نطاق التغطية المحدد", "close": "إغلاق النافذة", "search": "البحث باسم مسؤول العرض", "available": "متاح", "busy": "مشغول", "tasks": "مهام", "assign": "تعيين مسؤول العرض", "selectRequired": "اختر مسؤول عرض متاحًا.", "unverified": "تعذر إكمال طلب إعادة التعيين." }
+      }
+    },
+    "merchandisers": {
+      "title": "إدارة مسؤولي العرض", "subtitle": "متابعة وإدارة مسؤولي العرض على المنصة", "searchLabel": "البحث في مسؤولي العرض", "searchPlaceholder": "ابحث عن مسؤول عرض", "statusFilterLabel": "تصفية حسب الحالة", "add": "إضافة مسؤول عرض", "loading": "جارٍ تحميل مسؤولي العرض…", "retry": "إعادة المحاولة", "emptyTitle": "لا يوجد مسؤولو عرض", "emptyDescription": "جرّب تغيير البحث أو تصفية الحالة.", "toggleStatus": "تغيير حالة {name}", "edit": "تعديل {name}", "delete": "حذف {name}",
+      "stats": { "total": "إجمالي مسؤولي العرض", "active": "مسؤولو العرض النشطون", "inactive": "مسؤولو العرض غير النشطين" }, "statuses": { "all": "كل الحالات", "active": "نشط", "inactive": "غير نشط" }, "columns": { "name": "اسم مسؤول العرض", "phone": "رقم الهاتف", "email": "البريد الإلكتروني", "completed": "المهام المكتملة", "status": "الحالة", "action": "الإجراء" }, "pagination": { "previous": "السابق", "next": "التالي" }, "errors": { "load": "تعذر تحميل مسؤولي العرض", "loadDescription": "تعذر تحميل بيانات مسؤولي العرض.", "status": "تعذر تحديث حالة مسؤول العرض.", "delete": "تعذر حذف مسؤول العرض." }, "deleteDialog": { "title": "حذف مسؤول العرض؟", "description": "هل أنت متأكد من حذف {name}؟", "warning": "لا يمكن التراجع عن هذا الإجراء.", "cancel": "لا، احتفظ به", "confirm": "نعم، احذف" },
+      "form": { "createTitle": "إضافة مسؤول عرض جديد", "createSubtitle": "أدخل المعلومات أدناه لإضافة عضو جديد", "editTitle": "تحديث بيانات مسؤول العرض", "editSubtitle": "أدخل المعلومات أدناه لتحديث بيانات مسؤول العرض", "back": "العودة إلى مسؤولي العرض", "personalInfo": "المعلومات الشخصية", "uploadPhoto": "رفع صورة", "optional": "(اختياري)", "fullName": "الاسم الكامل", "fullNamePlaceholder": "أدخل الاسم الكامل", "email": "البريد الإلكتروني", "emailPlaceholder": "name@company.com", "phone": "رقم الهاتف", "phonePlaceholder": "+966 XX XXX XXXX", "jobDetails": "تفاصيل الوظيفة", "jobTitle": "المسمى الوظيفي", "merchandiser": "مسؤول عرض", "startDate": "تاريخ البدء", "systemPermissions": "صلاحيات النظام", "credentials": "بيانات تسجيل الدخول", "credentialsDescription": "إعداد صلاحيات الوصول لهذا الموظف", "enabled": "مفعّل", "temporaryPassword": "كلمة المرور المؤقتة", "copyPassword": "نسخ كلمة المرور المؤقتة", "credentialsNotice": "سيتم إرسال بيانات تسجيل الدخول تلقائيًا إلى بريد الموظف عند إنشاء الحساب.", "cancel": "إلغاء", "save": "حفظ", "saving": "جارٍ الحفظ…", "saveError": "تعذر حفظ مسؤول العرض.", "validation": { "name": "أدخل حرفين على الأقل.", "email": "أدخل بريدًا إلكترونيًا صالحًا.", "phone": "أدخل رقم هاتف صالحًا.", "startDate": "اختر تاريخ البدء.", "password": "يجب ألا تقل كلمة المرور عن ثمانية أحرف." } },
+      "details": { "title": "إدارة مسؤول العرض", "subtitle": "متابعة وإدارة مسؤولي العرض على المنصة", "back": "العودة إلى مسؤولي العرض", "loading": "جارٍ تحميل بيانات مسؤول العرض…", "error": "تعذر تحميل مسؤول العرض", "errorDescription": "تعذر تحميل تفاصيل مسؤول العرض.", "retry": "إعادة المحاولة", "notFound": "مسؤول العرض غير موجود", "notFoundDescription": "مسؤول العرض غير متاح أو تمت إزالته.", "active": "نشط", "inactive": "غير نشط", "email": "البريد الإلكتروني", "phone": "رقم الهاتف", "inProgress": "قيد التنفيذ", "due": "موعد التسليم: {date}", "filterDate": "تصفية حسب التاريخ", "history": "سجل الطلبات", "emptyHistory": "لا توجد طلبات", "emptyHistoryDescription": "لا توجد طلبات تطابق عوامل التصفية.", "editRequest": "تعديل الطلب", "deleteRequest": "حذف الطلب", "requestApiMissing": "لم يتم توفير واجهة طلبات الإدارة.", "stats": { "total": "إجمالي المهام", "completed": "مكتملة", "canceled": "ملغاة" }, "tabs": { "all": "الكل", "completed": "مكتملة", "failed": "فاشلة", "canceled": "ملغاة" }, "columns": { "id": "رقم الطلب", "location": "الموقع", "time": "الوقت", "status": "الحالة", "action": "الإجراء" }, "deleteDialog": { "title": "حذف الطلب؟", "description": "هل أنت متأكد من حذف هذا الطلب؟", "warning": "لا يمكن التراجع عن هذا الإجراء.", "cancel": "لا، احتفظ به", "confirm": "نعم، احذف" } }
+    },
+    "companies": {
+      "title": "إدارة الشركات",
+      "subtitle": "إدارة ومتابعة جميع الشركات المسجلة",
+      "searchLabel": "البحث في الشركات",
+      "searchPlaceholder": "البحث عن الشركات",
+      "statusFilterLabel": "تصفية الشركات حسب الحالة",
+      "loading": "جارٍ تحميل الشركات…",
+      "emptyTitle": "لا توجد شركات",
+      "emptyDescription": "جرّب تغيير البحث أو تصفية الحالة.",
+      "retry": "إعادة المحاولة",
+      "toggleStatus": "تغيير حالة {name}",
+      "delete": "حذف {name}",
+      "stats": { "total": "إجمالي الشركات", "active": "الشركات النشطة", "inactive": "الشركات غير النشطة" },
+      "statuses": { "all": "جميع الحالات", "active": "نشط", "inactive": "غير نشط" },
+      "columns": { "name": "اسم الشركة", "industry": "المجال", "crNumber": "رقم السجل التجاري", "email": "بريد العمل", "status": "الحالة", "action": "الإجراء" },
+      "pagination": { "previous": "السابق", "next": "التالي" },
+      "errors": { "load": "تعذر تحميل الشركات", "status": "تعذر تحديث حالة الشركة.", "delete": "تعذر حذف الشركة." },
+      "deleteDialog": { "title": "حذف الشركة؟", "description": "هل أنت متأكد من حذف هذه الشركة؟", "warning": "لا يمكن التراجع عن هذا الإجراء.", "cancel": "لا، احتفظ بها", "confirm": "نعم، احذف" },
+      "details": {
+        "title": "تفاصيل الشركة", "back": "العودة إلى الشركات", "loading": "جارٍ تحميل تفاصيل الشركة…", "error": "تعذر تحميل تفاصيل الشركة", "retry": "إعادة المحاولة", "notFound": "الشركة غير موجودة", "active": "نشط", "inactive": "غير نشط", "createdOn": "تاريخ الإنشاء", "industry": "المجال", "email": "البريد الإلكتروني", "crNumber": "رقم السجل التجاري", "phone": "رقم الهاتف", "catalogTitle": "إدارة الكتالوج", "manage": "إدارة",
+        "stats": { "totalRequests": "إجمالي الطلبات", "completed": "المكتملة", "pending": "قيد الانتظار", "spending": "إجمالي الإنفاق", "products": "المنتجات" },
+        "history": { "title": "سجل الطلبات", "viewAll": "عرض جميع الطلبات", "empty": "لا توجد طلبات حديثة", "requestId": "رقم الطلب", "location": "الموقع", "time": "الوقت", "status": "الحالة", "requestNumber": "طلب-{id}" },
+        "statuses": { "draft": "مسودة", "pending": "قيد الانتظار", "completed": "مكتمل", "failed": "فشل", "cancelled": "ملغي", "rejected": "مرفوض", "inProgress": "قيد التنفيذ" },
+        "catalog": {
+          "brand": { "title": "العلامات التجارية", "description": "إدارة جميع العلامات" },
+          "sub-brand": { "title": "العلامات الفرعية", "description": "إدارة جميع العلامات الفرعية" },
+          "category": { "title": "الفئات", "description": "إدارة جميع الفئات" },
+          "sub-category": { "title": "الفئات الفرعية", "description": "إدارة جميع الفئات الفرعية" },
+          "product": { "title": "المنتجات", "description": "إدارة جميع المنتجات" }
+        }
+      }
+    },
     "title": "لوحة التحكم",
     "welcome": "مرحبًا بعودتك، إليك ما يحدث اليوم",
     "summaryLabel": "ملخص المنصة",
@@ -1166,7 +1241,8 @@
       "searchNoResults": "لا توجد صفحات إدارة مطابقة",
       "menu": "فتح قائمة الإدارة",
       "notification": "الإشعارات",
-      "userMenu": "فتح قائمة ملف المشرف"
+      "userMenu": "فتح قائمة ملف المشرف",
+      "language": "تغيير لغة لوحة التحكم إلى الإنجليزية"
     },
     "user": { "name": "ShelfSpot", "role": "مشرف" },
     "stats": {
@@ -1436,5 +1512,6 @@
         "codeInvalid": "يجب أن يتكون رمز التحقق من 6 أرقام."
       }
     }
-  }
-}
+  },
+  "adminAdmins":{"title":"إدارة المسؤولين","subtitle":"مراقبة وإدارة مسؤولي المنصة","tabs":{"admins":"المسؤولون","roles":"الأدوار"},"searchLabel":"البحث في المسؤولين أو الأدوار","searchPlaceholder":"البحث عن مسؤول","statusLabel":"تصفية حسب الحالة","statuses":{"all":"كل الحالات","active":"نشط","inactive":"غير نشط"},"actions":{"addAdmin":"إضافة مسؤول","addRole":"إضافة دور","toggle":"تغيير الحالة","delete":"حذف","edit":"تعديل","cancel":"إلغاء","confirm":"تأكيد"},"columns":{"name":"اسم المسؤول","phone":"رقم الهاتف","email":"البريد الإلكتروني","role":"اسم الدور","users":"عدد المستخدمين","status":"الحالة","action":"الإجراء"},"pagination":{"previous":"السابق","next":"التالي","page":"الصفحة {page} من {pages}"},"states":{"loading":"جارٍ تحميل المسؤولين…","error":"تعذر تحميل المسؤولين","retry":"إعادة المحاولة","empty":"لا توجد سجلات","emptyDescription":"جرّب تغيير البحث أو تصفية الحالة."},"adminForm":{"createTitle":"إنشاء مسؤول جديد","editTitle":"تحديث بيانات المسؤول","activation":"التفعيل","name":"الاسم","role":"الدور","selectRole":"اختر الدور","email":"البريد الإلكتروني","phone":"رقم الهاتف","password":"كلمة المرور","confirmPassword":"تأكيد كلمة المرور"},"roleForm":{"createTitle":"إنشاء دور جديد","editTitle":"تحديث الدور","name":"الدور","permissions":"الصلاحيات"},"delete":{"warning":"لا يمكن التراجع عن هذا الإجراء.","cancel":"لا، احتفظ به","confirm":"نعم، احذف"},"deleteAdmin":{"title":"حذف المسؤول؟","description":"هل أنت متأكد من حذف {name}؟"},"deleteRole":{"title":"حذف الدور؟","description":"هل أنت متأكد من حذف {name}؟"},"validation":{"required":"هذا الحقل مطلوب.","email":"أدخل بريدًا إلكترونيًا صالحًا.","password":"يجب ألا تقل كلمة المرور عن 8 أحرف.","match":"كلمتا المرور غير متطابقتين."},"errors":{"noRole":"لا يملك هذا المسؤول دورًا ولا يمكن تحديثه بأمان.","roleStatus":"تفعيل الأدوار غير مدعوم في عقد الواجهة البرمجية المقدم.","phoneUnsupported":"الهاتف للقراءة فقط لأنه غير موجود في حمولة واجهة المسؤول المقدمة."},"success":{"close":"إغلاق نافذة النجاح","done":"تم","adminCreated":{"title":"تم إنشاء المسؤول","description":"تم إنشاء المسؤول بنجاح."},"adminUpdated":{"title":"تم تحديث المسؤول","description":"تم تحديث المسؤول بنجاح."},"adminDeleted":{"title":"تم حذف المسؤول","description":"تم حذف المسؤول بنجاح."},"roleCreated":{"title":"تم إنشاء الدور","description":"تم إنشاء الدور بنجاح."},"roleUpdated":{"title":"تم تحديث الدور","description":"تم تحديث الدور بنجاح."},"roleDeleted":{"title":"تم حذف الدور","description":"تم حذف الدور بنجاح."}},"failure":{"close":"إغلاق نافذة الخطأ","done":"إغلاق","adminCreated":{"title":"تعذر إنشاء المسؤول","description":"تعذر إنشاء المسؤول. يرجى المحاولة مرة أخرى."},"adminUpdated":{"title":"تعذر تحديث المسؤول","description":"تعذر تحديث المسؤول. يرجى المحاولة مرة أخرى."},"adminDeleted":{"title":"تعذر حذف المسؤول","description":"تعذر حذف المسؤول. يرجى المحاولة مرة أخرى."},"roleCreated":{"title":"تعذر إنشاء الدور","description":"تعذر إنشاء الدور. يرجى المحاولة مرة أخرى."},"roleUpdated":{"title":"تعذر تحديث الدور","description":"تعذر تحديث الدور. يرجى المحاولة مرة أخرى."},"roleDeleted":{"title":"تعذر حذف الدور","description":"تعذر حذف الدور. يرجى المحاولة مرة أخرى."}}}
+,"adminPayments":{"title":"المدفوعات","subtitle":"تتبع المعاملات المالية الواردة والصادرة","summary":{"incoming":"إجمالي الوارد","outgoing":"إجمالي الصادر","balance":"صافي الرصيد"},"searchLabel":"بحث الشركات","searchPlaceholder":"البحث عن الشركات","dateFilter":"التاريخ","statusFilter":"الحالة","dates":{"newest":"الأحدث","oldest":"الأقدم"},"statuses":{"all":"كل الحالات","completed":"مكتمل","failed":"فاشل","refunded":"مسترد"},"columns":{"company":"اسم الشركة","spending":"إجمالي الإنفاق","date":"التاريخ","status":"الحالة","action":"الإجراء"},"selectAll":"تحديد الكل","select":"تحديد {name}","view":"عرض {name}","delete":"حذف {name}","empty":"لا توجد معاملات","error":"تعذر تحميل المدفوعات","pagination":{"previous":"السابق","next":"التالي","page":"الصفحة {page} من {pages}"},"deleteDialog":{"title":"حذف المعاملة؟","description":"إزالة معاملة {name}؟","previewWarning":"معاينة فقط: لم يتم توفير واجهة مدفوعات.","cancel":"لا، احتفظ بها","confirm":"إزالة"},"details":{"title":"تفاصيل الدفع","back":"العودة إلى المدفوعات","loading":"جارٍ تحميل الدفع…","error":"تعذر تحميل تفاصيل الدفع","retry":"إعادة المحاولة","notFound":"لم يتم العثور على الدفع","companyTitle":"معلومات الشركة","transactionTitle":"تفاصيل المعاملة","fields":{"company":"الشركة","email":"البريد الإلكتروني","phone":"الهاتف","country":"البلد","date":"التاريخ","chargedAt":"تاريخ الخصم","transactionId":"معرّف المعاملة","paymentStatus":"حالة الدفع"},"statuses":{"completed":"مكتمل","failed":"فاشل","refunded":"مسترد"},"directionTitle":"اتجاه المعاملة","direction":{"incoming":"وارد","outgoing":"صادر","incomingDesc":"أموال مستلمة إلى المنصة","outgoingDesc":"أموال مرسلة من المنصة"}}},"adminSettings":{"title":"الإعدادات","subtitle":"إدارة تفضيلات المنصة وإعداداتها","tabs":{"general":"عام","profile":"الملف الشخصي"},"save":"حفظ التغيير","saving":"جارٍ الحفظ…","unverified":"تبقى التغييرات في المعاينة لعدم توفير واجهة إعدادات المسؤول.","general":{"title":"الإعدادات العامة","platform":"اسم المنصة","email":"البريد الإلكتروني"},"profile":{"title":"إعدادات الملف الشخصي","passwordSection":"تغيير كلمة المرور (اختياري)","name":"الاسم","email":"البريد الإلكتروني","current":"كلمة المرور الحالية","new":"كلمة المرور الجديدة","confirm":"تأكيد كلمة المرور","success":"تم تحديث الملف الشخصي بنجاح.","error":"تعذر تحديث الملف الشخصي. يرجى المحاولة مرة أخرى.","loadError":"تعذر تحميل الملف الشخصي.","validation":{"currentRequired":"كلمة المرور الحالية مطلوبة لتعيين كلمة مرور جديدة.","mismatch":"كلمة المرور الجديدة وتأكيدها غير متطابقين."}}}}

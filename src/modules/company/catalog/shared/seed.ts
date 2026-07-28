@@ -33,5 +33,6 @@ export interface SubCategoryRow extends CatalogBaseRow {
 export interface ProductRow extends CatalogBaseRow {
   pathSegments: string[];
   sku: string;
+  barcode: string;
   description: string;
 }
