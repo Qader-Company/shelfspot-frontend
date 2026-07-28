@@ -1,4 +1,4 @@
-import { adminApiClient } from "@/shared/lib/api/client";
+import { apiClient } from "@/shared/lib/api/client";
 import type { TrashItem, TrashTab } from "./types";
 
 type ApiRecord = Record<string, unknown>;
@@ -47,16 +47,16 @@ const paths: Record<TrashTab, string> = {
 };
 
 export async function getTrash(tab: TrashTab) {
-  const { data } = await adminApiClient.get<ApiResponse>(paths[tab]);
+  const { data } = await apiClient.get<ApiResponse>(paths[tab]);
   return rows(data).map((item) => normalize(item, tab));
 }
 
 export async function restoreTrashItem({ tab, id }: { tab: TrashTab; id: string }) {
   if (tab === "requests") throw new Error("Request restoration is not supported by the provided API contract.");
-  return (await adminApiClient.post(`${paths[tab]}/${encodeURIComponent(id)}/restore`)).data;
+  return (await apiClient.post(`${paths[tab]}/${encodeURIComponent(id)}/restore`)).data;
 }
 
 export async function permanentlyDeleteTrashItem({ tab, id }: { tab: TrashTab; id: string }) {
-  return (await adminApiClient.delete(`${paths[tab]}/${encodeURIComponent(id)}`)).data;
+  return (await apiClient.delete(`${paths[tab]}/${encodeURIComponent(id)}`)).data;
 }
 

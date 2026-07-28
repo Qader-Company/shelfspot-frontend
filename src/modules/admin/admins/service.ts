@@ -1,4 +1,4 @@
-import { adminApiClient } from "@/shared/lib/api/client";
+import { apiClient } from "@/shared/lib/api/client";
 
 import type {
   Admin,
@@ -64,21 +64,21 @@ const roleBody = (payload: RolePayload) => ({
 });
 
 export async function getAdmins(params: Record<string, unknown> = {}) {
-  const { data } = await adminApiClient.get("/api/admin/access-control/admins", {
+  const { data } = await apiClient.get("/api/admin/access-control/admins", {
     params,
   });
   return listFrom<Admin>(data);
 }
 
 export async function getRoles(params: Record<string, unknown> = {}) {
-  const { data } = await adminApiClient.get("/api/admin/access-control/roles", {
+  const { data } = await apiClient.get("/api/admin/access-control/roles", {
     params,
   });
   return listFrom<Role>(data);
 }
 
 export async function getPermissions() {
-  const { data } = await adminApiClient.get(
+  const { data } = await apiClient.get(
     "/api/admin/access-control/permissions",
   );
   return listFrom<Permission>(data).items;
@@ -86,7 +86,7 @@ export async function getPermissions() {
 
 export async function createAdmin(payload: AdminPayload) {
   return (
-    await adminApiClient.post(
+    await apiClient.post(
       "/api/admin/access-control/admins",
       adminBody(payload),
     )
@@ -95,7 +95,7 @@ export async function createAdmin(payload: AdminPayload) {
 
 export async function updateAdmin({ id, payload }: { id: Id; payload: AdminPayload }) {
   return (
-    await adminApiClient.put(
+    await apiClient.put(
       `/api/admin/access-control/admins/${encodeURIComponent(id)}`,
       adminBody(payload),
     )
@@ -104,7 +104,7 @@ export async function updateAdmin({ id, payload }: { id: Id; payload: AdminPaylo
 
 export async function deleteAdmin(id: Id) {
   return (
-    await adminApiClient.delete(
+    await apiClient.delete(
       `/api/admin/access-control/admins/${encodeURIComponent(id)}`,
     )
   ).data;
@@ -112,7 +112,7 @@ export async function deleteAdmin(id: Id) {
 
 export async function createRole(payload: RolePayload) {
   return (
-    await adminApiClient.post(
+    await apiClient.post(
       "/api/admin/access-control/roles",
       roleBody(payload),
     )
@@ -121,7 +121,7 @@ export async function createRole(payload: RolePayload) {
 
 export async function updateRole({ id, payload }: { id: Id; payload: RolePayload }) {
   return (
-    await adminApiClient.patch(
+    await apiClient.patch(
       `/api/admin/access-control/roles/${encodeURIComponent(id)}`,
       roleBody(payload),
     )
@@ -130,7 +130,7 @@ export async function updateRole({ id, payload }: { id: Id; payload: RolePayload
 
 export async function deleteRole(id: Id) {
   return (
-    await adminApiClient.delete(
+    await apiClient.delete(
       `/api/admin/access-control/roles/${encodeURIComponent(id)}`,
     )
   ).data;

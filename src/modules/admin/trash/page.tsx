@@ -22,7 +22,24 @@ export function AdminTrashPage() {
   const [page, setPage] = useState(1);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [confirm, setConfirm] = useState<Confirm>();
-  const query = useTrash(tab);
+
+  // Fetch all tabs in parallel so counts are always visible (Rules of Hooks: called unconditionally)
+  const qBrands        = useTrash("brands");
+  const qSubBrands     = useTrash("sub-brands");
+  const qCategories    = useTrash("categories");
+  const qSubCategories = useTrash("sub-categories");
+  const qProducts      = useTrash("products");
+  const qRequests      = useTrash("requests");
+  const qFreelancers   = useTrash("freelancers");
+  const qCompanies     = useTrash("companies");
+
+  const tabQueries: Record<TrashTab, typeof qBrands> = {
+    "brands": qBrands, "sub-brands": qSubBrands, "categories": qCategories,
+    "sub-categories": qSubCategories, "products": qProducts,
+    "requests": qRequests, "freelancers": qFreelancers, "companies": qCompanies,
+  };
+
+  const query = tabQueries[tab];
   const restore = useRestoreTrash();
   const remove = usePermanentDeleteTrash();
   const filtered = useMemo(() => (query.data ?? []).filter((item) => {
@@ -45,7 +62,7 @@ export function AdminTrashPage() {
   return <main className="space-y-6 px-4 py-8 lg:px-8">
     <header><h1 className="text-3xl font-bold">{t("title")}</h1><p className="mt-2 text-lg text-muted-foreground">{t("subtitle")}</p></header>
     <div className="flex gap-2 overflow-x-auto rounded-2xl bg-muted/50 p-3" role="tablist" aria-label={t("tabsLabel")}>
-      {TRASH_TABS.map((key) => <button key={key} role="tab" aria-selected={tab === key} onClick={() => changeTab(key)} className={`flex shrink-0 items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-colors ${tab === key ? "bg-primary text-primary-foreground" : "bg-card text-muted-foreground hover:text-foreground"}`}>{t(`tabs.${key}`)}<span className={`rounded-full px-1.5 py-0.5 text-xs ${tab === key ? "bg-primary-foreground/25" : "bg-muted"}`}>{tab === key ? query.data?.length ?? "—" : "—"}</span></button>)}
+      {TRASH_TABS.map((key) => <button key={key} role="tab" aria-selected={tab === key} onClick={() => changeTab(key)} className={`flex shrink-0 items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-colors ${tab === key ? "bg-primary text-primary-foreground" : "bg-card text-muted-foreground hover:text-foreground"}`}>{t(`tabs.${key}`)}<span className={`rounded-full px-1.5 py-0.5 text-xs ${tab === key ? "bg-primary-foreground/25" : "bg-muted"}`}>{tabQueries[key].data?.length ?? "—"}</span></button>)}
     </div>
     <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"><SearchInput label={t("searchLabel")} placeholder={t("searchPlaceholder", { entity: t(`tabs.${tab}`) })} value={search} onChange={(event) => { setSearch(event.target.value); setPage(1); }} className="max-w-md"/><select value={status} onChange={(event) => { setStatus(event.target.value); setPage(1); }} aria-label={t("statusLabel")} className="h-11 rounded-lg border bg-card px-4"><option value="all">{t("statuses.all")}</option><option value="active">{t("statuses.active")}</option><option value="inactive">{t("statuses.inactive")}</option></select></div>
     {query.isPending ? <PageLoadingSkeleton showHeader={false} cardCount={0} tableRows={8} tableColumns={6} label={t("loading")}/> : query.isError ? <ErrorState title={t("error")} description={normalizeApiError(query.error).message} retryLabel={t("retry")} onRetry={() => void query.refetch()}/> : visible.length === 0 ? <EmptyState title={t("empty")} description={t("emptyDescription")}/> : <TrashTable tab={tab} items={visible} selected={selected} onToggle={toggle} onConfirm={setConfirm} t={t}/>} 

@@ -1,4 +1,4 @@
-import { adminApiClient } from "@/shared/lib/api/client";
+import { apiClient } from "@/shared/lib/api/client";
 
 import type {
   PromoCodeRecord,
@@ -62,7 +62,7 @@ function normalize(item: ApiCoupon): PromoCodeRecord {
 export async function getPromoCodes(
   params: PromoListParams,
 ): Promise<PromoListResult> {
-  const { data: response } = await adminApiClient.get<
+  const { data: response } = await apiClient.get<
     ApiResponse<
       | ApiCoupon[]
       | {
@@ -97,7 +97,7 @@ export async function getPromoCodes(
 }
 
 export async function getPromoCode(id: string) {
-  const { data } = await adminApiClient.get<ApiResponse<ApiCoupon>>(
+  const { data } = await apiClient.get<ApiResponse<ApiCoupon>>(
     `/api/admin/wallet-coupons/${encodeURIComponent(id)}`,
   );
   return normalize(data.data);
@@ -119,7 +119,7 @@ function toFormData(input: PromoPayload) {
 
 export async function createPromoCode(input: PromoPayload) {
   const response = (
-    await adminApiClient.post("/api/admin/wallet-coupons", toFormData(input))
+    await apiClient.post("/api/admin/wallet-coupons", toFormData(input))
   ).data;
   const item = (response as { data?: ApiCoupon }).data ??
     (response as ApiCoupon);
@@ -144,7 +144,7 @@ export async function updatePromoCode({
   input: PromoPayload;
 }) {
   const response = (
-    await adminApiClient.put(
+    await apiClient.put(
       `/api/admin/wallet-coupons/${encodeURIComponent(id)}`,
       toFormData(input),
     )
@@ -166,7 +166,7 @@ export async function updatePromoCode({
 
 export async function deletePromoCode(id: string) {
   return (
-    await adminApiClient.delete(
+    await apiClient.delete(
       `/api/admin/wallet-coupons/${encodeURIComponent(id)}`,
     )
   ).data;
@@ -180,7 +180,7 @@ export async function updatePromoStatus({
   active: boolean;
 }) {
   return (
-    await adminApiClient.put(
+    await apiClient.put(
       `/api/admin/wallet-coupons/${encodeURIComponent(id)}`,
       undefined,
       { params: { active: active ? 1 : 0 } },

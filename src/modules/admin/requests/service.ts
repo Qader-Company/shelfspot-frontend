@@ -1,4 +1,4 @@
-import { adminApiClient } from "@/shared/lib/api/client";
+import { apiClient } from "@/shared/lib/api/client";
 import type {
   AdminRequest,
   AdminRequestList,
@@ -107,7 +107,7 @@ function pagePayload(response: ApiResponse<unknown>) {
 
 export async function getAdminRequests(params: AdminRequestParams): Promise<AdminRequestList> {
   const endpoint = params.companyDeleted ? "/api/admin/tasks/company-deleted" : "/api/admin/tasks";
-  const { data: response } = await adminApiClient.get<ApiResponse<unknown>>(endpoint, {
+  const { data: response } = await apiClient.get<ApiResponse<unknown>>(endpoint, {
     params: {
       company_id: params.companyId || undefined,
       page: params.page,
@@ -138,12 +138,12 @@ export async function getAdminRequests(params: AdminRequestParams): Promise<Admi
 }
 
 export async function getAdminRequest(id: string) {
-  const { data } = await adminApiClient.get<ApiResponse<unknown>>(`/api/admin/tasks/${encodeURIComponent(id)}`);
+  const { data } = await apiClient.get<ApiResponse<unknown>>(`/api/admin/tasks/${encodeURIComponent(id)}`);
   return normalizeRequest(data.data);
 }
 
 export async function getNearbyMerchandisers(requestId: string, radiusKm: number): Promise<NearbyMerchandiser[]> {
-  const { data } = await adminApiClient.get<ApiResponse<unknown>>(
+  const { data } = await apiClient.get<ApiResponse<unknown>>(
     `/api/admin/tasks/${encodeURIComponent(requestId)}/available-workers`,
     { params: { radius_km: radiusKm } },
   );
@@ -165,15 +165,15 @@ export async function getNearbyMerchandisers(requestId: string, radiusKm: number
 
 export async function assignAdminRequest(input: { requestId: string; merchandiserId: string }) {
   const body = new URLSearchParams({ worker_id: input.merchandiserId });
-  return (await adminApiClient.post(`/api/admin/tasks/${encodeURIComponent(input.requestId)}/reassign`, body, {
+  return (await apiClient.post(`/api/admin/tasks/${encodeURIComponent(input.requestId)}/reassign`, body, {
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
   })).data;
 }
 
 export async function reopenAdminRequest(requestId: string) {
-  return (await adminApiClient.post(`/api/admin/tasks/${encodeURIComponent(requestId)}/reopen`)).data;
+  return (await apiClient.post(`/api/admin/tasks/${encodeURIComponent(requestId)}/reopen`)).data;
 }
 
 export async function deleteCompanyDeletedRequest(requestId: string) {
-  return (await adminApiClient.delete(`/api/admin/tasks/company-deleted/${encodeURIComponent(requestId)}`)).data;
+  return (await apiClient.delete(`/api/admin/tasks/company-deleted/${encodeURIComponent(requestId)}`)).data;
 }
