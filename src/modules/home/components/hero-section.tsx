@@ -31,13 +31,10 @@ export async function HeroSection({ locale }: HeroSectionProps) {
         </div>
         <div className="absolute inset-x-[18%] bottom-0 top-14 rounded-[40px] bg-gradient-to-b from-primary/10 via-primary/5 to-transparent" />
         <Image
-          src="/auth/screens/login-screen.png"
+          src={isRtl ? "/company/hero-ar.png" : "/company/hero-en.png"}
           alt={t("visualAlt")}
           fill
-          className={cn(
-            "object-contain object-bottom",
-            isRtl ? "scale-x-100" : "-scale-x-100",
-          )}
+          className="object-contain object-bottom"
           sizes="(max-width: 1024px) 100vw, 46vw"
           priority
         />

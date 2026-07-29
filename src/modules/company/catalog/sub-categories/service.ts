@@ -1,7 +1,7 @@
 import type { GetBrandsMeta } from "@/modules/company/catalog/brands/types";
 import type { CompanySubCategory, GetSubCategoriesParams, GetSubCategoriesResponse } from "@/modules/company/catalog/sub-categories/types";
 import { apiClient } from "@/shared/lib/api/client";
-import { CATALOG_IMAGE_REMOVE_FILE_NAME } from "@/shared/components/catalog/upload-area";
+const CATALOG_IMAGE_REMOVE_FILE_NAME = "__catalog_image_remove__";
 type Page = Partial<GetBrandsMeta> & { data: CompanySubCategory[]; meta?: GetBrandsMeta };
 type Raw = Omit<GetSubCategoriesResponse, "data"> & { data: CompanySubCategory[] | Page; pagination?: GetBrandsMeta };
 export async function getSubCategoriesService(params: GetSubCategoriesParams): Promise<GetSubCategoriesResponse> { const { data: payload } = await apiClient.get<Raw>("/api/company/sub-categories", { params }); if (Array.isArray(payload.data)) return payload as GetSubCategoriesResponse; const value = payload.data; return { success: payload.success, message: payload.message, data: value.data, meta: value.meta ?? payload.pagination ?? (value.current_page != null && value.last_page != null ? { current_page: value.current_page, last_page: value.last_page, per_page: value.per_page ?? 10, total: value.total ?? value.data.length } : undefined) }; }

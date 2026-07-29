@@ -1,4 +1,4 @@
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 
 import { AuthSplitShell } from "@/modules/auth/components/auth-split-shell";
 import { LoginForm } from "@/modules/auth/components/login-form";
@@ -14,6 +14,7 @@ export async function LoginPageView({
   authContext = "company",
 }: LoginPageViewProps) {
   const t = await getTranslations("auth.login");
+  const locale = await getLocale();
 
   if (authContext === "admin") {
     const adminT = await getTranslations("auth.adminLogin");
@@ -32,7 +33,7 @@ export async function LoginPageView({
   return (
     <AuthSplitShell
       visualAlt={t("visualAlt")}
-      visualSrc="/auth/screens/login-screen.png"
+      visualSrc={locale === "ar" ? "/auth/screens/login-screen-ar.png" : "/auth/screens/login-screen.png"}
     >
       <LoginForm showRegistrationSuccess={showRegistrationSuccess} authContext="company" />
     </AuthSplitShell>

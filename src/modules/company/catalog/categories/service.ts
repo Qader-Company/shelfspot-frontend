@@ -1,7 +1,7 @@
 import type { GetBrandsMeta } from "@/modules/company/catalog/brands/types";
 import type { CompanyCategory, GetCategoriesParams, GetCategoriesResponse } from "@/modules/company/catalog/categories/types";
 import { apiClient } from "@/shared/lib/api/client";
-import { CATALOG_IMAGE_REMOVE_FILE_NAME } from "@/shared/components/catalog/upload-area";
+const CATALOG_IMAGE_REMOVE_FILE_NAME = "__catalog_image_remove__";
 
 type Page = Partial<GetBrandsMeta> & { data: CompanyCategory[]; meta?: GetBrandsMeta };
 type Raw = Omit<GetCategoriesResponse, "data"> & { data: CompanyCategory[] | Page; pagination?: GetBrandsMeta };
