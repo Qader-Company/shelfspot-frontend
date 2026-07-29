@@ -1,4 +1,7 @@
 import { UploadIcon } from "@/shared/components/dashboard/dashboard-icons";
+import { Button } from "@/shared/ui/button";
+
+export const CATALOG_IMAGE_REMOVE_FILE_NAME = "__catalog_image_remove__";
 
 interface CatalogUploadAreaProps {
   label: string;
@@ -6,6 +9,8 @@ interface CatalogUploadAreaProps {
   file?: File | null;
   onFileChange?: (file: File | null) => void;
   existingImageUrl?: string | null;
+  onRemove?: () => void;
+  removeLabel?: string;
 }
 
 export function CatalogUploadArea({
@@ -14,11 +19,14 @@ export function CatalogUploadArea({
   file,
   onFileChange,
   existingImageUrl,
+  onRemove,
+  removeLabel = "Remove image",
 }: CatalogUploadAreaProps) {
   const previewUrl = file ? null : existingImageUrl;
 
   return (
-    <label className="flex min-h-28 cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border border-dashed border-border p-6 transition-colors hover:border-primary/60">
+    <div className="relative flex min-h-28 flex-col items-center justify-center gap-2 rounded-lg border border-dashed border-border p-6 transition-colors hover:border-primary/60">
+      <label className="flex cursor-pointer flex-col items-center justify-center gap-2">
       <input
         type="file"
         accept="image/*"
@@ -42,6 +50,15 @@ export function CatalogUploadArea({
       )}
       <p className="text-sm font-medium text-foreground">{label}</p>
       <p className="text-xs text-primary">{file?.name ?? hint}</p>
-    </label>
+      </label>
+      {(file || existingImageUrl) ? (
+        <Button type="button" variant="ghost" size="sm" onClick={() => {
+          if (onRemove) onRemove();
+          else onFileChange?.(new File([], CATALOG_IMAGE_REMOVE_FILE_NAME));
+        }} className="text-destructive hover:text-destructive">
+          {removeLabel}
+        </Button>
+      ) : null}
+    </div>
   );
 }

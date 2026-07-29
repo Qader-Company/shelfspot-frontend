@@ -114,7 +114,7 @@ export function SubBrandPage() {
     if (!brandId || !nameEn.trim() || !nameAr.trim() || (openDialog === "add" && !logo)) { setFormError(t("catalogPage.subBrand.dialog.requiredFields")); return; }
     setFormError("");
     try {
-      const payload = { brandId, nameEn: nameEn.trim(), nameAr: nameAr.trim(), isActive, logo: logo ?? undefined };
+      const payload = { brandId, nameEn: nameEn.trim(), nameAr: nameAr.trim(), isActive, logo: logo ?? undefined, ...(openDialog === "edit" ? { logoAction: logo ? "replace" as const : existingImage ? "keep" as const : "remove" as const } : {}) };
       const response = openDialog === "edit" && selectedId
         ? await updateMutation.mutateAsync({ id: selectedId, payload })
         : await createMutation.mutateAsync({ ...payload, logo: logo! });
@@ -150,7 +150,7 @@ export function SubBrandPage() {
     <DeleteConfirmDialog isOpen={openDialog === "delete"} title={t("catalogPage.subBrand.deleteDialog.title")} descriptionLine1={t("catalogPage.subBrand.deleteDialog.descriptionLine1")} descriptionLine2={t("catalogPage.subBrand.deleteDialog.descriptionLine2")} cancelLabel={t("catalogPage.subBrand.deleteDialog.cancel")} confirmLabel={t("catalogPage.subBrand.deleteDialog.confirm")} onClose={close} onConfirm={remove} isPending={deleteMutation.isPending} errorMessage={deleteError} />
     <CatalogFormDialog isOpen={openDialog === "add" || openDialog === "edit"} title={openDialog === "edit" ? t("catalogPage.subBrand.dialog.editTitle") : t("catalogPage.subBrand.dialog.title")} closeLabel={t("catalogPage.dialog.close")} cancelLabel={t("catalogPage.dialog.cancel")} saveLabel={t("catalogPage.dialog.save")} onClose={close} onSubmit={save} isPending={createMutation.isPending || updateMutation.isPending} errorMessage={formError}>
       <div className="space-y-1.5"><label className="text-sm font-semibold">{t("catalogPage.dialog.parentBrand")}</label><select value={brandId} onChange={(event) => setBrandId(event.target.value)} required className="h-11 w-full rounded-lg border bg-secondary px-4"><option value="" disabled>{t("catalogPage.dialog.selectBrand")}</option>{(brandsQuery.data?.data ?? []).map((brand) => <option key={brand.id} value={brand.id}>{brand.name ?? `#${brand.id}`}</option>)}</select></div>
-      <CatalogUploadArea label={t("catalogPage.subBrand.dialog.uploadLabel")} hint={t("catalogPage.dialog.uploadHint")} file={logo} onFileChange={setLogo} existingImageUrl={openDialog === "edit" ? existingImage : undefined} />
+      <CatalogUploadArea label={t("catalogPage.subBrand.dialog.uploadLabel")} hint={t("catalogPage.dialog.uploadHint")} file={logo} onFileChange={setLogo} existingImageUrl={openDialog === "edit" ? existingImage : undefined} onRemove={openDialog === "edit" ? () => { setLogo(null); setExistingImage(null); } : undefined} />
       <div className="space-y-1.5"><label className="text-sm font-semibold">{t("catalogPage.subBrand.dialog.nameEnLabel")}</label><Input value={nameEn} onChange={(event) => setNameEn(event.target.value)} required /></div>
       <div className="space-y-1.5"><label className="text-sm font-semibold">{t("catalogPage.subBrand.dialog.nameArLabel")}</label><Input dir="rtl" value={nameAr} onChange={(event) => setNameAr(event.target.value)} required /></div>
       <CatalogStatusField activeLabel={t("catalogPage.dialog.statusActive")} description={t("catalogPage.subBrand.dialog.statusDescription")} ariaLabel={t("catalogPage.dialog.statusActive")} isActive={isActive} onChange={setIsActive} />

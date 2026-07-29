@@ -83,6 +83,7 @@ function initialForm(item?: AdminCatalogItem): AdminCatalogPayload {
     categoryId: item?.category_id != null ? String(item.category_id) : "",
     subCategoryId: item?.sub_category_id != null ? String(item.sub_category_id) : "",
     isActive: item ? active(item) : true,
+    logoAction: item ? "keep" : undefined,
   };
 }
 
@@ -398,7 +399,8 @@ function CatalogForm({ resource, item, brands, subBrands, categories, subCategor
         hint={t("dialog.uploadHint")}
         file={form.image}
         existingImageUrl={item?.logo_url ?? item?.logo ?? item?.image_url ?? item?.image}
-        onFileChange={(image) => setForm({ ...form, image: image ?? undefined })}
+        onFileChange={(image) => setForm({ ...form, image: image ?? undefined, logoAction: image ? "replace" : form.logoAction })}
+        onRemove={item ? () => setForm({ ...form, image: undefined, logoAction: "remove" }) : undefined}
       />
       <CatalogStatusField
         activeLabel={t("dialog.statusActive")}

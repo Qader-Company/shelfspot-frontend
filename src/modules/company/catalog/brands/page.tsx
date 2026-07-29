@@ -233,6 +233,7 @@ export function BrandPage() {
       nameAr: nameAr.trim(),
       isActive,
       logo: logo ?? undefined,
+      logoAction: logo ? "replace" as const : existingLogoUrl ? "keep" as const : "remove" as const,
     };
 
     try {
@@ -553,6 +554,7 @@ export function BrandPage() {
           existingImageUrl={
             openDialog === "edit" ? existingLogoUrl : undefined
           }
+          onRemove={openDialog === "edit" ? () => { setLogo(null); setExistingLogoUrl(null); } : undefined}
         />
         <div className="space-y-1.5">
           <label

@@ -6,6 +6,7 @@ import { FooterContact } from "@/modules/home/components/footer-contact";
 import { FooterLogo } from "@/modules/home/components/footer-logo";
 import { FooterNavigation } from "@/modules/home/components/footer-navigation";
 import { LandingContainer } from "@/modules/home/components/landing-container";
+import { getPublicPlatformSettings } from "@/modules/home/services/platform-settings";
 
 interface FooterProps {
   locale: Locale;
@@ -15,6 +16,7 @@ export async function Footer({
   locale,
 }: FooterProps) {
   const isRtl = locale === "ar";
+  const settings = await getPublicPlatformSettings();
 
   return (
     <footer id="contact" className="pt-16 sm:pt-20 lg:pt-24">
@@ -25,9 +27,9 @@ export async function Footer({
             isRtl ? "lg:[direction:rtl]" : "lg:[direction:ltr]",
           )}
         >
-          <FooterLogo locale={locale} />
+          <FooterLogo locale={locale} description={settings?.description} />
           <FooterNavigation locale={locale} />
-          <FooterContact locale={locale} />
+          <FooterContact locale={locale} settings={settings} />
         </div>
       </LandingContainer>
 

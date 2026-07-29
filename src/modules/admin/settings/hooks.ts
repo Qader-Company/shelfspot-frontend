@@ -2,7 +2,24 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { getAdminProfile, updateAdminProfile } from "./service";
+import { getAdminProfile, getPlatformSettings, updateAdminProfile, updatePlatformSettings } from "./service";
+
+export const platformSettingsQueryKey = ["platform-settings"] as const;
+
+export function usePlatformSettings() {
+  return useQuery({ queryKey: platformSettingsQueryKey, queryFn: getPlatformSettings });
+}
+
+export function useUpdatePlatformSettings() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: updatePlatformSettings,
+    onSuccess: (response) => {
+      queryClient.setQueryData(platformSettingsQueryKey, response.data);
+      void queryClient.invalidateQueries({ queryKey: platformSettingsQueryKey });
+    },
+  });
+}
 
 export const adminProfileQueryKey = ["admin", "profile"] as const;
 

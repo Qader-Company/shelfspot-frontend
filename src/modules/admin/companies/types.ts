@@ -144,6 +144,7 @@ export interface AdminCatalogPayload {
   subCategoryId?: string;
   isActive: boolean;
   image?: File;
+  logoAction?: "keep" | "remove" | "replace";
 }
 
 export interface AdminCatalogMutationInput {

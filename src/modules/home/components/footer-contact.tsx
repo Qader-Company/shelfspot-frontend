@@ -3,27 +3,30 @@ import { getTranslations } from "next-intl/server";
 
 import type { Locale } from "@/i18n/locale";
 import { cn } from "@/shared/lib/utils";
+import type { PublicPlatformSettings } from "@/modules/home/services/platform-settings";
 
 interface FooterContactProps {
   locale: Locale;
+  settings?: PublicPlatformSettings | null;
 }
 
 export async function FooterContact({
   locale,
+  settings,
 }: FooterContactProps) {
   const t = await getTranslations("home.footer");
   const isRtl = locale === "ar";
 
   const contacts = [
     {
-      href: "tel:+966xxxxxxxxxx",
-      label: t("contact.phone"),
+      href: `tel:${settings?.phone || "+966xxxxxxxxxx"}`,
+      label: settings?.phone || t("contact.phone"),
       icon: Phone,
       variant: "primary" as const,
     },
     {
-      href: "mailto:info@shelfspot.com",
-      label: t("contact.email"),
+      href: `mailto:${settings?.email || "info@shelfspot.com"}`,
+      label: settings?.email || t("contact.email"),
       icon: Mail,
       variant: "secondary" as const,
     },
@@ -41,7 +44,7 @@ export async function FooterContact({
       </h3>
 
       <p className="text-md font-regular text-foreground/80">
-        {t("contact.location")}
+        {settings?.address || t("contact.location")}
       </p>
 
       <div className={cn("flex flex-wrap gap-3", isRtl ? "justify-end" : "justify-start")}>

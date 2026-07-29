@@ -8,10 +8,12 @@ import { cn } from "@/shared/lib/utils";
 
 interface FooterLogoProps {
   locale: Locale;
+  description?: string | null;
 }
 
 export async function FooterLogo({
   locale,
+  description,
 }: FooterLogoProps) {
   const t = await getTranslations("home.footer");
   const isRtl = locale === "ar";
@@ -28,7 +30,7 @@ export async function FooterLogo({
       </Link>
 
       <p className="text-md leading-[1.6] font-regular text-foreground/80">
-        {t("description")}
+        {description || t("description")}
       </p>
     </div>
   );
