@@ -384,18 +384,18 @@ html[dir="ltr"] {
   }
 
   .section-label {
-    @apply text-section-label font-regular text-foreground;
+    @apply text-lg font-regular text-foreground sm:text-xl lg:text-section-label;
   }
 
   .section-heading {
-    @apply text-display-lg font-medium text-foreground;
+    @apply text-display-md font-medium leading-[1.35] text-foreground sm:text-display-lg;
   }
 
   .section-subheading {
-    @apply text-display-sm font-medium text-foreground;
+    @apply text-xl font-medium leading-[1.45] text-foreground sm:text-display-sm;
   }
 
   .section-body {
-    @apply text-base font-regular text-foreground/80;
+    @apply text-sm leading-[1.7] font-regular text-foreground/80 sm:text-base;
   }
 }

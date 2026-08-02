@@ -135,13 +135,13 @@ export async function HowItWorksSection({
         </div>
 
         <div className="mt-8 flex flex-col items-center gap-3 text-center lg:mt-10">
-          <p className="text-lg font-regular text-foreground">
+          <p className="text-base font-regular text-foreground sm:text-lg">
             {t("ctaLabel")}
           </p>
 
           <Button
             asChild
-            className="h-14 min-w-[118px] rounded-[10px] border border-primary bg-primary px-[18px] py-[10px] text-xl font-semibold text-white shadow-none hover:bg-primary/90 hover:text-white [&_*]:text-white"
+            className="h-12 min-w-[104px] rounded-[10px] border border-primary bg-primary px-4 py-2 text-base font-semibold text-white shadow-none hover:bg-primary/90 hover:text-white sm:h-14 sm:min-w-[118px] sm:px-[18px] sm:py-[10px] sm:text-xl [&_*]:text-white"
           >
             <Link href={ROUTES.register}>{t("ctaAction")}</Link>
           </Button>

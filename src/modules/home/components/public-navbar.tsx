@@ -29,7 +29,11 @@ export async function PublicNavbar({ locale }: PublicNavbarProps) {
   const logoSlot = (
     <div className="flex shrink-0 items-center">
       <Link href={ROUTES.home} aria-label={t("brandLabel")} className="shrink-0">
-        <Logo className="h-[68px] w-[182px]" width={182} height={68} />
+        <Logo
+          className="h-12 w-[128px] sm:h-[58px] sm:w-[155px] lg:h-[68px] lg:w-[182px]"
+          width={182}
+          height={68}
+        />
       </Link>
     </div>
   );
@@ -38,9 +42,9 @@ export async function PublicNavbar({ locale }: PublicNavbarProps) {
     <Link
       href={ROUTES.home}
       locale={nextLocale}
-      className="inline-flex items-center gap-1.5 text-xl font-medium text-foreground transition-colors hover:text-primary lg:text-[20px]"
+      className="relative z-20 inline-flex items-center gap-1 text-base font-medium text-foreground transition-colors hover:text-primary sm:gap-1.5 sm:text-lg lg:text-[20px]"
     >
-      <ChevronDown className="size-4" />
+      <ChevronDown className="size-3.5 sm:size-4" />
       <span>{t("actions.localeSwitch")}</span>
     </Link>
   );
@@ -48,7 +52,7 @@ export async function PublicNavbar({ locale }: PublicNavbarProps) {
   const ctaButton = (
     <Button
       asChild
-      className="h-14 w-[118px] rounded-[10px] border border-primary bg-primary px-[18px] py-[10px] text-xl font-semibold text-white shadow-none hover:bg-primary/90 hover:text-white lg:text-[20px] [&_*]:text-white"
+      className="relative z-20 h-11 w-[88px] rounded-[10px] border border-primary bg-primary px-3 py-2 text-sm font-semibold text-white shadow-none hover:bg-primary/90 hover:text-white sm:h-12 sm:w-[104px] sm:px-4 sm:text-base lg:h-14 lg:w-[118px] lg:px-[18px] lg:py-[10px] lg:text-[20px] [&_*]:text-white"
     >
       <Link href={ROUTES.login}>{t("actions.login")}</Link>
     </Button>
@@ -67,11 +71,11 @@ export async function PublicNavbar({ locale }: PublicNavbarProps) {
   );
 
   return (
-    <header className="pt-6 sm:pt-8 lg:pt-16">
+    <header className="relative z-20 bg-card pt-4 sm:pt-8 lg:pt-16">
       <LandingContainer>
         <div
           dir="ltr"
-          className="flex h-[68px] items-center justify-between gap-6"
+          className="flex h-12 items-center justify-between gap-2 sm:h-[58px] sm:gap-4 lg:h-[68px] lg:gap-6"
         >
           {isRtl ? actionSlot : logoSlot}
 

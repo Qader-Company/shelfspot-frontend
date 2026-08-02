@@ -34,16 +34,17 @@ export async function FooterContact({
 
   return (
     <div
+      dir={isRtl ? "rtl" : "ltr"}
       className={cn(
         "flex flex-col gap-4",
         isRtl ? "items-end text-right" : "items-start text-left",
       )}
     >
-      <h3 className="text-xl font-semibold text-foreground">
+      <h3 className="text-lg font-semibold text-foreground sm:text-xl">
         {t("contact.title")}
       </h3>
 
-      <p className="text-md font-regular text-foreground/80">
+      <p className="text-sm font-regular text-foreground/80 sm:text-md">
         {settings?.address || t("contact.location")}
       </p>
 
@@ -55,6 +56,7 @@ export async function FooterContact({
             <a
               key={contact.label}
               href={contact.href}
+              dir={isRtl ? "rtl" : "ltr"}
               className={cn(
                 "inline-flex h-10 items-center gap-2 rounded-[10px] border px-4 text-sm font-medium transition-colors",
                 contact.variant === "primary"

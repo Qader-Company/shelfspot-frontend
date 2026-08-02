@@ -20,6 +20,7 @@ export async function FooterLogo({
 
   return (
     <div
+      dir={isRtl ? "rtl" : "ltr"}
       className={cn(
         "flex max-w-[320px] flex-col gap-6",
         isRtl ? "items-end text-right" : "items-start text-left",
@@ -29,7 +30,7 @@ export async function FooterLogo({
         <Logo className="h-[52px] w-auto" width={182} height={68} />
       </Link>
 
-      <p className="text-md leading-[1.6] font-regular text-foreground/80">
+      <p className="text-sm leading-[1.7] font-regular text-foreground/80 sm:text-md">
         {description || t("description")}
       </p>
     </div>

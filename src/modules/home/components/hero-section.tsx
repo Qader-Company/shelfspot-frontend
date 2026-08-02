@@ -17,25 +17,26 @@ export async function HeroSection({ locale }: HeroSectionProps) {
   const isRtl = locale === "ar";
 
   const imageSlot = (
-    <div className="flex-1">
-      <div className="relative mx-auto h-[320px] w-full max-w-[540px] sm:h-[420px] lg:h-[520px]">
-        <div className="absolute inset-x-[12%] top-8 h-[62%] rounded-full bg-accent" />
-        <div className="absolute start-0 top-28 rounded-full bg-accent px-4 py-2 text-sm font-medium text-primary shadow-sm">
-          {t("floatingCards.speed")}
-        </div>
-        <div className="absolute end-[6%] top-10 rounded-full bg-accent px-4 py-2 text-sm font-medium text-primary shadow-sm">
-          {t("floatingCards.clarity")}
-        </div>
-        <div className="absolute start-1/2 top-[58%] -translate-x-1/2 rounded-full bg-accent px-4 py-2 text-sm font-medium text-primary shadow-sm">
-          {t("floatingCards.execution")}
-        </div>
-        <div className="absolute inset-x-[18%] bottom-0 top-14 rounded-[40px] bg-gradient-to-b from-primary/10 via-primary/5 to-transparent" />
+    <div className="w-full lg:w-1/2 lg:shrink-0">
+      <div
+        className={cn(
+          "relative mx-auto w-full overflow-hidden lg:-mt-20",
+          isRtl
+            ? "aspect-[1006/822] max-w-[500px] lg:max-w-[590px]"
+            : "aspect-square max-w-[460px] sm:max-w-[500px] lg:max-w-[540px]",
+        )}
+      >
         <Image
           src={isRtl ? "/company/hero-ar.png" : "/company/hero-en.png"}
           alt={t("visualAlt")}
           fill
-          className="object-contain object-bottom"
-          sizes="(max-width: 1024px) 100vw, 46vw"
+          className={cn(
+            "pointer-events-none select-none",
+            isRtl
+              ? "object-contain object-center"
+              : "object-cover object-right",
+          )}
+          sizes="(max-width: 1024px) 100vw, 50vw"
           priority
         />
       </div>
@@ -45,13 +46,13 @@ export async function HeroSection({ locale }: HeroSectionProps) {
   const textSlot = (
     <div
       className={cn(
-        "flex w-full flex-col gap-6 text-center lg:max-w-[686px]",
+        "flex w-full flex-col gap-5 text-center sm:gap-6 lg:w-1/2 lg:max-w-[600px]",
         isRtl
           ? "items-center lg:items-end lg:text-right"
           : "items-center lg:items-start lg:text-left",
       )}
     >
-      <h1 className="max-w-[686px] text-display-lg leading-[1.4] font-semibold text-foreground lg:text-display-2xl">
+      <h1 className="max-w-[686px] text-display-md leading-[1.35] font-semibold text-foreground sm:text-display-lg lg:text-display-2xl">
         {isRtl ? (
           <>
             <span>{t("titlePrefix")}</span>{" "}
@@ -67,13 +68,13 @@ export async function HeroSection({ locale }: HeroSectionProps) {
         )}
       </h1>
 
-      <p className="max-w-[686px] text-display-xs leading-[1.5] font-light text-foreground/80">
+      <p className="max-w-[686px] text-base leading-[1.6] font-light text-foreground/80 sm:text-display-xs">
         {t("description")}
       </p>
 
       <Button
         asChild
-        className="h-14 min-w-[118px] w-fit rounded-[10px] border border-primary bg-primary px-[18px] py-[10px] text-xl font-semibold text-white shadow-none hover:bg-primary/90 hover:text-white lg:text-[20px] [&_*]:text-white"
+        className="h-12 min-w-[104px] w-fit rounded-[10px] border border-primary bg-primary px-4 py-2 text-base font-semibold text-white shadow-none hover:bg-primary/90 hover:text-white sm:h-14 sm:min-w-[118px] sm:px-[18px] sm:py-[10px] sm:text-xl lg:text-[20px] [&_*]:text-white"
       >
         <Link href={ROUTES.register}>{t("primaryCta")}</Link>
       </Button>
@@ -81,23 +82,17 @@ export async function HeroSection({ locale }: HeroSectionProps) {
   );
 
   return (
-    <section className="pb-16 pt-8 sm:pb-20 sm:pt-10 lg:pb-24 lg:pt-14">
+    <section className="overflow-x-clip bg-card pb-12 pt-8 sm:pb-20 sm:pt-10 lg:pb-24 lg:pt-14">
       <LandingContainer>
         <div
           dir="ltr"
-          className="flex flex-col gap-10 lg:flex-row lg:items-center lg:justify-between lg:gap-12"
-        >
-          {isRtl ? (
-            <>
-              {imageSlot}
-              {textSlot}
-            </>
-          ) : (
-            <>
-              {textSlot}
-              {imageSlot}
-            </>
+          className={cn(
+            "flex flex-col gap-10 lg:items-start lg:justify-between lg:gap-8",
+            isRtl ? "lg:flex-row-reverse" : "lg:flex-row",
           )}
+        >
+          {textSlot}
+          {imageSlot}
         </div>
       </LandingContainer>
     </section>

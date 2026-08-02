@@ -1,6 +1,4 @@
 import type { Locale } from "@/i18n/locale";
-import { cn } from "@/shared/lib/utils";
-
 import { FooterBottom } from "@/modules/home/components/footer-bottom";
 import { FooterContact } from "@/modules/home/components/footer-contact";
 import { FooterLogo } from "@/modules/home/components/footer-logo";
@@ -22,10 +20,8 @@ export async function Footer({
     <footer id="contact" className="pt-16 sm:pt-20 lg:pt-24">
       <LandingContainer>
         <div
-          className={cn(
-            "grid gap-10 pb-10 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1.1fr)_minmax(0,0.9fr)] lg:gap-12",
-            isRtl ? "lg:[direction:rtl]" : "lg:[direction:ltr]",
-          )}
+          dir={isRtl ? "rtl" : "ltr"}
+          className="grid gap-10 pb-10 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1.1fr)_minmax(0,0.9fr)] lg:gap-12"
         >
           <FooterLogo locale={locale} description={settings?.description} />
           <FooterNavigation locale={locale} />

@@ -38,7 +38,10 @@ export async function FooterNavigation({
   ];
 
   return (
-    <div className="grid gap-10 sm:grid-cols-2 lg:gap-14">
+    <div
+      dir={isRtl ? "rtl" : "ltr"}
+      className="grid gap-8 sm:grid-cols-2 lg:gap-14"
+    >
       {groups.map((group) => (
         <div
           key={group.title}
@@ -47,7 +50,7 @@ export async function FooterNavigation({
             isRtl ? "items-end text-right" : "items-start text-left",
           )}
         >
-          <h3 className="text-xl font-semibold text-foreground">
+          <h3 className="text-lg font-semibold text-foreground sm:text-xl">
             {group.title}
           </h3>
 
@@ -56,7 +59,7 @@ export async function FooterNavigation({
               <Link
                 key={link.label}
                 href={link.href}
-                className="text-md font-regular text-foreground/80 transition-colors hover:text-primary"
+                className="text-sm font-regular text-foreground/80 transition-colors hover:text-primary sm:text-md"
               >
                 {link.label}
               </Link>
