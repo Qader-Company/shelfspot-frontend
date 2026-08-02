@@ -23,15 +23,17 @@ export async function Footer({
           dir={isRtl ? "rtl" : "ltr"}
           className="grid gap-10 pb-8 md:grid-cols-2 md:gap-x-8 md:gap-y-12 md:pb-10 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1.1fr)_minmax(0,0.9fr)] lg:gap-12"
         >
-          <div className="md:col-span-2 lg:col-span-1">
-            <FooterLogo locale={locale} description={settings?.description} />
-          </div>
+          <FooterLogo
+            locale={locale}
+            description={settings?.description}
+            className="md:max-lg:col-span-2"
+          />
           <FooterNavigation locale={locale} />
           <FooterContact locale={locale} settings={settings} />
         </div>
       </LandingContainer>
 
-      <FooterBottom />
+      <FooterBottom locale={locale} />
     </footer>
   );
 }

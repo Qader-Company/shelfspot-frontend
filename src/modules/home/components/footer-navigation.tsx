@@ -46,27 +46,42 @@ export async function FooterNavigation({
         <div
           key={group.title}
           className={cn(
-            "flex flex-col items-center gap-4 text-center min-[440px]:items-start min-[440px]:text-start",
-            isRtl ? "min-[440px]:items-end" : "min-[440px]:items-start",
+            "flex flex-col items-center gap-4 text-center",
+            isRtl
+              ? "min-[440px]:items-start min-[440px]:text-right"
+              : "min-[440px]:items-start min-[440px]:text-left",
           )}
         >
-          <h3 className="text-lg font-semibold text-foreground sm:text-xl">
+          <h3
+            className={cn(
+              "w-full text-lg font-semibold text-foreground sm:text-xl",
+              isRtl
+                ? "text-center min-[440px]:text-right"
+                : "text-center min-[440px]:text-left",
+            )}
+          >
             {group.title}
           </h3>
 
           <div
             className={cn(
-              "flex flex-col items-center gap-3",
+              "flex w-full flex-col items-center gap-3",
               isRtl
-                ? "min-[440px]:items-end"
-                : "min-[440px]:items-start",
+                ? "min-[440px]:items-start min-[440px]:text-right"
+                : "min-[440px]:items-start min-[440px]:text-left",
             )}
           >
             {group.links.map((link) => (
               <Link
                 key={link.label}
                 href={link.href}
-                className="text-sm font-regular text-foreground/80 transition-colors hover:text-primary sm:text-md"
+                dir={isRtl ? "rtl" : "ltr"}
+                className={cn(
+                  "block w-full text-sm font-regular text-foreground/80 transition-colors hover:text-primary sm:text-md",
+                  isRtl
+                    ? "text-center min-[440px]:text-right"
+                    : "text-center min-[440px]:text-left",
+                )}
               >
                 {link.label}
               </Link>

@@ -36,23 +36,35 @@ export async function FooterContact({
     <div
       dir={isRtl ? "rtl" : "ltr"}
       className={cn(
-        "flex flex-col items-center gap-4 text-center md:items-start md:text-start",
-        isRtl ? "md:items-end" : "md:items-start",
+        "flex flex-col items-center gap-4 text-center",
+        isRtl
+          ? "md:items-start md:text-right"
+          : "md:items-start md:text-left",
       )}
     >
-      <h3 className="text-lg font-semibold text-foreground sm:text-xl">
+      <h3
+        className={cn(
+          "w-full text-lg font-semibold text-foreground sm:text-xl",
+          isRtl ? "text-center md:text-right" : "text-center md:text-left",
+        )}
+      >
         {t("contact.title")}
       </h3>
 
-      <p className="text-sm font-regular text-foreground/80 sm:text-md">
-        {settings?.address || t("contact.location")}
+      <p
+        dir={isRtl ? "rtl" : "ltr"}
+        className={cn(
+          "w-full text-sm font-regular text-foreground/80 sm:text-md",
+          isRtl ? "text-center md:text-right" : "text-center md:text-left",
+        )}
+      >
+        {isRtl
+          ? t("contact.location")
+          : settings?.address || t("contact.location")}
       </p>
 
       <div
-        className={cn(
-          "flex w-full flex-col items-center gap-3 sm:flex-row sm:flex-wrap md:w-auto",
-          isRtl ? "md:justify-end" : "md:justify-start",
-        )}
+        className="flex w-full flex-col items-center justify-center gap-3 sm:flex-row sm:flex-wrap sm:items-start sm:justify-start"
       >
         {contacts.map((contact) => {
           const Icon = contact.icon;

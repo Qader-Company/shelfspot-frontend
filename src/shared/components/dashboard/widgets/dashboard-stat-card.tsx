@@ -41,7 +41,7 @@ export function DashboardStatCard({
   const changePercentage = item.changePercentage ?? 0;
 
   return (
-    <article className="flex min-h-24 items-center gap-4 rounded-lg border border-border bg-card p-5 shadow-lg shadow-foreground/5">
+    <article className="flex min-h-24 items-center gap-3 rounded-lg border border-border bg-card p-4 shadow-lg shadow-foreground/5 sm:gap-4 sm:p-5">
       <span
         className={cn(
           "flex size-12 shrink-0 items-center justify-center rounded-full",

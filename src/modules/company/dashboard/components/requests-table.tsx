@@ -31,8 +31,8 @@ export function RequestsTable({
 
   return (
     <section className="overflow-hidden rounded-lg border border-border bg-card shadow-sm">
-      <div className="border-b border-border px-7 py-5">
-        <h2 className="text-3xl font-bold leading-none text-foreground">
+      <div className="border-b border-border px-4 py-4 sm:px-7 sm:py-5">
+        <h2 className="text-xl leading-none font-bold text-foreground sm:text-3xl">
           {labels.title}
         </h2>
       </div>
