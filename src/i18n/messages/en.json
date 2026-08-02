@@ -16,7 +16,9 @@
       },
       "actions": {
         "login": "Sign In",
-        "localeSwitch": "AR"
+        "localeSwitch": "AR",
+        "menu": "Open navigation menu",
+        "closeMenu": "Close navigation menu"
       }
     },
     "hero": {

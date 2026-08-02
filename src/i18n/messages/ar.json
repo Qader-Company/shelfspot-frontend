@@ -16,7 +16,9 @@
       },
       "actions": {
         "login": "تسجيل جديد",
-        "localeSwitch": "EN"
+        "localeSwitch": "EN",
+        "menu": "فتح قائمة التنقل",
+        "closeMenu": "إغلاق قائمة التنقل"
       }
     },
     "hero": {

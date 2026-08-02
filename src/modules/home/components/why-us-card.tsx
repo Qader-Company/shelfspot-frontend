@@ -31,11 +31,11 @@ export function WhyUsCard({
         <Image src={iconSrc} alt={iconAlt} width={24} height={24} />
       </div>
 
-      <h3 className="text-xl font-semibold text-foreground sm:text-display-sm">
+      <h3 className="text-[clamp(1.125rem,2vw,1.75rem)] leading-[1.4] font-semibold text-foreground">
         {title}
       </h3>
 
-      <p className="mt-3 text-sm font-regular text-foreground/80 sm:mt-4 sm:text-base">
+      <p className="mt-3 text-[clamp(0.875rem,1.2vw,1rem)] leading-[1.6] font-regular text-foreground/80 sm:mt-4">
         {description}
       </p>
     </article>

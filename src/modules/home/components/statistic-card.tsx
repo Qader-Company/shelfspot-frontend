@@ -14,13 +14,13 @@ export function StatisticCard({
 
   return (
     <article className="flex flex-col items-center gap-3 text-center">
-      <p className="text-display-md leading-none font-bold text-foreground sm:text-display-lg">
+      <p className="text-[clamp(2rem,3.4vw,3rem)] leading-none font-bold text-foreground">
         {hasPlusPrefix ? <span className="text-primary">+</span> : null}
         <span>{digits}</span>
         {hasPercentSuffix ? <span className="text-primary">%</span> : null}
       </p>
 
-      <p className="max-w-[220px] text-sm font-medium text-foreground sm:text-md">
+      <p className="max-w-[220px] text-[clamp(0.875rem,1.2vw,1rem)] font-medium text-foreground">
         {label}
       </p>
     </article>
