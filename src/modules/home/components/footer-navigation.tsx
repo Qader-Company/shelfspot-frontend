@@ -40,21 +40,28 @@ export async function FooterNavigation({
   return (
     <div
       dir={isRtl ? "rtl" : "ltr"}
-      className="grid gap-8 sm:grid-cols-2 lg:gap-14"
+      className="grid gap-8 min-[440px]:grid-cols-2 lg:gap-14"
     >
       {groups.map((group) => (
         <div
           key={group.title}
           className={cn(
-            "flex flex-col gap-4",
-            isRtl ? "items-end text-right" : "items-start text-left",
+            "flex flex-col items-center gap-4 text-center min-[440px]:items-start min-[440px]:text-start",
+            isRtl ? "min-[440px]:items-end" : "min-[440px]:items-start",
           )}
         >
           <h3 className="text-lg font-semibold text-foreground sm:text-xl">
             {group.title}
           </h3>
 
-          <div className="flex flex-col gap-3">
+          <div
+            className={cn(
+              "flex flex-col items-center gap-3",
+              isRtl
+                ? "min-[440px]:items-end"
+                : "min-[440px]:items-start",
+            )}
+          >
             {group.links.map((link) => (
               <Link
                 key={link.label}

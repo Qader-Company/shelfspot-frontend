@@ -36,8 +36,8 @@ export async function FooterContact({
     <div
       dir={isRtl ? "rtl" : "ltr"}
       className={cn(
-        "flex flex-col gap-4",
-        isRtl ? "items-end text-right" : "items-start text-left",
+        "flex flex-col items-center gap-4 text-center md:items-start md:text-start",
+        isRtl ? "md:items-end" : "md:items-start",
       )}
     >
       <h3 className="text-lg font-semibold text-foreground sm:text-xl">
@@ -48,7 +48,12 @@ export async function FooterContact({
         {settings?.address || t("contact.location")}
       </p>
 
-      <div className={cn("flex flex-wrap gap-3", isRtl ? "justify-end" : "justify-start")}>
+      <div
+        className={cn(
+          "flex w-full flex-col items-center gap-3 sm:flex-row sm:flex-wrap md:w-auto",
+          isRtl ? "md:justify-end" : "md:justify-start",
+        )}
+      >
         {contacts.map((contact) => {
           const Icon = contact.icon;
 
@@ -58,14 +63,16 @@ export async function FooterContact({
               href={contact.href}
               dir={isRtl ? "rtl" : "ltr"}
               className={cn(
-                "inline-flex h-10 items-center gap-2 rounded-[10px] border px-4 text-sm font-medium transition-colors",
+                "inline-flex h-10 w-full max-w-[280px] items-center justify-center gap-2 rounded-[10px] border px-4 text-sm font-medium transition-colors sm:w-auto sm:max-w-full",
                 contact.variant === "primary"
                   ? "border-primary bg-primary text-white hover:bg-primary/90"
                   : "border-border bg-card text-foreground hover:border-primary/50",
               )}
             >
               <Icon className="size-4 shrink-0" />
-              <span dir="ltr">{contact.label}</span>
+              <span dir="ltr" className="min-w-0 truncate">
+                {contact.label}
+              </span>
             </a>
           );
         })}

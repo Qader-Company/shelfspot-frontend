@@ -22,12 +22,14 @@ export async function FooterLogo({
     <div
       dir={isRtl ? "rtl" : "ltr"}
       className={cn(
-        "flex max-w-[320px] flex-col gap-6",
-        isRtl ? "items-end text-right" : "items-start text-left",
+        "mx-auto flex w-full max-w-[460px] flex-col items-center gap-4 text-center md:gap-6 lg:mx-0 lg:max-w-[320px]",
+        isRtl
+          ? "lg:items-end lg:text-right"
+          : "lg:items-start lg:text-left",
       )}
     >
       <Link href={ROUTES.home} aria-label={t("brandLabel")}>
-        <Logo className="h-[52px] w-auto" width={182} height={68} />
+        <Logo className="h-11 w-auto sm:h-[52px]" width={182} height={68} />
       </Link>
 
       <p className="text-sm leading-[1.7] font-regular text-foreground/80 sm:text-md">
