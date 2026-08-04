@@ -15,7 +15,7 @@ export function Logo({
 }: LogoProps) {
   return (
     <Image
-      src="/shelfspot-logo.png"
+      src="/shelfspot-logo.svg"
       alt="ShelfSpot"
       width={width}
       height={height}
