@@ -17,26 +17,21 @@ export async function HeroSection({ locale }: HeroSectionProps) {
   const isRtl = locale === "ar";
 
   const imageSlot = (
-    <div className="w-full lg:w-1/2 lg:shrink-0">
-      <div
-        className={cn(
-          "relative mx-auto w-full overflow-hidden lg:-mt-20",
-          isRtl
-            ? "aspect-[1006/822] max-w-[500px] lg:max-w-[590px]"
-            : "aspect-square max-w-[460px] sm:max-w-[500px] lg:max-w-[540px]",
-        )}
-      >
+    <div
+      className={cn(
+        "flex w-full items-center justify-center lg:-mt-28 lg:min-w-0 lg:flex-[1.08] xl:-mt-36",
+        isRtl
+          ? "lg:-translate-x-12 xl:-translate-x-32"
+          : "lg:translate-x-12 xl:translate-x-32",
+      )}
+    >
+      <div className="relative mx-auto aspect-square w-full max-w-[400px] overflow-visible sm:max-w-[500px] lg:max-w-[600px] xl:max-w-[640px]">
         <Image
           src={isRtl ? "/company/hero-ar.png" : "/company/hero-en.png"}
           alt={t("visualAlt")}
           fill
-          className={cn(
-            "pointer-events-none select-none",
-            isRtl
-              ? "object-contain object-center"
-              : "object-cover object-right",
-          )}
-          sizes="(max-width: 1024px) 100vw, 50vw"
+          className="pointer-events-none object-contain object-center select-none lg:scale-[1.16] xl:scale-[1.2]"
+          sizes="(max-width: 640px) calc(100vw - 32px), (max-width: 1279px) 500px, 640px"
           priority
         />
       </div>
@@ -46,7 +41,7 @@ export async function HeroSection({ locale }: HeroSectionProps) {
   const textSlot = (
     <div
       className={cn(
-        "flex w-full flex-col gap-5 text-center sm:gap-6 lg:w-1/2 lg:max-w-[600px]",
+        "flex w-full flex-col gap-5 text-center sm:gap-6 lg:min-w-0 lg:flex-[1.08] lg:max-w-[620px]",
         isRtl
           ? "items-center lg:items-end lg:text-right"
           : "items-center lg:items-start lg:text-left",
@@ -82,12 +77,12 @@ export async function HeroSection({ locale }: HeroSectionProps) {
   );
 
   return (
-    <section className="overflow-x-clip bg-card pb-12 pt-8 sm:pb-20 sm:pt-10 lg:pb-24 lg:pt-14">
+    <section className="overflow-x-clip bg-card pb-12 pt-10 sm:pb-16 sm:pt-12 lg:pb-14 lg:pt-10 xl:pb-12 xl:pt-8">
       <LandingContainer>
         <div
           dir="ltr"
           className={cn(
-            "flex flex-col gap-10 lg:items-start lg:justify-between lg:gap-8",
+            "flex flex-col gap-8 sm:gap-10 lg:items-start lg:justify-between lg:gap-8 xl:gap-10",
             isRtl ? "lg:flex-row-reverse" : "lg:flex-row",
           )}
         >

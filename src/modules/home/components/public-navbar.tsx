@@ -28,11 +28,15 @@ export async function PublicNavbar({ locale }: PublicNavbarProps) {
 
   const logoSlot = (
     <div className="flex shrink-0 items-center">
-      <Link href={ROUTES.home} aria-label={t("brandLabel")} className="shrink-0">
+      <Link
+        href={ROUTES.home}
+        aria-label={t("brandLabel")}
+        className="flex shrink-0 items-center"
+      >
         <Logo
-          className="h-9 w-24 sm:h-[58px] sm:w-[155px] lg:h-[68px] lg:w-[182px]"
-          width={182}
-          height={68}
+          className="h-auto w-28 sm:w-32 lg:w-[146px] xl:w-[176px]"
+          width={176}
+          height={65}
         />
       </Link>
     </div>
@@ -45,19 +49,19 @@ export async function PublicNavbar({ locale }: PublicNavbarProps) {
   const ctaButton = (
     <Button
       asChild
-      className="relative z-20 hidden h-10 w-auto min-w-[82px] shrink-0 whitespace-nowrap rounded-lg border border-primary bg-primary px-2.5 py-2 text-xs font-semibold text-white shadow-none hover:bg-primary/90 hover:text-white lg:inline-flex lg:h-14 lg:w-[118px] lg:px-[18px] lg:py-[10px] lg:text-[20px] [&_*]:text-white"
+      className="relative z-20 hidden h-10 w-auto min-w-[82px] shrink-0 whitespace-nowrap rounded-lg border border-primary bg-primary px-2.5 py-2 text-xs font-semibold text-white shadow-none hover:bg-primary/90 hover:text-white xl:inline-flex xl:h-14 xl:w-[118px] xl:px-[18px] xl:py-[10px] xl:text-[20px] [&_*]:text-white"
     >
       <Link href={ROUTES.login}>{t("actions.login")}</Link>
     </Button>
   );
 
   const actionSlot = isRtl ? (
-    <div className="flex min-w-0 shrink-0 items-center gap-1.5 sm:gap-3">
+    <div className="hidden min-w-0 shrink-0 items-center gap-3 xl:flex">
       {ctaButton}
       {localeSwitcher}
     </div>
   ) : (
-    <div className="flex min-w-0 shrink-0 items-center gap-1.5 sm:gap-3">
+    <div className="hidden min-w-0 shrink-0 items-center gap-3 xl:flex">
       {localeSwitcher}
       {ctaButton}
     </div>
@@ -79,16 +83,32 @@ export async function PublicNavbar({ locale }: PublicNavbarProps) {
     />
   );
 
+  const mobileControls = (
+    <div className="flex shrink-0 items-center gap-2 sm:gap-3 xl:hidden">
+      {isRtl ? (
+        <>
+          {mobileNavigation}
+          {localeSwitcher}
+        </>
+      ) : (
+        <>
+          {localeSwitcher}
+          {mobileNavigation}
+        </>
+      )}
+    </div>
+  );
+
   return (
-    <header className="relative z-20 overflow-x-clip bg-card pt-3 sm:pt-8 lg:pt-16">
+    <header className="relative z-20 overflow-x-clip bg-card pt-3 sm:pt-8 lg:pt-12 xl:pt-16">
       <LandingContainer>
         <div
           dir="ltr"
-          className="flex h-11 min-w-0 items-center justify-between gap-2 sm:h-[58px] sm:gap-4 lg:h-[68px] lg:gap-6"
+          className="flex h-11 min-w-0 items-center justify-between gap-2 sm:h-[52px] sm:gap-4 lg:h-14 lg:gap-6 xl:h-[68px]"
         >
           {isRtl ? (
             <>
-              {mobileNavigation}
+              {mobileControls}
               {actionSlot}
             </>
           ) : (
@@ -97,7 +117,7 @@ export async function PublicNavbar({ locale }: PublicNavbarProps) {
 
           <nav
             dir={isRtl ? "rtl" : "ltr"}
-            className="hidden flex-1 items-center justify-center gap-8 lg:flex"
+            className="hidden flex-1 items-center justify-center gap-8 xl:flex"
           >
             {links.map((link) => (
               <Link
@@ -121,7 +141,7 @@ export async function PublicNavbar({ locale }: PublicNavbarProps) {
           ) : (
             <>
               {actionSlot}
-              {mobileNavigation}
+              {mobileControls}
             </>
           )}
         </div>

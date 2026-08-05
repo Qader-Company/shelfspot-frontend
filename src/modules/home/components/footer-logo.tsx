@@ -33,8 +33,16 @@ export async function FooterLogo({
       )}
       {...props}
     >
-      <Link href={ROUTES.home} aria-label={t("brandLabel")}>
-        <Logo className="h-11 w-auto sm:h-[52px]" width={182} height={68} />
+      <Link
+        href={ROUTES.home}
+        aria-label={t("brandLabel")}
+        className="flex items-center"
+      >
+        <Logo
+          className="h-auto w-28 sm:w-32 lg:w-[146px]"
+          width={146}
+          height={54}
+        />
       </Link>
 
       <p
