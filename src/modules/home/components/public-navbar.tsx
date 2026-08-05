@@ -101,7 +101,7 @@ export async function PublicNavbar({ locale }: PublicNavbarProps) {
 
   return (
     <header className="relative z-20 overflow-x-clip bg-card pt-3 sm:pt-8 lg:pt-12 xl:pt-16">
-      <LandingContainer>
+      <LandingContainer className="xl:max-w-[1184px] xl:px-0">
         <div
           dir="ltr"
           className="flex h-11 min-w-0 items-center justify-between gap-2 sm:h-[52px] sm:gap-4 lg:h-14 lg:gap-6 xl:h-[68px]"

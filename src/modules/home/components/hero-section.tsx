@@ -4,7 +4,6 @@ import Image from "next/image";
 import { ROUTES } from "@/config/routes";
 import type { Locale } from "@/i18n/locale";
 import { Link } from "@/i18n/navigation";
-import { LandingContainer } from "@/modules/home/components/landing-container";
 import { cn } from "@/shared/lib/utils";
 import { Button } from "@/shared/ui/button";
 
@@ -19,19 +18,19 @@ export async function HeroSection({ locale }: HeroSectionProps) {
   const imageSlot = (
     <div
       className={cn(
-        "flex w-full items-center justify-center lg:-mt-28 lg:min-w-0 lg:flex-[1.08] xl:-mt-36",
+        "flex w-full items-center justify-center lg:-mt-28 lg:min-w-0 lg:flex-[1.08] xl:mt-0 xl:w-[min(48.681vw,701px)] xl:flex-none xl:translate-x-0",
         isRtl
-          ? "lg:translate-x-4 xl:translate-x-16"
-          : "lg:translate-x-12 xl:translate-x-32",
+          ? "lg:translate-x-4 xl:-mr-2"
+          : "lg:translate-x-12 xl:-ml-2",
       )}
     >
-      <div className="relative mx-auto aspect-square w-full max-w-[400px] overflow-visible sm:max-w-[500px] lg:max-w-[600px] xl:max-w-[640px]">
+      <div className="relative mx-auto aspect-square w-full max-w-[400px] overflow-visible sm:max-w-[500px] lg:max-w-[600px] xl:aspect-[701/733] xl:max-w-[701px]">
         <Image
           src={isRtl ? "/company/hero-ar.png" : "/company/hero-en.png"}
           alt={t("visualAlt")}
           fill
-          className="pointer-events-none object-contain object-center select-none lg:scale-[1.16] xl:scale-[1.2]"
-          sizes="(max-width: 640px) calc(100vw - 32px), (max-width: 1279px) 500px, 640px"
+          className="pointer-events-none object-contain object-center select-none lg:scale-[1.16] xl:-translate-y-[18%] xl:scale-[1.2]"
+          sizes="(max-width: 640px) calc(100vw - 32px), (max-width: 1279px) 500px, 701px"
           priority
         />
       </div>
@@ -41,13 +40,13 @@ export async function HeroSection({ locale }: HeroSectionProps) {
   const textSlot = (
     <div
       className={cn(
-        "flex w-full flex-col gap-5 text-center sm:gap-6 lg:min-w-0 lg:flex-[0.92] lg:max-w-[580px] lg:pt-8 xl:pt-12",
+        "flex w-full flex-col gap-5 text-center sm:gap-6 lg:min-w-0 lg:flex-[0.92] lg:max-w-[580px] lg:pt-8 xl:w-[min(42.986vw,619px)] xl:max-w-[619px] xl:flex-none xl:gap-6 xl:pt-[clamp(80px,6.806vw,98px)]",
         isRtl
           ? "items-center lg:items-end lg:text-right"
           : "items-center lg:items-start lg:text-left",
       )}
     >
-      <h1 className="max-w-[580px] text-[clamp(2rem,3vw,2.75rem)] leading-[1.3] font-semibold text-foreground">
+      <h1 className="max-w-[619px] text-[clamp(2rem,3vw,2.75rem)] leading-[1.3] font-semibold text-foreground xl:text-[clamp(44px,4.444vw,64px)] xl:leading-[1.4]">
         {isRtl ? (
           <>
             <span>{t("titlePrefix")}</span>{" "}
@@ -63,13 +62,13 @@ export async function HeroSection({ locale }: HeroSectionProps) {
         )}
       </h1>
 
-      <p className="max-w-[560px] text-[clamp(0.9375rem,1.05vw,1rem)] leading-[1.6] font-light text-foreground/80">
+      <p className="max-w-[619px] text-[clamp(0.9375rem,1.05vw,1rem)] leading-[1.6] font-light text-foreground/80 xl:text-[clamp(16px,1.667vw,24px)] xl:leading-[1.5]">
         {t("description")}
       </p>
 
       <Button
         asChild
-        className="h-12 min-w-[104px] w-fit rounded-[10px] border border-primary bg-primary px-4 py-2 text-[clamp(0.95rem,1.1vw,1rem)] font-semibold text-white shadow-none hover:bg-primary/90 hover:text-white sm:min-w-[118px] sm:px-[18px] sm:py-[10px] [&_*]:text-white"
+        className="h-12 min-w-[104px] w-fit rounded-[10px] border border-primary bg-primary px-4 py-2 text-[clamp(0.95rem,1.1vw,1rem)] font-semibold text-white shadow-none hover:bg-primary/90 hover:text-white sm:min-w-[118px] sm:px-[18px] sm:py-[10px] xl:h-[clamp(52px,4.167vw,60px)] xl:w-[clamp(150px,12.431vw,179px)] xl:rounded-lg xl:px-[18px] xl:text-[clamp(16px,1.667vw,24px)] xl:leading-[1.5] [&_*]:text-white"
       >
         <Link href={ROUTES.register}>{t("primaryCta")}</Link>
       </Button>
@@ -77,8 +76,8 @@ export async function HeroSection({ locale }: HeroSectionProps) {
   );
 
   return (
-    <section className="overflow-x-clip bg-card pb-12 pt-10 sm:pb-16 sm:pt-12 lg:pb-14 lg:pt-10 xl:pb-12 xl:pt-8">
-      <LandingContainer>
+    <section className="overflow-x-clip bg-card pb-12 pt-10 sm:pb-16 sm:pt-12 lg:pb-14 lg:pt-10 xl:pb-0 xl:pt-[clamp(24px,2.153vw,31px)]">
+      <div className="mx-auto w-full max-w-[1440px] px-4 sm:px-5 lg:px-6 xl:pe-0 xl:ps-[clamp(112px,8.889vw,128px)]">
         <div
           dir="ltr"
           className={cn(
@@ -89,7 +88,7 @@ export async function HeroSection({ locale }: HeroSectionProps) {
           {textSlot}
           {imageSlot}
         </div>
-      </LandingContainer>
+      </div>
     </section>
   );
 }
