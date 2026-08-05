@@ -49,19 +49,19 @@ export async function PublicNavbar({ locale }: PublicNavbarProps) {
   const ctaButton = (
     <Button
       asChild
-      className="relative z-20 hidden h-10 w-auto min-w-[82px] shrink-0 whitespace-nowrap rounded-lg border border-primary bg-primary px-2.5 py-2 text-xs font-semibold text-white shadow-none hover:bg-primary/90 hover:text-white xl:inline-flex xl:h-14 xl:w-[118px] xl:px-[18px] xl:py-[10px] xl:text-[20px] [&_*]:text-white"
+      className="relative z-20 hidden h-10 w-[82px] min-w-[82px] shrink-0 whitespace-nowrap rounded-lg border border-primary bg-primary px-2.5 py-2 text-xs font-semibold text-white shadow-none hover:bg-primary/90 hover:text-white min-[824px]:inline-flex min-[1200px]:h-12 min-[1200px]:w-[104px] min-[1200px]:text-base xl:h-14 xl:w-[118px] xl:px-[18px] xl:py-[10px] xl:text-[20px] [&_*]:text-white"
     >
       <Link href={ROUTES.login}>{t("actions.login")}</Link>
     </Button>
   );
 
   const actionSlot = isRtl ? (
-    <div className="hidden min-w-0 shrink-0 items-center gap-3 xl:flex">
+    <div className="hidden min-w-0 shrink-0 items-center gap-2 min-[824px]:flex min-[1200px]:gap-3">
       {ctaButton}
       {localeSwitcher}
     </div>
   ) : (
-    <div className="hidden min-w-0 shrink-0 items-center gap-3 xl:flex">
+    <div className="hidden min-w-0 shrink-0 items-center gap-2 min-[824px]:flex min-[1200px]:gap-3">
       {localeSwitcher}
       {ctaButton}
     </div>
@@ -84,7 +84,7 @@ export async function PublicNavbar({ locale }: PublicNavbarProps) {
   );
 
   const mobileControls = (
-    <div className="flex shrink-0 items-center gap-2 sm:gap-3 xl:hidden">
+    <div className="flex shrink-0 items-center gap-2 sm:gap-3 min-[824px]:hidden">
       {isRtl ? (
         <>
           {mobileNavigation}
@@ -117,15 +117,15 @@ export async function PublicNavbar({ locale }: PublicNavbarProps) {
 
           <nav
             dir={isRtl ? "rtl" : "ltr"}
-            className="hidden flex-1 items-center justify-center gap-8 xl:flex"
+            className="hidden flex-1 items-center justify-center gap-3 min-[824px]:flex min-[1000px]:gap-4 min-[1200px]:gap-5 xl:gap-8"
           >
             {links.map((link) => (
               <Link
                 key={link.href}
                 href={link.href.startsWith("#") ? `${ROUTES.home}${link.href}` : link.href}
                 className={cn(
-                  "text-xl font-medium transition-colors hover:text-primary",
-                  "lg:text-[20px]",
+                  "text-sm font-medium transition-colors hover:text-primary min-[1000px]:text-base min-[1200px]:text-xl",
+                  "xl:text-[20px]",
                   "isActive" in link && link.isActive
                     ? "text-primary"
                     : "text-foreground",

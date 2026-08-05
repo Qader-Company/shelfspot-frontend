@@ -39,7 +39,7 @@ export function MobileNavigation({
   }, [isOpen]);
 
   return (
-    <div className="shrink-0 xl:hidden">
+    <div className="shrink-0 min-[824px]:hidden">
       <button
         type="button"
         aria-label={menuLabel}
