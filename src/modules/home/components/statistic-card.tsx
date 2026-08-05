@@ -38,7 +38,12 @@ export function StatisticCard({
     let animationFrame = 0;
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (!entry.isIntersecting) return;
+        cancelAnimationFrame(animationFrame);
+
+        if (!entry.isIntersecting) {
+          setDisplayValue(0);
+          return;
+        }
 
         const startedAt = performance.now();
         const duration = 1500;
@@ -54,7 +59,6 @@ export function StatisticCard({
         };
 
         animationFrame = requestAnimationFrame(update);
-        observer.unobserve(entry.target);
       },
       { threshold: 0.45 },
     );

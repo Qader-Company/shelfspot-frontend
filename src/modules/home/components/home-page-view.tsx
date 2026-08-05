@@ -17,7 +17,9 @@ export function HomePageView({ locale }: HomePageViewProps) {
   return (
     <LandingPageShell>
       <PublicNavbar locale={locale} />
-      <HeroSection locale={locale} />
+      <ScrollReveal>
+        <HeroSection locale={locale} />
+      </ScrollReveal>
       <ScrollReveal>
         <AboutSection locale={locale} />
       </ScrollReveal>
