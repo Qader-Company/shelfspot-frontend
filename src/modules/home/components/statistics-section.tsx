@@ -70,12 +70,17 @@ export async function StatisticsSection({
       <div className="mt-10 bg-accent py-12 sm:py-14 lg:mt-12 lg:py-16">
         <LandingContainer>
           <div className="grid gap-10 text-center sm:grid-cols-2 lg:grid-cols-4">
-            {statistics.map((statistic) => (
-              <StatisticCard
+            {statistics.map((statistic, index) => (
+              <div
                 key={statistic.label}
-                value={statistic.value}
-                label={statistic.label}
-              />
+                className="scroll-reveal-card"
+                style={{ transitionDelay: `${120 + index * 170}ms` }}
+              >
+                <StatisticCard
+                  value={statistic.value}
+                  label={statistic.label}
+                />
+              </div>
             ))}
           </div>
         </LandingContainer>

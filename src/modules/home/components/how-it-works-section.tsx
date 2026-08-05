@@ -7,7 +7,7 @@ import { Button } from "@/shared/ui/button";
 import { cn } from "@/shared/lib/utils";
 
 import { LandingContainer } from "@/modules/home/components/landing-container";
-import { TimelineStepCard } from "@/modules/home/components/timeline-step-card";
+import { InteractiveTimeline } from "@/modules/home/components/interactive-timeline";
 
 interface HowItWorksSectionProps {
   locale: Locale;
@@ -78,61 +78,7 @@ export async function HowItWorksSection({
           {!isRtl ? <div /> : null}
         </div>
 
-        <div className="relative mt-12">
-          <div className="absolute inset-x-1/2 hidden h-full w-px -translate-x-1/2 bg-accent md:block" />
-
-          <div className="flex flex-col gap-6 md:gap-2">
-            {steps.map((step, index) => {
-              const isLeft = step.side === "left";
-
-              return (
-                <div
-                  key={step.id}
-                  dir="ltr"
-                  className="grid items-center gap-5 md:grid-cols-[1fr_auto_1fr] md:gap-10"
-                >
-                  <div className={cn("hidden md:block", isLeft ? "" : "invisible")}>
-                    {isLeft ? (
-                      <TimelineStepCard
-                        title={step.title}
-                        description={step.description}
-                      />
-                    ) : null}
-                  </div>
-
-                  <div className="relative z-10 flex justify-center">
-                    <div
-                      className={cn(
-                        "flex size-8 items-center justify-center rounded-full border-2 border-primary text-base font-medium",
-                        index === 0
-                          ? "bg-primary text-white"
-                          : "bg-card text-primary",
-                      )}
-                    >
-                      {index + 1}
-                    </div>
-                  </div>
-
-                  <div className={cn("hidden md:block", isLeft ? "invisible" : "")}>
-                    {!isLeft ? (
-                      <TimelineStepCard
-                        title={step.title}
-                        description={step.description}
-                      />
-                    ) : null}
-                  </div>
-
-                  <div className="md:hidden">
-                    <TimelineStepCard
-                      title={step.title}
-                      description={step.description}
-                    />
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
+        <InteractiveTimeline steps={steps} />
 
         <div className="mt-8 flex flex-col items-center gap-3 text-center lg:mt-10">
           <p className="text-base font-regular text-foreground sm:text-lg">

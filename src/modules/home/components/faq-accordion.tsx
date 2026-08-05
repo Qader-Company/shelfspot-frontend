@@ -1,7 +1,7 @@
 "use client";
 
 import { ChevronDown } from "lucide-react";
-import { useState } from "react";
+import { useState, type CSSProperties } from "react";
 
 interface FaqItem {
   question: string;
@@ -25,7 +25,8 @@ export function FaqAccordion({ items }: FaqAccordionProps) {
         return (
           <article
             key={item.question}
-            className={`overflow-hidden rounded-2xl border bg-background shadow-sm transition-[border-color,box-shadow,transform] duration-300 ${
+            style={{ "--faq-delay": `${index * 90}ms` } as CSSProperties}
+            className={`faq-item-reveal overflow-hidden rounded-2xl border bg-background shadow-sm transition-[border-color,box-shadow,transform] duration-300 ${
               isOpen
                 ? "border-primary/40 shadow-md"
                 : "border-border/70 hover:-translate-y-0.5 hover:border-primary/25"
@@ -55,7 +56,7 @@ export function FaqAccordion({ items }: FaqAccordionProps) {
               }`}
             >
               <div className="min-h-0 overflow-hidden">
-                <p className="mx-5 border-t border-border/60 pb-5 pt-4 text-sm leading-7 text-foreground/70 sm:mx-6 sm:pb-6 sm:text-base">
+                <p className={`mx-5 border-t border-border/60 pb-5 pt-4 text-sm leading-7 text-foreground/70 transition-[transform,filter] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] sm:mx-6 sm:pb-6 sm:text-base ${isOpen ? "translate-y-0 blur-none" : "-translate-y-2 blur-[2px]"}`}>
                   {item.answer}
                 </p>
               </div>

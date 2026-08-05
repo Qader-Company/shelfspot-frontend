@@ -55,7 +55,11 @@ export async function PublicContentPage({ locale, page }: PublicContentPageProps
         {page === "privacy" || page === "terms" ? (
           <div className="mx-auto grid max-w-4xl gap-5">
             {sectionKeys[page].map((key, index) => (
-              <ScrollReveal key={key} delay={(index % 2) * 80}>
+              <ScrollReveal
+                key={key}
+                delay={index * 90}
+                variant={index % 2 === 0 ? "left" : "right"}
+              >
                 <article className="rounded-2xl border border-border/70 bg-background p-6 shadow-sm transition-[transform,box-shadow,border-color] duration-300 hover:-translate-y-1 hover:border-primary/25 hover:shadow-md sm:p-8">
                   <div className="flex items-start gap-4">
                     <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-sm font-bold text-primary">{index + 1}</span>
@@ -94,11 +98,13 @@ export async function PublicContentPage({ locale, page }: PublicContentPageProps
           </div>
         ) : null}
       </LandingContainer>
-      <Footer
-        locale={locale}
-        settings={settings}
-        loadSettings={page === "contact"}
-      />
+      <ScrollReveal>
+        <Footer
+          locale={locale}
+          settings={settings}
+          loadSettings={page === "contact"}
+        />
+      </ScrollReveal>
     </LandingPageShell>
   );
 }

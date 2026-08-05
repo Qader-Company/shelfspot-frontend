@@ -8,9 +8,15 @@ interface ScrollRevealProps {
   children: ReactNode;
   className?: string;
   delay?: number;
+  variant?: "up" | "left" | "right" | "scale";
 }
 
-export function ScrollReveal({ children, className, delay = 0 }: ScrollRevealProps) {
+export function ScrollReveal({
+  children,
+  className,
+  delay = 0,
+  variant = "up",
+}: ScrollRevealProps) {
   const elementRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
 
@@ -34,7 +40,12 @@ export function ScrollReveal({ children, className, delay = 0 }: ScrollRevealPro
   return (
     <div
       ref={elementRef}
-      className={cn("scroll-reveal", isVisible && "scroll-reveal-visible", className)}
+      className={cn(
+        "scroll-reveal",
+        `scroll-reveal-${variant}`,
+        isVisible && "scroll-reveal-visible",
+        className,
+      )}
       style={{ transitionDelay: isVisible ? `${delay}ms` : "0ms" }}
     >
       {children}

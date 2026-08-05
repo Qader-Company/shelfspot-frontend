@@ -27,8 +27,14 @@ export function WhyUsCard({
         isRtl ? "items-end text-right" : "items-start text-left",
       )}
     >
-      <div className="mb-6 inline-flex size-11 items-center justify-center rounded-full bg-accent sm:mb-8 sm:size-12">
-        <Image src={iconSrc} alt={iconAlt} width={24} height={24} />
+      <div className="mb-6 inline-flex size-14 items-center justify-center rounded-full bg-accent sm:mb-7 sm:size-16">
+        <Image
+          src={iconSrc}
+          alt={iconAlt}
+          width={40}
+          height={40}
+          className="size-8 object-contain sm:size-10"
+        />
       </div>
 
       <h3 className="text-[clamp(1.125rem,2vw,1.75rem)] leading-[1.4] font-semibold text-foreground">

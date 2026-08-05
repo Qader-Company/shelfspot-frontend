@@ -126,28 +126,38 @@ export async function WhyUsSection({
 
           <div dir="ltr" className="grid w-full gap-6 md:grid-cols-2">
             <div className="flex flex-col gap-6">
-              {leftColumnItems.map((item) => (
-                <WhyUsCard
+              {leftColumnItems.map((item, index) => (
+                <div
                   key={item.title}
-                  locale={locale}
-                  iconSrc={item.iconSrc}
-                  iconAlt={item.iconAlt}
-                  title={item.title}
-                  description={item.description}
-                />
+                  className="scroll-reveal-card why-us-card-reveal"
+                  style={{ transitionDelay: `${100 + index * 360}ms` }}
+                >
+                  <WhyUsCard
+                    locale={locale}
+                    iconSrc={item.iconSrc}
+                    iconAlt={item.iconAlt}
+                    title={item.title}
+                    description={item.description}
+                  />
+                </div>
               ))}
             </div>
 
             <div className="flex flex-col gap-6">
-              {rightColumnItems.map((item) => (
-                <WhyUsCard
+              {rightColumnItems.map((item, index) => (
+                <div
                   key={item.title}
-                  locale={locale}
-                  iconSrc={item.iconSrc}
-                  iconAlt={item.iconAlt}
-                  title={item.title}
-                  description={item.description}
-                />
+                  className="scroll-reveal-card why-us-card-reveal"
+                  style={{ transitionDelay: `${280 + index * 360}ms` }}
+                >
+                  <WhyUsCard
+                    locale={locale}
+                    iconSrc={item.iconSrc}
+                    iconAlt={item.iconAlt}
+                    title={item.title}
+                    description={item.description}
+                  />
+                </div>
               ))}
             </div>
           </div>
