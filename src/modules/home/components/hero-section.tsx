@@ -21,7 +21,7 @@ export async function HeroSection({ locale }: HeroSectionProps) {
         "flex w-full items-center justify-center lg:-mt-28 lg:min-w-0 lg:flex-[1.08] xl:mt-0 xl:w-[min(48.681vw,701px)] xl:flex-none",
         isRtl
           ? "lg:translate-x-12 xl:-mr-2 xl:translate-x-6"
-          : "lg:translate-x-16 xl:-ml-2 xl:translate-x-8",
+          : "lg:translate-x-20 xl:-ml-2 xl:translate-x-64",
       )}
     >
       <div className="relative mx-auto aspect-square w-full max-w-[400px] overflow-visible sm:max-w-[500px] lg:max-w-[600px] xl:aspect-[701/733] xl:max-w-[701px]">
