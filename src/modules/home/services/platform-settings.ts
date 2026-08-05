@@ -1,6 +1,7 @@
 import "server-only";
 
 import { cookies } from "next/headers";
+import { cache } from "react";
 
 import { createServerApiClient } from "@/shared/lib/api/server";
 import { ACCESS_TOKEN_COOKIE } from "@/shared/lib/auth/session-cookies";
@@ -12,7 +13,7 @@ export interface PublicPlatformSettings {
   description: string | null;
 }
 
-export async function getPublicPlatformSettings(): Promise<PublicPlatformSettings | null> {
+export const getPublicPlatformSettings = cache(async (): Promise<PublicPlatformSettings | null> => {
   try {
     const [client, cookieStore] = await Promise.all([
       createServerApiClient(),
@@ -23,6 +24,7 @@ export async function getPublicPlatformSettings(): Promise<PublicPlatformSetting
     const { data } = await client.get<{
       data?: PublicPlatformSettings;
     }>("/admin/platform-settings/", {
+      signal: AbortSignal.timeout(2_000),
       headers: accessToken
         ? { Authorization: `Bearer ${accessToken}` }
         : undefined,
@@ -31,4 +33,4 @@ export async function getPublicPlatformSettings(): Promise<PublicPlatformSetting
   } catch {
     return null;
   }
-}
+});

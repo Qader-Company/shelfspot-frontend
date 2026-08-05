@@ -29,10 +29,10 @@ export async function FooterNavigation({
     {
       title: t("navigation.support.title"),
       links: [
-        { href: `${ROUTES.home}#privacy-policy`, label: t("navigation.support.links.privacyPolicy") },
-        { href: `${ROUTES.home}#contact`, label: t("navigation.support.links.contactUs") },
-        { href: `${ROUTES.home}#terms-and-conditions`, label: t("navigation.support.links.termsConditions") },
-        { href: `${ROUTES.home}#faqs`, label: t("navigation.support.links.faqs") },
+        { href: ROUTES.privacyPolicy, label: t("navigation.support.links.privacyPolicy") },
+        { href: ROUTES.contact, label: t("navigation.support.links.contactUs") },
+        { href: ROUTES.termsAndConditions, label: t("navigation.support.links.termsConditions") },
+        { href: ROUTES.faqs, label: t("navigation.support.links.faqs") },
       ],
     },
   ];

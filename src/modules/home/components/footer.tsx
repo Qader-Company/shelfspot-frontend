@@ -4,17 +4,25 @@ import { FooterContact } from "@/modules/home/components/footer-contact";
 import { FooterLogo } from "@/modules/home/components/footer-logo";
 import { FooterNavigation } from "@/modules/home/components/footer-navigation";
 import { LandingContainer } from "@/modules/home/components/landing-container";
-import { getPublicPlatformSettings } from "@/modules/home/services/platform-settings";
+import { getPublicPlatformSettings, type PublicPlatformSettings } from "@/modules/home/services/platform-settings";
 
 interface FooterProps {
   locale: Locale;
+  settings?: PublicPlatformSettings | null;
+  loadSettings?: boolean;
 }
 
 export async function Footer({
   locale,
+  settings: providedSettings,
+  loadSettings = true,
 }: FooterProps) {
   const isRtl = locale === "ar";
-  const settings = await getPublicPlatformSettings();
+  const settings = providedSettings !== undefined
+    ? providedSettings
+    : loadSettings
+      ? await getPublicPlatformSettings()
+      : null;
 
   return (
     <footer id="contact" className="overflow-x-clip pt-12 sm:pt-16 lg:pt-24">

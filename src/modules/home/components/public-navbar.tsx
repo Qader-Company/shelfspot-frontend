@@ -1,4 +1,3 @@
-import { ChevronDown } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 
 import { ROUTES } from "@/config/routes";
@@ -6,6 +5,7 @@ import type { Locale } from "@/i18n/locale";
 import { Link } from "@/i18n/navigation";
 import { LandingContainer } from "@/modules/home/components/landing-container";
 import { MobileNavigation } from "@/modules/home/components/mobile-navigation";
+import { PublicLocaleSwitcher } from "@/modules/home/components/public-locale-switcher";
 import { cn } from "@/shared/lib/utils";
 import { Button } from "@/shared/ui/button";
 import { Logo } from "@/shared/ui/logo";
@@ -16,7 +16,6 @@ interface PublicNavbarProps {
 
 export async function PublicNavbar({ locale }: PublicNavbarProps) {
   const t = await getTranslations("home.navbar");
-  const nextLocale = locale === "ar" ? "en" : "ar";
   const isRtl = locale === "ar";
 
   const links = [
@@ -40,14 +39,7 @@ export async function PublicNavbar({ locale }: PublicNavbarProps) {
   );
 
   const localeSwitcher = (
-    <Link
-      href={ROUTES.home}
-      locale={nextLocale}
-      className="relative z-20 inline-flex shrink-0 items-center gap-0.5 whitespace-nowrap text-sm font-medium text-foreground transition-colors hover:text-primary sm:gap-1.5 sm:text-lg lg:text-[20px]"
-    >
-      <ChevronDown className="hidden size-3.5 sm:block sm:size-4" />
-      <span>{t("actions.localeSwitch")}</span>
-    </Link>
+    <PublicLocaleSwitcher label={t("actions.localeSwitch")} />
   );
 
   const ctaButton = (
