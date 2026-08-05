@@ -77,7 +77,7 @@ export async function WhyUsSection({
   const rightColumnItems = isRtl ? [items[0], items[2]] : [items[1], items[3]];
 
   return (
-    <section id="features" className="py-16 sm:py-20 lg:py-24">
+    <section id="features" className="py-6 sm:py-7 lg:py-8">
       <LandingContainer>
         <div className="flex w-full flex-col gap-6">
           <div dir="ltr" className="grid gap-10 md:grid-cols-2 md:gap-8 lg:gap-14">

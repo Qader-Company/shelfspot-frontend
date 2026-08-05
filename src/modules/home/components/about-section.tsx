@@ -56,7 +56,7 @@ export async function AboutSection({
   );
 
   return (
-    <section id="about" className="py-16 sm:py-20 lg:py-24">
+    <section id="about" className="py-6 sm:py-7 lg:py-8">
       <LandingContainer>
         <div
           dir="ltr"

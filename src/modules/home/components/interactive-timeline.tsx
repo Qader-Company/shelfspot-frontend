@@ -20,7 +20,7 @@ export function InteractiveTimeline({ steps }: InteractiveTimelineProps) {
   const [activeStep, setActiveStep] = useState(0);
 
   return (
-    <div className="relative mt-12">
+    <div className="relative mt-8 lg:mt-10">
       <div className="timeline-line absolute inset-x-1/2 hidden h-full w-px -translate-x-1/2 bg-accent md:block" />
 
       <div className="flex flex-col gap-6 md:gap-2">

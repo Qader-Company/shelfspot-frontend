@@ -47,7 +47,7 @@ export async function HowItWorksSection({
   ];
 
   return (
-    <section id="how-it-works" className="py-16 sm:py-20 lg:py-24">
+    <section id="how-it-works" className="py-6 sm:py-7 lg:py-8">
       <LandingContainer>
         <div dir="ltr" className="grid gap-10 md:grid-cols-2 md:gap-8 lg:gap-14">
           {isRtl ? <div /> : null}
