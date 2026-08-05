@@ -18,10 +18,10 @@ export async function HeroSection({ locale }: HeroSectionProps) {
   const imageSlot = (
     <div
       className={cn(
-        "flex w-full items-center justify-center lg:-mt-28 lg:min-w-0 lg:flex-[1.08] xl:mt-0 xl:w-[min(48.681vw,701px)] xl:flex-none xl:translate-x-0",
+        "flex w-full items-center justify-center lg:-mt-28 lg:min-w-0 lg:flex-[1.08] xl:mt-0 xl:w-[min(48.681vw,701px)] xl:flex-none",
         isRtl
-          ? "lg:translate-x-4 xl:-mr-2"
-          : "lg:translate-x-12 xl:-ml-2",
+          ? "lg:translate-x-12 xl:-mr-2 xl:translate-x-6"
+          : "lg:translate-x-16 xl:-ml-2 xl:translate-x-8",
       )}
     >
       <div className="relative mx-auto aspect-square w-full max-w-[400px] overflow-visible sm:max-w-[500px] lg:max-w-[600px] xl:aspect-[701/733] xl:max-w-[701px]">
@@ -29,7 +29,12 @@ export async function HeroSection({ locale }: HeroSectionProps) {
           src={isRtl ? "/company/hero-ar.png" : "/company/hero-en.png"}
           alt={t("visualAlt")}
           fill
-          className="pointer-events-none object-contain object-center select-none lg:scale-[1.16] xl:-translate-y-[18%] xl:scale-[1.2]"
+          className={cn(
+            "pointer-events-none object-contain object-center select-none",
+            isRtl
+              ? "scale-[0.94] lg:scale-[1.08] xl:-translate-y-[20%] xl:scale-[1.1]"
+              : "lg:scale-[1.16] xl:-translate-y-[18%] xl:scale-[1.2]",
+          )}
           sizes="(max-width: 640px) calc(100vw - 32px), (max-width: 1279px) 500px, 701px"
           priority
         />
@@ -77,7 +82,7 @@ export async function HeroSection({ locale }: HeroSectionProps) {
 
   return (
     <section className="overflow-x-clip bg-card pb-12 pt-10 sm:pb-16 sm:pt-12 lg:pb-14 lg:pt-10 xl:pb-0 xl:pt-[clamp(24px,2.153vw,31px)]">
-      <div className="mx-auto w-full max-w-[1440px] px-4 sm:px-5 lg:px-6 xl:pe-0 xl:ps-[clamp(112px,8.889vw,128px)]">
+      <div className="mx-auto w-full max-w-[1320px] px-4 sm:px-5 lg:px-6">
         <div
           dir="ltr"
           className={cn(
