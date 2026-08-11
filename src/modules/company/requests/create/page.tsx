@@ -108,7 +108,7 @@ const defaultValues: CreateRequestFormValues = {
 
 // ─── Main component ───────────────────────────────────────────────────────────
 
-export function CreateRequestPage({ taskId }: { taskId?: string | number }) {
+export function CreateRequestPage({ taskId, repeatTaskId }: { taskId?: string | number; repeatTaskId?: string | number }) {
   const t = useTranslations("dashboard");
   const [openDialog, setOpenDialog] = useState<DialogName>(null);
   const [activeStepIndex, setActiveStepIndex] = useState(0);
@@ -120,7 +120,8 @@ export function CreateRequestPage({ taskId }: { taskId?: string | number }) {
   const serviceSectionRef = useRef<HTMLElement | null>(null);
 
   const createTaskMutation = useCreateTaskMutation();
-  const taskQuery = useTaskQuery(taskId ?? "");
+  const sourceTaskId = taskId ?? repeatTaskId;
+  const taskQuery = useTaskQuery(sourceTaskId ?? "");
   const { update: updateTaskMutation } = useTaskMutations();
   const hydratedTaskId = useRef<string | number | null>(null);
   const servicesQuery = useServicesQuery();
@@ -138,11 +139,13 @@ export function CreateRequestPage({ taskId }: { taskId?: string | number }) {
 
   useEffect(() => {
     const task = taskQuery.data?.data;
-    if (!taskId || !task || task.status !== "draft" || hydratedTaskId.current === task.id) return;
+    if (!sourceTaskId || !task || (taskId && task.status !== "draft") || hydratedTaskId.current === task.id) return;
     hydratedTaskId.current = task.id;
     const address = task.location.address ?? "";
     form.reset({
-      executionDate: task.date.slice(0, 10), executionDateIso: task.date.slice(0, 10), executionTime: "09:00 AM",
+      executionDate: repeatTaskId ? "" : task.date.slice(0, 10),
+      executionDateIso: repeatTaskId ? "" : task.date.slice(0, 10),
+      executionTime: "09:00 AM",
       storeName: task.location.location_name ?? address, streetAddress: address,
       latitude: Number(task.location.latitude), longitude: Number(task.location.longitude),
     });
@@ -152,7 +155,7 @@ export function CreateRequestPage({ taskId }: { taskId?: string | number }) {
       instructions: item.execution_instructions ?? "", productIds: item.products.map((product) => product.product.id),
       productDetails: Object.fromEntries(item.products.map((product) => [product.product.id, Array.isArray(product.product_details) ? {} : Object.fromEntries(Object.entries(product.product_details).map(([key, value]) => [key, value == null ? "" : String(value)]))])),
     })));
-  }, [form, taskId, taskQuery.data]);
+  }, [form, repeatTaskId, sourceTaskId, taskId, taskQuery.data]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(

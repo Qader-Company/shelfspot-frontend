@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 
@@ -9,14 +9,16 @@ import type { StatusBadgeStatus } from "@/shared/components/dashboard/status-bad
 import { DeleteConfirmDialog } from "@/shared/components/dashboard/delete-confirm-dialog";
 import {
   ActivityIcon,
+  BackChevronIcon,
   BoxIcon,
   CalendarIcon,
   ClockIcon,
   CloseIcon,
   CostIcon,
   MapPinIcon,
-  PaginationPreviousIcon,
   PaymentIcon,
+  RepeatIcon,
+  ViewIcon,
   WarningIcon,
 } from "@/shared/components/dashboard/dashboard-icons";
 import { Button } from "@/shared/ui/button";
@@ -97,6 +99,7 @@ function RequestDetailsView({ task, id }: { task: CompanyTask; id: string | numb
   const [showPay, setShowPay] = useState(false);
   const [showReschedule, setShowReschedule] = useState(false);
   const [editDate, setEditDate] = useState(task.date.slice(0, 10));
+  const executionDetailsRef = useRef<HTMLDivElement>(null);
 
   const remaining = timeRemaining(task.expires_at);
   const locationName = task.location.location_name || task.location.address || "—";
@@ -111,6 +114,7 @@ function RequestDetailsView({ task, id }: { task: CompanyTask; id: string | numb
   const canCancel = task.status === "pending" || task.status === "failed";
   const canReschedule = task.status === "failed";
   const canReject = task.status === "completed";
+  const isRejected = task.status === "rejected";
 
   const serviceLabels = {
     productHeading:      t("requestDetails.services.productHeading"),
@@ -132,23 +136,25 @@ function RequestDetailsView({ task, id }: { task: CompanyTask; id: string | numb
 
       {/* Page header */}
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <div>
+        <div className="flex items-start gap-3">
           <Button
             type="button"
             variant="ghost"
-            size="sm"
-            className="mb-2 -ms-2 gap-1 text-muted-foreground"
+            size="icon"
+            aria-label={t("requestDetails.back")}
+            className="mt-1 size-12 shrink-0 rounded-full bg-card text-foreground shadow-sm hover:bg-muted"
             onClick={() => router.back()}
           >
-            <PaginationPreviousIcon className="size-4 rtl:rotate-180" />
-            {t("requestDetails.back")}
+            <BackChevronIcon className="size-6 rtl:rotate-180" />
           </Button>
-          <h1 className="text-3xl font-bold leading-tight text-foreground">
-            {t("requestDetails.title")}
-          </h1>
-          <p className="mt-1 text-lg font-medium text-muted-foreground">
-            {t("requestDetails.subtitle", { id: `REQ-${task.id}` })}
-          </p>
+          <div>
+            <h1 className="text-3xl font-bold leading-tight text-foreground">
+              {t("requestDetails.title")}
+            </h1>
+            <p className="mt-1 text-lg font-medium text-muted-foreground">
+              {t("requestDetails.subtitle", { id: `REQ-${task.id}` })}
+            </p>
+          </div>
         </div>
       </div>
 
@@ -288,7 +294,7 @@ function RequestDetailsView({ task, id }: { task: CompanyTask; id: string | numb
         <Button type="button" className="h-12 w-full gap-2 rounded-xl text-sm font-semibold text-white hover:text-white" onClick={() => setShowPay(true)}><PaymentIcon className="size-4" />{t("requestDetails.actions.pay")}</Button>
       )}
       {((canDeleteTask && canCancel) || (canEditTask && canReschedule)) && (
-        <div className="grid gap-3 sm:grid-cols-2">
+        <div className={`grid gap-3 ${canEditTask && canReschedule && canDeleteTask && canCancel ? "sm:grid-cols-2" : "grid-cols-1"}`}>
         {canEditTask && canReschedule ? <Button type="button" variant="outline" className="h-12 gap-2 rounded-xl" onClick={() => setShowReschedule(true)}><CalendarIcon className="size-4" />{t("requestDetails.actions.reschedule")}</Button> : null}
         {canDeleteTask && canCancel ? (
         <Button
@@ -314,8 +320,30 @@ function RequestDetailsView({ task, id }: { task: CompanyTask; id: string | numb
         </Button>
       ) : null}
 
+      {isRejected ? (
+        <div className="grid gap-3 sm:grid-cols-2">
+          <Button
+            type="button"
+            className="h-12 gap-2 rounded-xl text-sm font-semibold text-white hover:text-white"
+            onClick={() => router.push(`/dashboard/requests/create?repeat=${task.id}`)}
+          >
+            <RepeatIcon className="size-4" />
+            {t("requestDetails.actions.repeatRequest")}
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            className="h-12 gap-2 rounded-xl text-sm font-semibold"
+            onClick={() => executionDetailsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })}
+          >
+            <ViewIcon className="size-4" />
+            {t("requestDetails.actions.viewExecution")}
+          </Button>
+        </div>
+      ) : null}
+
       {/* Services section */}
-      <div className="space-y-4">
+      <div ref={executionDetailsRef} className="scroll-mt-6 space-y-4">
         <h2 className="text-xl font-bold text-foreground">
           {t("requestDetails.services.heading", { count: task.services.length })}
         </h2>
