@@ -7,6 +7,7 @@ import { useTranslations } from "next-intl";
 import { normalizeApiError } from "@/shared/lib/api/errors";
 import { PageLoadingSkeleton } from "@/shared/components/feedback";
 import { Button } from "@/shared/ui/button";
+import { PermissionGate } from "@/shared/components/auth/permission-provider";
 import { Input } from "@/shared/ui/input";
 
 import { useCompanyProfile, useUpdateCompanyProfile } from "./use-profile";
@@ -132,9 +133,9 @@ function CompanyProfileForm({ profile }: { profile: CompanyProfile }) {
           ) : null}
 
           <div className="flex justify-end">
-            <Button type="submit" className="h-12 min-w-40 text-white" disabled={updateProfile.isPending || !name.trim() || !email.trim() || Boolean(password && password !== passwordConfirmation)}>
+            <PermissionGate permission="edit_company"><Button type="submit" className="h-12 min-w-40 text-white" disabled={updateProfile.isPending || !name.trim() || !email.trim() || Boolean(password && password !== passwordConfirmation)}>
               {updateProfile.isPending ? t("createRequest.actions.submitting") : t("profilePage.save")}
-            </Button>
+            </Button></PermissionGate>
           </div>
         </form>
       </section>

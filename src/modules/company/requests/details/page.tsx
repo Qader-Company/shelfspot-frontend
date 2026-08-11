@@ -20,6 +20,7 @@ import {
   WarningIcon,
 } from "@/shared/components/dashboard/dashboard-icons";
 import { Button } from "@/shared/ui/button";
+import { usePermission } from "@/shared/components/auth/permission-provider";
 import { ErrorState, PageLoadingSkeleton } from "@/shared/components/feedback";
 import { normalizeApiError } from "@/shared/lib/api/errors";
 
@@ -89,6 +90,8 @@ function RequestDetailsView({ task, id }: { task: CompanyTask; id: string | numb
   const locale = useLocale();
   const router = useRouter();
   const { act, pay, update } = useTaskMutations();
+  const canEditTask = usePermission("edit_task");
+  const canDeleteTask = usePermission("delete_task");
   const [showCancel, setShowCancel] = useState(false);
   const [showReject, setShowReject] = useState(false);
   const [showPay, setShowPay] = useState(false);
@@ -281,13 +284,13 @@ function RequestDetailsView({ task, id }: { task: CompanyTask; id: string | numb
       )}
 
       {/* Action buttons */}
-      {isDraft && (
+      {canEditTask && isDraft && (
         <Button type="button" className="h-12 w-full gap-2 rounded-xl text-sm font-semibold text-white hover:text-white" onClick={() => setShowPay(true)}><PaymentIcon className="size-4" />{t("requestDetails.actions.pay")}</Button>
       )}
-      {(canCancel || canReschedule) && (
+      {((canDeleteTask && canCancel) || (canEditTask && canReschedule)) && (
         <div className="grid gap-3 sm:grid-cols-2">
-        {canReschedule ? <Button type="button" variant="outline" className="h-12 gap-2 rounded-xl" onClick={() => setShowReschedule(true)}><CalendarIcon className="size-4" />{t("requestDetails.actions.reschedule")}</Button> : null}
-        {canCancel ? (
+        {canEditTask && canReschedule ? <Button type="button" variant="outline" className="h-12 gap-2 rounded-xl" onClick={() => setShowReschedule(true)}><CalendarIcon className="size-4" />{t("requestDetails.actions.reschedule")}</Button> : null}
+        {canDeleteTask && canCancel ? (
         <Button
           type="button"
           className="h-12 w-full gap-2 rounded-xl bg-destructive text-sm font-semibold text-white hover:bg-destructive/90"
@@ -299,7 +302,7 @@ function RequestDetailsView({ task, id }: { task: CompanyTask; id: string | numb
         ) : null}
         </div>
       )}
-      {canReject ? (
+      {canEditTask && canReject ? (
         <Button
           type="button"
           variant="outline"

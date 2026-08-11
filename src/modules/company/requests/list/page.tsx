@@ -18,6 +18,7 @@ import type { DashboardStatItem } from "@/shared/components/dashboard/widgets/ty
 import { EmptyState, ErrorState, PageLoadingSkeleton } from "@/shared/components/feedback";
 import { normalizeApiError } from "@/shared/lib/api/errors";
 import { Button } from "@/shared/ui/button";
+import { PermissionGate } from "@/shared/components/auth/permission-provider";
 
 const requestStats = [
   { key: "total", titleKey: "requestsPage.stats.total.title", value: "0", trendKey: "requestsPage.stats.total.trend", tone: "info", iconSrc: "/company/folders.svg" },
@@ -97,7 +98,7 @@ export function DashboardRequestsPage() {
     <div className="space-y-6 px-4 py-8 lg:px-8">
       <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
         <div><h1 className="text-3xl font-bold leading-tight text-foreground">{t("requestsPage.title")}</h1><p className="mt-2 text-lg font-medium text-muted-foreground">{t("requestsPage.subtitle")}</p></div>
-        <Button asChild className="h-12 rounded-lg px-6 text-sm font-semibold text-white hover:text-white"><Link href={ROUTES.dashboardCreateRequest}><AddIcon className="size-5" />{t("requestsPage.actions.createRequest")}</Link></Button>
+        <PermissionGate permission="create_task"><Button asChild className="h-12 rounded-lg px-6 text-sm font-semibold text-white hover:text-white"><Link href={ROUTES.dashboardCreateRequest}><AddIcon className="size-5" />{t("requestsPage.actions.createRequest")}</Link></Button></PermissionGate>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">

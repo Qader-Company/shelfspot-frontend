@@ -4,6 +4,7 @@ import {
   TrashIcon,
 } from "@/shared/components/dashboard/dashboard-icons";
 import { Button } from "@/shared/ui/button";
+import { usePermission } from "@/shared/components/auth/permission-provider";
 
 import type { AdminRow } from "./admins.seed";
 
@@ -32,6 +33,8 @@ export function AdminsTable({
   onDelete,
   onEdit,
 }: AdminsTableProps) {
+  const canEdit = usePermission("edit_admin");
+  const canDelete = usePermission("delete_admin");
   return (
     <div className="overflow-hidden rounded-lg border border-border bg-card shadow-sm">
       <div className="overflow-x-auto">
@@ -81,7 +84,7 @@ export function AdminsTable({
                 </td>
                 <td className="border-b border-border px-5 py-4">
                   <div className="flex items-center gap-3">
-                    <Button
+                    {canDelete ? <Button
                       type="button"
                       variant="ghost"
                       size="icon-xs"
@@ -90,8 +93,8 @@ export function AdminsTable({
                       onClick={() => onDelete(row.id)}
                     >
                       <TrashIcon className="size-4" />
-                    </Button>
-                    <Button
+                    </Button> : null}
+                    {canEdit ? <Button
                       type="button"
                       variant="ghost"
                       size="icon-xs"
@@ -100,7 +103,7 @@ export function AdminsTable({
                       onClick={() => onEdit(row.id)}
                     >
                       <EditIcon className="size-4" />
-                    </Button>
+                    </Button> : null}
                   </div>
                 </td>
               </tr>
