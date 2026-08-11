@@ -7,7 +7,7 @@ import { cookies, headers } from "next/headers";
 import { API_CONFIG } from "@/config/api";
 import { serverEnv } from "@/config/env";
 
-export async function createServerApiClient() {
+export async function createServerApiClient(apiKey?: string) {
   const [cookieStore, requestHeaders] = await Promise.all([
     cookies(),
     headers(),
@@ -25,7 +25,7 @@ export async function createServerApiClient() {
       : undefined,
     headers: {
       Accept: "application/json",
-      "X-Authorization": API_CONFIG.serverApiKey,
+      "X-Authorization": apiKey || API_CONFIG.serverApiKey,
       Cookie: cookieStore.toString(),
       "Accept-Language": requestHeaders.get("accept-language") ?? undefined,
     },

@@ -4,7 +4,6 @@ import Image from "next/image";
 import { ROUTES } from "@/config/routes";
 import type { Locale } from "@/i18n/locale";
 import { Link } from "@/i18n/navigation";
-import { LandingContainer } from "@/modules/home/components/landing-container";
 import { cn } from "@/shared/lib/utils";
 import { Button } from "@/shared/ui/button";
 
@@ -17,28 +16,26 @@ export async function HeroSection({ locale }: HeroSectionProps) {
   const isRtl = locale === "ar";
 
   const imageSlot = (
-    <div className="flex-1">
-      <div className="relative mx-auto h-[320px] w-full max-w-[540px] sm:h-[420px] lg:h-[520px]">
-        <div className="absolute inset-x-[12%] top-8 h-[62%] rounded-full bg-accent" />
-        <div className="absolute start-0 top-28 rounded-full bg-accent px-4 py-2 text-sm font-medium text-primary shadow-sm">
-          {t("floatingCards.speed")}
-        </div>
-        <div className="absolute end-[6%] top-10 rounded-full bg-accent px-4 py-2 text-sm font-medium text-primary shadow-sm">
-          {t("floatingCards.clarity")}
-        </div>
-        <div className="absolute start-1/2 top-[58%] -translate-x-1/2 rounded-full bg-accent px-4 py-2 text-sm font-medium text-primary shadow-sm">
-          {t("floatingCards.execution")}
-        </div>
-        <div className="absolute inset-x-[18%] bottom-0 top-14 rounded-[40px] bg-gradient-to-b from-primary/10 via-primary/5 to-transparent" />
+    <div
+      className={cn(
+        "flex w-full items-center justify-center lg:-mt-28 lg:min-w-0 lg:flex-[1.08] xl:mt-0 xl:w-[min(48.681vw,701px)] xl:flex-none",
+        isRtl
+          ? "lg:translate-x-12 xl:-mr-2 xl:translate-x-6"
+          : "hero-image-slot-en xl:-ml-2 xl:translate-x-64",
+      )}
+    >
+      <div className="relative mx-auto aspect-square w-full max-w-[400px] overflow-visible sm:max-w-[500px] lg:max-w-[600px] xl:aspect-[701/733] xl:max-w-[701px]">
         <Image
-          src="/auth/screens/login-screen.png"
+          src={isRtl ? "/company/hero-ar.png" : "/company/hero-en.png"}
           alt={t("visualAlt")}
           fill
           className={cn(
-            "object-contain object-bottom",
-            isRtl ? "scale-x-100" : "-scale-x-100",
+            "pointer-events-none object-contain object-center select-none",
+            isRtl
+              ? "translate-x-[10%] scale-[0.94] lg:-translate-y-[2%] lg:translate-x-0 lg:scale-[1.02] xl:-translate-y-[20%] xl:scale-[1.1]"
+              : "translate-x-[15%] lg:translate-x-0 lg:scale-[1.16] xl:-translate-y-[18%] xl:scale-[1.2]",
           )}
-          sizes="(max-width: 1024px) 100vw, 46vw"
+          sizes="(max-width: 640px) calc(100vw - 32px), (max-width: 1279px) 500px, 701px"
           priority
         />
       </div>
@@ -48,13 +45,13 @@ export async function HeroSection({ locale }: HeroSectionProps) {
   const textSlot = (
     <div
       className={cn(
-        "flex w-full flex-col gap-6 text-center lg:max-w-[686px]",
+        "flex w-full flex-col gap-5 text-center sm:gap-6 lg:min-w-0 lg:flex-[0.92] lg:max-w-[580px] lg:pt-8 xl:w-[min(42.986vw,619px)] xl:max-w-[619px] xl:flex-none xl:gap-6 xl:pt-[clamp(80px,6.806vw,98px)]",
         isRtl
-          ? "items-center lg:items-end lg:text-right"
+          ? "items-center lg:-translate-x-[clamp(64px,10vw,128px)] lg:items-end lg:text-right xl:translate-x-0"
           : "items-center lg:items-start lg:text-left",
       )}
     >
-      <h1 className="max-w-[686px] text-display-lg leading-[1.4] font-semibold text-foreground lg:text-display-2xl">
+      <h1 className="hero-text-enter hero-text-enter-title max-w-[619px] text-[clamp(2rem,3vw,2.75rem)] leading-[1.3] font-semibold text-foreground xl:text-[clamp(44px,4.444vw,64px)] xl:leading-[1.4]">
         {isRtl ? (
           <>
             <span>{t("titlePrefix")}</span>{" "}
@@ -70,13 +67,13 @@ export async function HeroSection({ locale }: HeroSectionProps) {
         )}
       </h1>
 
-      <p className="max-w-[686px] text-display-xs leading-[1.5] font-light text-foreground/80">
+      <p className="hero-text-enter hero-text-enter-description max-w-[619px] text-[clamp(0.9375rem,1.05vw,1rem)] leading-[1.6] font-light text-foreground/80 xl:text-[clamp(16px,1.667vw,24px)] xl:leading-[1.5]">
         {t("description")}
       </p>
 
       <Button
         asChild
-        className="h-14 min-w-[118px] w-fit rounded-[10px] border border-primary bg-primary px-[18px] py-[10px] text-xl font-semibold text-white shadow-none hover:bg-primary/90 hover:text-white lg:text-[20px] [&_*]:text-white"
+        className="hero-text-enter hero-text-enter-action h-12 min-w-[104px] w-fit rounded-[10px] border border-primary bg-primary px-4 py-2 text-[clamp(0.95rem,1.1vw,1rem)] font-semibold text-white shadow-none hover:bg-primary/90 hover:text-white sm:min-w-[118px] sm:px-[18px] sm:py-[10px] xl:h-[clamp(52px,4.167vw,60px)] xl:w-[clamp(150px,12.431vw,179px)] xl:rounded-lg xl:px-[18px] xl:text-[clamp(16px,1.667vw,24px)] xl:leading-[1.5] [&_*]:text-white"
       >
         <Link href={ROUTES.register}>{t("primaryCta")}</Link>
       </Button>
@@ -84,25 +81,21 @@ export async function HeroSection({ locale }: HeroSectionProps) {
   );
 
   return (
-    <section className="pb-16 pt-8 sm:pb-20 sm:pt-10 lg:pb-24 lg:pt-14">
-      <LandingContainer>
+    <section className="overflow-x-clip bg-card pb-12 pt-10 sm:pb-16 sm:pt-12 lg:pb-14 lg:pt-10 xl:pb-0 xl:pt-[clamp(24px,2.153vw,31px)]">
+      <div className="mx-auto w-full max-w-[1320px] px-4 sm:px-5 lg:px-6">
         <div
           dir="ltr"
-          className="flex flex-col gap-10 lg:flex-row lg:items-center lg:justify-between lg:gap-12"
-        >
-          {isRtl ? (
-            <>
-              {imageSlot}
-              {textSlot}
-            </>
-          ) : (
-            <>
-              {textSlot}
-              {imageSlot}
-            </>
+          className={cn(
+            "flex flex-col gap-8 sm:gap-10 lg:gap-8 xl:gap-10",
+            isRtl
+              ? "lg:flex-row-reverse lg:content-center lg:items-center lg:justify-center xl:items-start xl:justify-between"
+              : "lg:flex-row lg:items-start lg:justify-between",
           )}
+        >
+          {textSlot}
+          {imageSlot}
         </div>
-      </LandingContainer>
+      </div>
     </section>
   );
 }

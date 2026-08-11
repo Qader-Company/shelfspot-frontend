@@ -146,7 +146,10 @@ function catalogForm(
   if (payload.subBrandId) data.append("sub_brand_id", payload.subBrandId);
   if (payload.categoryId) data.append("category_id", payload.categoryId);
   if (payload.subCategoryId) data.append("sub_category_id", payload.subCategoryId);
-  if (update) data.append("_method", "put");
+  if (update) {
+    data.append("_method", "put");
+    data.append("logo_action", payload.logoAction ?? (payload.image ? "replace" : "keep"));
+  }
   if (payload.image) {
     const field = resource === "brand" || resource === "sub-brand" ? "logo" : "image";
     data.append(field, payload.image, payload.image.name);

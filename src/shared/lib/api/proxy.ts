@@ -4,6 +4,7 @@ import axios from "axios";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
+import { API_CONFIG } from "@/config/api";
 import { createServerApiClient } from "@/shared/lib/api/server";
 import {
   ACCESS_TOKEN_COOKIE,
@@ -21,6 +22,36 @@ export async function proxyCompanyRequest(
   options?: { responseType?: "arraybuffer"; omitCompanyHeader?: boolean },
 ) {
   upstreamPath = upstreamPath.replace(/\/{2,}/g, "/");
+  
+  return proxyRequest(request, upstreamPath, {
+    ...options,
+    apiKey: API_CONFIG.companyApiKey,
+  });
+}
+
+export function proxyAdminRequest(
+  request: NextRequest,
+  upstreamPath: string,
+  options?: { responseType?: "arraybuffer" },
+) {
+  upstreamPath = upstreamPath.replace(/\/{2,}/g, "/");
+  
+  return proxyRequest(request, upstreamPath, {
+    ...options,
+    apiKey: API_CONFIG.adminApiKey,
+    omitCompanyHeader: true,
+  });
+}
+
+async function proxyRequest(
+  request: NextRequest,
+  upstreamPath: string,
+  options?: { 
+    responseType?: "arraybuffer"; 
+    omitCompanyHeader?: boolean;
+    apiKey?: string;
+  },
+) {
   const apiClient = await createServerApiClient();
 
   const isMultipart = request.headers
@@ -31,10 +62,6 @@ export async function proxyCompanyRequest(
 
   if (request.method !== "GET" && request.method !== "HEAD") {
     if (isMultipart) {
-      // Preserve the browser-generated multipart body byte-for-byte. Parsing it
-      // into Web FormData and asking Node's axios adapter to serialize it again
-      // can turn uploaded Files into plain fields, causing backend image rules
-      // to reject otherwise valid images.
       body = await request.arrayBuffer();
     } else {
       body = await request.text() || undefined;
@@ -45,9 +72,11 @@ export async function proxyCompanyRequest(
 
   const contentType = request.headers.get("content-type");
   if (contentType) {
-    // Multipart bodies retain their original boundary, matching the raw bytes.
     forwardedHeaders["Content-Type"] = contentType;
   }
+
+  // Use portal-specific API key (admin or company)
+  forwardedHeaders["X-Authorization"] = options?.apiKey ?? API_CONFIG.companyApiKey;
 
   const accessToken = request.cookies.get(ACCESS_TOKEN_COOKIE)?.value;
   if (accessToken) {
@@ -96,8 +125,6 @@ export async function proxyCompanyRequest(
       typeof response.data === "object" &&
       (response.data as { message?: string }).message === "Company not found.";
     const nextResponse = NextResponse.json(response.data, {
-      // Treat a stale company cookie as an invalid session so the client can
-      // re-authenticate and receive the correct company context.
       status: hasInvalidCompanyContext ? 401 : response.status,
     });
 
@@ -121,15 +148,4 @@ export async function proxyCompanyRequest(
       { status: 500 },
     );
   }
-}
-
-export function proxyAdminRequest(
-  request: NextRequest,
-  upstreamPath: string,
-  options?: { responseType?: "arraybuffer" },
-) {
-  return proxyCompanyRequest(request, upstreamPath, {
-    ...options,
-    omitCompanyHeader: true,
-  });
 }

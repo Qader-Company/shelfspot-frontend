@@ -1,6 +1,7 @@
 import type { NextRequest } from "next/server";
 
 import { AUTH_UPSTREAM_ENDPOINTS, isAuthAction, isAuthContext } from "@/modules/auth/config/auth-context";
+import { API_CONFIG } from "@/config/api";
 import { proxyAuthRequest } from "@/shared/lib/api/auth-proxy";
 import {
   ACCESS_TOKEN_COOKIE,
@@ -22,6 +23,9 @@ export async function POST(request: NextRequest, { params }: { params: Promise<R
   }
 
   const upstreamPath = AUTH_UPSTREAM_ENDPOINTS[authContext][action];
+  
+  // Get the correct API key based on auth context
+  const apiKey = authContext === "admin" ? API_CONFIG.adminApiKey : API_CONFIG.companyApiKey;
 
   if (action === "refresh") {
     const refreshToken = request.cookies.get(REFRESH_TOKEN_COOKIE)?.value;
@@ -30,6 +34,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<R
       return Response.json({ message: "Invalid refresh session." }, { status: 401 });
     }
     return proxyAuthRequest(request, upstreamPath, {
+      apiKey,
       authorization: `Bearer ${refreshToken}`,
       transformResponse: (body, response) => {
         if (body && typeof body === "object") {
@@ -47,6 +52,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<R
   if (action === "login") {
     const persistent = request.headers.get("x-remember-me") === "true";
     return proxyAuthRequest(request, upstreamPath, {
+      apiKey,
       transformResponse: (body, response) => {
         if (body && typeof body === "object") {
           const data = (body as { data?: unknown }).data;
@@ -60,6 +66,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<R
   if (action === "logout") {
     const accessToken = request.cookies.get(ACCESS_TOKEN_COOKIE)?.value;
     return proxyAuthRequest(request, upstreamPath, {
+      apiKey,
       authorization: accessToken ? `Bearer ${accessToken}` : undefined,
       method: "DELETE",
       transformResponse: (body, response) => {
@@ -69,5 +76,5 @@ export async function POST(request: NextRequest, { params }: { params: Promise<R
     });
   }
 
-  return proxyAuthRequest(request, upstreamPath);
+  return proxyAuthRequest(request, upstreamPath, { apiKey });
 }

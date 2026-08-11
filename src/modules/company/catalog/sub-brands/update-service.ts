@@ -7,6 +7,7 @@ export interface UpdateSubBrandPayload {
   nameAr: string;
   isActive: boolean;
   logo?: File;
+  logoAction?: "keep" | "remove" | "replace";
 }
 
 export async function updateSubBrandService({ id, payload }: { id: string; payload: UpdateSubBrandPayload }): Promise<CreateSubBrandResponse> {
@@ -16,6 +17,7 @@ export async function updateSubBrandService({ id, payload }: { id: string; paylo
   formData.append("is_active", payload.isActive ? "1" : "0");
   formData.append("brand_id", payload.brandId);
   formData.append("_method", "put");
+  formData.append("logo_action", payload.logoAction ?? (payload.logo ? "replace" : "keep"));
   if (payload.logo) formData.append("logo", payload.logo, payload.logo.name);
 
   const response = await apiClient.post<CreateSubBrandResponse>(`/api/company/sub-brands/${encodeURIComponent(id)}`, formData, {

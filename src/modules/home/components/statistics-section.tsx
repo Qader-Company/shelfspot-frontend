@@ -35,7 +35,7 @@ export async function StatisticsSection({
   ];
 
   return (
-    <section id="statistics" className="py-16 sm:py-20 lg:py-24">
+    <section id="statistics" className="py-6 sm:py-7 lg:py-8">
       <div className="mx-auto w-full max-w-[1184px] px-4 sm:px-5 lg:px-0">
         <div dir="ltr" className="grid gap-10 md:grid-cols-2 md:gap-8 lg:gap-14">
           {isRtl ? <div /> : null}
@@ -67,15 +67,20 @@ export async function StatisticsSection({
         </div>
       </div>
 
-      <div className="mt-10 bg-accent py-12 sm:py-14 lg:mt-12 lg:py-16">
+      <div className="mt-6 bg-accent py-10 sm:py-12 lg:mt-8 lg:py-12">
         <LandingContainer>
           <div className="grid gap-10 text-center sm:grid-cols-2 lg:grid-cols-4">
-            {statistics.map((statistic) => (
-              <StatisticCard
+            {statistics.map((statistic, index) => (
+              <div
                 key={statistic.label}
-                value={statistic.value}
-                label={statistic.label}
-              />
+                className="scroll-reveal-card"
+                style={{ transitionDelay: `${120 + index * 170}ms` }}
+              >
+                <StatisticCard
+                  value={statistic.value}
+                  label={statistic.label}
+                />
+              </div>
             ))}
           </div>
         </LandingContainer>

@@ -1,6 +1,8 @@
 import type { Locale } from "@/i18n/locale";
 import { HomePageView } from "@/modules/home/components";
 
+export const dynamic = "force-dynamic";
+
 export default async function HomePage({
   params,
 }: {

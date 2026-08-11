@@ -1,7 +1,7 @@
 "use client";
 
 import { ChevronRight, Eye, EyeOff, Settings2, UserRound } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 
 import { Button } from "@/shared/ui/button";
@@ -9,7 +9,7 @@ import { Input } from "@/shared/ui/input";
 import { cn } from "@/shared/lib/utils";
 import { normalizeApiError } from "@/shared/lib/api/errors";
 
-import { useAdminProfile, useUpdateAdminProfile } from "./hooks";
+import { useAdminProfile, usePlatformSettings, useUpdateAdminProfile, useUpdatePlatformSettings } from "./hooks";
 
 type Tab = "general" | "profile";
 
@@ -62,32 +62,60 @@ export function AdminSettingsPage() {
   );
 }
 
-/* ─── General tab (static UI only) ─────────────────────────────────────── */
+/* ─── General tab ─────────────────────────────────────────────────────── */
 
 function GeneralTab({
   t,
 }: {
   t: ReturnType<typeof useTranslations<"adminSettings">>;
 }) {
-  const [notice, setNotice] = useState("");
+  const settings = usePlatformSettings();
+  const mutation = useUpdatePlatformSettings();
+  const locale = useLocale();
+  const labels = locale === "ar" ? { phone: "رقم الهاتف", address: "العنوان", addressPlaceholder: "أدخل عنوان المنصة", description: "الوصف", descriptionPlaceholder: "أدخل وصف المنصة", success: "تم تحديث إعدادات المنصة بنجاح.", error: "تعذر تحديث إعدادات المنصة.", loadError: "تعذر تحميل إعدادات المنصة." } : { phone: "Phone Number", address: "Address", addressPlaceholder: "Enter the platform address", description: "Description", descriptionPlaceholder: "Enter the platform description", success: "Platform settings updated successfully.", error: "Unable to update platform settings.", loadError: "Unable to load platform settings." };
+  const [draft, setDraft] = useState<{ email: string; phone: string; address: string; description: string } | null>(null);
+  const [successMsg, setSuccessMsg] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
+
+  const form = draft ?? {
+    email: settings.data?.email ?? "",
+    phone: settings.data?.phone ?? "",
+    address: settings.data?.address ?? "",
+    description: settings.data?.description ?? "",
+  };
+  const set = (field: keyof typeof form, value: string) => setDraft({ ...form, [field]: value });
+
+  async function save() {
+    setSuccessMsg("");
+    setErrorMsg("");
+    try {
+      const response = await mutation.mutateAsync(form);
+      setDraft({
+        email: response.data.email ?? "",
+        phone: response.data.phone ?? "",
+        address: response.data.address ?? "",
+        description: response.data.description ?? "",
+      });
+      setSuccessMsg(response.message || labels.success);
+    } catch (error) {
+      setErrorMsg(normalizeApiError(error).message || labels.error);
+    }
+  }
 
   return (
     <div className="space-y-4">
       <h2 className="text-xl font-bold">{t("general.title")}</h2>
-      <Field label={t("general.platform")}>
-        <Input defaultValue="ShelfSpot" />
-      </Field>
-      <Field label={t("general.email")}>
-        <Input type="email" defaultValue="name@company.com" />
-      </Field>
-      {notice && (
-        <p role="status" className="rounded-lg border border-warning/30 bg-warning/10 p-3 text-sm text-warning-foreground">
-          {notice}
-        </p>
-      )}
+      {settings.isLoading ? <div className="space-y-3">{[1, 2, 3, 4].map((item) => <div key={item} className="h-11 animate-pulse rounded-lg bg-muted" />)}</div> : settings.isError ? <p role="alert" className="rounded-lg border border-destructive/20 bg-destructive/10 p-3 text-sm text-destructive">{labels.loadError}</p> : <>
+        <Field label={t("general.email")}><Input type="email" value={form.email} onChange={(event) => set("email", event.target.value)} placeholder="info@shelfspot.com" disabled={mutation.isPending} /></Field>
+        <Field label={labels.phone}><Input value={form.phone} onChange={(event) => set("phone", event.target.value)} placeholder="+966434**" dir="ltr" disabled={mutation.isPending} /></Field>
+        <Field label={labels.address}><Input value={form.address} onChange={(event) => set("address", event.target.value)} placeholder={labels.addressPlaceholder} disabled={mutation.isPending} /></Field>
+        <Field label={labels.description}><textarea value={form.description} onChange={(event) => set("description", event.target.value)} placeholder={labels.descriptionPlaceholder} disabled={mutation.isPending} rows={5} className="w-full resize-y rounded-lg border border-input bg-transparent px-3 py-2 text-sm outline-none placeholder:text-muted-foreground focus:border-primary disabled:opacity-50" /></Field>
+      </>}
+      {successMsg && <p role="status" className="rounded-lg border border-success/30 bg-success/10 p-3 text-sm text-success">{successMsg}</p>}
+      {errorMsg && <p role="alert" className="rounded-lg border border-destructive/20 bg-destructive/10 p-3 text-sm text-destructive">{errorMsg}</p>}
       <div className="flex justify-end">
-        <Button className="h-12 w-full sm:w-72" onClick={() => setNotice(t("unverified"))}>
-          {t("save")}
+        <Button className="h-12 w-full sm:w-72" onClick={() => void save()} disabled={mutation.isPending || settings.isLoading || settings.isError}>
+          {mutation.isPending ? t("saving") : t("save")}
         </Button>
       </div>
     </div>
@@ -115,6 +143,7 @@ function ProfileTab({
   // Populate form once data loads
   useEffect(() => {
     if (profile.data) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setName(profile.data.name ?? "");
       setEmail(profile.data.email ?? "");
     }

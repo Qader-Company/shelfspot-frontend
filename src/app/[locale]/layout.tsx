@@ -63,10 +63,10 @@ export async function generateMetadata({
     icons: {
       icon: [
         { url: "/favicon.ico" },
-        { url: "/shelfspot-logo.png", type: "image/png" },
+        { url: "/shelfspot-logo.svg", type: "image/png" },
       ],
       shortcut: ["/favicon.ico"],
-      apple: ["/shelfspot-logo.png"],
+      apple: ["/shelfspot-logo.svg"],
     },
     robots: {
       index: true,

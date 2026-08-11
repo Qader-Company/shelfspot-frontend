@@ -270,6 +270,290 @@ html[dir="ltr"] {
 }
 
 @layer components {
+  @keyframes public-page-hero-in {
+    from {
+      opacity: 0;
+      transform: translateY(1rem);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .public-page-hero-in {
+    animation: public-page-hero-in 600ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .public-page-hero-in > * {
+    opacity: 0;
+    animation: public-page-content-in 650ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+
+  .public-page-hero-in > :nth-child(1) { animation-delay: 80ms; }
+  .public-page-hero-in > :nth-child(2) { animation-delay: 150ms; }
+  .public-page-hero-in > :nth-child(3) { animation-delay: 230ms; }
+  .public-page-hero-in > :nth-child(4) { animation-delay: 320ms; }
+  .public-page-hero-in > :nth-child(5) { animation-delay: 390ms; }
+
+  @keyframes public-page-content-in {
+    from {
+      opacity: 0;
+      transform: translateY(1rem);
+      filter: blur(3px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+      filter: blur(0);
+    }
+  }
+
+  .scroll-reveal .faq-item-reveal {
+    opacity: 0;
+    transform: translateY(1.5rem) scale(0.985);
+  }
+
+  .scroll-reveal-visible .faq-item-reveal {
+    animation: faq-item-in 620ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    animation-delay: var(--faq-delay, 0ms);
+  }
+
+  @keyframes faq-item-in {
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  .scroll-reveal {
+    opacity: 0;
+    transition:
+      opacity 700ms cubic-bezier(0.22, 1, 0.36, 1),
+      transform 700ms cubic-bezier(0.22, 1, 0.36, 1),
+      filter 700ms cubic-bezier(0.22, 1, 0.36, 1);
+    filter: drop-shadow(0 18px 26px rgb(15 23 42 / 0.08));
+    will-change: opacity, transform;
+  }
+
+  .scroll-reveal-up {
+    transform: translateY(2rem) scale(0.99);
+  }
+
+  .scroll-reveal-left {
+    transform: translateX(-2.25rem);
+  }
+
+  .scroll-reveal-right {
+    transform: translateX(2.25rem);
+  }
+
+  .scroll-reveal-scale {
+    transform: translateY(1rem) scale(0.965);
+  }
+
+  .scroll-reveal-visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: drop-shadow(0 0 0 transparent);
+  }
+
+  .scroll-reveal :is(h2, h3, p) {
+    opacity: 0;
+    transform: translateY(1rem);
+    transition:
+      opacity 550ms cubic-bezier(0.22, 1, 0.36, 1),
+      transform 550ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .scroll-reveal :is(h2, h3) {
+    transition-delay: 100ms;
+  }
+
+  .scroll-reveal p {
+    transition-delay: 180ms;
+  }
+
+  .scroll-reveal-visible :is(h2, h3, p) {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .scroll-reveal-artwork,
+  .scroll-reveal-card {
+    opacity: 0;
+    transition:
+      opacity 650ms cubic-bezier(0.22, 1, 0.36, 1),
+      transform 650ms cubic-bezier(0.22, 1, 0.36, 1),
+      filter 650ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .scroll-reveal-artwork {
+    filter: drop-shadow(0 20px 24px rgb(15 23 42 / 0.1));
+  }
+
+  .scroll-reveal-artwork.from-left {
+    transform: translateX(-2.5rem) scale(0.97);
+  }
+
+  .scroll-reveal-artwork.from-right {
+    transform: translateX(2.5rem) scale(0.97);
+  }
+
+  .scroll-reveal-card {
+    transform: translateY(1.75rem) scale(0.975);
+  }
+
+  .why-us-card-reveal {
+    transform: translateY(2.25rem) scale(0.97);
+    transition-duration: 780ms;
+  }
+
+  .timeline-line {
+    transform: translateX(-50%) scaleY(0);
+    transform-origin: top;
+    transition: transform 1100ms cubic-bezier(0.22, 1, 0.36, 1) 120ms;
+  }
+
+  .scroll-reveal-visible .timeline-line {
+    transform: translateX(-50%) scaleY(1);
+  }
+
+  .timeline-node {
+    transform: scale(0.65);
+    transition:
+      transform 520ms cubic-bezier(0.34, 1.56, 0.64, 1),
+      box-shadow 520ms ease;
+    transition-delay: inherit;
+  }
+
+  .scroll-reveal-visible .timeline-row .timeline-node {
+    transform: scale(1);
+    box-shadow: 0 0 0 6px rgb(81 194 232 / 0.12);
+  }
+
+  .timeline-card-trigger article {
+    transition:
+      transform 420ms cubic-bezier(0.22, 1, 0.36, 1),
+      background-color 420ms ease,
+      border-color 420ms ease,
+      box-shadow 420ms ease;
+  }
+
+  .timeline-card-trigger:hover article {
+    transform: translateY(-0.2rem);
+    box-shadow: 0 12px 30px rgb(81 194 232 / 0.12);
+  }
+
+  .timeline-card-trigger:focus-visible {
+    outline: 3px solid rgb(81 194 232 / 0.3);
+    outline-offset: 4px;
+  }
+
+  .timeline-row-active .timeline-card-trigger article {
+    transform: translateY(-0.3rem) scale(1.015);
+    border-color: var(--primary);
+    background-color: color-mix(in srgb, var(--primary) 7%, var(--card));
+    box-shadow: 0 16px 36px rgb(81 194 232 / 0.18);
+  }
+
+  .scroll-reveal-visible .timeline-row-active .timeline-node {
+    transform: scale(1.12);
+    box-shadow: 0 0 0 8px rgb(81 194 232 / 0.18);
+  }
+
+  .scroll-reveal-visible .scroll-reveal-artwork,
+  .scroll-reveal-visible .scroll-reveal-card {
+    opacity: 1;
+    transform: translate(0) scale(1);
+    filter: drop-shadow(0 0 0 transparent);
+  }
+
+  .hero-text-enter {
+    opacity: 0;
+  }
+
+  .scroll-reveal-visible .hero-text-enter {
+    animation: hero-text-enter 700ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+
+  .hero-text-enter-title {
+    animation-delay: 120ms;
+  }
+
+  .hero-text-enter-description {
+    animation-delay: 260ms;
+  }
+
+  .hero-text-enter-action {
+    animation-delay: 380ms;
+  }
+
+  @keyframes hero-text-enter {
+    from {
+      opacity: 0;
+      transform: translateY(1.25rem);
+      filter: blur(4px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+      filter: blur(0);
+    }
+  }
+
+  @media (min-width: 64rem) and (max-width: 79.999rem) {
+    .hero-image-slot-en {
+      transform: translateX(
+        clamp(48px, calc((1280px - 100vw) * 0.5), 128px)
+      );
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .public-page-hero-in {
+      animation: none;
+    }
+
+    .public-page-hero-in > *,
+    .scroll-reveal .faq-item-reveal,
+    .scroll-reveal-visible .faq-item-reveal {
+      opacity: 1;
+      transform: none;
+      filter: none;
+      animation: none;
+      transition: none;
+    }
+
+    .scroll-reveal,
+    .scroll-reveal-visible,
+    .scroll-reveal :is(h2, h3, p),
+    .scroll-reveal-visible :is(h2, h3, p),
+    .scroll-reveal-artwork,
+    .scroll-reveal-card,
+    .scroll-reveal-visible .scroll-reveal-artwork,
+    .scroll-reveal-visible .scroll-reveal-card,
+    .timeline-line,
+    .scroll-reveal-visible .timeline-line,
+    .timeline-node,
+    .scroll-reveal-visible .timeline-row .timeline-node,
+    .hero-text-enter {
+      opacity: 1;
+      transform: none;
+      transition: none;
+      filter: none;
+      animation: none;
+    }
+
+    .timeline-line,
+    .scroll-reveal-visible .timeline-line {
+      transform: translateX(-50%) scaleY(1);
+    }
+  }
+
   @keyframes dialog-overlay-in {
     from {
       opacity: 0;
@@ -384,18 +668,18 @@ html[dir="ltr"] {
   }
 
   .section-label {
-    @apply text-section-label font-regular text-foreground;
+    @apply text-[clamp(1rem,1.5vw,1.5rem)] leading-[1.4] font-regular text-foreground;
   }
 
   .section-heading {
-    @apply text-display-lg font-medium text-foreground;
+    @apply text-[clamp(1.75rem,3.4vw,3rem)] leading-[1.3] font-medium text-foreground;
   }
 
   .section-subheading {
-    @apply text-display-sm font-medium text-foreground;
+    @apply text-[clamp(1.125rem,2vw,1.75rem)] leading-[1.45] font-medium text-foreground;
   }
 
   .section-body {
-    @apply text-base font-regular text-foreground/80;
+    @apply text-[clamp(0.875rem,1.2vw,1rem)] leading-[1.7] font-regular text-foreground/80;
   }
 }

@@ -85,17 +85,17 @@ export function DashboardOverview() {
   const statusItems = statusDonutData.map((item) => ({ ...item, label: t(item.labelKey) }));
 
   return (
-    <div className="min-w-0 space-y-4 px-4 py-6 sm:py-7 lg:px-8 lg:py-8">
+    <div className="min-w-0 space-y-4 px-4 py-5 sm:py-7 lg:px-8 lg:py-8">
       <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-        <div>
-          <h1 className="text-2xl font-bold leading-tight text-foreground sm:text-3xl">{t("overview.title")}</h1>
-          <p className="mt-2 text-base font-medium text-muted-foreground sm:text-lg">{t("overview.subtitle")}</p>
+        <div className="min-w-0">
+          <h1 className="text-[clamp(1.5rem,5vw,1.875rem)] leading-tight font-bold text-foreground">{t("overview.title")}</h1>
+          <p className="mt-1.5 text-[clamp(0.875rem,3vw,1.125rem)] leading-[1.5] font-medium text-muted-foreground sm:mt-2">{t("overview.subtitle")}</p>
         </div>
-        <div className="flex flex-wrap items-center gap-3">
-          <Button type="button" variant="outline" className="h-10 flex-1 gap-3 rounded-lg border-border bg-card px-4 text-sm font-medium text-muted-foreground shadow-none sm:flex-none sm:px-5">
+        <div className="grid w-full grid-cols-1 gap-3 min-[420px]:grid-cols-2 md:flex md:w-auto md:flex-wrap md:items-center">
+          <Button type="button" variant="outline" className="h-10 w-full gap-3 rounded-lg border-border bg-card px-4 text-sm font-medium text-muted-foreground shadow-none md:w-auto md:px-5">
             {t("overview.filters.thisWeek")}<SidebarChevronIcon className="size-4" />
           </Button>
-          <Button asChild className="h-10 flex-1 rounded-lg px-4 text-sm font-semibold text-white hover:text-white sm:flex-none sm:px-5">
+          <Button asChild className="h-10 w-full rounded-lg px-4 text-sm font-semibold text-white hover:text-white md:w-auto md:px-5">
             <Link href={ROUTES.dashboardCreateRequest}><AddIcon className="size-4" />{t("overview.actions.createRequest")}</Link>
           </Button>
         </div>

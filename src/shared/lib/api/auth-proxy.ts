@@ -4,6 +4,7 @@ import axios from "axios";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
+import { API_CONFIG } from "@/config/api";
 import { createServerApiClient } from "@/shared/lib/api/server";
 
 /**
@@ -26,10 +27,11 @@ export async function proxyAuthRequest(
   options?: {
     authorization?: string;
     method?: string;
+    apiKey?: string;
     transformResponse?: (body: unknown, response: NextResponse) => unknown;
   },
 ) {
-  const apiClient = await createServerApiClient();
+  const apiClient = await createServerApiClient(options?.apiKey);
 
   const isBodyless = request.method === "GET" || request.method === "HEAD";
   const contentType = request.headers.get("content-type") ?? "";

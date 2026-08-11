@@ -29,34 +29,59 @@ export async function FooterNavigation({
     {
       title: t("navigation.support.title"),
       links: [
-        { href: `${ROUTES.home}#privacy-policy`, label: t("navigation.support.links.privacyPolicy") },
-        { href: `${ROUTES.home}#contact`, label: t("navigation.support.links.contactUs") },
-        { href: `${ROUTES.home}#terms-and-conditions`, label: t("navigation.support.links.termsConditions") },
-        { href: `${ROUTES.home}#faqs`, label: t("navigation.support.links.faqs") },
+        { href: ROUTES.privacyPolicy, label: t("navigation.support.links.privacyPolicy") },
+        { href: ROUTES.contact, label: t("navigation.support.links.contactUs") },
+        { href: ROUTES.termsAndConditions, label: t("navigation.support.links.termsConditions") },
+        { href: ROUTES.faqs, label: t("navigation.support.links.faqs") },
       ],
     },
   ];
 
   return (
-    <div className="grid gap-10 sm:grid-cols-2 lg:gap-14">
+    <div
+      dir={isRtl ? "rtl" : "ltr"}
+      className="grid gap-8 min-[440px]:grid-cols-2 lg:gap-14"
+    >
       {groups.map((group) => (
         <div
           key={group.title}
           className={cn(
-            "flex flex-col gap-4",
-            isRtl ? "items-end text-right" : "items-start text-left",
+            "flex flex-col items-center gap-4 text-center",
+            isRtl
+              ? "min-[440px]:items-start min-[440px]:text-right"
+              : "min-[440px]:items-start min-[440px]:text-left",
           )}
         >
-          <h3 className="text-xl font-semibold text-foreground">
+          <h3
+            className={cn(
+              "w-full text-lg font-semibold text-foreground sm:text-xl",
+              isRtl
+                ? "text-center min-[440px]:text-right"
+                : "text-center min-[440px]:text-left",
+            )}
+          >
             {group.title}
           </h3>
 
-          <div className="flex flex-col gap-3">
+          <div
+            className={cn(
+              "flex w-full flex-col items-center gap-3",
+              isRtl
+                ? "min-[440px]:items-start min-[440px]:text-right"
+                : "min-[440px]:items-start min-[440px]:text-left",
+            )}
+          >
             {group.links.map((link) => (
               <Link
                 key={link.label}
                 href={link.href}
-                className="text-md font-regular text-foreground/80 transition-colors hover:text-primary"
+                dir={isRtl ? "rtl" : "ltr"}
+                className={cn(
+                  "block w-full text-sm font-regular text-foreground/80 transition-colors hover:text-primary sm:text-md",
+                  isRtl
+                    ? "text-center min-[440px]:text-right"
+                    : "text-center min-[440px]:text-left",
+                )}
               >
                 {link.label}
               </Link>

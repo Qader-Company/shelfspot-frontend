@@ -15,7 +15,11 @@ export async function AboutSection({
   const t = await getTranslations("home.about");
   const isRtl = locale === "ar";
 
-  const visualSlot = <AboutVisual placeholderLabel={t("visualPlaceholder")} />;
+  const visualSlot = (
+    <div className={cn("scroll-reveal-artwork", isRtl ? "from-left" : "from-right")}>
+      <AboutVisual />
+    </div>
+  );
 
   const contentSlot = (
     <div
@@ -52,7 +56,7 @@ export async function AboutSection({
   );
 
   return (
-    <section id="about" className="py-16 sm:py-20 lg:py-24">
+    <section id="about" className="py-6 sm:py-7 lg:py-8">
       <LandingContainer>
         <div
           dir="ltr"

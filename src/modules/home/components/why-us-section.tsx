@@ -77,7 +77,7 @@ export async function WhyUsSection({
   const rightColumnItems = isRtl ? [items[0], items[2]] : [items[1], items[3]];
 
   return (
-    <section id="features" className="py-16 sm:py-20 lg:py-24">
+    <section id="features" className="py-6 sm:py-7 lg:py-8">
       <LandingContainer>
         <div className="flex w-full flex-col gap-6">
           <div dir="ltr" className="grid gap-10 md:grid-cols-2 md:gap-8 lg:gap-14">
@@ -126,28 +126,38 @@ export async function WhyUsSection({
 
           <div dir="ltr" className="grid w-full gap-6 md:grid-cols-2">
             <div className="flex flex-col gap-6">
-              {leftColumnItems.map((item) => (
-                <WhyUsCard
+              {leftColumnItems.map((item, index) => (
+                <div
                   key={item.title}
-                  locale={locale}
-                  iconSrc={item.iconSrc}
-                  iconAlt={item.iconAlt}
-                  title={item.title}
-                  description={item.description}
-                />
+                  className="scroll-reveal-card why-us-card-reveal"
+                  style={{ transitionDelay: `${100 + index * 360}ms` }}
+                >
+                  <WhyUsCard
+                    locale={locale}
+                    iconSrc={item.iconSrc}
+                    iconAlt={item.iconAlt}
+                    title={item.title}
+                    description={item.description}
+                  />
+                </div>
               ))}
             </div>
 
             <div className="flex flex-col gap-6">
-              {rightColumnItems.map((item) => (
-                <WhyUsCard
+              {rightColumnItems.map((item, index) => (
+                <div
                   key={item.title}
-                  locale={locale}
-                  iconSrc={item.iconSrc}
-                  iconAlt={item.iconAlt}
-                  title={item.title}
-                  description={item.description}
-                />
+                  className="scroll-reveal-card why-us-card-reveal"
+                  style={{ transitionDelay: `${280 + index * 360}ms` }}
+                >
+                  <WhyUsCard
+                    locale={locale}
+                    iconSrc={item.iconSrc}
+                    iconAlt={item.iconAlt}
+                    title={item.title}
+                    description={item.description}
+                  />
+                </div>
               ))}
             </div>
           </div>

@@ -8,13 +8,13 @@ export function TimelineStepCard({
   title,
 }: TimelineStepCardProps) {
   return (
-    <article className="rounded-[28px] border-2 border-primary bg-card px-7 py-6 shadow-none">
+    <article className="rounded-[20px] border-2 border-primary bg-card px-5 py-5 shadow-none sm:rounded-[28px] sm:px-7 sm:py-6">
       <div className="flex flex-col gap-3 text-center">
-        <h3 className="text-display-sm font-semibold text-foreground">
+        <h3 className="text-[clamp(1.125rem,2vw,1.75rem)] leading-[1.4] font-semibold text-foreground">
           {title}
         </h3>
 
-        <p className="text-lg font-regular leading-[1.5] text-foreground/80">
+        <p className="text-[clamp(0.875rem,1.35vw,1.125rem)] leading-[1.6] font-regular text-foreground/80">
           {description}
         </p>
       </div>
