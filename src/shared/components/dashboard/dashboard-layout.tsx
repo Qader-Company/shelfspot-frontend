@@ -1,6 +1,9 @@
+"use client";
+
 import type { ReactNode } from "react";
 
 import type { AuthContext } from "@/modules/auth/config/auth-context";
+import { NotificationDebug } from "@/shared/components/notifications/notification-debug";
 
 import { DashboardBodyLock } from "./dashboard-body-lock";
 import { DashboardSidebar } from "./dashboard-sidebar";
@@ -59,6 +62,11 @@ export function DashboardLayout({
         />
         <main className="min-w-0 flex-1">{children}</main>
       </div>
+      {process.env.NODE_ENV === "development" ? (
+        <NotificationDebug
+          portal={authContext === "admin" ? "admin" : "company"}
+        />
+      ) : null}
     </div>
   );
 }

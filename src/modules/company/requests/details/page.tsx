@@ -90,6 +90,7 @@ function RequestDetailsView({ task, id }: { task: CompanyTask; id: string | numb
   const router = useRouter();
   const { act, pay, update } = useTaskMutations();
   const [showCancel, setShowCancel] = useState(false);
+  const [showReject, setShowReject] = useState(false);
   const [showPay, setShowPay] = useState(false);
   const [showReschedule, setShowReschedule] = useState(false);
   const [editDate, setEditDate] = useState(task.date.slice(0, 10));
@@ -106,6 +107,7 @@ function RequestDetailsView({ task, id }: { task: CompanyTask; id: string | numb
   const isDraft = task.status === "draft";
   const canCancel = task.status === "pending" || task.status === "failed";
   const canReschedule = task.status === "failed";
+  const canReject = task.status === "completed";
 
   const serviceLabels = {
     productHeading:      t("requestDetails.services.productHeading"),
@@ -297,6 +299,17 @@ function RequestDetailsView({ task, id }: { task: CompanyTask; id: string | numb
         ) : null}
         </div>
       )}
+      {canReject ? (
+        <Button
+          type="button"
+          variant="outline"
+          className="h-12 w-full gap-2 rounded-xl border-destructive text-sm font-semibold text-destructive hover:bg-destructive/10 hover:text-destructive"
+          onClick={() => setShowReject(true)}
+        >
+          <CloseIcon className="size-4" />
+          {t("requestDetails.actions.reject")}
+        </Button>
+      ) : null}
 
       {/* Services section */}
       <div className="space-y-4">
@@ -334,6 +347,29 @@ function RequestDetailsView({ task, id }: { task: CompanyTask; id: string | numb
           act.mutate(
             { id, action: "cancel" },
             { onSuccess: () => { setShowCancel(false); router.back(); } },
+          )
+        }
+      />
+
+      <DeleteConfirmDialog
+        isOpen={showReject}
+        title={t("requestDetails.rejectDialog.title")}
+        descriptionLine1={t("requestDetails.rejectDialog.description")}
+        descriptionLine2=""
+        cancelLabel={t("requestDetails.rejectDialog.cancel")}
+        confirmLabel={t("requestDetails.rejectDialog.confirm")}
+        isPending={act.isPending}
+        errorMessage={
+          act.isError
+            ? normalizeApiError(act.error).message ||
+              t("requestDetails.rejectDialog.error")
+            : undefined
+        }
+        onClose={() => setShowReject(false)}
+        onConfirm={() =>
+          act.mutate(
+            { id, action: "reject" },
+            { onSuccess: () => setShowReject(false) },
           )
         }
       />

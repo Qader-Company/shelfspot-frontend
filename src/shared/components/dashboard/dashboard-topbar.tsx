@@ -4,7 +4,7 @@ import { Menu } from "lucide-react";
 
 import { Button } from "@/shared/ui/button";
 
-import { NotificationButton } from "./notification-button";
+import { NotificationButtonWrapper } from "@/shared/components/notifications/notification-button-wrapper";
 import { DashboardLocaleSwitcher } from "./dashboard-locale-switcher";
 import { SearchInput } from "./search-input";
 import { UserMenu } from "./user-menu";
@@ -64,7 +64,10 @@ export function DashboardTopbar({
       <div className="col-start-3 row-start-1 flex min-w-0 shrink-0 items-center justify-end gap-1 sm:gap-2 lg:gap-4">
         <DashboardLocaleSwitcher label={languageLabel} />
         <UserMenu authContext={authContext} user={user} label={userMenuLabel} />
-        <NotificationButton label={notificationLabel} />
+        <NotificationButtonWrapper 
+          label={notificationLabel}
+          portal={authContext === "admin" ? "admin" : "company"}
+        />
       </div>
     </header>
   );

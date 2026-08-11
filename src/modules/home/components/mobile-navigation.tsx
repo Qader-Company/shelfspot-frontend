@@ -4,8 +4,11 @@ import { Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import type { Locale } from "@/i18n/locale";
-import { Link } from "@/i18n/navigation";
+import { Link, useRouter } from "@/i18n/navigation";
 import { cn } from "@/shared/lib/utils";
+import type { AuthContext } from "@/modules/auth/config/auth-context";
+import { useLogoutMutation } from "@/modules/auth/hooks/use-auth-mutations";
+import { ROUTES } from "@/config/routes";
 
 interface MobileNavigationProps {
   closeLabel: string;
@@ -14,6 +17,10 @@ interface MobileNavigationProps {
   loginHref: string;
   loginLabel: string;
   menuLabel: string;
+  authContext: AuthContext | null;
+  dashboardLabel: string;
+  profileLabel: string;
+  signOutLabel: string;
 }
 
 export function MobileNavigation({
@@ -23,9 +30,24 @@ export function MobileNavigation({
   loginHref,
   loginLabel,
   menuLabel,
+  authContext,
+  dashboardLabel,
+  profileLabel,
+  signOutLabel,
 }: MobileNavigationProps) {
   const [isOpen, setIsOpen] = useState(false);
   const isRtl = locale === "ar";
+  const router = useRouter();
+  const logoutMutation = useLogoutMutation(authContext ?? "company");
+  const dashboardHref = authContext === "admin" ? ROUTES.adminDashboard : ROUTES.dashboard;
+
+  async function signOut() {
+    if (!authContext) return;
+    await logoutMutation.mutateAsync();
+    setIsOpen(false);
+    router.replace(ROUTES.home);
+    router.refresh();
+  }
 
   useEffect(() => {
     if (!isOpen) return;
@@ -100,13 +122,25 @@ export function MobileNavigation({
           ))}
         </nav>
 
-        <Link
-          href={loginHref}
-          onClick={() => setIsOpen(false)}
-          className="mt-6 flex min-h-12 items-center justify-center rounded-lg bg-primary px-4 py-3 text-base font-semibold text-white transition-colors hover:bg-primary/90"
-        >
-          {loginLabel}
-        </Link>
+        {authContext ? (
+          <div className="mt-6 grid gap-2">
+            <Link href={dashboardHref} onClick={() => setIsOpen(false)} className="flex min-h-12 items-center justify-center rounded-lg bg-primary px-4 py-3 text-base font-semibold text-white hover:bg-primary/90">
+              {dashboardLabel}
+            </Link>
+            {authContext === "company" ? (
+              <Link href={ROUTES.dashboardProfile} onClick={() => setIsOpen(false)} className="flex min-h-11 items-center justify-center rounded-lg border border-border px-4 py-2 font-medium hover:border-primary/50 hover:text-primary">
+                {profileLabel}
+              </Link>
+            ) : null}
+            <button type="button" onClick={signOut} disabled={logoutMutation.isPending} className="min-h-11 rounded-lg px-4 py-2 font-medium text-destructive hover:bg-accent disabled:opacity-50">
+              {signOutLabel}
+            </button>
+          </div>
+        ) : (
+          <Link href={loginHref} onClick={() => setIsOpen(false)} className="mt-6 flex min-h-12 items-center justify-center rounded-lg bg-primary px-4 py-3 text-base font-semibold text-white transition-colors hover:bg-primary/90">
+            {loginLabel}
+          </Link>
+        )}
       </aside>
     </div>
   );

@@ -1,4 +1,5 @@
 import { getTranslations } from "next-intl/server";
+import { cookies } from "next/headers";
 
 import { ROUTES } from "@/config/routes";
 import type { Locale } from "@/i18n/locale";
@@ -6,6 +7,12 @@ import { Link } from "@/i18n/navigation";
 import { LandingContainer } from "@/modules/home/components/landing-container";
 import { MobileNavigation } from "@/modules/home/components/mobile-navigation";
 import { PublicLocaleSwitcher } from "@/modules/home/components/public-locale-switcher";
+import { PublicAuthActions } from "@/modules/home/components/public-auth-actions";
+import { isAuthContext } from "@/modules/auth/config/auth-context";
+import {
+  ACCESS_TOKEN_COOKIE,
+  AUTH_CONTEXT_COOKIE,
+} from "@/shared/lib/auth/session-cookies";
 import { cn } from "@/shared/lib/utils";
 import { Button } from "@/shared/ui/button";
 import { Logo } from "@/shared/ui/logo";
@@ -15,8 +22,16 @@ interface PublicNavbarProps {
 }
 
 export async function PublicNavbar({ locale }: PublicNavbarProps) {
-  const t = await getTranslations("home.navbar");
+  const [t, cookieStore] = await Promise.all([
+    getTranslations("home.navbar"),
+    cookies(),
+  ]);
   const isRtl = locale === "ar";
+  const storedAuthContext = cookieStore.get(AUTH_CONTEXT_COOKIE)?.value;
+  const hasAccessToken = cookieStore.has(ACCESS_TOKEN_COOKIE);
+  const authContext = hasAccessToken && storedAuthContext && isAuthContext(storedAuthContext)
+    ? storedAuthContext
+    : null;
 
   const links = [
     { href: ROUTES.home, label: t("links.home"), isActive: true },
@@ -46,7 +61,14 @@ export async function PublicNavbar({ locale }: PublicNavbarProps) {
     <PublicLocaleSwitcher label={t("actions.localeSwitch")} />
   );
 
-  const ctaButton = (
+  const ctaButton = authContext ? (
+    <PublicAuthActions
+      authContext={authContext}
+      dashboardLabel={t("actions.dashboard")}
+      profileLabel={t("actions.profile")}
+      signOutLabel={t("actions.signOut")}
+    />
+  ) : (
     <Button
       asChild
       className="relative z-20 hidden h-10 w-[82px] min-w-[82px] shrink-0 whitespace-nowrap rounded-lg border border-primary bg-primary px-2.5 py-2 text-xs font-semibold text-white shadow-none hover:bg-primary/90 hover:text-white min-[824px]:inline-flex min-[1200px]:h-12 min-[1200px]:w-[104px] min-[1200px]:text-base xl:h-14 xl:w-[118px] xl:px-[18px] xl:py-[10px] xl:text-[20px] [&_*]:text-white"
@@ -74,6 +96,10 @@ export async function PublicNavbar({ locale }: PublicNavbarProps) {
       closeLabel={t("actions.closeMenu")}
       loginLabel={t("actions.login")}
       loginHref={ROUTES.login}
+      authContext={authContext}
+      dashboardLabel={t("actions.dashboard")}
+      profileLabel={t("actions.profile")}
+      signOutLabel={t("actions.signOut")}
       links={links.map((link) => ({
         ...link,
         href: link.href.startsWith("#")

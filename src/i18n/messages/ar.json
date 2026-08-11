@@ -16,6 +16,9 @@
       },
       "actions": {
         "login": "تسجيل جديد",
+        "dashboard": "لوحة التحكم",
+        "profile": "الملف الشخصي",
+        "signOut": "تسجيل الخروج",
         "localeSwitch": "EN",
         "menu": "فتح قائمة التنقل",
         "closeMenu": "إغلاق قائمة التنقل"
@@ -231,8 +234,77 @@
     },
     "notifications": {
       "title": "الإشعارات",
-      "newBadge": "2 جديد",
+      "newBadge": "جديد",
       "closeOverlay": "إغلاق الإشعارات",
+      "markAllRead": "تحديد الكل كمقروء",
+      "noNotifications": "لا توجد إشعارات بعد",
+      "viewDetails": "عرض التفاصيل",
+      "fallback": {
+        "title": "إشعار جديد",
+        "description": "لديك إشعار جديد."
+      },
+      "events": {
+        "task.published": {
+          "title": "مهمة جديدة متاحة",
+          "description": "تم نشر المهمة #{taskId}"
+        },
+        "task.reassigned": {
+          "title": "تم إعادة تعيين المهمة",
+          "description": "تم إعادة تعيين المهمة #{taskId}"
+        },
+        "task.reopened": {
+          "title": "تم إعادة فتح المهمة",
+          "description": "تم إعادة فتح المهمة #{taskId}"
+        },
+        "task.completed": {
+          "title": "تم إكمال المهمة",
+          "description": "تم إكمال المهمة #{taskId}"
+        },
+        "task.failed": {
+          "title": "فشلت المهمة",
+          "description": "فشلت المهمة #{taskId}"
+        },
+        "task.worker_cancelled": {
+          "title": "ألغى العامل المهمة",
+          "description": "ألغى العامل المهمة #{taskId}"
+        },
+        "task.rejected": {
+          "title": "تم رفض المهمة",
+          "description": "تم رفض المهمة #{taskId}"
+        },
+        "payment.completed": {
+          "title": "تم الدفع",
+          "description": "تم إتمام الدفعة #{paymentId} بمبلغ {amount} {currency}"
+        },
+        "payment.pending": {
+          "title": "دفعة قيد الانتظار",
+          "description": "الدفعة #{paymentId} قيد الانتظار"
+        },
+        "payment.failed": {
+          "title": "فشل الدفع",
+          "description": "فشلت الدفعة #{paymentId}"
+        },
+        "payment.refunded": {
+          "title": "تم استرجاع المبلغ",
+          "description": "تم استرجاع مبلغ الدفعة #{paymentId}"
+        },
+        "system.maintenance": {
+          "title": "صيانة النظام",
+          "description": "صيانة مجدولة قيد التنفيذ"
+        },
+        "system.update": {
+          "title": "تحديث النظام",
+          "description": "تم تحديث النظام"
+        },
+        "account.verified": {
+          "title": "تم التحقق من الحساب",
+          "description": "تم التحقق من حسابك"
+        },
+        "account.suspended": {
+          "title": "تم تعليق الحساب",
+          "description": "تم تعليق حسابك"
+        }
+      },
       "items": {
         "newHiringRequest": {
           "title": "طلب توظيف جديد",
@@ -368,6 +440,7 @@
         "closeDialog": "إغلاق النافذة",
         "toggleSection": "فتح أو إغلاق القسم",
         "addService": "إضافة خدمة",
+        "removeService": "إزالة الخدمة",
         "deleteService": "حذف الخدمة",
         "removeServiceDraft": "إزالة مسودة الخدمة",
         "save": "حفظ",
@@ -767,6 +840,13 @@
       "actions": {
         "addNew": "إضافة مشرف جديد"
       },
+      "states": {
+        "errorTitle": "تعذر تحميل المشرفين",
+        "errorDescription": "حدث خطأ أثناء تحميل قائمة المشرفين.",
+        "retry": "إعادة المحاولة",
+        "emptyTitle": "لا يوجد مشرفون",
+        "emptyDescription": "أضف مشرفًا جديدًا للبدء."
+      },
       "table": {
         "columns": {
           "adminName": "اسم المشرف",
@@ -1148,6 +1228,7 @@
         "edit": "تعديل المسودة",
         "reschedule": "إعادة جدولة الطلب",
         "cancelRequest": "إلغاء الطلب",
+        "reject": "رفض المهمة المكتملة",
         "pay": "ادفع الآن",
         "repeatRequest": "تكرار الطلب",
         "viewExecution": "عرض تفاصيل التنفيذ",
@@ -1165,9 +1246,16 @@
       "description": "هل أنت متأكد من رغبتك في إلغاء هذا الطلب؟ لا يمكن التراجع عن هذا الإجراء.",
       "cancel": "رجوع",
       "confirm": "نعم، إلغاء",
-      "error": "تعذر إلغاء الطلب. يرجى المحاولة مرة أخرى."
+        "error": "تعذر إلغاء الطلب. يرجى المحاولة مرة أخرى."
       },
-    "status": {
+      "rejectDialog": {
+        "title": "رفض المهمة المكتملة؟",
+        "description": "هل أنت متأكد من رغبتك في رفض هذه المهمة المكتملة؟",
+        "cancel": "رجوع",
+        "confirm": "نعم، ارفض",
+        "error": "تعذر رفض المهمة المكتملة. يرجى المحاولة مرة أخرى."
+      },
+      "status": {
       "draft": "مسودة",
       "started": "بدأ",
       "inProgress": "قيد التنفيذ",
@@ -1263,6 +1351,53 @@
           "sub-category": { "title": "الفئات الفرعية", "description": "إدارة جميع الفئات الفرعية" },
           "product": { "title": "المنتجات", "description": "إدارة جميع المنتجات" }
         }
+      }
+    },
+    "requests": {
+      "title": "إدارة الطلبات",
+      "subtitle": "متابعة وإدارة جميع طلبات المنصة",
+      "searchLabel": "البحث في الطلبات",
+      "searchPlaceholder": "ابحث عن طلب",
+      "loading": "جارٍ تحميل الطلبات…",
+      "retry": "إعادة المحاولة",
+      "empty": "لا توجد طلبات",
+      "emptyDescription": "جرّب تغيير البحث أو تصفية الحالة.",
+      "tabs": {
+        "all": "جميع الطلبات",
+        "deleted": "الطلبات المحذوفة"
+      },
+      "stats": {
+        "total": "إجمالي الطلبات",
+        "pending": "قيد الانتظار",
+        "inProgress": "قيد التنفيذ",
+        "rejected": "مرفوض",
+        "completed": "مكتمل",
+        "commission": "العمولة"
+      },
+      "statuses": {
+        "all": "كل الحالات",
+        "draft": "مسودة",
+        "pending": "قيد الانتظار",
+        "inProgress": "قيد التنفيذ",
+        "in_progress": "قيد التنفيذ",
+        "completed": "مكتمل",
+        "failed": "فشل",
+        "cancelled": "ملغي",
+        "rejected": "مرفوض"
+      },
+      "columns": {
+        "id": "رقم الطلب",
+        "company": "الشركة",
+        "created": "تاريخ الإنشاء",
+        "store": "المتجر",
+        "price": "السعر",
+        "status": "الحالة",
+        "action": "الإجراء"
+      },
+      "pagination": {
+        "previous": "السابق",
+        "next": "التالي",
+        "page": "الصفحة {page} من {pages}"
       }
     },
     "title": "لوحة التحكم",

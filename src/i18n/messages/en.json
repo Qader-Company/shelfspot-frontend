@@ -16,6 +16,9 @@
       },
       "actions": {
         "login": "Sign In",
+        "dashboard": "Dashboard",
+        "profile": "Profile",
+        "signOut": "Sign out",
         "localeSwitch": "AR",
         "menu": "Open navigation menu",
         "closeMenu": "Close navigation menu"
@@ -231,8 +234,77 @@
     },
     "notifications": {
       "title": "Notification",
-      "newBadge": "2 new",
+      "newBadge": "new",
       "closeOverlay": "Close notifications",
+      "markAllRead": "Mark all as read",
+      "noNotifications": "No notifications yet",
+      "viewDetails": "View Details",
+      "fallback": {
+        "title": "New notification",
+        "description": "You have a new notification."
+      },
+      "events": {
+        "task.published": {
+          "title": "New Task Available",
+          "description": "Task #{taskId} has been published"
+        },
+        "task.reassigned": {
+          "title": "Task Reassigned",
+          "description": "Task #{taskId} has been reassigned"
+        },
+        "task.reopened": {
+          "title": "Task Reopened",
+          "description": "Task #{taskId} has been reopened"
+        },
+        "task.completed": {
+          "title": "Task Completed",
+          "description": "Task #{taskId} has been completed"
+        },
+        "task.failed": {
+          "title": "Task Failed",
+          "description": "Task #{taskId} has failed"
+        },
+        "task.worker_cancelled": {
+          "title": "Worker Cancelled",
+          "description": "Worker cancelled task #{taskId}"
+        },
+        "task.rejected": {
+          "title": "Task Rejected",
+          "description": "Task #{taskId} has been rejected"
+        },
+        "payment.completed": {
+          "title": "Payment Completed",
+          "description": "Payment #{paymentId} of {amount} {currency} has been completed"
+        },
+        "payment.pending": {
+          "title": "Payment Pending",
+          "description": "Payment #{paymentId} is pending"
+        },
+        "payment.failed": {
+          "title": "Payment Failed",
+          "description": "Payment #{paymentId} has failed"
+        },
+        "payment.refunded": {
+          "title": "Payment Refunded",
+          "description": "Payment #{paymentId} has been refunded"
+        },
+        "system.maintenance": {
+          "title": "System Maintenance",
+          "description": "Scheduled maintenance in progress"
+        },
+        "system.update": {
+          "title": "System Update",
+          "description": "System has been updated"
+        },
+        "account.verified": {
+          "title": "Account Verified",
+          "description": "Your account has been verified"
+        },
+        "account.suspended": {
+          "title": "Account Suspended",
+          "description": "Your account has been suspended"
+        }
+      },
       "items": {
         "newHiringRequest": {
           "title": "New hiring request",
@@ -1156,6 +1228,7 @@
         "edit": "Edit Draft",
         "reschedule": "Reschedule This Request",
         "cancelRequest": "Cancel Request",
+        "reject": "Reject Completed Task",
         "pay": "Pay Now",
         "repeatRequest": "Repeat This Request",
         "viewExecution": "View Execution Details",
@@ -1173,9 +1246,16 @@
       "description": "Are you sure you want to cancel this request? This action cannot be undone.",
       "cancel": "Go Back",
       "confirm": "Yes, Cancel",
-      "error": "The request could not be canceled. Please try again."
+        "error": "The request could not be canceled. Please try again."
       },
-    "status": {
+      "rejectDialog": {
+        "title": "Reject Completed Task?",
+        "description": "Are you sure you want to reject this completed task?",
+        "cancel": "Go Back",
+        "confirm": "Yes, Reject",
+        "error": "The completed task could not be rejected. Please try again."
+      },
+      "status": {
       "draft": "Draft",
       "started": "Started",
       "inProgress": "In Progress",
@@ -1297,6 +1377,53 @@
           "sub-category": { "title": "Sub-category", "description": "Manage all sub-category" },
           "product": { "title": "Products", "description": "Manage all products" }
         }
+      }
+    },
+    "requests": {
+      "title": "Requests Management",
+      "subtitle": "Monitor and manage all platform requests",
+      "searchLabel": "Search requests",
+      "searchPlaceholder": "Search for requests",
+      "loading": "Loading requests…",
+      "retry": "Try again",
+      "empty": "No requests found",
+      "emptyDescription": "Try changing the search or status filter.",
+      "tabs": {
+        "all": "All Requests",
+        "deleted": "Deleted Requests"
+      },
+      "stats": {
+        "total": "Total Requests",
+        "pending": "Pending",
+        "inProgress": "In Progress",
+        "rejected": "Rejected",
+        "completed": "Completed",
+        "commission": "Commission"
+      },
+      "statuses": {
+        "all": "All Statuses",
+        "draft": "Draft",
+        "pending": "Pending",
+        "inProgress": "In Progress",
+        "in_progress": "In Progress",
+        "completed": "Completed",
+        "failed": "Failed",
+        "cancelled": "Cancelled",
+        "rejected": "Rejected"
+      },
+      "columns": {
+        "id": "Request ID",
+        "company": "Company",
+        "created": "Created",
+        "store": "Store",
+        "price": "Price",
+        "status": "Status",
+        "action": "Action"
+      },
+      "pagination": {
+        "previous": "Previous",
+        "next": "Next",
+        "page": "Page {page} of {pages}"
       }
     },
     "title": "Dashboard",

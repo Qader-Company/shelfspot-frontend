@@ -38,6 +38,7 @@ export async function updatePlatformSettings(
 }
 
 export interface AdminProfile {
+  id: number;
   name: string;
   email: string;
 }
