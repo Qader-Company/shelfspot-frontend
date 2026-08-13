@@ -20,7 +20,11 @@ interface TokenPayload {
   access_token: TokenValue;
   refresh_token: TokenValue;
   token_type?: string;
-  user?: { permissions?: unknown } & Record<string, unknown>;
+  user?: {
+    available_permissions?: unknown;
+    not_available_permissions?: unknown;
+    permissions?: unknown;
+  } & Record<string, unknown>;
   company_id?: string | number;
 }
 
@@ -73,7 +77,9 @@ export function setSessionCookies(
   const isCompanyOwner = payload.user?.is_owner === true || payload.user?.is_owner === 1 || payload.user?.is_owner === "1";
   const permissions = isCompanyOwner
     ? ALL_COMPANY_PERMISSIONS.join("|")
-    : serializePermissions(payload.user?.permissions);
+    : serializePermissions(
+        payload.user?.available_permissions ?? payload.user?.permissions,
+      );
 
   response.cookies.set(
     AUTH_CONTEXT_COOKIE,
