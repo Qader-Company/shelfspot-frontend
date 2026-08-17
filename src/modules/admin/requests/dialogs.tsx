@@ -1,0 +1,15 @@
+"use client";
+import { useState } from "react";
+import { MapPin, Search, Star, X } from "lucide-react";
+import { FlowDialog } from "@/shared/components/flow-dialog";
+import { Button } from "@/shared/ui/button";
+import { useAssignAdminRequest, useNearbyMerchandisers } from "./hooks";
+
+export function AssignMerchandiserDialog({ open, requestId, labels, onClose }: { open: boolean; requestId: string; labels: Record<string, string>; onClose: () => void }) {
+  const [radius, setRadius] = useState(5);
+  const query = useNearbyMerchandisers(requestId, radius, open);
+  const mutation = useAssignAdminRequest(); const [selected, setSelected] = useState(""); const [search, setSearch] = useState(""); const [error, setError] = useState("");
+  const rows = (query.data ?? []).filter((item) => item.name.toLowerCase().includes(search.toLowerCase()));
+  async function submit() { if (!selected) { setError(labels.selectRequired); return; } try { await mutation.mutateAsync({ requestId, merchandiserId: selected }); onClose(); } catch (cause) { setError(cause instanceof Error ? cause.message : labels.unverified); } }
+  return <FlowDialog isOpen={open} onClose={onClose} title={labels.title} closeLabel={labels.close} className="max-w-xl" footer={<Button className="w-full" onClick={submit} disabled={mutation.isPending}>{labels.assign}</Button>}><p className="text-sm text-muted-foreground">{labels.subtitle}</p><label className="relative mt-4 block"><Search className="absolute start-3 top-3 size-4 text-muted-foreground" /><span className="sr-only">{labels.search}</span><input value={search} onChange={(event) => setSearch(event.target.value)} placeholder={labels.search} className="h-10 w-full rounded-lg border border-border bg-card px-10" /></label><div className="mt-4 flex gap-2">{[5,10,15,20].map((option) => <button type="button" key={option} onClick={() => setRadius(option)} className={`rounded-full border px-3 py-1 text-sm ${radius === option ? "border-primary bg-primary text-primary-foreground" : "border-border"}`}>{option} km</button>)}</div><div className="mt-4 max-h-[50dvh] space-y-3 overflow-y-auto">{rows.map((item) => <button key={item.id} type="button" disabled={!item.available} onClick={() => setSelected(item.id)} className={`w-full rounded-xl border p-4 text-start ${selected === item.id ? "border-primary" : "border-border"} disabled:opacity-50`}><div className="flex justify-between"><strong>{item.name}</strong><span className="rounded-full bg-success/10 px-2 text-xs text-success">{item.available ? labels.available : labels.busy}</span></div><p className="text-sm text-muted-foreground">{item.phone}</p><div className="mt-2 flex justify-between text-xs text-muted-foreground"><span><MapPin className="inline size-3" /> {item.distanceKm} km</span><span>{item.tasks} {labels.tasks}</span><span><Star className="inline size-3" /> {item.rating}</span></div></button>)}</div>{error ? <p role="alert" className="mt-3 rounded-lg bg-destructive/10 p-3 text-sm text-destructive">{error}</p> : null}</FlowDialog>;
+}

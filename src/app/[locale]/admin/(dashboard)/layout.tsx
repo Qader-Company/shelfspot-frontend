@@ -1,0 +1,24 @@
+import { getTranslations } from "next-intl/server";
+
+import { ROUTES } from "@/config/routes";
+import { DashboardLayout, type DashboardSidebarItem } from "@/shared/components/dashboard";
+
+export default async function AdminLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  const t = await getTranslations("adminDashboard");
+  const unavailable = ROUTES.adminDashboard;
+  const sidebarItems: DashboardSidebarItem[] = [
+    { key: "dashboard", label: t("navigation.dashboard"), href: ROUTES.adminDashboard, icon: "dashboard" },
+    { key: "companies", label: t("navigation.companies"), href: "/admin/companies", icon: "companies" },
+    { key: "workers", label: t("navigation.merchandisers"), href: "/admin/merchandisers", icon: "workers" },
+    { key: "requests", label: t("navigation.requests"), href: ROUTES.adminRequests, icon: "box" },
+    { key: "promoCode", label: t("navigation.promoCode"), href: "/admin/promo-codes", icon: "promoCode" },
+    { key: "admins", label: t("navigation.admins"), href: "/admin/admins", icon: "admins" },
+    { key: "payments", label: t("navigation.payments"), href: "/admin/payments", icon: "payment" },
+    { key: "settings", label: t("navigation.settings"), href: "/admin/settings", icon: "settings" },
+    { key: "services", label: t("navigation.services"), href: "/admin/services", icon: "services" },
+    { key: "trash", label: t("navigation.trash"), href: "/admin/trash", icon: "trash" },
+    { key: "logout", label: t("navigation.logout"), href: ROUTES.login, icon: "logout" },
+  ];
+
+  return <DashboardLayout authContext="admin" sidebarItems={sidebarItems} primaryItemCount={5} user={{ name: t("user.name"), description: t("user.role") }} labels={{ navigation: t("navigation.label"), logo: t("navigation.logo"), search: t("header.searchLabel"), searchPlaceholder: t("header.searchPlaceholder"), searchNoResults: t("header.searchNoResults"), menu: t("header.menu"), notification: t("header.notification"), userMenu: t("header.userMenu"), language: t("header.language") }}>{children}</DashboardLayout>;
+}

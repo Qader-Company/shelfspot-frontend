@@ -1,0 +1,1700 @@
+{
+  "metadata": {
+    "title": "شيلف سبوت",
+    "description": "شيلف سبوت"
+  },
+  "home": {
+    "title": "شيلف سبوت",
+    "navbar": {
+      "brandLabel": "الصفحة الرئيسية لشيلف سبوت",
+      "links": {
+        "home": "الرئيسية",
+        "about": "من نحن",
+        "whyShelfSpot": "الميزات",
+        "howItWorks": "كيف نعمل",
+        "contact": "تواصل معنا"
+      },
+      "actions": {
+        "login": "تسجيل جديد",
+        "dashboard": "لوحة التحكم",
+        "profile": "الملف الشخصي",
+        "signOut": "تسجيل الخروج",
+        "localeSwitch": "EN",
+        "menu": "فتح قائمة التنقل",
+        "closeMenu": "إغلاق قائمة التنقل"
+      }
+    },
+    "hero": {
+      "titlePrefix": "نرفع",
+      "titleAccent": "كفاءة التنفيذ",
+      "titleRest": "داخل المتاجر",
+      "description": "منصة رقمية متكاملة لإدارة مهام العرض والتنفيذ الميداني، مع متابعة لحظية، إثبات موثق، ونظام دفع يضمن حقوق جميع الأطراف.",
+      "primaryCta": "ابدأ الآن",
+      "visualAlt": "واجهة تنفيذ العمليات داخل المتاجر",
+      "floatingCards": {
+        "speed": "تنفيذ سريع",
+        "clarity": "استجابة فورية",
+        "execution": "استجابة فورية"
+      }
+    },
+    "about": {
+      "eyebrow": "منصتنا الرقمية",
+      "title": "ما هي ShelfSpot؟",
+      "subtitle": "هي منصة رقمية متخصصة في إدارة وتنفيذ المهام الميدانية داخل المتاجر.",
+      "paragraphOne": "نعمل كحل وسيط بين الشركات والمنفذين الميدانيين، لضمان تنفيذ العروض والامتثال وفق المعايير المحددة، مع نظام متابعة لحظي، وإثبات موثق، وآلية دفع آمنة.",
+      "paragraphTwo": "نهدف إلى رفع كفاءة التنفيذ الميداني في السوق السعودي، من خلال حلول تقنية ترتكز على الدقة، السرعة، والشفافية.",
+      "visualPlaceholder": "معاينة لوحة التحكم المؤقتة"
+    },
+    "whyShelfSpot": {
+      "eyebrowPrefix": "لماذا",
+      "eyebrowSuffix": "؟",
+      "titlePrefix": "ما يميز",
+      "titleSuffix": "؟",
+      "items": {
+        "visibility": {
+          "title": "رؤية كاملة",
+          "description": "متابعة لحظية وتحقق بالصور لكل مهمة.",
+          "iconAlt": "أيقونة الرؤية الكاملة"
+        },
+        "centralized": {
+          "title": "تحكم مركزي",
+          "description": "إدارة جميع طلباتك من لوحة تحكم واحدة قوية.",
+          "iconAlt": "أيقونة التحكم المركزي"
+        },
+        "flexible": {
+          "title": "تنفيذ مرن",
+          "description": "إنشاء مهام عبر مواقع متعددة بسهولة.",
+          "iconAlt": "أيقونة التنفيذ المرن"
+        },
+        "secure": {
+          "title": "مدفوعات آمنة",
+          "description": "لا يتم صرف المدفوعات إلا بعد اعتماد المهمة.",
+          "iconAlt": "أيقونة المدفوعات الآمنة"
+        }
+      }
+    },
+    "statistics": {
+      "eyebrow": "موثوق بنتائجه",
+      "title": "أرقامنا تتحدث",
+      "items": {
+        "merchandisers": {
+          "value": "+800",
+          "label": "منفذ ميداني موثق"
+        },
+        "approvalRate": {
+          "value": "98%",
+          "label": "نسبة اعتماد من أول مرة"
+        },
+        "companies": {
+          "value": "+120",
+          "label": "شركة تستخدم ShelfSpot"
+        },
+        "tasks": {
+          "value": "+5000",
+          "label": "مهمة مكتملة بنجاح"
+        }
+      }
+    },
+    "howItWorksSection": {
+      "eyebrow": "كيف يعمل ShelfSpot؟",
+      "title": "خطوات بسيطة",
+      "steps": {
+        "request": {
+          "title": "إنشاء الطلب",
+          "description": "تقوم الشركة بتحديد الموقع، المنتج، نوع الخدمة، وأرفاق البلانوجرام أو مستندات BDA أو بجد."
+        },
+        "assignment": {
+          "title": "توجيه المهمة",
+          "description": "يتم إشعار أقرب منفذ ميداني معتمد حسب الموقع ونوع النشاط."
+        },
+        "execution": {
+          "title": "التنفيذ والتوثيق",
+          "description": "يقوم المنفذ بتنفيذ المهمة وفق التعليمات المحددة ورفع الصور وإثبات التنفيذ."
+        },
+        "review": {
+          "title": "المراجعة واعتماد التنفيذ",
+          "description": "تقوم الشركة بمراجعة النتائج، وعند الاعتماد يتم تحويل المستحقات تلقائيًا."
+        }
+      },
+      "ctaLabel": "ماذا تنتظر؟",
+      "ctaAction": "ابدأ الآن"
+    },
+    "footer": {
+      "brandLabel": "شعار شيلف سبوت في التذييل",
+      "description": "منصة رقمية لإدارة وتنفيذ المهام الميدانية داخل المتاجر، تزوّد الشركات برؤية تشغيلية واضحة وآلية تنفيذ موثوقة عبر مختلف مناطق المملكة.",
+      "navigation": {
+        "quickLinks": {
+          "title": "روابط سريعة",
+          "links": {
+            "home": "الرئيسية",
+            "services": "الخدمات",
+            "workMechanism": "آلية العمل",
+            "successPartners": "شركاء النجاح",
+            "aboutUs": "من نحن"
+          }
+        },
+        "support": {
+          "title": "الدعم والتواصل",
+          "links": {
+            "privacyPolicy": "سياسة الخصوصية",
+            "contactUs": "تواصل معنا",
+            "termsConditions": "الشروط والأحكام",
+            "faqs": "الأسئلة الشائعة"
+          }
+        }
+      },
+      "contact": {
+        "title": "تواصل معنا",
+        "location": "المملكة العربية السعودية",
+        "phone": "+966xxxxxxxxxx",
+        "email": "info@shelfspot.com"
+      },
+      "bottom": {
+        "copy": "© 2025 ShelfSpot. جميع الحقوق محفوظة"
+      }
+    }
+  },
+  "publicPages": {
+    "backHome": "العودة إلى الرئيسية",
+    "lastUpdated": "آخر تحديث: 5 أغسطس 2026",
+    "privacy": {
+      "eyebrow": "خصوصيتك تهمنا", "title": "سياسة الخصوصية",
+      "intro": "توضح هذه السياسة المعلومات التي تجمعها شيلف سبوت، وكيف نستخدمها، والخيارات المتاحة لك عند استخدام منصتنا.",
+      "sections": {
+        "collection": { "title": "المعلومات التي نجمعها", "body": "نجمع بيانات الحساب والمنشأة ومعلومات التواصل وبيانات المهام وإثباتات التنفيذ المرفوعة ومعلومات الجهاز وسجلات الاستخدام اللازمة لتشغيل شيلف سبوت." },
+        "usage": { "title": "كيف نستخدم المعلومات", "body": "نستخدم المعلومات لتقديم المنصة وتحسينها، وتنسيق المهام الميدانية، والتحقق من التنفيذ، ومعالجة المدفوعات، والتواصل معك، وحماية المستخدمين من إساءة الاستخدام." },
+        "sharing": { "title": "متى نشارك المعلومات", "body": "قد نشارك المعلومات مع الشركات والمنفذين المشاركين في المهمة، أو مزودي الخدمات الموثوقين، أو الجهات المختصة عند طلبها نظامًا. ولا نبيع المعلومات الشخصية." },
+        "security": { "title": "أمن البيانات", "body": "نطبق إجراءات تقنية وتنظيمية مناسبة لحماية المعلومات. لا يوجد نظام إلكتروني آمن بالكامل، لذلك ينبغي للمستخدمين أيضًا حماية كلمات المرور والأجهزة الخاصة بهم." },
+        "rights": { "title": "خياراتك وحقوقك", "body": "يمكنك طلب الوصول إلى معلوماتك الشخصية المؤهلة أو تصحيحها أو حذفها، كما يمكنك تحديث بيانات حسابك من خلال المنصة أو بالتواصل معنا." },
+        "retention": { "title": "الاحتفاظ والتواصل", "body": "نحتفظ بالمعلومات للمدة اللازمة لتشغيل المنصة والوفاء بالالتزامات النظامية وتسوية النزاعات. يمكن إرسال أسئلة الخصوصية إلى info@shelfspot.com." }
+      }
+    },
+    "terms": {
+      "eyebrow": "استخدام شيلف سبوت", "title": "الشروط والأحكام",
+      "intro": "تحدد هذه الشروط القواعد المطبقة عند الوصول إلى شيلف سبوت أو استخدام خدمات التنفيذ الميداني داخل المتاجر.",
+      "sections": {
+        "acceptance": { "title": "الموافقة على الشروط", "body": "بإنشاء حساب أو استخدام شيلف سبوت، فإنك توافق على هذه الشروط والأنظمة المعمول بها. وإذا استخدمت المنصة نيابة عن منشأة، فإنك تقر بصلاحيتك لإلزامها." },
+        "accounts": { "title": "الحسابات والوصول", "body": "يجب تقديم معلومات صحيحة والمحافظة على سرية بيانات الدخول وإبلاغنا بأي استخدام غير مصرح به. وتتحمل مسؤولية الأنشطة التي تتم من خلال حسابك." },
+        "services": { "title": "خدمات المنصة", "body": "تساعد شيلف سبوت الشركات على إنشاء المهام الميدانية وإسنادها ومتابعتها والتحقق منها. وتظهر في المنصة تفاصيل نطاق المهمة والموعد ومتطلبات الإثبات." },
+        "payments": { "title": "الرسوم والمدفوعات", "body": "تظهر الأسعار وشروط الدفع المطبقة قبل التأكيد. وقد تُصرف المدفوعات بعد اعتماد المهمة وفق شروط الخدمة المتفق عليها وسياسات الاسترداد المطبقة." },
+        "conduct": { "title": "الاستخدام المقبول", "body": "لا يجوز إساءة استخدام المنصة أو تقديم إثباتات مزيفة أو تعطيل تشغيلها أو انتهاك حقوق الغير أو استخدام شيلف سبوت في نشاط غير نظامي أو احتيالي أو ضار." },
+        "liability": { "title": "التوافر والمسؤولية", "body": "نسعى إلى إبقاء شيلف سبوت موثوقة، لكننا لا نضمن توافرها دون انقطاع. وتكون المسؤولية محدودة بالقدر الذي تسمح به الأنظمة المطبقة. تواصل معنا لأي استفسار." }
+      }
+    },
+    "faqs": {
+      "eyebrow": "مركز المساعدة", "title": "الأسئلة الشائعة",
+      "intro": "إجابات سريعة حول شيلف سبوت والمهام الميدانية والتحقق والمدفوعات والدعم.",
+      "items": {
+        "platform": { "question": "ما هي شيلف سبوت؟", "answer": "شيلف سبوت منصة رقمية تساعد الشركات على إدارة التنفيذ الميداني داخل المتاجر والتحقق منه من خلال منفذين ميدانيين مؤهلين." },
+        "companies": { "question": "من يمكنه استخدام شيلف سبوت؟", "answer": "يمكن للشركات إنشاء الطلبات ومتابعتها، بينما يستطيع المنفذون الميدانيون المعتمدون استلام المهام المسندة وتنفيذها." },
+        "tasks": { "question": "كيف يتم إنشاء مهمة ميدانية؟", "answer": "تحدد الشركة الموقع والمنتجات ونوع الخدمة والموعد وتعليمات التنفيذ، ثم تتاح المهمة لمنفذ ميداني مناسب." },
+        "verification": { "question": "كيف يتم التحقق من العمل المنجز؟", "answer": "يرفع المنفذ الميداني الصور والإثباتات المطلوبة، ثم تراجع الشركة النتائج عبر شيلف سبوت قبل اعتماد المهمة." },
+        "payments": { "question": "متى تتم معالجة المدفوعات؟", "answer": "تخضع المدفوعات للشروط الظاهرة في كل طلب، ويتم صرفها عادة بعد مراجعة العمل المقدم واعتماده." },
+        "support": { "question": "كيف أتواصل مع الدعم؟", "answer": "استخدم صفحة تواصل معنا أو راسل info@shelfspot.com، واذكر بيانات حسابك ورقم الطلب عند الحاجة." }
+      }
+    },
+    "contact": {
+      "eyebrow": "نحن هنا لمساعدتك", "title": "تواصل معنا",
+      "intro": "لديك سؤال عن شيلف سبوت أو تحتاج مساعدة في حسابك؟ تواصل مع فريقنا عبر القنوات التالية.",
+      "cards": { "location": "الموقع", "phone": "الهاتف", "email": "البريد الإلكتروني" },
+      "values": { "location": "المملكة العربية السعودية", "phone": "+966xxxxxxxxxx", "email": "info@shelfspot.com" }
+    }
+  },
+  "adminServices":{"title":"الخدمات","subtitle":"إدارة جميع الخدمات المتاحة وإعداداتها","searchLabel":"البحث عن الخدمات","searchPlaceholder":"البحث عن خدمة","statusLabel":"تصفية الخدمات حسب الحالة","statuses":{"all":"كل الحالات","active":"نشط","inactive":"غير نشط"},"loading":"جارٍ تحميل الخدمات…","error":"تعذر تحميل الخدمات","retry":"إعادة المحاولة","empty":"لا توجد خدمات","emptyDescription":"جرّب تغيير البحث أو تصفية الحالة.","minutes":"دقيقة","toggle":"تغيير حالة {name}","edit":"تعديل {name}","columns":{"name":"اسم الخدمة","description":"الوصف","price":"الحد الأدنى للسعر","time":"الحد الأدنى للوقت","status":"الحالة","action":"الإجراء"},"pagination":{"previous":"السابق","next":"التالي","page":"الصفحة {page} من {pages}"},"dialog":{"title":"تعديل الخدمة","close":"إغلاق محرر الخدمة","name":"اسم الخدمة","description":"الوصف","price":"الحد الأدنى للسعر","time":"الحد الأدنى للوقت","activeDescription":"الخدمة متاحة وظاهرة","cancel":"إلغاء","save":"حفظ"}},
+  "adminTrash":{"title":"سلة المحذوفات","subtitle":"استعادة العناصر المحذوفة أو إزالتها نهائيًا","tabsLabel":"أنواع العناصر المحذوفة","tabs":{"brands":"العلامات التجارية","sub-brands":"العلامات الفرعية","categories":"الفئات","sub-categories":"الفئات الفرعية","products":"المنتجات","requests":"الطلبات","freelancers":"المستقلون","companies":"الشركات"},"searchLabel":"البحث في المحذوفات","searchPlaceholder":"البحث في {entity}","statusLabel":"تصفية حسب الحالة","statuses":{"all":"كل الحالات","active":"نشط","inactive":"غير نشط"},"loading":"جارٍ تحميل المحذوفات…","error":"تعذر تحميل المحذوفات","retry":"إعادة المحاولة","empty":"سلة المحذوفات فارغة","emptyDescription":"لا توجد عناصر محذوفة تطابق عوامل التصفية.","select":"تحديد","selectItem":"تحديد {name}","deleteItem":"حذف {name} نهائيًا","restoreItem":"استعادة {name}","columns":{"name":"الاسم","brand":"العلامة التجارية","subBrand":"العلامة الفرعية","category":"الفئة","family":"التصنيف","sku":"رمز SKU","description":"الوصف","status":"الحالة","deletedAt":"تاريخ الحذف","company":"اسم الشركة","store":"اسم المتجر","price":"السعر","requestStatus":"حالة الطلب","phone":"رقم الهاتف","email":"البريد الإلكتروني","completed":"المهام المكتملة","industry":"المجال","crNumber":"رقم السجل التجاري","action":"الإجراء"},"pagination":{"previous":"السابق","next":"التالي","page":"الصفحة {page} من {pages}"},"dialog":{"close":"إغلاق التأكيد","deleteTitle":"هل أنت متأكد من حذف هذا العنصر؟","deleteDescription":"حذف {name} نهائيًا؟ لا يمكن التراجع عن هذا الإجراء.","restoreTitle":"هل أنت متأكد من استعادة هذا العنصر؟","restoreDescription":"استعادة {name} إلى قائمته الأصلية؟","keep":"لا، احتفظ به","delete":"نعم، احذف!","restore":"نعم، استعد"}},
+  "dashboard": {
+    "navigation": {
+      "label": "تنقل لوحة التحكم",
+      "logo": "الانتقال إلى الصفحة الرئيسية",
+      "dashboard": "لوحة التحكم",
+      "requests": "الطلبات",
+      "payment": "الدفع",
+      "catalog": "الكتالوج",
+      "catalogBrand": "العلامةالتجارية",
+      "catalogSubBrand": "العلامةالفرعية",
+      "catalogCategory": "الفئة",
+      "catalogSubCategory": "الفئةالفرعية",
+      "catalogProduct": "المنتجات",
+      "admins": "المشرفون",
+      "trash": "المهملات",
+      "logout": "تسجيل الخروج"
+    },
+    "topbar": {
+      "searchLabel": "البحث",
+      "searchPlaceholder": "البحث في لوحة التحكم",
+      "searchNoResults": "لا توجد صفحات مطابقة في لوحة التحكم",
+      "menu": "فتح تنقل لوحة التحكم",
+      "notification": "الإشعارات",
+      "userMenu": "فتح قائمة الملف الشخصي",
+      "language": "تغيير لغة لوحة التحكم إلى الإنجليزية"
+    },
+    "user": {
+      "name": "شركة ألف",
+      "description": "محمد"
+    },
+    "notifications": {
+      "title": "الإشعارات",
+      "newBadge": "جديد",
+      "closeOverlay": "إغلاق الإشعارات",
+      "markAllRead": "تحديد الكل كمقروء",
+      "noNotifications": "لا توجد إشعارات بعد",
+      "viewDetails": "عرض التفاصيل",
+      "fallback": {
+        "title": "إشعار جديد",
+        "description": "لديك إشعار جديد."
+      },
+      "events": {
+        "task.published": {
+          "title": "مهمة جديدة متاحة",
+          "description": "تم نشر المهمة #{taskId}"
+        },
+        "task.reassigned": {
+          "title": "تم إعادة تعيين المهمة",
+          "description": "تم إعادة تعيين المهمة #{taskId}"
+        },
+        "task.reopened": {
+          "title": "تم إعادة فتح المهمة",
+          "description": "تم إعادة فتح المهمة #{taskId}"
+        },
+        "task.completed": {
+          "title": "تم إكمال المهمة",
+          "description": "تم إكمال المهمة #{taskId}"
+        },
+        "task.failed": {
+          "title": "فشلت المهمة",
+          "description": "فشلت المهمة #{taskId}"
+        },
+        "task.worker_cancelled": {
+          "title": "ألغى العامل المهمة",
+          "description": "ألغى العامل المهمة #{taskId}"
+        },
+        "task.rejected": {
+          "title": "تم رفض المهمة",
+          "description": "تم رفض المهمة #{taskId}"
+        },
+        "payment.completed": {
+          "title": "تم الدفع",
+          "description": "تم إتمام الدفعة #{paymentId} بمبلغ {amount} {currency}"
+        },
+        "payment.pending": {
+          "title": "دفعة قيد الانتظار",
+          "description": "الدفعة #{paymentId} قيد الانتظار"
+        },
+        "payment.failed": {
+          "title": "فشل الدفع",
+          "description": "فشلت الدفعة #{paymentId}"
+        },
+        "payment.refunded": {
+          "title": "تم استرجاع المبلغ",
+          "description": "تم استرجاع مبلغ الدفعة #{paymentId}"
+        },
+        "system.maintenance": {
+          "title": "صيانة النظام",
+          "description": "صيانة مجدولة قيد التنفيذ"
+        },
+        "system.update": {
+          "title": "تحديث النظام",
+          "description": "تم تحديث النظام"
+        },
+        "account.verified": {
+          "title": "تم التحقق من الحساب",
+          "description": "تم التحقق من حسابك"
+        },
+        "account.suspended": {
+          "title": "تم تعليق الحساب",
+          "description": "تم تعليق حسابك"
+        }
+      },
+      "items": {
+        "newHiringRequest": {
+          "title": "طلب توظيف جديد",
+          "description": "طلبت TechCorp مصمم واجهات.",
+          "time": "منذ دقيقتين"
+        },
+        "assignmentRejected": {
+          "title": "تم رفض التكليف",
+          "description": "رفض عمر علي المشروع.",
+          "time": "منذ دقيقتين"
+        },
+        "freelancerAssigned": {
+          "title": "تم تعيين مستقل",
+          "description": "قبل عمر علي الطلب.",
+          "time": "منذ 15 دقيقة"
+        },
+        "walletCredited": {
+          "title": "تم شحن المحفظة",
+          "description": "أضافت TechCorp مبلغ 2,000$ إلى المحفظة.",
+          "time": "منذ ساعتين"
+        }
+      }
+    },
+    "home": {
+      "empty": {
+        "title": "ابدأ بإنشاء أول طلب خدمة لإدارة التنفيذ الميداني.",
+        "action": "إنشاء أول طلب"
+      }
+    },
+    "overview": {
+      "title": "لوحة التحكم",
+      "subtitle": "مرحبًا بعودتك، إليك ما يحدث اليوم",
+      "states": {
+        "errorTitle": "الطلبات غير متاحة",
+        "errorDescription": "تعذر تحميل طلباتك.",
+        "retry": "إعادة المحاولة",
+        "emptyTitle": "لا توجد طلبات",
+        "emptyDescription": "أنشئ طلبًا أو عدّل عوامل التصفية الحالية."
+      },
+      "filters": {
+        "thisWeek": "هذا الأسبوع"
+      },
+      "actions": {
+        "createRequest": "إنشاء طلب"
+      },
+      "stats": {
+        "change": "{value}% خلال هذه الفترة",
+        "active": {
+          "title": "الطلبات النشطة",
+          "trend": "+12% هذا الأسبوع"
+        },
+        "completed": {
+          "title": "مكتملة هذا الأسبوع",
+          "trend": "+18% هذا الأسبوع"
+        },
+        "delayed": {
+          "title": "الطلبات المتأخرة",
+          "trend": "-2% هذا الأسبوع"
+        },
+        "acceptance": {
+          "title": "معدل القبول",
+          "trend": "+3% هذا الأسبوع"
+        }
+      },
+      "charts": {
+        "requestsOverTime": "الطلبات بمرور الوقت"
+      },
+      "months": {
+        "jan": "ينا",
+        "feb": "فبر",
+        "mar": "مار",
+        "apr": "أبر",
+        "may": "ماي",
+        "jun": "يون",
+        "jul": "يول",
+        "aug": "أغس",
+        "sep": "سبت",
+        "oct": "أكت",
+        "nov": "نوف",
+        "dec": "ديس"
+      },
+      "status": {
+        "pending": "قيد الانتظار",
+        "inProgress": "قيد التنفيذ",
+        "completed": "مكتمل",
+        "failed": "فشل",
+        "rejected": "مرفوض"
+      },
+      "errors": {
+        "report": "تعذر تحميل إحصائيات لوحة التحكم. يرجى المحاولة مرة أخرى."
+      },
+      "table": {
+        "loading": "جارٍ تحميل عناصر الكتالوج…",
+        "empty": "لم يتم العثور على عناصر في الكتالوج.",
+        "title": "الطلبات",
+        "columns": {
+          "requestId": "رقم الطلب",
+          "location": "الموقع",
+          "assignedBy": "المسؤول",
+          "time": "الوقت",
+          "status": "الحالة",
+          "action": "الإجراء"
+        },
+        "actions": {
+          "delete": "حذف الطلب",
+          "edit": "تعديل الطلب"
+        }
+      },
+      "mock": {
+        "locations": {
+          "dammam": "الدمام"
+        },
+        "assignees": {
+          "mohamedAli": "محمد علي"
+        }
+      }
+    },
+    "createRequest": {
+      "title": "إنشاء طلب جديد",
+      "subtitle": "جدولة وإدارة طلب التنفيذ داخل المتجر مع متابعة لحظية وتحقق موثق من الإكمال.",
+      "stepperLabel": "خطوات إنشاء الطلب",
+      "steps": {
+        "location": "الموقع والتاريخ والوقت",
+        "service": "تفاصيل الخدمة والمنتجات",
+        "guidelines": "الإرشادات وقواعد التنفيذ"
+      },
+      "actions": {
+        "previous": "السابق",
+        "next": "التالي",
+        "cancel": "إلغاء الطلب",
+        "submit": "إرسال الطلب",
+        "submitting": "جارٍ الإرسال...",
+        "closeDialog": "إغلاق النافذة",
+        "toggleSection": "فتح أو إغلاق القسم",
+        "addService": "إضافة خدمة",
+        "removeService": "إزالة الخدمة",
+        "deleteService": "حذف الخدمة",
+        "removeServiceDraft": "إزالة مسودة الخدمة",
+        "save": "حفظ",
+        "confirm": "تأكيد",
+        "cancelPayment": "إلغاء"
+      },
+      "location": {
+        "title": "الموقع والتاريخ والوقت",
+        "description": "اختر مكان وموعد تنفيذ المهمة.",
+        "executionDateTime": "تاريخ ووقت التنفيذ",
+        "scheduleHint": "يمكن جدولة طلبات التنفيذ لليوم الحالي أو اليوم التالي فقط.",
+        "storeLocation": "موقع المتجر",
+        "storeDescription": "اختر المتجر الذي سيتم تنفيذ المهمة فيه.",
+        "addLocation": "إضافة موقع",
+        "addLocationDescription": "أضف المتجر يدويًا أو اختره من الخريطة."
+      },
+      "services": {
+        "title": "الخدمات",
+        "description": "إضافة خدمة جديدة",
+        "serviceLabel": "الخدمة رقم {index}",
+        "selectServiceTitle": "اختر نوع الخدمة والسعر",
+        "selectServiceDescription": "اختر نوع خدمة التنفيذ الميداني المطلوبة."
+      },
+      "guidelines": {
+        "title": "الإرشادات والمستندات",
+        "description": "ارفع الملفات والتعليمات الداعمة للمنفذ الميداني.",
+        "documents": "مستندات البلانوجرام",
+        "uploadTitle": "رفع الملفات",
+        "uploadDescription": "اسحب الملفات هنا أو تصفح الملفات",
+        "supportedFormats": "الصيغ المدعومة: PNG، JPG، PDF",
+        "removeFile": "حذف الملف"
+      },
+      "fields": {
+        "executionDate": {
+          "label": "اختيار تاريخ التنفيذ",
+          "placeholder": "اختر تاريخ التنفيذ"
+        },
+        "executionTime": {
+          "label": "اختيار وقت التنفيذ",
+          "placeholder": "--:-- --"
+        },
+        "serviceType": {
+          "label": "اختر نوع الخدمة",
+          "placeholder": "اختر الخدمة"
+        },
+        "estimatedTime": {
+          "label": "الوقت المتوقع (دقيقة)"
+        },
+        "price": {
+          "label": "السعر (ر.س)",
+          "placeholder": "أدخل السعر"
+        },
+        "brand": {
+          "label": "العلامة التجارية",
+          "placeholder": "اختر العلامة التجارية"
+        },
+        "subBrand": {
+          "label": "العلامة الفرعية",
+          "placeholder": "اختر العلامة الفرعية"
+        },
+        "category": {
+          "label": "الفئة",
+          "placeholder": "اختر الفئة"
+        },
+        "subCategory": {
+          "label": "الفئة الفرعية",
+          "placeholder": "اختر الفئة الفرعية"
+        },
+        "instructions": {
+          "label": "تعليمات التنفيذ",
+          "description": "أضف ملاحظات تنفيذ واضحة أو متطلبات ترتيب أو تفاصيل توقيت أو تعليمات خاصة.",
+          "placeholder": "اكتب تعليمات تفصيلية للمنفذ الميداني..."
+        },
+        "planogramFiles": {
+          "label": "رفع البلانوجرام",
+          "accept": "PDF / صورة"
+        },
+        "jobOrderFiles": {
+          "label": "رفع أمر التشغيل",
+          "accept": "PDF / صورة / Excel"
+        },
+        "files": {
+          "uploadHint": "انقر لرفع الملفات",
+          "replaceHint": "تم اختيار {count} ملف — انقر لإضافة المزيد"
+        }
+      },
+      "options": {
+        "services": {
+          "freshnessReport": "تقرير النضارة “يجب إرجاعه من الخلف”",
+          "onShelfAvailability": "توفر المنتج على الرف"
+        },
+        "brands": {
+          "pepsico": "بيبسيكو"
+        },
+        "subBrands": {
+          "pepsiDiet": "بيبسي دايت"
+        },
+        "categories": {
+          "softDrinks": "مشروبات غازية"
+        },
+        "subCategories": {
+          "softDrinks": "مشروبات غازية"
+        }
+      },
+      "productTable": {
+        "searchPlaceholder": "البحث باسم المنتج أو رمز SKU",
+        "showProducts": "المنتجات",
+        "emptyDetail": "-",
+        "noProducts": "لا توجد منتجات.",
+        "columns": {
+          "products": "المنتجات",
+          "sku": "رمز SKU",
+          "barcode": "الباركود",
+          "details": "تفاصيل المنتج",
+          "expiryDate": "تاريخ الانتهاء",
+          "minQuantity": "الحد الأدنى للكمية"
+        },
+        "editDetail": "تعديل القيمة"
+      },
+      "pagination": {
+        "previous": "السابق",
+        "next": "التالي",
+        "ellipsis": "..."
+      },
+      "locationDialog": {
+        "title": "اختيار موقع المتجر",
+        "mapLabel": "خريطة تفاعلية لموقع المتجر",
+        "mapHint": "اضغط على الخريطة لتحديد دبوس الموقع",
+        "tabs": {
+          "map": "على الخريطة",
+          "manual": "يدوي"
+        },
+        "fields": {
+          "storeName": {
+            "label": "اسم المتجر",
+            "placeholder": "مثال: كارفور"
+          },
+          "streetAddress": {
+            "label": "عنوان الشارع",
+            "placeholder": "مثال: 123 شارع رئيسي"
+          },
+          "state": {
+            "label": "المحافظة",
+            "placeholder": "مثال: محافظة القاهرة"
+          },
+          "region": {
+            "label": "المنطقة",
+            "placeholder": "مثال: المنطقة المركزية"
+          },
+          "city": {
+            "label": "المدينة",
+            "placeholder": "مثال: القاهرة الجديدة"
+          },
+          "district": {
+            "label": "الحي",
+            "placeholder": "مثال: الحي الخامس"
+          }
+        }
+      },
+      "dateDialog": {
+        "title": "اختيار تاريخ التنفيذ",
+        "month": "مايو 2026",
+        "previousMonth": "الشهر السابق",
+        "nextMonth": "الشهر التالي",
+        "previousYear": "السنة السابقة",
+        "nextYear": "السنة التالية",
+        "changeMonthYear": "تغيير الشهر والسنة",
+        "days": {
+          "mon": "الإثنين",
+          "tue": "الثلاثاء",
+          "wed": "الأربعاء",
+          "thu": "الخميس",
+          "fri": "الجمعة",
+          "sat": "السبت",
+          "sun": "الأحد"
+        }
+      },
+      "timeDialog": {
+        "title": "اختيار وقت التنفيذ",
+        "icon": "◷",
+        "openPicker": "فتح منتقي الوقت",
+        "clockFace": "واجهة ساعة تناظرية لاختيار الوقت",
+        "hour": "الساعة",
+        "minute": "الدقيقة",
+        "period": "الفترة",
+        "am": "صباحًا",
+        "pm": "مساءً",
+        "incrementHour": "زيادة الساعة",
+        "decrementHour": "تقليل الساعة",
+        "incrementMinute": "زيادة الدقيقة",
+        "decrementMinute": "تقليل الدقيقة",
+        "togglePeriod": "التبديل بين صباحًا ومساءً"
+      },
+      "productsDialog": {
+        "title": "المنتجات المحددة",
+        "selectedCount": "تم تحديد {count} منتجات"
+      },
+      "paymentDialog": {
+        "title": "تأكيد الدفع",
+        "reviewTitle": "راجع تفاصيل الدفع",
+        "currentBalance": "الرصيد الحالي",
+        "amountToHold": "المبلغ المحجوز",
+        "remainingBalance": "الرصيد المتبقي",
+        "currentBalanceValue": "230 ر.س",
+        "amountToHoldValue": "175 ر.س",
+        "remainingBalanceValue": "55 ر.س",
+        "howItWorks": {
+          "title": "كيف يعمل الدفع",
+          "hold": "الحجز: يتم حجز المبلغ في محفظتك دون تحويله الآن",
+          "completed": "عند الإكمال: يتم تحويل المبلغ إلى شيلف سبوت",
+          "refund": "عند عدم الإكمال: يتم رد المبلغ بالكامل إلى محفظتك"
+        },
+        "insufficientBalance": "الرصيد غير كافٍ. يرجى شحن محفظتك قبل المتابعة.",
+        "pendingStatus": {
+          "title": "الحالة: قيد الانتظار",
+          "description": "سيظهر الطلب في لوحة التحكم بحالة قيد الانتظار حتى يقبله أحد المندوبين."
+        },
+        "status": {
+          "title": "الحالة: قيد الانتظار",
+          "description": "سيظهر الطلب في لوحة التحكم بحالة “قيد الانتظار” حتى يقبله المنفذ الميداني."
+        }
+      },
+      "cost": {
+        "title": "إجمالي التكلفة المتوقعة",
+        "description": "لجميع الخدمتين",
+        "amount": "230 $"
+      },
+      "success": {
+        "title": "تم إرسال الطلب",
+        "description": "تم إنشاء طلبك وهو الآن بانتظار التعيين.",
+        "action": "تم"
+      },
+      "mock": {
+        "executionDate": "12 مايو 2026",
+        "executionTime": "9:00 مساءً",
+        "estimatedTime": "30 دقيقة",
+        "price": "30$",
+        "servicePrice": "$ 75$",
+        "location": {
+          "storeName": "بنده هايبرماركت",
+          "streetAddress": "طريق الملك فهد، حي الملقا، الملقا، الرياض",
+          "state": "الرياض",
+          "region": "المنطقة الوسطى",
+          "city": "الرياض",
+          "district": "الملقا"
+        },
+        "products": {
+          "dietDrinksOne": {
+            "name": "مشروبات دايت",
+            "sku": "123SKU",
+            "skuLong": "SKU: CC-ZS-330-CAN",
+            "expiryDate": "12 مايو 2026"
+          },
+          "dietDrinksTwo": {
+            "name": "مشروبات دايت",
+            "sku": "123SKU",
+            "skuLong": "SKU: CC-ZS-330-CAN",
+            "expiryDate": "12 مايو 2026"
+          },
+          "dietDrinksThree": {
+            "name": "مشروبات دايت",
+            "sku": "123SKU",
+            "skuLong": "SKU: CC-ZS-330-CAN",
+            "expiryDate": "12 مايو 2026"
+          },
+          "dietDrinksFour": {
+            "name": "مشروبات دايت",
+            "sku": "123SKU",
+            "skuLong": "SKU: CC-ZS-330-CAN",
+            "expiryDate": "12 مايو 2026"
+          },
+          "dietDrinksFive": {
+            "name": "مشروبات دايت",
+            "sku": "123SKU",
+            "skuLong": "SKU: CC-ZS-330-CAN",
+            "expiryDate": "12 مايو 2026"
+          },
+          "dietDrinksSix": {
+            "name": "مشروبات دايت",
+            "sku": "123SKU",
+            "skuLong": "SKU: CC-ZS-330-CAN",
+            "expiryDate": "12 مايو 2026"
+          }
+        }
+      },
+      "validation": {
+        "executionDateRequired": "تاريخ التنفيذ مطلوب.",
+        "executionTimeRequired": "وقت التنفيذ مطلوب.",
+        "storeRequired": "موقع المتجر مطلوب.",
+        "streetAddressRequired": "عنوان الشارع مطلوب.",
+        "stateRequired": "المحافظة مطلوبة.",
+        "regionRequired": "المنطقة مطلوبة.",
+        "cityRequired": "المدينة مطلوبة.",
+        "serviceTypeRequired": "نوع الخدمة مطلوب.",
+        "priceRequired": "يجب أن يكون السعر بحد أدنى للخدمة على الأقل.",
+        "executionTimeMinsRequired": "يجب أن يكون وقت التنفيذ بحد أدنى للخدمة على الأقل.",
+        "brandRequired": "العلامة التجارية مطلوبة.",
+        "subBrandRequired": "العلامة الفرعية مطلوبة.",
+        "categoryRequired": "الفئة مطلوبة.",
+        "subCategoryRequired": "الفئة الفرعية مطلوبة.",
+        "productsRequired": "اختر منتجًا واحدًا على الأقل.",
+        "instructionsRequired": "تعليمات التنفيذ مطلوبة (10 أحرف على الأقل)."
+      },
+      "errors": {
+        "unauthorized": "انتهت جلستك. يرجى تسجيل الدخول مجددًا.",
+        "forbidden": "ليس لديك صلاحية إنشاء طلبات.",
+        "generic": "حدث خطأ ما. يرجى المحاولة مجددًا.",
+        "loadServices": "فشل تحميل الخدمات.",
+        "loadProducts": "فشل تحميل المنتجات."
+      },
+      "states": {
+        "loading": "جارٍ التحميل...",
+        "noProducts": "لا توجد منتجات. جرّب تعديل الفلاتر.",
+        "noServices": "لا توجد خدمات متاحة."
+      }
+    },
+    "catalogPage": {
+      "feedback": { "loading": "جارٍ تحميل الكتالوج", "error": "تعذر تحميل الكتالوج", "retry": "إعادة المحاولة", "empty": "لا توجد عناصر في الكتالوج", "required": "أكمل جميع الحقول المطلوبة", "saved": "تم حفظ عنصر الكتالوج بنجاح", "imported": "تم استيراد ملف الكتالوج بنجاح" },
+      "fields": { "barcode": "الباركود", "english": "الإنجليزية", "arabic": "العربية" },
+      "search": { "label": "البحث في الكتالوج", "placeholder": "البحث بالعلامة التجارية" },
+      "filters": { "allStatuses": "جميع الحالات" },
+      "actions": { "import": "استيراد" },
+      "status": { "active": "نشط", "inactive": "غير نشط" },
+      "table": {
+        "loading": "جارٍ تحميل عناصر الكتالوج",
+        "empty": "لا توجد عناصر في الكتالوج",
+        "columns": { "status": "الحالة", "createdDate": "تاريخ الإنشاء", "action": "الإجراء" },
+        "actions": { "selectAll": "تحديد الكل", "selectRow": "تحديد الصف", "delete": "حذف العنصر", "edit": "تعديل العنصر", "toggleStatus": "تبديل الحالة" }
+      },
+      "pagination": { "previous": "السابق", "next": "التالي" },
+      "dialog": {
+        "close": "إغلاق", "cancel": "إلغاء", "save": "حفظ",
+        "uploadHint": "PNG,JSG حتى 5 ميغابايت",
+        "statusLabel": "الحالة", "statusActive": "نشط",
+        "parentBrand": "العلامة الرئيسية", "selectBrand": "اختر علامة تجارية",
+        "subBrand": "العلامة الفرعية", "selectSubBrand": "اختر علامة فرعية"
+      },
+      "import": {
+        "title": "استيراد الملفات",
+        "description": "حدد الملفات وارفعها وفقاً لملف القالب",
+        "downloadLabel": "تنزيل ملف القالب",
+        "uploadLabel": "رفع الملفات",
+        "uploadHint": "حدد ملفاً أو اسحبه هنا",
+        "uploadFormat": "الصيغة: CSV, XLSX"
+      },
+      "brand": {
+        "title": "العلامة التجارية", "subtitle": "إدارة ومراقبة جميع علاماتك التجارية",
+        "actions": { "add": "إضافة علامة تجارية" },
+        "table": { "columns": { "brandName": "اسم العلامة" } }, "listError": "تعذر تحميل العلامات التجارية.",
+        "dialog": { "title": "إضافة علامة جديدة", "editTitle": "تحديث العلامة", "uploadLabel": "رفع شعار العلامة", "nameLabel": "اسم العلامة", "namePlaceholder": "أدخل اسم العلامة", "nameEnLabel": "اسم العلامة (بالإنجليزية)", "nameEnPlaceholder": "أدخل اسم العلامة بالإنجليزية", "nameArLabel": "اسم العلامة (بالعربية)", "nameArPlaceholder": "أدخل اسم العلامة بالعربية", "requiredNames": "أدخل اسم العلامة باللغتين الإنجليزية والعربية.", "success": "تم إنشاء العلامة التجارية بنجاح.", "error": "تعذر إنشاء العلامة التجارية.", "updateSuccess": "تم تحديث العلامة التجارية بنجاح.", "updateError": "تعذر تحديث العلامة التجارية.", "templateError": "تعذر تنزيل قالب العلامات التجارية.", "importFileRequired": "حدد ملف CSV أو XLSX للاستيراد.", "importSuccess": "تم استيراد العلامات التجارية بنجاح.", "importError": "تعذر استيراد ملف العلامات التجارية.", "statusDescription": "العلامة متاحة وظاهرة" },
+        "deleteDialog": { "title": "حذف العلامة؟", "descriptionLine1": "هل أنت متأكد من حذف هذه العلامة؟", "descriptionLine2": "لا يمكن التراجع عن هذا الإجراء.", "cancel": "لا، احتفظ به", "confirm": "نعم، احذفه!", "success": "تم حذف العلامة التجارية بنجاح.", "error": "تعذر حذف العلامة التجارية." }
+      },
+      "subBrand": {
+        "title": "العلامة الفرعية", "subtitle": "إدارة ومراقبة جميع علاماتك الفرعية",
+        "actions": { "add": "إضافة علامة فرعية" },
+        "table": { "columns": { "subBrandName": "اسم العلامة الفرعية", "brand": "العلامة" } },
+        "dialog": { "title": "إضافة علامة فرعية جديدة", "editTitle": "تحديث العلامة الفرعية", "uploadLabel": "رفع صورة العلامة الفرعية", "nameLabel": "اسم العلامة الفرعية", "namePlaceholder": "أدخل اسم العلامة الفرعية", "nameEnLabel": "اسم العلامة الفرعية (بالإنجليزية)", "nameEnPlaceholder": "أدخل اسم العلامة الفرعية بالإنجليزية", "nameArLabel": "اسم العلامة الفرعية (بالعربية)", "nameArPlaceholder": "أدخل اسم العلامة الفرعية بالعربية", "requiredFields": "حدد العلامة الرئيسية وأدخل الاسمين وارفع الشعار.", "importFileRequired": "حدد ملف CSV أو XLSX للاستيراد.", "success": "تم إنشاء العلامة الفرعية بنجاح.", "error": "تعذر إنشاء العلامة الفرعية.", "statusDescription": "العلامة الفرعية متاحة وظاهرة" },
+        "deleteDialog": { "title": "حذف العلامة الفرعية؟", "descriptionLine1": "هل أنت متأكد من حذف هذه العلامة الفرعية؟", "descriptionLine2": "لا يمكن التراجع عن هذا الإجراء.", "cancel": "لا، احتفظ به", "confirm": "نعم، احذفه!" }
+      },
+      "category": {
+        "title": "الفئة", "subtitle": "إدارة ومراقبة جميع فئاتك المسجلة",
+        "actions": { "add": "إضافة فئة" },
+        "table": { "columns": { "category": "الفئة", "brand": "العلامة", "subBrand": "العلامة الفرعية" } },
+        "dialog": { "title": "إضافة فئة جديدة", "editTitle": "تحديث الفئة", "uploadLabel": "رفع صورة الفئة", "nameLabel": "اسم الفئة", "namePlaceholder": "أدخل اسم الفئة", "nameEnLabel": "اسم الفئة (بالإنجليزية)", "nameArLabel": "اسم الفئة (بالعربية)", "requiredFields": "حدد العلامة والعلامة الفرعية وأدخل الاسمين وارفع صورة.", "importFileRequired": "حدد ملف CSV أو XLSX للاستيراد.", "statusDescription": "الفئة متاحة وظاهرة" },
+        "deleteDialog": { "title": "حذف الفئة؟", "descriptionLine1": "هل أنت متأكد من حذف هذه الفئة؟", "descriptionLine2": "لا يمكن التراجع عن هذا الإجراء.", "cancel": "لا، احتفظ به", "confirm": "نعم، احذفه!" }
+      },
+      "subCategory": {
+        "title": "الفئة الفرعية", "subtitle": "إدارة ومراقبة جميع فئاتك المسجلة",
+        "actions": { "add": "إضافة فئة فرعية" },
+        "table": { "columns": { "subCategory": "الفئة", "brand": "العلامة", "subBrand": "العلامة الفرعية", "category": "الفئة" } },
+        "dialog": { "title": "إضافة فئة فرعية جديدة", "editTitle": "تحديث الفئة الفرعية", "uploadLabel": "رفع صورة الفئة الفرعية", "nameLabel": "اسم الفئة الفرعية", "namePlaceholder": "أدخل اسم الفئة الفرعية", "nameEnLabel": "اسم الفئة الفرعية (بالإنجليزية)", "nameArLabel": "اسم الفئة الفرعية (بالعربية)", "categoryLabel": "الفئة", "selectCategory": "اختر فئة", "requiredFields": "حدد التسلسل الكامل وأدخل الاسمين وارفع صورة.", "importFileRequired": "حدد ملف CSV أو XLSX للاستيراد.", "statusDescription": "الفئة الفرعية متاحة وظاهرة" },
+        "deleteDialog": { "title": "حذف الفئة الفرعية؟", "descriptionLine1": "هل أنت متأكد من حذف هذه الفئة الفرعية؟", "descriptionLine2": "لا يمكن التراجع عن هذا الإجراء.", "cancel": "لا، احتفظ به", "confirm": "نعم، احذفه!" }
+      },
+      "product": {
+        "title": "المنتجات", "subtitle": "إدارة علاماتك ومنتجاتك هنا",
+        "actions": { "add": "إضافة منتج" },
+        "table": { "columns": { "products": "المنتجات", "family": "العائلة", "sku": "رمز SKU", "description": "الوصف" } },
+        "dialog": { "title": "إضافة منتج جديد", "editTitle": "تحديث المنتج", "uploadLabel": "رفع صورة المنتج", "nameLabel": "اسم المنتج", "namePlaceholder": "أدخل اسم المنتج", "skuLabel": "رمز SKU", "skuPlaceholder": "أدخل رمز SKU", "descriptionLabel": "الوصف", "descriptionPlaceholder": "أدخل وصف المنتج", "categoryLabel": "الفئة", "selectCategory": "اختر فئة", "subCategoryLabel": "الفئة الفرعية", "selectSubCategory": "اختر فئة فرعية", "requiredFields": "حدد التسلسل الكامل وأدخل الاسم ورمز SKU وارفع صورة.", "importFileRequired": "حدد ملف CSV أو XLSX للاستيراد.", "statusDescription": "المنتج متاح وظاهر" },
+        "deleteDialog": { "title": "حذف المنتج؟", "descriptionLine1": "هل أنت متأكد من حذف هذا المنتج؟", "descriptionLine2": "لا يمكن التراجع عن هذا الإجراء.", "cancel": "لا، احتفظ به", "confirm": "نعم، احذفه!" }
+      }
+    },
+    "adminsPage": {
+      "title": "إدارة المشرفين",
+      "subtitle": "مراقبة وإدارة مشرفي المنصة",
+      "tabsLabel": "أقسام المشرفين",
+      "tabs": {
+        "admins": "المشرفون",
+        "roles": "الأدوار"
+      },
+      "search": {
+        "label": "البحث عن مشرف",
+        "placeholder": "البحث عن الشركات"
+      },
+      "filters": {
+        "allStatuses": "جميع الحالات"
+      },
+      "actions": {
+        "addNew": "إضافة مشرف جديد"
+      },
+      "states": {
+        "errorTitle": "تعذر تحميل المشرفين",
+        "errorDescription": "حدث خطأ أثناء تحميل قائمة المشرفين.",
+        "retry": "إعادة المحاولة",
+        "emptyTitle": "لا يوجد مشرفون",
+        "emptyDescription": "أضف مشرفًا جديدًا للبدء."
+      },
+      "table": {
+        "columns": {
+          "adminName": "اسم المشرف",
+          "phoneNumber": "رقم الجوال",
+          "email": "البريد الإلكتروني",
+          "role": "الدور",
+          "status": "الحالة",
+          "action": "الإجراء",
+          "roleName": "اسم الدور",
+          "numberOfUsers": "عدد المستخدمين"
+        },
+        "actions": {
+          "toggleStatus": "تبديل الحالة",
+          "delete": "حذف المشرف",
+          "edit": "تعديل المشرف",
+          "deleteRole": "حذف الدور",
+          "editRole": "تعديل الدور"
+        }
+      },
+      "pagination": {
+        "previous": "السابق",
+        "next": "التالي"
+      },
+      "dialogs": {
+        "deleteAdmin": {
+          "title": "حذف المشرف؟",
+          "descriptionLine1": "هل أنت متأكد من حذف {name}؟",
+          "descriptionLine2": "لا يمكن التراجع عن هذا الإجراء.",
+          "cancel": "لا، احتفظ به",
+          "confirm": "نعم، احذفه!"
+        },
+        "deleteRole": {
+          "title": "حذف الدور؟",
+          "descriptionLine1": "هل أنت متأكد من حذف دور {name}؟",
+          "descriptionLine2": "لا يمكن التراجع عن هذا الإجراء.",
+          "cancel": "لا، احتفظ به",
+          "confirm": "نعم، احذفه!"
+        },
+        "adminForm": {
+          "createTitle": "إنشاء مشرف جديد",
+          "editTitle": "تحديث بيانات المشرف",
+          "activation": "التفعيل",
+          "active": "نشط",
+          "name": "الاسم",
+          "namePlaceholder": "عمر علي",
+          "role": "الدور",
+          "email": "البريد الإلكتروني",
+          "emailPlaceholder": "omarali3@gmail.com",
+          "phoneNumber": "رقم الجوال",
+          "phonePlaceholder": "+966 6262525242",
+          "password": "كلمة المرور",
+          "passwordPlaceholder": "أدخل كلمة المرور",
+          "confirmPassword": "تأكيد كلمة المرور",
+          "confirmPasswordPlaceholder": "تأكيد كلمة المرور",
+          "cancel": "إلغاء",
+          "confirm": "تأكيد"
+        },
+        "roleForm": {
+          "title": "إنشاء دور جديد",
+          "activation": "التفعيل",
+          "active": "نشط",
+          "role": "الدور",
+          "permission": "صلاحية 1",
+          "cancel": "إلغاء",
+          "confirm": "تأكيد"
+        }
+      }
+    },
+    "trashPage": {
+      "title": "المهملات",
+      "subtitle": "العناصر المحذوفة — استعادتها أو حذفها نهائيًا",
+      "tabs": {
+        "brand": "العلامة التجارية",
+        "subBrand": "العلامة الفرعية",
+        "category": "الفئة",
+        "subCategory": "الفئة الفرعية",
+        "products": "المنتجات",
+        "requests": "الطلبات"
+      },
+      "search": {
+        "label": "البحث في المهملات",
+        "placeholder": "البحث بالعلامة التجارية"
+      },
+      "filters": {
+        "allStatuses": "جميع الحالات"
+      },
+      "table": {
+        "columns": {
+          "products": "المنتجات",
+          "family": "العائلة",
+          "sku": "رمز SKU",
+          "description": "الوصف",
+          "status": "الحالة",
+          "deletedDate": "تاريخ الحذف",
+          "action": "الإجراء"
+        },
+        "actions": {
+          "selectAll": "تحديد جميع العناصر",
+          "selectRow": "تحديد العنصر",
+          "delete": "حذف نهائي",
+          "restore": "استعادة العنصر",
+          "toggleStatus": "تبديل حالة العنصر"
+        }
+      },
+      "pagination": {
+        "previous": "السابق",
+        "next": "التالي"
+      },
+      "requests": {
+        "columns": {
+          "requestId": "رقم الطلب",
+          "location": "الموقع",
+          "assignedBy": "المسؤول",
+          "deletedAt": "تاريخ الحذف",
+          "status": "الحالة",
+          "action": "الإجراء"
+        }
+      },
+      "dialogs": {
+        "permanentDelete": {
+          "title": "حذف نهائي؟",
+          "descriptionLine1": "هل أنت متأكد من حذف هذا العنصر نهائياً؟",
+          "descriptionLine2": "لا يمكن التراجع عن هذا الإجراء.",
+          "cancel": "لا، احتفظ به",
+          "confirm": "نعم، احذفه!"
+        },
+        "restore": {
+          "title": "استعادة العنصر؟",
+          "descriptionLine1": "هل أنت متأكد من استعادة هذا العنصر؟",
+          "descriptionLine2": "سيتم إعادة العنصر إلى موضعه الأصلي.",
+          "cancel": "لا، إلغاء",
+          "confirm": "نعم، استعده!"
+        }
+      }
+    },
+    "paymentPage": {
+      "title": "الدفع",
+      "subtitle": "إدارة طرق الدفع والمعاملات",
+      "summary": {
+        "accountBalance": "رصيد الحساب",
+        "accountId": "رقم الحساب",
+        "monthlySpending": "الإنفاق الشهري",
+        "lastMonth": "آخر شهر",
+        "pending": "معلق",
+        "paymentMethods": "طريقة دفع",
+        "toggleBalance": "إظهار أو إخفاء الرصيد",
+        "copyAccountId": "نسخ رقم الحساب"
+      },
+      "actions": {
+        "addFund": "إضافة رصيد"
+      },
+      "search": {
+        "label": "البحث في المدفوعات",
+        "placeholder": "البحث عن الشركات"
+      },
+      "filters": {
+        "date": "التاريخ",
+        "allStatuses": "جميع الحالات"
+      },
+      "table": {
+        "columns": {
+          "types": "النوع",
+          "totalSpending": "إجمالي الإنفاق",
+          "date": "التاريخ",
+          "performedBy": "تم الاسترداد بواسطة"
+        },
+        "actions": {
+          "delete": "حذف المعاملة"
+        }
+      },
+      "status": {
+        "refunded": "مسترد",
+        "completed": "مكتمل",
+        "failed": "فشل"
+      },
+      "types": {
+        "couponRedemption": "استرداد قسيمة",
+        "manualWalletRecharge": "شحن محفظة يدوي",
+        "taskPayment": "دفع مهمة",
+        "taskRefund": "استرداد مهمة"
+      },
+      "pagination": {
+        "previous": "السابق",
+        "next": "التالي"
+      },
+      "addFundDialog": {
+        "title": "اختر طريقة الدفع",
+        "close": "إغلاق النافذة",
+        "methods": {
+          "promoCode": {
+            "label": "رمز الخصم",
+            "description": "تطبيق رمز خصم أو بطاقة هدية"
+          },
+          "creditCard": {
+            "label": "بطاقة ائتمان / مدين",
+            "description": "فيزا، ماستركارد"
+          },
+          "bankTransfer": {
+            "label": "تحويل بنكي",
+            "description": "تحويل بنكي مباشر"
+          }
+        },
+        "promoCodeSection": {
+          "title": "أدخل رمز الخصم",
+          "placeholder": "رمز الخصم",
+          "validate": "تحقق",
+          "availableTitle": "رموز الخصم المتاحة",
+          "apply": "تطبيق رمز الخصم"
+        },
+        "errors": {
+          "invalid": "رمز الخصم غير صالح. تحقق من الرمز وحاول مرة أخرى.",
+          "expired": "انتهت صلاحية رمز الخصم هذا.",
+          "alreadyUsed": "تم استخدام رمز الخصم هذا من قبل.",
+          "tooManyAttempts": "عدد المحاولات كبير جدًا. انتظر قليلًا ثم حاول مرة أخرى.",
+          "network": "تعذر الاتصال. تحقق من اتصال الإنترنت وحاول مرة أخرى.",
+          "server": "تعذر تطبيق رمز الخصم الآن. حاول مرة أخرى لاحقًا أو تواصل مع الدعم."
+        },
+        "promoCodes": {
+          "welcomeBonus": {
+            "title": "مكافأة ترحيبية 50$",
+            "description": "للمستخدمين الجدد فقط",
+            "code": "Welcome $50"
+          },
+          "credit100": {
+            "title": "رصيد 100$",
+            "description": "عرض لفترة محدودة",
+            "code": "PROMO 100"
+          }
+        }
+      }
+    },
+    "profilePage": {
+      "title": "الملف التعريفي للشركة",
+      "subtitle": "إدارة معلومات حساب الشركة والأمان",
+      "owner": "مالك الحساب",
+      "companyId": "رقم الشركة: {id}",
+      "active": "نشط",
+      "inactive": "غير نشط",
+      "personalInfo": "معلومات الملف التعريفي",
+      "personalInfoDescription": "حدّث البيانات المستخدمة في حساب شركتك.",
+      "fields": {
+        "name": "اسم الشركة",
+        "email": "البريد الإلكتروني",
+        "password": "كلمة المرور الجديدة",
+        "passwordHint": "اترك الحقل فارغًا للاحتفاظ بكلمة المرور الحالية.",
+        "passwordPlaceholder": "أدخل كلمة مرور جديدة",
+        "passwordConfirmation": "تأكيد كلمة المرور الجديدة",
+        "passwordConfirmationPlaceholder": "أعد إدخال كلمة المرور الجديدة",
+        "status": "حالة الحساب",
+        "roles": "الأدوار"
+      },
+      "passwordMismatch": "تأكيد كلمة المرور غير مطابق.",
+      "save": "حفظ التغييرات",
+      "success": "تم تحديث الملف التعريفي للشركة بنجاح."
+    },
+    "requestsPage": {
+      "title": "الطلبات",
+      "subtitle": "مرحبًا بعودتك، إليك ما يحدث اليوم",
+      "actions": {
+        "createRequest": "إنشاء طلب"
+      },
+      "stats": {
+        "total": {
+          "title": "إجمالي الطلبات",
+          "trend": "+12% هذا الأسبوع"
+        },
+        "completed": {
+          "title": "مكتملة هذا الأسبوع",
+          "trend": "+18% هذا الأسبوع"
+        },
+        "delayed": {
+          "title": "الطلبات المتأخرة",
+          "trend": "-2% هذا الأسبوع"
+        },
+        "acceptance": {
+          "title": "معدل القبول",
+          "trend": "+3% هذا الأسبوع"
+        }
+      },
+      "search": {
+        "label": "البحث في الطلبات",
+        "placeholder": "البحث بالعلامة التجارية"
+      },
+      "filters": {
+        "allStatuses": "كل الحالات"
+      },
+      "states": {
+        "errorTitle": "الطلبات غير متاحة",
+        "errorDescription": "تعذر تحميل الطلبات.",
+        "retry": "حاول مرة أخرى",
+        "emptyTitle": "لا توجد طلبات",
+        "emptyDescription": "أنشئ طلبًا أو عدل عوامل التصفية الحالية."
+      },
+    "status": {
+      "draft": "مسودة",
+      "started": "بدأ",
+      "inProgress": "قيد التنفيذ",
+        "completed": "مكتمل",
+        "inReview": "قيد المراجعة",
+        "accepted": "مقبول",
+        "failed": "فشل",
+        "rejected": "مرفوض",
+        "canceled": "ملغي",
+        "pending": "قيد الانتظار",
+        "reopened": "معاد فتحه"
+      },
+      "table": {
+        "columns": {
+          "requestId": "رقم الطلب",
+          "location": "الموقع",
+          "assignedBy": "المسؤول",
+          "time": "الوقت",
+          "status": "الحالة",
+          "action": "الإجراء"
+        },
+        "actions": {
+          "selectAll": "تحديد كل الطلبات",
+          "selectRow": "تحديد الطلب",
+          "delete": "حذف الطلب",
+          "edit": "تعديل الطلب"
+        }
+      },
+      "pagination": {
+        "previous": "السابق",
+        "next": "التالي"
+      },
+      "mock": {
+        "locations": {
+          "dammam": "الدمام"
+        },
+        "assignees": {
+          "mohamedAli": "محمد علي"
+        }
+      },
+      "deleteDialog": {
+        "title": "حذف الطلب؟",
+        "description": "هل أنت متأكد من حذف الطلب #{id}؟ لا يمكن التراجع عن هذا الإجراء.",
+        "reasonLabel": "سبب الحذف",
+        "reasonPlaceholder": "اختر سببًا",
+        "reasons": {
+          "duplicate": "طلب مكرر",
+          "cancelled": "تم إلغاؤه من قبل العميل",
+          "error": "أُنشئ بالخطأ",
+          "other": "سبب آخر"
+        },
+      "cancel": "لا، احتفظ به",
+      "confirm": "نعم، احذفه!",
+      "error": "تعذر حذف الطلب. يرجى المحاولة مرة أخرى."
+      }
+    },
+    "requestDetails": {
+      "title": "تفاصيل الطلب",
+      "subtitle": "معلومات كاملة حول طلب التنفيذ {id}",
+      "back": "رجوع",
+      "createdOn": "تاريخ الإنشاء",
+      "errorTitle": "فشل تحميل الطلب",
+      "errorDescription": "حدث خطأ أثناء تحميل هذا الطلب. يرجى المحاولة مجدداً.",
+      "retry": "إعادة المحاولة",
+      "info": {
+        "location": "الموقع",
+        "assignedBy": "المسؤول",
+        "executionDate": "تاريخ التنفيذ",
+        "expiresAt": "تاريخ الانتهاء",
+        "notes": "ملاحظات"
+      },
+      "stats": {
+        "totalCost": "إجمالي التكلفة",
+        "servicesCount": "{count} خدمة",
+        "progress": "التقدم",
+        "totalProducts": "إجمالي المنتجات",
+        "unitsSubtitle": "وحدات عبر جميع الخدمات",
+      "timeRemaining": "الوقت المتبقي",
+      "timeRemainingValue": "{hours} س {minutes} د",
+      "currencyValue": "{amount} ر.س",
+      "expired": "منتهي",
+        "untilDeadline": "حتى الموعد"
+      },
+      "actions": {
+        "edit": "تعديل المسودة",
+        "reschedule": "إعادة جدولة الطلب",
+        "cancelRequest": "إلغاء الطلب",
+        "reject": "رفض المهمة المكتملة",
+        "pay": "ادفع الآن",
+        "repeatRequest": "تكرار الطلب",
+        "viewExecution": "عرض تفاصيل التنفيذ",
+        "cancelReopening": "إلغاء إعادة الفتح"
+      },
+      "editDialog": {
+        "title": "تعديل مسودة الطلب",
+        "date": "تاريخ التنفيذ",
+        "notes": "ملاحظات",
+        "cancel": "إلغاء",
+        "save": "حفظ التغييرات"
+      },
+      "cancelDialog": {
+        "title": "إلغاء الطلب",
+      "description": "هل أنت متأكد من رغبتك في إلغاء هذا الطلب؟ لا يمكن التراجع عن هذا الإجراء.",
+      "cancel": "رجوع",
+      "confirm": "نعم، إلغاء",
+        "error": "تعذر إلغاء الطلب. يرجى المحاولة مرة أخرى."
+      },
+      "rejectDialog": {
+        "title": "رفض المهمة المكتملة؟",
+        "description": "هل أنت متأكد من رغبتك في رفض هذه المهمة المكتملة؟",
+        "cancel": "رجوع",
+        "confirm": "نعم، ارفض",
+        "error": "تعذر رفض المهمة المكتملة. يرجى المحاولة مرة أخرى."
+      },
+      "status": {
+      "draft": "مسودة",
+      "started": "بدأ",
+      "inProgress": "قيد التنفيذ",
+        "pending": "قيد الانتظار",
+        "failed": "فشل",
+        "rejected": "مرفوض",
+        "inReview": "قيد المراجعة",
+        "accepted": "مقبول",
+        "reopened": "معاد فتحه",
+        "completed": "مكتمل",
+        "canceled": "ملغي"
+      },
+      "services": {
+        "heading": "تفاصيل الخدمات ({count})",
+        "productHeading": "المنتجات",
+        "executionGuidelines": "تعليمات التنفيذ",
+        "attachments": "المرفقات",
+        "brand": "العلامة التجارية",
+        "subBrand": "العلامة الفرعية",
+        "category": "الفئة",
+        "subCategory": "الفئة الفرعية",
+        "noProducts": "لا توجد منتجات.",
+        "download": "تنزيل المرفق",
+        "columns": {
+          "products": "المنتج",
+          "skuCode": "رمز SKU",
+          "minQuantity": "الحد الأدنى للكمية",
+          "quantity": "الكمية",
+          "expiryDate": "تاريخ الانتهاء"
+        }
+      },
+      "reschedule": {
+        "dateTitle": "اختر تاريخ التنفيذ",
+        "timeTitle": "اختر وقت التنفيذ",
+        "close": "إغلاق"
+      }
+    }
+  },
+  "adminDashboard": {
+    "promoCodes": {
+      "title":"الرموز الترويجية","subtitle":"إدارة الرموز الترويجية ومتابعة استخدامها","add":"إضافة رمز ترويجي","searchLabel":"البحث في الرموز الترويجية","searchPlaceholder":"ابحث عن رمز ترويجي","filterLabel":"تصفية الرموز حسب الحالة","unlimited":"غير محدود","loading":"جارٍ تحميل الرموز الترويجية…","retry":"إعادة المحاولة","loadError":"تعذر تحميل الرموز الترويجية","loadErrorDescription":"تعذر تحميل قائمة الرموز الترويجية.","saveError":"تعذر حفظ الرمز الترويجي.","deleteError":"تعذر حذف الرمز الترويجي.","empty":"لا توجد رموز ترويجية","emptyDescription":"جرّب تغيير البحث أو تصفية الحالة.","edit":"تعديل الرمز الترويجي","delete":"حذف الرمز الترويجي","previous":"السابق","next":"التالي",
+      "stats":{"active":"الرموز النشطة","expired":"الرموز المنتهية","redemptions":"إجمالي الاستخدامات","revenue":"تأثير الإيرادات"},"statuses":{"all":"كل الحالات","active":"نشط","inactive":"غير نشط","expired":"منتهي"},"columns":{"code":"الرمز","amount":"القيمة","maxRedemptions":"الحد الأقصى للاستخدام","used":"عدد الاستخدامات","expiry":"تاريخ الانتهاء","status":"الحالة","action":"الإجراء"},
+      "deleteDialog":{"title":"حذف الرمز الترويجي","description":"هل أنت متأكد من حذف هذا الرمز الترويجي؟","warning":"لا يمكن التراجع عن هذا الإجراء.","cancel":"لا، احتفظ به","confirm":"نعم، احذف!"},
+      "form":{"createTitle":"إنشاء رمز ترويجي جديد","editTitle":"تحديث الرمز الترويجي","close":"إغلاق نموذج الرمز","code":"الرمز","codePlaceholder":"مثال: WELCOME50","amount":"القيمة","amountPlaceholder":"مثال: 500","maxRedemptions":"الحد الأقصى للاستخدام","maxRedemptionsPlaceholder":"مثال: 10","expiry":"تاريخ الانتهاء","assignedCompanyId":"معرّف الشركة المخصصة","assignedCompanyIdPlaceholder":"مثال: 1","notes":"ملاحظات","notesPlaceholder":"أضف ملاحظات","optional":"(اختياري)","status":"حالة الرمز","statusDescription":"تفعيل الرمز فور إنشائه","cancel":"إلغاء","create":"إنشاء الرمز","save":"حفظ","saving":"جارٍ الحفظ…","validation":{"code":"أدخل الرمز.","amount":"أدخل قيمة موجبة.","maxRedemptions":"أدخل حد استخدام موجبًا.","expiry":"اختر تاريخ الانتهاء.","active":"اختر حالة صحيحة.","assignedCompanyId":"أدخل معرّف شركة صحيحًا.","notes":"أدخل ملاحظات صحيحة."}},
+      "success":{"close":"إغلاق نافذة النجاح","done":"تم","created":{"title":"تم إنشاء الرمز الترويجي","description":"تم إنشاء الرمز الترويجي بنجاح."},"updated":{"title":"تم تحديث الرمز الترويجي","description":"تم تحديث الرمز الترويجي بنجاح."},"deleted":{"title":"تم حذف الرمز الترويجي","description":"تم حذف الرمز الترويجي بنجاح."}},
+      "details":{"title":"تفاصيل الرمز الترويجي","close":"إغلاق تفاصيل الرمز","code":"الرمز","amount":"القيمة","used":"عدد الاستخدامات","limit":"الحد الأقصى للاستخدام","remaining":"المتبقي","expiry":"تاريخ الانتهاء","company":"اسم الشركة","usedDate":"تاريخ الاستخدام","saved":"المبلغ الموفر","total":"إجمالي الخصم الممنوح"}
+    },
+    "requests": {
+      "title": "مراقبة الطلبات", "subtitle": "متابعة فورية لجميع طلبات المنصة", "searchLabel": "البحث في الطلبات", "searchPlaceholder": "ابحث عن طلب", "statusFilter": "تصفية الطلبات حسب الحالة", "loading": "جارٍ تحميل الطلبات…", "error": "تعذر تحميل الطلبات", "errorDescription": "تعذر تحميل قائمة الطلبات.", "retry": "إعادة المحاولة", "empty": "لا توجد طلبات", "emptyDescription": "جرّب تغيير البحث أو عوامل التصفية.", "previous": "السابق", "next": "التالي",
+      "stats": { "total": "إجمالي الطلبات", "pending": "الطلبات المعلقة", "inProgress": "الطلبات قيد التنفيذ", "rejected": "الطلبات المرفوضة", "completed": "المكتملة هذا الأسبوع", "commission": "إجمالي العمولة" },
+      "tabs": { "all": "الكل", "deleted": "المحذوفه " },
+      "columns": { "id": "رقم الطلب", "company": "اسم الشركة", "created": "تاريخ الإنشاء", "store": "اسم المتجر", "price": "السعر", "status": "الحالة" },
+      "statuses": { "all": "كل الحالات", "draft": "مسودة", "pending": "معلق", "failed": "فشل", "in_progress": "قيد التنفيذ", "canceled": "ملغي", "in_review": "قيد المراجعة", "accepted": "مقبول", "rejected": "مرفوض", "reopened": "أعيد فتحه" },
+      "details": {
+        "title": "تفاصيل الطلب", "subtitle": "المعلومات الكاملة لطلب التنفيذ {id}", "loading": "جارٍ تحميل تفاصيل الطلب…", "error": "تعذر تحميل الطلب", "errorDescription": "تعذر تحميل تفاصيل الطلب.", "retry": "إعادة المحاولة", "notFound": "الطلب غير موجود", "notFoundDescription": "هذا الطلب غير متاح أو تمت إزالته.", "created": "تاريخ الإنشاء", "location": "الموقع", "assignedBy": "تم التعيين بواسطة", "executionDate": "تاريخ التنفيذ", "timeWindow": "الفترة الزمنية", "worker": "مسؤول العرض", "totalCost": "التكلفة الإجمالية", "totalProducts": "إجمالي المنتجات", "timeRemaining": "الوقت المتبقي", "calculatedTime": "محسوب من الموعد النهائي", "assign": "تعيين مسؤول عرض", "reassign": "إعادة تعيين مسؤول العرض", "services": "تفاصيل الخدمات ({count})", "serviceNumber": "الخدمة رقم {number}", "brand": "العلامة التجارية", "subBrand": "العلامة الفرعية", "category": "الفئة", "subCategory": "الفئة الفرعية", "product": "المنتجات", "sku": "رمز SKU", "quantity": "الكمية", "expiry": "تاريخ الانتهاء", "guidelines": "تعليمات التنفيذ",
+        "statuses": { "draft": "مسودة", "pending": "معلق", "failed": "فشل", "in_progress": "قيد التنفيذ", "canceled": "ملغي", "in_review": "قيد المراجعة", "accepted": "مقبول", "rejected": "مرفوض", "reopened": "أعيد فتحه" },
+        "assignDialog": { "title": "إعادة تعيين مسؤول عرض قريب", "subtitle": "عرض مسؤولي العرض ضمن نطاق التغطية المحدد", "close": "إغلاق النافذة", "search": "البحث باسم مسؤول العرض", "available": "متاح", "busy": "مشغول", "tasks": "مهام", "assign": "تعيين مسؤول العرض", "selectRequired": "اختر مسؤول عرض متاحًا.", "unverified": "تعذر إكمال طلب إعادة التعيين." }
+      }
+    },
+    "merchandisers": {
+      "title": "إدارة مسؤولي العرض", "subtitle": "متابعة وإدارة مسؤولي العرض على المنصة", "searchLabel": "البحث في مسؤولي العرض", "searchPlaceholder": "ابحث عن مسؤول عرض", "statusFilterLabel": "تصفية حسب الحالة", "add": "إضافة مسؤول عرض", "loading": "جارٍ تحميل مسؤولي العرض…", "retry": "إعادة المحاولة", "emptyTitle": "لا يوجد مسؤولو عرض", "emptyDescription": "جرّب تغيير البحث أو تصفية الحالة.", "toggleStatus": "تغيير حالة {name}", "edit": "تعديل {name}", "delete": "حذف {name}",
+      "stats": { "total": "إجمالي مسؤولي العرض", "active": "مسؤولو العرض النشطون", "inactive": "مسؤولو العرض غير النشطين" }, "statuses": { "all": "كل الحالات", "active": "نشط", "inactive": "غير نشط" }, "columns": { "name": "اسم مسؤول العرض", "phone": "رقم الهاتف", "email": "البريد الإلكتروني", "completed": "المهام المكتملة", "status": "الحالة", "action": "الإجراء" }, "pagination": { "previous": "السابق", "next": "التالي" }, "errors": { "load": "تعذر تحميل مسؤولي العرض", "loadDescription": "تعذر تحميل بيانات مسؤولي العرض.", "status": "تعذر تحديث حالة مسؤول العرض.", "delete": "تعذر حذف مسؤول العرض." }, "deleteDialog": { "title": "حذف مسؤول العرض؟", "description": "هل أنت متأكد من حذف {name}؟", "warning": "لا يمكن التراجع عن هذا الإجراء.", "cancel": "لا، احتفظ به", "confirm": "نعم، احذف" },
+      "form": { "createTitle": "إضافة مسؤول عرض جديد", "createSubtitle": "أدخل المعلومات أدناه لإضافة عضو جديد", "editTitle": "تحديث بيانات مسؤول العرض", "editSubtitle": "أدخل المعلومات أدناه لتحديث بيانات مسؤول العرض", "back": "العودة إلى مسؤولي العرض", "personalInfo": "المعلومات الشخصية", "uploadPhoto": "رفع صورة", "optional": "(اختياري)", "fullName": "الاسم الكامل", "fullNamePlaceholder": "أدخل الاسم الكامل", "email": "البريد الإلكتروني", "emailPlaceholder": "name@company.com", "phone": "رقم الهاتف", "phonePlaceholder": "+966 XX XXX XXXX", "jobDetails": "تفاصيل الوظيفة", "jobTitle": "المسمى الوظيفي", "merchandiser": "مسؤول عرض", "startDate": "تاريخ البدء", "systemPermissions": "صلاحيات النظام", "credentials": "بيانات تسجيل الدخول", "credentialsDescription": "إعداد صلاحيات الوصول لهذا الموظف", "enabled": "مفعّل", "temporaryPassword": "كلمة المرور المؤقتة", "copyPassword": "نسخ كلمة المرور المؤقتة", "credentialsNotice": "سيتم إرسال بيانات تسجيل الدخول تلقائيًا إلى بريد الموظف عند إنشاء الحساب.", "cancel": "إلغاء", "save": "حفظ", "saving": "جارٍ الحفظ…", "saveError": "تعذر حفظ مسؤول العرض.", "validation": { "name": "أدخل حرفين على الأقل.", "email": "أدخل بريدًا إلكترونيًا صالحًا.", "phone": "أدخل رقم هاتف صالحًا.", "startDate": "اختر تاريخ البدء.", "password": "يجب ألا تقل كلمة المرور عن ثمانية أحرف." } },
+      "details": { "title": "إدارة مسؤول العرض", "subtitle": "متابعة وإدارة مسؤولي العرض على المنصة", "back": "العودة إلى مسؤولي العرض", "loading": "جارٍ تحميل بيانات مسؤول العرض…", "error": "تعذر تحميل مسؤول العرض", "errorDescription": "تعذر تحميل تفاصيل مسؤول العرض.", "retry": "إعادة المحاولة", "notFound": "مسؤول العرض غير موجود", "notFoundDescription": "مسؤول العرض غير متاح أو تمت إزالته.", "active": "نشط", "inactive": "غير نشط", "email": "البريد الإلكتروني", "phone": "رقم الهاتف", "inProgress": "قيد التنفيذ", "due": "موعد التسليم: {date}", "filterDate": "تصفية حسب التاريخ", "history": "سجل الطلبات", "emptyHistory": "لا توجد طلبات", "emptyHistoryDescription": "لا توجد طلبات تطابق عوامل التصفية.", "editRequest": "تعديل الطلب", "deleteRequest": "حذف الطلب", "requestApiMissing": "لم يتم توفير واجهة طلبات الإدارة.", "stats": { "total": "إجمالي المهام", "completed": "مكتملة", "canceled": "ملغاة" }, "tabs": { "all": "الكل", "completed": "مكتملة", "failed": "فاشلة", "canceled": "ملغاة" }, "columns": { "id": "رقم الطلب", "location": "الموقع", "time": "الوقت", "status": "الحالة", "action": "الإجراء" }, "deleteDialog": { "title": "حذف الطلب؟", "description": "هل أنت متأكد من حذف هذا الطلب؟", "warning": "لا يمكن التراجع عن هذا الإجراء.", "cancel": "لا، احتفظ به", "confirm": "نعم، احذف" } }
+    },
+    "companies": {
+      "title": "إدارة الشركات",
+      "subtitle": "إدارة ومتابعة جميع الشركات المسجلة",
+      "searchLabel": "البحث في الشركات",
+      "searchPlaceholder": "البحث عن الشركات",
+      "statusFilterLabel": "تصفية الشركات حسب الحالة",
+      "loading": "جارٍ تحميل الشركات…",
+      "emptyTitle": "لا توجد شركات",
+      "emptyDescription": "جرّب تغيير البحث أو تصفية الحالة.",
+      "retry": "إعادة المحاولة",
+      "toggleStatus": "تغيير حالة {name}",
+      "delete": "حذف {name}",
+      "stats": { "total": "إجمالي الشركات", "active": "الشركات النشطة", "inactive": "الشركات غير النشطة" },
+      "statuses": { "all": "جميع الحالات", "active": "نشط", "inactive": "غير نشط" },
+      "columns": { "name": "اسم الشركة", "industry": "المجال", "crNumber": "رقم السجل التجاري", "email": "بريد العمل", "status": "الحالة", "action": "الإجراء" },
+      "pagination": { "previous": "السابق", "next": "التالي" },
+      "errors": { "load": "تعذر تحميل الشركات", "status": "تعذر تحديث حالة الشركة.", "delete": "تعذر حذف الشركة." },
+      "deleteDialog": { "title": "حذف الشركة؟", "description": "هل أنت متأكد من حذف هذه الشركة؟", "warning": "لا يمكن التراجع عن هذا الإجراء.", "cancel": "لا، احتفظ بها", "confirm": "نعم، احذف" },
+      "details": {
+        "title": "تفاصيل الشركة", "back": "العودة إلى الشركات", "loading": "جارٍ تحميل تفاصيل الشركة…", "error": "تعذر تحميل تفاصيل الشركة", "retry": "إعادة المحاولة", "notFound": "الشركة غير موجودة", "active": "نشط", "inactive": "غير نشط", "createdOn": "تاريخ الإنشاء", "industry": "المجال", "email": "البريد الإلكتروني", "crNumber": "رقم السجل التجاري", "phone": "رقم الهاتف", "catalogTitle": "إدارة الكتالوج", "manage": "إدارة",
+        "stats": { "totalRequests": "إجمالي الطلبات", "completed": "المكتملة", "pending": "قيد الانتظار", "spending": "إجمالي الإنفاق", "products": "المنتجات" },
+        "history": { "title": "سجل الطلبات", "viewAll": "عرض جميع الطلبات", "empty": "لا توجد طلبات حديثة", "requestId": "رقم الطلب", "location": "الموقع", "time": "الوقت", "status": "الحالة", "requestNumber": "طلب-{id}" },
+        "statuses": { "draft": "مسودة", "pending": "قيد الانتظار", "completed": "مكتمل", "failed": "فشل", "cancelled": "ملغي", "rejected": "مرفوض", "inProgress": "قيد التنفيذ" },
+        "catalog": {
+          "brand": { "title": "العلامات التجارية", "description": "إدارة جميع العلامات" },
+          "sub-brand": { "title": "العلامات الفرعية", "description": "إدارة جميع العلامات الفرعية" },
+          "category": { "title": "الفئات", "description": "إدارة جميع الفئات" },
+          "sub-category": { "title": "الفئات الفرعية", "description": "إدارة جميع الفئات الفرعية" },
+          "product": { "title": "المنتجات", "description": "إدارة جميع المنتجات" }
+        }
+      }
+    },
+    "requests": {
+      "title": "إدارة الطلبات",
+      "subtitle": "متابعة وإدارة جميع طلبات المنصة",
+      "searchLabel": "البحث في الطلبات",
+      "searchPlaceholder": "ابحث عن طلب",
+      "loading": "جارٍ تحميل الطلبات…",
+      "retry": "إعادة المحاولة",
+      "empty": "لا توجد طلبات",
+      "emptyDescription": "جرّب تغيير البحث أو تصفية الحالة.",
+      "tabs": {
+        "all": "جميع الطلبات",
+        "deleted": "الطلبات المحذوفة"
+      },
+      "stats": {
+        "total": "إجمالي الطلبات",
+        "pending": "قيد الانتظار",
+        "inProgress": "قيد التنفيذ",
+        "rejected": "مرفوض",
+        "completed": "مكتمل",
+        "commission": "العمولة"
+      },
+      "statuses": {
+        "all": "كل الحالات",
+        "draft": "مسودة",
+        "pending": "قيد الانتظار",
+        "inProgress": "قيد التنفيذ",
+        "in_progress": "قيد التنفيذ",
+        "completed": "مكتمل",
+        "failed": "فشل",
+        "cancelled": "ملغي",
+        "rejected": "مرفوض"
+      },
+      "columns": {
+        "id": "رقم الطلب",
+        "company": "الشركة",
+        "created": "تاريخ الإنشاء",
+        "store": "المتجر",
+        "price": "السعر",
+        "status": "الحالة",
+        "action": "الإجراء"
+      },
+      "pagination": {
+        "previous": "السابق",
+        "next": "التالي",
+        "page": "الصفحة {page} من {pages}"
+      }
+    },
+    "title": "لوحة التحكم",
+    "welcome": "مرحبًا بعودتك، إليك ما يحدث اليوم",
+    "summaryLabel": "ملخص المنصة",
+    "navigation": {
+      "label": "التنقل في لوحة تحكم الإدارة",
+      "logo": "الانتقال إلى لوحة تحكم الإدارة",
+      "dashboard": "لوحة التحكم",
+      "companies": "الشركات",
+      "merchandisers": "مندوبو العرض",
+      "requests": "الطلبات",
+      "promoCode": "الرموز الترويجية",
+      "admins": "المشرفون",
+      "payments": "المدفوعات",
+      "settings": "الإعدادات",
+      "services": "الخدمات",
+      "trash": "سلة المحذوفات",
+      "logout": "تسجيل الخروج"
+    },
+    "header": {
+      "searchLabel": "البحث في لوحة تحكم الإدارة",
+      "searchPlaceholder": "بحث",
+      "searchNoResults": "لا توجد صفحات إدارة مطابقة",
+      "menu": "فتح قائمة الإدارة",
+      "notification": "الإشعارات",
+      "userMenu": "فتح قائمة ملف المشرف",
+      "language": "تغيير لغة لوحة التحكم إلى الإنجليزية"
+    },
+    "user": { "name": "ShelfSpot", "role": "مشرف" },
+    "stats": {
+      "totalCompanies": "إجمالي الشركات",
+      "activeCompanies": "الشركات النشطة",
+      "requestsToday": "طلبات اليوم",
+      "totalWorkers": "إجمالي المستقلين",
+      "activeWorkers": "المستقلون النشطون",
+      "platformRevenue": "إيرادات المنصة"
+    },
+    "trends": {
+      "monthlyIncrease": "+12% هذا الشهر",
+      "weeklyIncrease": "+8% هذا الأسبوع",
+      "weeklyDecrease": "-2% هذا الأسبوع",
+      "workersIncrease": "+18% هذا الأسبوع",
+      "activeWorkersIncrease": "+15% هذا الأسبوع",
+      "revenueIncrease": "+24% هذا الأسبوع"
+    },
+    "chart": {
+      "requestsOverTime": "الطلبات بمرور الوقت",
+      "statusDistribution": "توزيع حالات الطلبات",
+      "thisWeek": "هذا الأسبوع",
+      "dates": { "mar3": "3 مارس", "mar9": "9 مارس", "mar15": "15 مارس", "mar18": "18 مارس", "mar21": "21 مارس", "mar25": "25 مارس", "mar28": "28 مارس" }
+    },
+    "status": { "pending": "قيد الانتظار", "inProgress": "قيد التنفيذ", "completed": "مكتمل", "rejected": "مرفوض" },
+    "rankings": {
+      "companies": "أفضل 5 شركات",
+      "workers": "أفضل 5 مستقلين نشطين",
+      "requests": "{count} طلب",
+      "completed": "{count} مكتملة"
+    },
+    "mock": {
+      "companies": { "techCorp": "حلول تك كورب", "retailHub": "ريتيل هب", "namaa": "أسواق نماء", "vision": "متاجر الرؤية", "supplyPoint": "نقطة التوريد" },
+      "workers": { "ibrahim": "إبراهيم إمام", "omar": "عمر علي", "sara": "سارة أحمد", "khaled": "خالد عادل", "mona": "منى علي" }
+    }
+  },
+  "auth": {
+    "adminLogin": {
+      "title": "مرحبًا!",
+      "description": "أدخل بيانات الدخول للوصول إلى حسابك"
+    },
+    "login": {
+      "visualAlt": "واجهة تسجيل الدخول",
+      "title": "مرحبًا بعودتك",
+      "description": "أدخل بياناتك للوصول إلى حسابك",
+      "tabs": {
+        "signIn": "تسجيل الدخول",
+        "signUp": "إنشاء حساب"
+      },
+      "fields": {
+        "email": {
+          "label": "البريد الإلكتروني",
+          "placeholder": "name@company.com"
+        },
+        "password": {
+          "label": "كلمة المرور",
+          "placeholder": "أدخل كلمة المرور"
+        }
+      },
+      "actions": {
+        "showPassword": "إظهار كلمة المرور",
+        "hidePassword": "إخفاء كلمة المرور",
+        "rememberMe": "تذكرني",
+        "forgotPassword": "هل نسيت كلمة المرور؟",
+        "submit": "تسجيل الدخول",
+        "submitting": "جارٍ تسجيل الدخول...",
+        "createAccount": "إنشاء حساب"
+      },
+      "errors": {
+        "invalidApiKey": "مفتاح API غير صالح.",
+        "invalidCredentials": "البريد الإلكتروني أو كلمة المرور غير صحيحة.",
+        "validation": "يرجى التحقق من الحقول المظللة.",
+        "generic": "تعذر تسجيل الدخول الآن. حاول مرة أخرى."
+      },
+      "states": {
+        "registerSuccess": "تم إنشاء حسابك بنجاح. يرجى التحقق من بريدك الإلكتروني للمتابعة.",
+        "noAccount": "ليس لديك حساب؟"
+      },
+      "validation": {
+        "emailRequired": "البريد الإلكتروني مطلوب.",
+        "emailInvalid": "يرجى إدخال بريد إلكتروني صالح.",
+        "passwordRequired": "كلمة المرور مطلوبة."
+      }
+    },
+    "register": {
+      "visualAlt": "واجهة إنشاء الحساب",
+      "title": "ابدأ الآن",
+      "description": "أنشئ حسابك لبدء إدارة العمليات الميدانية",
+      "tabs": {
+        "signIn": "تسجيل الدخول",
+        "signUp": "إنشاء حساب"
+      },
+      "fields": {
+        "companyName": {
+          "label": "اسم الشركة",
+          "placeholder": "مثال: ShelfSpot Logistics"
+        },
+        "crNumber": {
+          "label": "رقم السجل التجاري",
+          "placeholder": "أدخل رقم السجل التجاري المكون من 10 أرقام"
+        },
+        "email": {
+          "label": "البريد الإلكتروني للعمل",
+          "placeholder": "name@company.com"
+        },
+        "phoneNumber": {
+          "label": "رقم الجوال",
+          "placeholder": "+966 XX XXX XXXX"
+        },
+        "password": {
+          "label": "كلمة المرور",
+          "placeholder": "أنشئ كلمة مرور قوية"
+        },
+        "passwordConfirmation": {
+          "label": "تأكيد كلمة المرور",
+          "placeholder": "أعد إدخال كلمة المرور"
+        },
+        "industry": {
+          "label": "القطاع",
+          "placeholder": "مثال: لوجستيات، تجزئة، تقنية"
+        }
+      },
+      "actions": {
+        "showPassword": "إظهار كلمة المرور",
+        "hidePassword": "إخفاء كلمة المرور",
+        "submit": "إنشاء الحساب",
+        "submitting": "جارٍ إنشاء الحساب..."
+      },
+      "errors": {
+        "invalidApiKey": "مفتاح API غير صالح.",
+        "unauthorized": "غير مصرح لك بتنفيذ هذا الإجراء.",
+        "duplicateAccount": "يوجد حساب بهذه البيانات بالفعل.",
+        "validation": "يرجى التحقق من الحقول المظللة.",
+        "generic": "تعذر إنشاء الحساب الآن. حاول مرة أخرى."
+      },
+      "states": {
+        "success": "تم إنشاء حسابك بنجاح. سيتم تحويلك إلى صفحة التحقق من البريد الإلكتروني..."
+      },
+      "industryOptions": {
+        "logistics": "اللوجستيات",
+        "retail": "التجزئة",
+        "tech": "التقنية"
+      },
+      "validation": {
+        "companyNameRequired": "اسم الشركة مطلوب.",
+        "crNumberRequired": "رقم السجل التجاري مطلوب.",
+        "crNumberInvalid": "يجب أن يتكون رقم السجل التجاري من 10 أرقام.",
+        "emailRequired": "البريد الإلكتروني للعمل مطلوب.",
+        "emailInvalid": "يرجى إدخال بريد إلكتروني صالح.",
+        "phoneNumberRequired": "رقم الجوال مطلوب.",
+        "phoneNumberInvalid": "يرجى إدخال رقم جوال صالح.",
+        "passwordRequired": "كلمة المرور مطلوبة.",
+        "passwordMin": "يجب ألا تقل كلمة المرور عن 8 أحرف.",
+        "passwordConfirmationRequired": "تأكيد كلمة المرور مطلوب.",
+        "passwordConfirmationMismatch": "كلمتا المرور غير متطابقتين.",
+        "industryRequired": "القطاع مطلوب."
+      }
+    },
+    "forgotPassword": {
+      "visualAlt": "واجهة نسيت كلمة المرور",
+      "title": "نسيت كلمة المرور",
+      "description": "لا تقلق! أدخل البريد الإلكتروني المرتبط بحسابك.",
+      "fields": {
+        "email": {
+          "label": "البريد الإلكتروني للعمل",
+          "placeholder": "name@company.com"
+        }
+      },
+      "actions": {
+        "back": "رجوع",
+        "submit": "إعادة تعيين كلمة المرور",
+        "submitting": "جارٍ الإرسال..."
+      },
+      "errors": {
+        "invalidApiKey": "مفتاح API غير صالح.",
+        "unauthorized": "غير مصرح لك بتنفيذ هذا الإجراء.",
+        "emailNotFound": "لم يتم العثور على حساب بهذا البريد الإلكتروني.",
+        "validation": "يرجى التحقق من الحقول المظللة.",
+        "generic": "تعذر إرسال طلب إعادة التعيين الآن. حاول مرة أخرى."
+      },
+      "states": {
+        "success": "تم إرسال تعليمات إعادة التعيين بنجاح."
+      },
+      "validation": {
+        "emailRequired": "البريد الإلكتروني مطلوب.",
+        "emailInvalid": "يرجى إدخال بريد إلكتروني صالح."
+      }
+    },
+    "otpVerification": {
+      "visualAlt": "واجهة التحقق برمز OTP",
+      "title": "التحقق برمز OTP",
+      "description": "أدخل رمز التحقق الذي أرسلناه للتو إلى بريدك الإلكتروني.",
+      "digitLabel": "الرقم {position} من رمز التحقق",
+      "errors": {
+        "missingEmail": "ابدأ استعادة كلمة المرور مرة أخرى وأدخل بريدك الإلكتروني.",
+        "missingToken": "لم تتضمن استجابة التحقق رمز إعادة تعيين كلمة المرور.",
+        "invalidCode": "رمز التحقق غير صحيح أو منتهي الصلاحية.",
+        "generic": "تعذر التحقق من الرمز الآن. حاول مرة أخرى."
+      },
+      "actions": {
+        "back": "رجوع",
+        "submit": "تحقق من الرمز",
+        "submitting": "جارٍ التحقق..."
+      },
+      "validation": {
+        "codeRequired": "رمز التحقق مطلوب.",
+        "codeInvalid": "يجب أن يتكون رمز التحقق من 6 أرقام."
+      }
+    },
+    "resetPassword": {
+      "visualAlt": "واجهة إعادة تعيين كلمة المرور",
+      "title": "إعادة تعيين كلمة المرور",
+      "description": "يجب أن تكون كلمة المرور الجديدة مختلفة عن كلمات المرور المستخدمة سابقًا.",
+      "errors": {
+        "missingToken": "تحقق من الرمز قبل إعادة تعيين كلمة المرور.",
+        "validation": "يرجى مراجعة الحقول المحددة.",
+        "generic": "تعذر إعادة تعيين كلمة المرور الآن. حاول مرة أخرى."
+      },
+      "fields": {
+        "password": {
+          "label": "كلمة المرور الجديدة",
+          "placeholder": "أدخل كلمة المرور"
+        },
+        "confirmPassword": {
+          "label": "تأكيد كلمة المرور",
+          "placeholder": "أدخل كلمة المرور"
+        }
+      },
+      "actions": {
+        "back": "رجوع",
+        "showPassword": "إظهار كلمة المرور",
+        "hidePassword": "إخفاء كلمة المرور",
+        "showConfirmPassword": "إظهار تأكيد كلمة المرور",
+        "hideConfirmPassword": "إخفاء تأكيد كلمة المرور",
+        "submit": "تأكيد كلمة المرور",
+        "submitting": "جارٍ الحفظ..."
+      },
+      "states": {
+        "passwordRules": "يجب أن تكون كلمة المرور:",
+        "passwordMin": "تحتوي على 8 أحرف على الأقل",
+        "passwordMatch": "يجب أن تتطابق كلمتا المرور"
+      },
+      "validation": {
+        "passwordRequired": "كلمة المرور مطلوبة.",
+        "passwordMin": "يجب ألا تقل كلمة المرور عن 8 أحرف.",
+        "confirmPasswordRequired": "تأكيد كلمة المرور مطلوب.",
+        "passwordsMismatch": "كلمتا المرور غير متطابقتين."
+      }
+    },
+    "verifyEmail": {
+      "visualAlt": "واجهة التحقق من البريد الإلكتروني",
+      "title": "تحقق من بريدك الإلكتروني",
+      "description": "تم إرسال رسالة من shelfspot@gmail.com إلى بريدك الإلكتروني. أدخل رمز التحقق لتأكيد حسابك.",
+      "actions": {
+        "back": "رجوع",
+        "submit": "تم",
+        "submitting": "جارٍ التحقق...",
+        "resendCode": "إعادة إرسال رمز التحقق",
+        "resending": "جارٍ إعادة الإرسال..."
+      },
+      "errors": {
+        "missingToken": "رمز التحقق مفقود. يرجى التسجيل مرة أخرى.",
+        "generic": "تعذر التحقق من البريد الإلكتروني الآن. حاول مرة أخرى."
+      },
+      "validation": {
+        "codeRequired": "رمز التحقق مطلوب.",
+        "codeInvalid": "يجب أن يتكون رمز التحقق من 6 أرقام."
+      }
+    }
+  },
+  "adminAdmins":{"title":"إدارة المسؤولين","subtitle":"مراقبة وإدارة مسؤولي المنصة","tabs":{"admins":"المسؤولون","roles":"الأدوار"},"searchLabel":"البحث في المسؤولين أو الأدوار","searchPlaceholder":"البحث عن مسؤول","statusLabel":"تصفية حسب الحالة","statuses":{"all":"كل الحالات","active":"نشط","inactive":"غير نشط"},"actions":{"addAdmin":"إضافة مسؤول","addRole":"إضافة دور","toggle":"تغيير الحالة","delete":"حذف","edit":"تعديل","cancel":"إلغاء","confirm":"تأكيد"},"columns":{"name":"اسم المسؤول","phone":"رقم الهاتف","email":"البريد الإلكتروني","role":"اسم الدور","users":"عدد المستخدمين","status":"الحالة","action":"الإجراء"},"pagination":{"previous":"السابق","next":"التالي","page":"الصفحة {page} من {pages}"},"states":{"loading":"جارٍ تحميل المسؤولين…","error":"تعذر تحميل المسؤولين","retry":"إعادة المحاولة","empty":"لا توجد سجلات","emptyDescription":"جرّب تغيير البحث أو تصفية الحالة."},"adminForm":{"createTitle":"إنشاء مسؤول جديد","editTitle":"تحديث بيانات المسؤول","activation":"التفعيل","name":"الاسم","role":"الدور","selectRole":"اختر الدور","email":"البريد الإلكتروني","phone":"رقم الهاتف","password":"كلمة المرور","confirmPassword":"تأكيد كلمة المرور"},"roleForm":{"createTitle":"إنشاء دور جديد","editTitle":"تحديث الدور","name":"الدور","permissions":"الصلاحيات"},"delete":{"warning":"لا يمكن التراجع عن هذا الإجراء.","cancel":"لا، احتفظ به","confirm":"نعم، احذف"},"deleteAdmin":{"title":"حذف المسؤول؟","description":"هل أنت متأكد من حذف {name}؟"},"deleteRole":{"title":"حذف الدور؟","description":"هل أنت متأكد من حذف {name}؟"},"validation":{"required":"هذا الحقل مطلوب.","email":"أدخل بريدًا إلكترونيًا صالحًا.","password":"يجب ألا تقل كلمة المرور عن 8 أحرف.","match":"كلمتا المرور غير متطابقتين."},"errors":{"noRole":"لا يملك هذا المسؤول دورًا ولا يمكن تحديثه بأمان.","roleStatus":"تفعيل الأدوار غير مدعوم في عقد الواجهة البرمجية المقدم.","phoneUnsupported":"الهاتف للقراءة فقط لأنه غير موجود في حمولة واجهة المسؤول المقدمة."},"success":{"close":"إغلاق نافذة النجاح","done":"تم","adminCreated":{"title":"تم إنشاء المسؤول","description":"تم إنشاء المسؤول بنجاح."},"adminUpdated":{"title":"تم تحديث المسؤول","description":"تم تحديث المسؤول بنجاح."},"adminDeleted":{"title":"تم حذف المسؤول","description":"تم حذف المسؤول بنجاح."},"roleCreated":{"title":"تم إنشاء الدور","description":"تم إنشاء الدور بنجاح."},"roleUpdated":{"title":"تم تحديث الدور","description":"تم تحديث الدور بنجاح."},"roleDeleted":{"title":"تم حذف الدور","description":"تم حذف الدور بنجاح."}},"failure":{"close":"إغلاق نافذة الخطأ","done":"إغلاق","adminCreated":{"title":"تعذر إنشاء المسؤول","description":"تعذر إنشاء المسؤول. يرجى المحاولة مرة أخرى."},"adminUpdated":{"title":"تعذر تحديث المسؤول","description":"تعذر تحديث المسؤول. يرجى المحاولة مرة أخرى."},"adminDeleted":{"title":"تعذر حذف المسؤول","description":"تعذر حذف المسؤول. يرجى المحاولة مرة أخرى."},"roleCreated":{"title":"تعذر إنشاء الدور","description":"تعذر إنشاء الدور. يرجى المحاولة مرة أخرى."},"roleUpdated":{"title":"تعذر تحديث الدور","description":"تعذر تحديث الدور. يرجى المحاولة مرة أخرى."},"roleDeleted":{"title":"تعذر حذف الدور","description":"تعذر حذف الدور. يرجى المحاولة مرة أخرى."}}}
+,"adminPayments":{"title":"المدفوعات","subtitle":"تتبع المعاملات المالية الواردة والصادرة","summary":{"incoming":"إجمالي الوارد","outgoing":"إجمالي الصادر","balance":"صافي الرصيد"},"searchLabel":"بحث الشركات","searchPlaceholder":"البحث عن الشركات","dateFilter":"التاريخ","statusFilter":"الحالة","dates":{"newest":"الأحدث","oldest":"الأقدم"},"statuses":{"all":"كل الحالات","completed":"مكتمل","failed":"فاشل","refunded":"مسترد"},"columns":{"company":"اسم الشركة","spending":"إجمالي الإنفاق","date":"التاريخ","status":"الحالة","action":"الإجراء"},"selectAll":"تحديد الكل","select":"تحديد {name}","view":"عرض {name}","delete":"حذف {name}","empty":"لا توجد معاملات","error":"تعذر تحميل المدفوعات","pagination":{"previous":"السابق","next":"التالي","page":"الصفحة {page} من {pages}"},"deleteDialog":{"title":"حذف المعاملة؟","description":"إزالة معاملة {name}؟","previewWarning":"معاينة فقط: لم يتم توفير واجهة مدفوعات.","cancel":"لا، احتفظ بها","confirm":"إزالة"},"details":{"title":"تفاصيل الدفع","back":"العودة إلى المدفوعات","loading":"جارٍ تحميل الدفع…","error":"تعذر تحميل تفاصيل الدفع","retry":"إعادة المحاولة","notFound":"لم يتم العثور على الدفع","companyTitle":"معلومات الشركة","transactionTitle":"تفاصيل المعاملة","fields":{"company":"الشركة","email":"البريد الإلكتروني","phone":"الهاتف","country":"البلد","date":"التاريخ","chargedAt":"تاريخ الخصم","transactionId":"معرّف المعاملة","paymentStatus":"حالة الدفع"},"statuses":{"completed":"مكتمل","failed":"فاشل","refunded":"مسترد"},"directionTitle":"اتجاه المعاملة","direction":{"incoming":"وارد","outgoing":"صادر","incomingDesc":"أموال مستلمة إلى المنصة","outgoingDesc":"أموال مرسلة من المنصة"}}},"adminSettings":{"title":"الإعدادات","subtitle":"إدارة تفضيلات المنصة وإعداداتها","tabs":{"general":"عام","profile":"الملف الشخصي"},"save":"حفظ التغيير","saving":"جارٍ الحفظ…","unverified":"تبقى التغييرات في المعاينة لعدم توفير واجهة إعدادات المسؤول.","general":{"title":"الإعدادات العامة","platform":"اسم المنصة","email":"البريد الإلكتروني"},"profile":{"title":"إعدادات الملف الشخصي","passwordSection":"تغيير كلمة المرور (اختياري)","name":"الاسم","email":"البريد الإلكتروني","current":"كلمة المرور الحالية","new":"كلمة المرور الجديدة","confirm":"تأكيد كلمة المرور","success":"تم تحديث الملف الشخصي بنجاح.","error":"تعذر تحديث الملف الشخصي. يرجى المحاولة مرة أخرى.","loadError":"تعذر تحميل الملف الشخصي.","validation":{"currentRequired":"كلمة المرور الحالية مطلوبة لتعيين كلمة مرور جديدة.","mismatch":"كلمة المرور الجديدة وتأكيدها غير متطابقين."}}}}
