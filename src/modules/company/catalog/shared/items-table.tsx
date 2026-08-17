@@ -15,6 +15,8 @@ import {
 } from "@/shared/components/dashboard/dashboard-icons";
 import { StatusToggle } from "@/shared/components/dashboard/status-toggle";
 import { Button } from "@/shared/ui/button";
+import { usePermission } from "@/shared/components/auth/permission-provider";
+import type { CompanyPermission } from "@/shared/lib/auth/permissions";
 
 import type { CatalogBaseRow } from "../shared/seed";
 
@@ -96,6 +98,12 @@ export function CatalogItemsTable({
       pathname.endsWith("/sub-category") ? "sub-categories" :
         pathname.endsWith("/category") ? "categories" :
           pathname.endsWith("/brand") ? "brands" : undefined);
+  const permissionStem = ({
+    brands: "brand", "sub-brands": "sub_brand", categories: "category",
+    "sub-categories": "sub_category", products: "product",
+  } as const)[resolvedResource ?? "brands"];
+  const canEdit = usePermission(`edit_${permissionStem}` as CompanyPermission);
+  const canDelete = usePermission(`delete_${permissionStem}` as CompanyPermission);
 
   async function toggleStatus(id: string, isActive: boolean) {
     if (onToggleStatus) return onToggleStatus(id, isActive);
@@ -206,7 +214,7 @@ export function CatalogItemsTable({
                       }
                     />
                   ) : (
-                    <button
+                    canEdit ? <button
                       type="button"
                       className="rounded-full"
                       onClick={() => toggleStatus(row.id, !row.isActive)}
@@ -216,7 +224,7 @@ export function CatalogItemsTable({
                         isActive={row.isActive}
                         ariaLabel={labels.toggleStatus}
                       />
-                    </button>
+                    </button> : <StatusBadge status={row.isActive ? "active" : "inactive"} label={row.isActive ? labels.activeLabel : labels.inactiveLabel} />
                   )}
                 </td>
 
@@ -228,7 +236,7 @@ export function CatalogItemsTable({
                 {/* Actions */}
                 <td className="border-b border-border px-5 py-4">
                   <div className="flex items-center gap-3">
-                    <Button
+                    {canDelete ? <Button
                       type="button"
                       variant="ghost"
                       size="icon-xs"
@@ -237,8 +245,8 @@ export function CatalogItemsTable({
                       onClick={() => onDelete(row.id)}
                     >
                       <TrashIcon className="size-4" />
-                    </Button>
-                    <Button
+                    </Button> : null}
+                    {canEdit ? <Button
                       type="button"
                       variant="ghost"
                       size="icon-xs"
@@ -247,7 +255,7 @@ export function CatalogItemsTable({
                       onClick={() => onEdit(row.id)}
                     >
                       <EditIcon className="size-4" />
-                    </Button>
+                    </Button> : null}
                   </div>
                 </td>
               </tr>

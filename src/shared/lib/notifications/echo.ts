@@ -3,12 +3,18 @@
 import Echo from "laravel-echo";
 import Pusher from "pusher-js";
 
+declare global {
+  interface Window {
+    Pusher: typeof Pusher;
+  }
+}
+
 // Make Pusher available globally for Laravel Echo
 if (typeof window !== "undefined") {
   window.Pusher = Pusher;
 }
 
-let echoInstance: Echo | null = null;
+let echoInstance: Echo<"reverb"> | null = null;
 
 export interface EchoConfig {
   userId: number;
@@ -17,7 +23,7 @@ export interface EchoConfig {
 /**
  * Creates and configures a Laravel Echo instance for Reverb WebSocket connection
  */
-export function createEchoInstance(config: EchoConfig): Echo {
+export function createEchoInstance(config: EchoConfig): Echo<"reverb"> {
   // Disconnect existing instance if any
   if (echoInstance) {
     echoInstance.disconnect();
@@ -57,7 +63,7 @@ export function createEchoInstance(config: EchoConfig): Echo {
 /**
  * Returns the current Echo instance
  */
-export function getEchoInstance(): Echo | null {
+export function getEchoInstance(): Echo<"reverb"> | null {
   return echoInstance;
 }
 

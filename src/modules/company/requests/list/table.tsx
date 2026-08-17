@@ -3,6 +3,7 @@ import type { DashboardRequestRow } from "@/modules/company/requests/list/types"
 import { StatusBadge } from "@/shared/components/dashboard/status-badge";
 import { EditIcon, TrashIcon } from "@/shared/components/dashboard/dashboard-icons";
 import { Button } from "@/shared/ui/button";
+import { usePermission } from "@/shared/components/auth/permission-provider";
 
 interface DashboardRequestsTableProps {
   rows: DashboardRequestRow[];
@@ -28,6 +29,8 @@ export function DashboardRequestsTable({
   resolveStatus,
   onDelete,
 }: DashboardRequestsTableProps) {
+  const canEdit = usePermission("edit_task");
+  const canDelete = usePermission("delete_task");
   return (
     <div className="overflow-hidden rounded-lg border border-border bg-card shadow-sm">
       <div className="overflow-x-auto">
@@ -87,7 +90,7 @@ export function DashboardRequestsTable({
                 </td>
                 <td className="border-b border-border px-7 py-4">
                   <div className="flex items-center gap-3">
-                    <Button
+                    {canDelete ? <Button
                       aria-label={labels.delete}
                       type="button"
                       variant="ghost"
@@ -96,8 +99,8 @@ export function DashboardRequestsTable({
                       onClick={() => onDelete?.(String(row.taskId ?? row.id))}
                     >
                       <TrashIcon className="size-4" />
-                    </Button>
-                    {row.canEdit ? (
+                    </Button> : null}
+                    {canEdit && row.canEdit ? (
                       <Button asChild aria-label={labels.edit} variant="ghost" size="icon-xs" className="text-muted-foreground hover:text-foreground">
                         <Link href={`/dashboard/requests/${row.taskId ?? row.id}/edit`}><EditIcon className="size-4" /></Link>
                       </Button>

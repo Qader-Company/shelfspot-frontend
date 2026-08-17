@@ -9,6 +9,8 @@ const productionPrefix = process.env.NODE_ENV === "production" ? "__Host-" : "";
 const accessTokenCookie = `${productionPrefix}shelfspot-access`;
 const refreshTokenCookie = `${productionPrefix}shelfspot-refresh`;
 const authContextCookie = `${productionPrefix}shelfspot-auth-context`;
+const permissionsCookie = `${productionPrefix}shelfspot-permissions`;
+const companyOwnerCookie = `${productionPrefix}shelfspot-company-owner`;
 const dashboardPathPattern = /^\/(ar|en)\/dashboard(?:\/|$)/;
 const adminDashboardPathPattern = /^\/(ar|en)\/admin\/?$/;
 
@@ -34,6 +36,33 @@ export default function proxy(request: NextRequest) {
         request.url,
       );
       return NextResponse.redirect(loginUrl);
+    }
+
+    if (dashboardMatch) {
+      const permissions = new Set(
+        request.cookies.get(permissionsCookie)?.value.split("|").filter(Boolean) ?? [],
+      );
+      const isCompanyOwner = request.cookies.get(companyOwnerCookie)?.value === "true";
+      const relativePath = request.nextUrl.pathname.replace(/^\/(ar|en)\/dashboard/, "") || "/";
+      const routeRules: Array<[RegExp, string[]]> = [
+        [/^\/requests\/create\/?$/, ["create_task"]],
+        [/^\/requests\/[^/]+\/edit\/?$/, ["edit_task"]],
+        [/^\/requests(?:\/|$)/, ["view_task"]],
+        [/^\/payment(?:\/|$)/, ["view_wallet"]],
+        [/^\/admins(?:\/|$)/, ["view_admin", "view_role"]],
+        [/^\/catalog\/brand(?:\/|$)/, ["view_brand"]],
+        [/^\/catalog\/sub-brand(?:\/|$)/, ["view_sub_brand"]],
+        [/^\/catalog\/category(?:\/|$)/, ["view_category"]],
+        [/^\/catalog\/sub-category(?:\/|$)/, ["view_sub_category"]],
+        [/^\/catalog\/product(?:\/|$)/, ["view_product"]],
+        [/^\/trash(?:\/|$)/, ["delete_task", "delete_product"]],
+        [/^\/profile(?:\/|$)/, ["view_company"]],
+      ];
+      const rule = routeRules.find(([pattern]) => pattern.test(relativePath));
+      if (rule && !isCompanyOwner && !rule[1].some((permission) => permissions.has(permission))) {
+        const locale = dashboardMatch[1];
+        return NextResponse.redirect(new URL(`/${locale}/dashboard/forbidden`, request.url));
+      }
     }
   }
 

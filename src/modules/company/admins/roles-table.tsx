@@ -4,6 +4,7 @@ import {
   TrashIcon,
 } from "@/shared/components/dashboard/dashboard-icons";
 import { Button } from "@/shared/ui/button";
+import { usePermission } from "@/shared/components/auth/permission-provider";
 
 import type { RoleRow } from "./admins.seed";
 
@@ -30,6 +31,8 @@ export function RolesTable({
   onDelete,
   onEdit,
 }: RolesTableProps) {
+  const canEdit = usePermission("edit_role");
+  const canDelete = usePermission("delete_role");
   return (
     <div className="overflow-hidden rounded-lg border border-border bg-card shadow-sm">
       <div className="overflow-x-auto">
@@ -67,7 +70,7 @@ export function RolesTable({
                 </td>
                 <td className="border-b border-border px-5 py-4">
                   <div className="flex items-center gap-3">
-                    <Button
+                    {canDelete ? <Button
                       type="button"
                       variant="ghost"
                       size="icon-xs"
@@ -76,8 +79,8 @@ export function RolesTable({
                       onClick={() => onDelete(row.id)}
                     >
                       <TrashIcon className="size-4" />
-                    </Button>
-                    <Button
+                    </Button> : null}
+                    {canEdit ? <Button
                       type="button"
                       variant="ghost"
                       size="icon-xs"
@@ -86,7 +89,7 @@ export function RolesTable({
                       onClick={() => onEdit(row.id)}
                     >
                       <EditIcon className="size-4" />
-                    </Button>
+                    </Button> : null}
                   </div>
                 </td>
               </tr>

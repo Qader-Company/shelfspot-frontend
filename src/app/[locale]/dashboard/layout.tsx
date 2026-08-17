@@ -1,17 +1,25 @@
 import { getTranslations } from "next-intl/server";
+import { cookies } from "next/headers";
 
 import { ROUTES } from "@/config/routes";
 import { DashboardLayout } from "@/shared/components/dashboard";
 import type { DashboardSidebarItem } from "@/shared/components/dashboard";
+import { PermissionProvider } from "@/shared/components/auth/permission-provider";
+import { COMPANY_OWNER_COOKIE, PERMISSIONS_COOKIE } from "@/shared/lib/auth/session-cookies";
+import { ALL_COMPANY_PERMISSIONS, parsePermissions } from "@/shared/lib/auth/permissions";
 
 export default async function Layout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const t = await getTranslations("dashboard");
+  const [t, cookieStore] = await Promise.all([getTranslations("dashboard"), cookies()]);
+  const permissions = parsePermissions(cookieStore.get(PERMISSIONS_COOKIE)?.value);
+  if (cookieStore.get(COMPANY_OWNER_COOKIE)?.value === "true") {
+    ALL_COMPANY_PERMISSIONS.forEach((permission) => permissions.add(permission));
+  }
 
-  const sidebarItems: DashboardSidebarItem[] = [
+  const allSidebarItems: DashboardSidebarItem[] = [
     {
       key: "home",
       label: t("navigation.dashboard"),
@@ -63,8 +71,23 @@ export default async function Layout({
       icon: "logout",
     },
   ];
+  const catalogPermissions: Record<string, string> = {
+    brand: "view_brand", subBrand: "view_sub_brand", category: "view_category",
+    subCategory: "view_sub_category", product: "view_product",
+  };
+  const sidebarItems: DashboardSidebarItem[] = allSidebarItems.map((item) => item.key === "catalog"
+    ? { ...item, children: item.children?.filter((child) => permissions.has(catalogPermissions[child.key] ?? "")) }
+    : item).filter((item) => {
+      if (item.key === "requests") return permissions.has("view_task");
+      if (item.key === "payment") return permissions.has("view_wallet");
+      if (item.key === "admins") return permissions.has("view_admin") || permissions.has("view_role");
+      if (item.key === "trash") return permissions.has("delete_task") || permissions.has("delete_product");
+      if (item.key === "catalog") return Boolean(item.children?.length);
+      return true;
+    });
 
   return (
+    <PermissionProvider permissions={[...permissions]}>
     <DashboardLayout
       authContext="company"
       sidebarItems={sidebarItems}
@@ -86,5 +109,6 @@ export default async function Layout({
     >
       {children}
     </DashboardLayout>
+    </PermissionProvider>
   );
 }

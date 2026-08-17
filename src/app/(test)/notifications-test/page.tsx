@@ -16,15 +16,27 @@ export default function NotificationsTestPage() {
   const [connectionStatus, setConnectionStatus] = useState<string>("Disconnected");
   const [statusColor, setStatusColor] = useState<string>("slate");
   const [realtimeEvents, setRealtimeEvents] = useState<Array<{ label: string; payload: any }>>([]);
+  const [accessToken, setAccessToken] = useState<string | null>(null);
   
   const { userId: sessionUserId, profile } = useSession(portal);
-  const accessToken = getAccessToken();
   
   const { notifications, unreadCount, isRealtimeConnected, refresh } = useNotifications({
     portal,
     userId: sessionUserId,
     enabled: true,
   });
+
+  useEffect(() => {
+    let cancelled = false;
+
+    void getAccessToken().then((token) => {
+      if (!cancelled) setAccessToken(token);
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   // Reverb configuration from env
   const reverbConfig = {
@@ -66,8 +78,6 @@ export default function NotificationsTestPage() {
     }
 
     try {
-      const apiOrigin = process.env.NEXT_PUBLIC_API_BASE_URL?.replace(/\/api\/v1$/, "") || "";
-      
       // Disconnect existing
       disconnectEcho();
       
@@ -76,8 +86,6 @@ export default function NotificationsTestPage() {
       // Create new Echo instance
       const echo = createEchoInstance({
         userId,
-        accessToken: token,
-        apiOrigin,
       });
 
       // Bind connection events

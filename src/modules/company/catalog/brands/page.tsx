@@ -27,6 +27,7 @@ import {
 import { SearchInput } from "@/shared/components/dashboard/search-input";
 import { cn } from "@/shared/lib/utils";
 import { Button } from "@/shared/ui/button";
+import { PermissionGate } from "@/shared/components/auth/permission-provider";
 import { Input } from "@/shared/ui/input";
 
 import { DeleteConfirmDialog } from "@/shared/components/dashboard/delete-confirm-dialog";
@@ -390,7 +391,7 @@ export function BrandPage() {
             {t("catalogPage.brand.subtitle")}
           </p>
         </div>
-        <div className="flex items-center gap-3">
+        <PermissionGate permission="create_brand"><div className="flex items-center gap-3">
           <Button
             type="button"
             variant="outline"
@@ -408,7 +409,7 @@ export function BrandPage() {
             <AddIcon className="size-4" />
             {t("catalogPage.brand.actions.add")}
           </Button>
-        </div>
+        </div></PermissionGate>
       </div>
 
       {successMessage ? (

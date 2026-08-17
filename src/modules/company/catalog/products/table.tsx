@@ -13,6 +13,7 @@ import {
 } from "@/shared/components/dashboard/dashboard-icons";
 import { StatusToggle } from "@/shared/components/dashboard/status-toggle";
 import { Button } from "@/shared/ui/button";
+import { usePermission } from "@/shared/components/auth/permission-provider";
 
 // Reuse ProductCell and CategoryPath from Trash — same visual design
 import { ProductCell } from "@/modules/company/catalog/products/cell";
@@ -67,6 +68,8 @@ export function CatalogProductTable({
   const statusMutation = useUpdateCatalogStatusMutation();
   const [statusError, setStatusError] = useState("");
   const resolvedResource = statusResource ?? "products";
+  const canEdit = usePermission("edit_product");
+  const canDelete = usePermission("delete_product");
   const allSelected = rows.length > 0 && rows.every((row) => selectedIds.includes(row.id));
   async function toggleStatus(id: string, isActive: boolean) {
     if (onToggleStatus) return onToggleStatus(id, isActive);
@@ -83,7 +86,7 @@ export function CatalogProductTable({
             <tr className="text-xs font-medium text-foreground">
               <th className="w-10 border-b border-e border-border px-4 py-3 text-start">
                 <span className="sr-only">{labels.selectAll}</span>
-                <input type="checkbox" checked={allSelected} onChange={() => onSelectionChange?.(allSelected ? selectedIds.filter((id) => !rows.some((row) => row.id === id)) : Array.from(new Set([...selectedIds, ...rows.map((row) => row.id)])))} />
+                {canDelete ? <input type="checkbox" checked={allSelected} onChange={() => onSelectionChange?.(allSelected ? selectedIds.filter((id) => !rows.some((row) => row.id === id)) : Array.from(new Set([...selectedIds, ...rows.map((row) => row.id)])))} /> : null}
               </th>
               <th className="border-b border-e border-border px-5 py-3 text-start">
                 {labels.products}
@@ -133,7 +136,7 @@ export function CatalogProductTable({
               <tr key={`${row.id}-${index}`} className="text-sm">
                 <td className="border-b border-border px-4 py-4">
                   <span className="sr-only">{labels.selectRow}</span>
-                  <input type="checkbox" checked={selectedIds.includes(row.id)} onChange={() => onSelectionChange?.(selectedIds.includes(row.id) ? selectedIds.filter((id) => id !== row.id) : [...selectedIds, row.id])} />
+                  {canDelete ? <input type="checkbox" checked={selectedIds.includes(row.id)} onChange={() => onSelectionChange?.(selectedIds.includes(row.id) ? selectedIds.filter((id) => id !== row.id) : [...selectedIds, row.id])} /> : null}
                 </td>
 
                 <td className="border-b border-border px-5 py-3">
@@ -171,7 +174,7 @@ export function CatalogProductTable({
                       }
                     />
                   ) : (
-                    <button
+                    canEdit ? <button
                       type="button"
                       className="rounded-full"
                       onClick={() => toggleStatus(row.id, !row.isActive)}
@@ -181,7 +184,7 @@ export function CatalogProductTable({
                         isActive={row.isActive}
                         ariaLabel={labels.toggleStatus}
                       />
-                    </button>
+                    </button> : <StatusBadge status={row.isActive ? "active" : "inactive"} label={row.isActive ? labels.activeLabel : labels.inactiveLabel} />
                   )}
                 </td>
 
@@ -191,7 +194,7 @@ export function CatalogProductTable({
 
                 <td className="border-b border-border px-5 py-4">
                   <div className="flex items-center gap-3">
-                    <Button
+                    {canDelete ? <Button
                       type="button"
                       variant="ghost"
                       size="icon-xs"
@@ -200,8 +203,8 @@ export function CatalogProductTable({
                       onClick={() => onDelete(row.id)}
                     >
                       <TrashIcon className="size-4" />
-                    </Button>
-                    <Button
+                    </Button> : null}
+                    {canEdit ? <Button
                       type="button"
                       variant="ghost"
                       size="icon-xs"
@@ -210,7 +213,7 @@ export function CatalogProductTable({
                       onClick={() => onEdit(row.id)}
                     >
                       <EditIcon className="size-4" />
-                    </Button>
+                    </Button> : null}
                   </div>
                 </td>
               </tr>

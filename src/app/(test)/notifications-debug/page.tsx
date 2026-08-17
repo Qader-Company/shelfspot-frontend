@@ -7,9 +7,21 @@ import { getAccessToken } from "@/shared/lib/auth/get-access-token";
 
 export default function NotificationsDebugPage() {
   const [refreshKey, setRefreshKey] = useState(0);
+  const [accessToken, setAccessToken] = useState<string | null>(null);
   const store = useNotificationStore();
-  const accessToken = getAccessToken();
   const echo = getEchoInstance();
+
+  useEffect(() => {
+    let cancelled = false;
+
+    void getAccessToken().then((token) => {
+      if (!cancelled) setAccessToken(token);
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   // Force re-render every second to see live updates
   useEffect(() => {

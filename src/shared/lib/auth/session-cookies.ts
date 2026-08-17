@@ -2,6 +2,7 @@ import "server-only";
 
 import type { ResponseCookie } from "next/dist/compiled/@edge-runtime/cookies";
 import type { NextResponse } from "next/server";
+import { ALL_COMPANY_PERMISSIONS, serializePermissions } from "@/shared/lib/auth/permissions";
 
 const productionPrefix = process.env.NODE_ENV === "production" ? "__Host-" : "";
 
@@ -10,6 +11,8 @@ export const REFRESH_TOKEN_COOKIE = `${productionPrefix}shelfspot-refresh`;
 export const PERSISTENT_SESSION_COOKIE = `${productionPrefix}shelfspot-persistent`;
 export const COMPANY_ID_COOKIE = `${productionPrefix}shelfspot-company-id`;
 export const AUTH_CONTEXT_COOKIE = `${productionPrefix}shelfspot-auth-context`;
+export const PERMISSIONS_COOKIE = `${productionPrefix}shelfspot-permissions`;
+export const COMPANY_OWNER_COOKIE = `${productionPrefix}shelfspot-company-owner`;
 
 type TokenValue = string | { token: string; ttl?: number };
 
@@ -17,7 +20,11 @@ interface TokenPayload {
   access_token: TokenValue;
   refresh_token: TokenValue;
   token_type?: string;
-  user?: unknown;
+  user?: {
+    available_permissions?: unknown;
+    not_available_permissions?: unknown;
+    permissions?: unknown;
+  } & Record<string, unknown>;
   company_id?: string | number;
 }
 
@@ -67,6 +74,12 @@ export function setSessionCookies(
   const access = readToken(payload.access_token);
   const refresh = readToken(payload.refresh_token);
   const companyId = readCompanyId(payload);
+  const isCompanyOwner = payload.user?.is_owner === true || payload.user?.is_owner === 1 || payload.user?.is_owner === "1";
+  const permissions = isCompanyOwner
+    ? ALL_COMPANY_PERMISSIONS.join("|")
+    : serializePermissions(
+        payload.user?.available_permissions ?? payload.user?.permissions,
+      );
 
   response.cookies.set(
     AUTH_CONTEXT_COOKIE,
@@ -97,6 +110,20 @@ export function setSessionCookies(
     String(persistent),
     cookieOptions(persistent && refresh.ttl ? refresh.ttl * 60 : undefined),
   );
+  if (authContext === "company" && permissions) {
+    response.cookies.set(
+      PERMISSIONS_COOKIE,
+      permissions,
+      cookieOptions(persistent && refresh.ttl ? refresh.ttl * 60 : undefined),
+    );
+  }
+  if (authContext === "company") {
+    response.cookies.set(
+      COMPANY_OWNER_COOKIE,
+      String(isCompanyOwner),
+      cookieOptions(persistent && refresh.ttl ? refresh.ttl * 60 : undefined),
+    );
+  }
 }
 
 export function clearSessionCookies(response: NextResponse) {
@@ -117,6 +144,14 @@ export function clearSessionCookies(response: NextResponse) {
     maxAge: 0,
   });
   response.cookies.set(AUTH_CONTEXT_COOKIE, "", {
+    ...cookieOptions(),
+    maxAge: 0,
+  });
+  response.cookies.set(PERMISSIONS_COOKIE, "", {
+    ...cookieOptions(),
+    maxAge: 0,
+  });
+  response.cookies.set(COMPANY_OWNER_COOKIE, "", {
     ...cookieOptions(),
     maxAge: 0,
   });

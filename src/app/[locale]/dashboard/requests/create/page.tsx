@@ -1,5 +1,10 @@
 import { CreateRequestPage } from "@/modules/company/requests/create/page";
 
-export default function Page() {
-  return <CreateRequestPage />;
+interface Props {
+  searchParams: Promise<{ repeat?: string }>;
+}
+
+export default async function Page({ searchParams }: Props) {
+  const { repeat } = await searchParams;
+  return <CreateRequestPage repeatTaskId={repeat} />;
 }
