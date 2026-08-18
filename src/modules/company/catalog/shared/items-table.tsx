@@ -77,6 +77,8 @@ interface CatalogItemsTableProps {
   onToggleStatus?: (id: string, isActive: boolean) => void;
   statusResource?: CatalogStatusResource;
   isLoading?: boolean;
+  selectedIds?: string[];
+  onSelectionChange?: (ids: string[]) => void;
 }
 
 export function CatalogItemsTable({
@@ -88,11 +90,17 @@ export function CatalogItemsTable({
   onToggleStatus,
   statusResource,
   isLoading = false,
+  selectedIds,
+  onSelectionChange,
 }: CatalogItemsTableProps) {
   const queryClient = useQueryClient();
   const pathname = usePathname();
   const statusMutation = useUpdateCatalogStatusMutation();
   const [statusError, setStatusError] = useState("");
+  const [internalSelectedIds, setInternalSelectedIds] = useState<string[]>([]);
+  const currentSelectedIds = selectedIds ?? internalSelectedIds;
+  const setSelectedIds = onSelectionChange ?? setInternalSelectedIds;
+  const allSelected = rows.length > 0 && rows.every((row) => currentSelectedIds.includes(row.id));
   const resolvedResource = statusResource ??
     (pathname.endsWith("/sub-brand") ? "sub-brands" :
       pathname.endsWith("/sub-category") ? "sub-categories" :
@@ -127,7 +135,16 @@ export function CatalogItemsTable({
               {/* Checkbox */}
               <th className="w-10 border-b border-e border-border px-4 py-3 text-start">
                 <span className="sr-only">{labels.selectAll}</span>
-                <span className="block size-4 rounded border border-border bg-card" />
+                {canDelete ? <input
+                  type="checkbox"
+                  aria-label={labels.selectAll}
+                  checked={allSelected}
+                  onChange={() => setSelectedIds(
+                    allSelected
+                      ? currentSelectedIds.filter((id) => !rows.some((row) => row.id === id))
+                      : Array.from(new Set([...currentSelectedIds, ...rows.map((row) => row.id)])),
+                  )}
+                /> : null}
               </th>
               {/* Name column */}
               <th className="border-b border-e border-border px-5 py-3 text-start">
@@ -176,7 +193,16 @@ export function CatalogItemsTable({
                 {/* Checkbox */}
                 <td className="border-b border-border px-4 py-4">
                   <span className="sr-only">{labels.selectRow}</span>
-                  <span className="block size-4 rounded border border-border bg-card" />
+                  {canDelete ? <input
+                    type="checkbox"
+                    aria-label={`${labels.selectRow}: ${row.name}`}
+                    checked={currentSelectedIds.includes(row.id)}
+                    onChange={() => setSelectedIds(
+                      currentSelectedIds.includes(row.id)
+                        ? currentSelectedIds.filter((id) => id !== row.id)
+                        : [...currentSelectedIds, row.id],
+                    )}
+                  /> : null}
                 </td>
 
                 {/* Thumbnail + name */}

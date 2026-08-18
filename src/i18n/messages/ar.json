@@ -817,7 +817,7 @@
       "product": {
         "title": "المنتجات", "subtitle": "إدارة علاماتك ومنتجاتك هنا",
         "actions": { "add": "إضافة منتج" },
-        "table": { "columns": { "products": "المنتجات", "family": "العائلة", "sku": "رمز SKU", "description": "الوصف" } },
+          "table": { "columns": { "products": "المنتجات", "family": "العائلة", "sku": "رمز SKU", "barcode": "الباركود", "description": "الوصف" } },
         "dialog": { "title": "إضافة منتج جديد", "editTitle": "تحديث المنتج", "uploadLabel": "رفع صورة المنتج", "nameLabel": "اسم المنتج", "namePlaceholder": "أدخل اسم المنتج", "skuLabel": "رمز SKU", "skuPlaceholder": "أدخل رمز SKU", "descriptionLabel": "الوصف", "descriptionPlaceholder": "أدخل وصف المنتج", "categoryLabel": "الفئة", "selectCategory": "اختر فئة", "subCategoryLabel": "الفئة الفرعية", "selectSubCategory": "اختر فئة فرعية", "requiredFields": "حدد التسلسل الكامل وأدخل الاسم ورمز SKU وارفع صورة.", "importFileRequired": "حدد ملف CSV أو XLSX للاستيراد.", "statusDescription": "المنتج متاح وظاهر" },
         "deleteDialog": { "title": "حذف المنتج؟", "descriptionLine1": "هل أنت متأكد من حذف هذا المنتج؟", "descriptionLine2": "لا يمكن التراجع عن هذا الإجراء.", "cancel": "لا، احتفظ به", "confirm": "نعم، احذفه!" }
       }
