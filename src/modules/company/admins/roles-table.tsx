@@ -70,7 +70,7 @@ export function RolesTable({
                 </td>
                 <td className="border-b border-border px-5 py-4">
                   <div className="flex items-center gap-3">
-                    {canDelete ? <Button
+                    {canDelete && !row.isProtected ? <Button
                       type="button"
                       variant="ghost"
                       size="icon-xs"
@@ -80,7 +80,7 @@ export function RolesTable({
                     >
                       <TrashIcon className="size-4" />
                     </Button> : null}
-                    {canEdit ? <Button
+                    {canEdit && !row.isProtected ? <Button
                       type="button"
                       variant="ghost"
                       size="icon-xs"

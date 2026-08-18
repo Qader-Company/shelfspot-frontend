@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { X } from "lucide-react";
 import { useLocale } from "next-intl";
 import { ROUTES } from "@/config/routes";
@@ -43,6 +43,9 @@ export function DashboardSidebar({
   const closeSidebar = useUiStore((state) => state.closeSidebar);
   const primaryItems = items.slice(0, primaryItemCount);
   const secondaryItems = items.slice(primaryItemCount);
+  const [expandedItemKeys, setExpandedItemKeys] = useState<Set<string>>(
+    () => new Set(items.filter((item) => item.children?.some((child) => pathname === child.href || pathname.startsWith(`${child.href}/`))).map((item) => item.key)),
+  );
 
   async function handleLogout() {
     if (logoutMutation.isPending) return;
@@ -90,11 +93,7 @@ export function DashboardSidebar({
   function renderItems(list: DashboardSidebarItem[]) {
     return list.map((item) => {
       const isParentActive = item.key === resolvedActiveItemKey;
-      const isExpanded =
-        item.children != null &&
-        item.children.some(
-          (c) => pathname === c.href || pathname.startsWith(`${c.href}/`),
-        );
+      const isExpanded = item.children != null && expandedItemKeys.has(item.key);
 
       return (
         <div key={item.key}>
@@ -103,7 +102,12 @@ export function DashboardSidebar({
             isActive={isParentActive && !item.children}
             isExpanded={isExpanded}
             isPending={item.key === "logout" && logoutMutation.isPending}
-            onAction={item.key === "logout" ? () => void handleLogout() : undefined}
+            onAction={item.key === "logout" ? () => void handleLogout() : item.children ? () => setExpandedItemKeys((current) => {
+              const next = new Set(current);
+              if (next.has(item.key)) next.delete(item.key);
+              else next.add(item.key);
+              return next;
+            }) : undefined}
           />
           {/* Render children when this parent is expanded */}
           {item.children && isExpanded && (

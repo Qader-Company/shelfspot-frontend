@@ -5,6 +5,7 @@ export interface AdminRow {
   email: string;
   role: string;
   isActive: boolean;
+  isProtected: boolean;
 }
 
 export interface RoleRow {
@@ -12,4 +13,5 @@ export interface RoleRow {
   name: string;
   userCount: number;
   isActive: boolean;
+  isProtected: boolean;
 }

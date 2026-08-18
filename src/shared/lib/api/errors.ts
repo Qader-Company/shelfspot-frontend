@@ -24,3 +24,14 @@ export function normalizeApiError(error: unknown): ApiError {
     status: 0,
   };
 }
+
+export function formatApiError(error: unknown): string {
+  const normalized = normalizeApiError(error);
+  const validationMessages = normalized.fieldErrors
+    ? [...new Set(Object.values(normalized.fieldErrors).flat())]
+    : [];
+
+  return validationMessages.length > 0
+    ? validationMessages.join(" ")
+    : normalized.message;
+}

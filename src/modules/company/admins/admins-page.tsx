@@ -19,6 +19,13 @@ import { useAdmins, useCreateAdmin, useCreateRole, useDeleteAdmin, useDeleteRole
 type Tab = "admins" | "roles";
 type Dialog = "admin" | "role" | "delete-admin" | "delete-role" | null;
 const activeOf = (item: { active?: boolean; is_active?: boolean | number }) => Boolean(item.active ?? item.is_active);
+const flagOf = (value: boolean | number | undefined) => value === true || value === 1;
+const isProtectedAdmin = (admin: Admin) =>
+  flagOf(admin.is_owner) || flagOf(admin.is_default) || flagOf(admin.is_primary);
+const isProtectedRole = (role: Role) => {
+  const normalizedName = role.name.trim().toLowerCase();
+  return flagOf(role.is_default) || flagOf(role.is_system) || flagOf(role.is_builtin) || normalizedName === "admin" || normalizedName === "others";
+};
 
 export function AdminsPage() {
   const t = useTranslations("dashboard");
@@ -28,8 +35,8 @@ export function AdminsPage() {
   const [selectedAdmin, setSelectedAdmin] = useState<Admin>(); const [selectedRole, setSelectedRole] = useState<Role>();
   const admins = useAdmins({ per_page: 100 }, canViewAdmins); const roles = useRoles({ per_page: 100 }, canViewRoles); const permissions = usePermissions(canViewRoles);
   const createAdmin = useCreateAdmin(); const updateAdmin = useUpdateAdmin(); const removeAdmin = useDeleteAdmin(); const createRole = useCreateRole(); const updateRole = useUpdateRole(); const removeRole = useDeleteRole();
-  const adminRows = useMemo(() => (admins.data?.items ?? []).filter(a => `${a.name} ${a.email} ${a.phone ?? a.phone_number ?? ""} ${typeof a.role === "object" ? a.role.name : a.role ?? ""}`.toLowerCase().includes(search.toLowerCase())).map(a => ({ id: String(a.id), name: a.name, phone: a.phone ?? a.phone_number ?? "-", email: a.email, role: typeof a.role === "object" ? a.role.name : a.role ?? "-", isActive: activeOf(a as Admin & { is_active?: boolean | number }) })), [admins.data, search]);
-  const roleRows = useMemo(() => (roles.data?.items ?? []).filter(r => r.name.toLowerCase().includes(search.toLowerCase())).map(r => ({ id: String(r.id), name: r.name, userCount: r.users_count ?? r.admins_count ?? 0, isActive: activeOf(r as Role & { is_active?: boolean | number }) })), [roles.data, search]);
+  const adminRows = useMemo(() => (admins.data?.items ?? []).filter(a => `${a.name} ${a.email} ${a.phone ?? a.phone_number ?? ""} ${typeof a.role === "object" ? a.role.name : a.role ?? ""}`.toLowerCase().includes(search.toLowerCase())).map(a => ({ id: String(a.id), name: a.name, phone: a.phone ?? a.phone_number ?? "-", email: a.email, role: typeof a.role === "object" ? a.role.name : a.role ?? "-", isActive: activeOf(a as Admin & { is_active?: boolean | number }), isProtected: isProtectedAdmin(a) })), [admins.data, search]);
+  const roleRows = useMemo(() => (roles.data?.items ?? []).filter(r => r.name.toLowerCase().includes(search.toLowerCase())).map(r => ({ id: String(r.id), name: r.name, userCount: r.users_count ?? r.admins_count ?? 0, isActive: activeOf(r as Role & { is_active?: boolean | number }), isProtected: isProtectedRole(r) })), [roles.data, search]);
   const currentError = admins.error ?? roles.error ?? permissions.error;
   const findAdmin = (id: string) => admins.data?.items.find(item => String(item.id) === id); const findRole = (id: string) => roles.data?.items.find(item => String(item.id) === id);
   const adminLabels = { createTitle: t("adminsPage.dialogs.adminForm.createTitle"), editTitle: t("adminsPage.dialogs.adminForm.editTitle"), activation: t("adminsPage.dialogs.adminForm.activation"), active: t("adminsPage.dialogs.adminForm.active"), name: t("adminsPage.dialogs.adminForm.name"), namePlaceholder: t("adminsPage.dialogs.adminForm.namePlaceholder"), role: t("adminsPage.dialogs.adminForm.role"), email: t("adminsPage.dialogs.adminForm.email"), emailPlaceholder: t("adminsPage.dialogs.adminForm.emailPlaceholder"), phoneNumber: t("adminsPage.dialogs.adminForm.phoneNumber"), phonePlaceholder: t("adminsPage.dialogs.adminForm.phonePlaceholder"), password: t("adminsPage.dialogs.adminForm.password"), passwordPlaceholder: t("adminsPage.dialogs.adminForm.passwordPlaceholder"), confirmPassword: t("adminsPage.dialogs.adminForm.confirmPassword"), confirmPasswordPlaceholder: t("adminsPage.dialogs.adminForm.confirmPasswordPlaceholder"), cancel: t("adminsPage.dialogs.adminForm.cancel"), confirm: t("adminsPage.dialogs.adminForm.confirm") };
