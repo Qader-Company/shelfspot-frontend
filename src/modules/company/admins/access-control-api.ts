@@ -3,7 +3,7 @@ import { apiClient } from "@/shared/lib/api/client";
 export interface Permission { id: number | string; name: string; label?: string; portal?: string; }
 export interface PermissionGroup { key: string; label: string; permissions: Permission[]; }
 export interface Role { id: number | string; name: string; active?: boolean; is_active?: boolean | number; users_count?: number; admins_count?: number; permissions?: Permission[]; is_default?: boolean | number; is_system?: boolean | number; is_builtin?: boolean | number; }
-export interface Admin { id: number | string; name: string; email: string; phone?: string; phone_number?: string; active?: boolean; is_active?: boolean | number; role?: Role | string; role_id?: number | string; is_owner?: boolean | number; is_default?: boolean | number; is_primary?: boolean | number; }
+export interface Admin { id: number | string; name: string; email: string; phone?: string; phone_number?: string; active?: boolean; is_active?: boolean | number; role?: Role | string; roles?: Role | string | string[] | null; role_id?: number | string; is_owner?: boolean | number; is_default?: boolean | number; is_primary?: boolean | number; }
 export interface PageMeta { current_page?: number; last_page?: number; total?: number; }
 export interface ListResult<T> { items: T[]; meta?: PageMeta; }
 

@@ -16,18 +16,26 @@ export function AdminFormDialog({ isOpen, mode, admin, roles, labels, onClose, o
 }
 
 function AdminFormContent({ mode, admin, roles, labels, onClose, onSubmit }: Omit<Props, "isOpen">) {
-  const roleId = admin?.role_id ?? (typeof admin?.role === "object" ? admin.role.id : "");
-  const [form, setForm] = useState({ name: admin?.name ?? "", role_id: String(roleId ?? ""), email: admin?.email ?? "", phone: admin?.phone ?? admin?.phone_number ?? "", password: "", password_confirmation: "", is_active: Boolean(admin?.active ?? admin?.is_active ?? true) });
+  const assignedRole = typeof admin?.roles === "string"
+    ? admin.roles
+    : Array.isArray(admin?.roles)
+      ? admin.roles[0] ?? ""
+      : typeof admin?.roles === "object" && admin.roles
+        ? admin.roles.name
+        : typeof admin?.role === "string"
+          ? admin.role
+          : admin?.role?.name ?? "";
+  const [form, setForm] = useState({ name: admin?.name ?? "", role: assignedRole, email: admin?.email ?? "", phone: admin?.phone ?? admin?.phone_number ?? "", password: "", password_confirmation: "", is_active: Boolean(admin?.active ?? admin?.is_active ?? true) });
   const [pending, setPending] = useState(false);
   const [error, setError] = useState("");
   const set = (key: string, value: string | boolean) => setForm(value0 => ({ ...value0, [key]: value }));
-  const submit = async (event: React.FormEvent) => { event.preventDefault(); setPending(true); setError(""); try { const payload: Record<string, unknown> = { ...form, name: form.name.trim(), email: form.email.trim(), phone: form.phone.trim(), role_id: Number(form.role_id), is_active: form.is_active ? 1 : 0 }; if (mode === "edit" && !form.password) { delete payload.password; delete payload.password_confirmation; } await onSubmit(payload); onClose(); } catch (e) { setError(formatApiError(e)); } finally { setPending(false); } };
+  const submit = async (event: React.FormEvent) => { event.preventDefault(); setPending(true); setError(""); try { const payload: Record<string, unknown> = { ...form, name: form.name.trim(), email: form.email.trim(), phone: form.phone.trim(), roles: [form.role], is_active: form.is_active ? 1 : 0 }; delete payload.role; if (mode === "edit" && !form.password) { delete payload.password; delete payload.password_confirmation; } await onSubmit(payload); onClose(); } catch (e) { setError(formatApiError(e)); } finally { setPending(false); } };
   return <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/40 p-4"><section role="dialog" aria-modal="true" className="max-h-[90dvh] w-full max-w-2xl overflow-y-auto rounded-2xl border bg-card p-5 shadow-xl sm:p-8">
     <h2 className="text-center text-2xl font-bold">{mode === "create" ? labels.createTitle : labels.editTitle}</h2>
     <form onSubmit={submit}><div className="mt-6 space-y-4">
       <button type="button" className="flex items-center gap-3" onClick={() => set("is_active", !form.is_active)}><span className="text-sm font-medium">{labels.activation}</span><StatusToggle isActive={form.is_active} ariaLabel={labels.activation}/><span className="text-sm text-muted-foreground">{labels.active}</span></button>
       <Field label={labels.name}><Input value={form.name} onChange={e => set("name", e.target.value)} placeholder={labels.namePlaceholder} required/></Field>
-      <Field label={labels.role}><select value={form.role_id} onChange={e => set("role_id", e.target.value)} className="h-11 w-full rounded-lg border bg-secondary px-4" required><option value="">{labels.role}</option>{roles.map(role => <option key={role.id} value={role.id}>{role.name}</option>)}</select></Field>
+      <Field label={labels.role}><select value={form.role} onChange={e => set("role", e.target.value)} className="h-11 w-full rounded-lg border bg-secondary px-4" required><option value="">{labels.role}</option>{roles.map(role => <option key={role.id} value={role.name}>{role.name}</option>)}</select></Field>
       <Field label={labels.email}><Input type="email" value={form.email} onChange={e => set("email", e.target.value)} placeholder={labels.emailPlaceholder} required/></Field>
       <Field label={labels.phoneNumber}><Input value={form.phone} onChange={e => set("phone", e.target.value)} placeholder={labels.phonePlaceholder} required/></Field>
       <div className="grid gap-4 sm:grid-cols-2"><Field label={labels.password}><Input type="password" value={form.password} onChange={e => set("password", e.target.value)} placeholder={labels.passwordPlaceholder} required={mode === "create"}/></Field><Field label={labels.confirmPassword}><Input type="password" value={form.password_confirmation} onChange={e => set("password_confirmation", e.target.value)} placeholder={labels.confirmPasswordPlaceholder} required={mode === "create" || Boolean(form.password)}/></Field></div>
