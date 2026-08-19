@@ -21,7 +21,7 @@ export async function proxyCompanyRequest(
   upstreamPath: string,
   options?: { responseType?: "arraybuffer"; omitCompanyHeader?: boolean },
 ) {
-  upstreamPath = upstreamPath.replace(/\/{2,}/g, "/");
+  upstreamPath = normalizeUpstreamUrl(upstreamPath);
   
   return proxyRequest(request, upstreamPath, {
     ...options,
@@ -34,13 +34,19 @@ export function proxyAdminRequest(
   upstreamPath: string,
   options?: { responseType?: "arraybuffer" },
 ) {
-  upstreamPath = upstreamPath.replace(/\/{2,}/g, "/");
+  upstreamPath = normalizeUpstreamUrl(upstreamPath);
   
   return proxyRequest(request, upstreamPath, {
     ...options,
     apiKey: API_CONFIG.adminApiKey,
     omitCompanyHeader: true,
   });
+}
+
+function normalizeUpstreamUrl(value: string) {
+  const protocolMatch = value.match(/^(https?:\/\/)(.*)$/);
+  if (!protocolMatch) return value.replace(/\/{2,}/g, "/");
+  return `${protocolMatch[1]}${protocolMatch[2].replace(/\/{2,}/g, "/")}`;
 }
 
 async function proxyRequest(

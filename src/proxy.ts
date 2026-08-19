@@ -44,6 +44,18 @@ export default function proxy(request: NextRequest) {
       );
       const isCompanyOwner = request.cookies.get(companyOwnerCookie)?.value === "true";
       const relativePath = request.nextUrl.pathname.replace(/^\/(ar|en)\/dashboard/, "") || "/";
+
+      if (
+        !isCompanyOwner &&
+        permissions.size === 0 &&
+        !/^\/forbidden\/?$/.test(relativePath)
+      ) {
+        const locale = dashboardMatch[1];
+        return NextResponse.redirect(
+          new URL(`/${locale}/dashboard/forbidden`, request.url),
+        );
+      }
+
       const routeRules: Array<[RegExp, string[]]> = [
         [/^\/requests\/create\/?$/, ["create_task"]],
         [/^\/requests\/[^/]+\/edit\/?$/, ["edit_task"]],

@@ -394,7 +394,8 @@
         "rejected": "Rejected"
       },
       "errors": {
-        "report": "We couldn't load the dashboard statistics. Please try again."
+        "report": "We couldn't load the dashboard statistics. Please try again.",
+        "reportForbidden": "You don't have permission to view the dashboard statistics."
       },
       "table": {
         "loading": "Loading catalog items…",

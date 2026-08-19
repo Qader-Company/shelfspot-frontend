@@ -1,5 +1,6 @@
 "use client";
 
+import axios from "axios";
 import { useTranslations } from "next-intl";
 
 import { ROUTES } from "@/config/routes";
@@ -25,6 +26,9 @@ import { Button } from "@/shared/ui/button";
 export function DashboardOverview() {
   const t = useTranslations("dashboard");
   const reportQuery = useDashboardReportQuery();
+  const isReportForbidden =
+    axios.isAxiosError(reportQuery.error) &&
+    reportQuery.error.response?.status === 403;
   const report = reportQuery.data;
   const cards = report?.cards;
   const dashboardStats: DashboardStatItem[] = [
@@ -102,7 +106,11 @@ export function DashboardOverview() {
       </div>
       {reportQuery.isError ? (
         <p className="rounded-lg border border-destructive/20 bg-destructive/10 px-4 py-3 text-sm text-destructive">
-          {t("overview.errors.report")}
+          {t(
+            isReportForbidden
+              ? "overview.errors.reportForbidden"
+              : "overview.errors.report",
+          )}
         </p>
       ) : null}
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4" aria-busy={reportQuery.isPending}>
