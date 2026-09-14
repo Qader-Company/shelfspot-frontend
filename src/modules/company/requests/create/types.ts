@@ -30,5 +30,5 @@ export interface TaskLocation { latitude: number; longitude: number; location_na
 export interface TaskProductDetails { [key: string]: unknown }
 export interface TaskProduct { product_id: number; product_details?: TaskProductDetails }
 export interface TaskService { service_key: string; price: number; execution_time_minutes: number; execution_instructions?: string | null; products: TaskProduct[]; planogramFiles?: File[]; jobOrderFiles?: File[] }
-export interface CreateTaskPayload { date: string; location: TaskLocation; notes?: string | null; services: TaskService[] }
+export interface CreateTaskPayload { date: string; store_id: string | number; execution_window: { from: string; to: string }; repeat_task_id?: string | number; keep_attachment_ids?: Array<string | number>; notes?: string | null; services: TaskService[] }
 export interface CreateTaskResponse { success: boolean; message: string; data: { id: number; date: string; total_price: number; status: string; payment_status: string } }

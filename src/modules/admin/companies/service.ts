@@ -140,6 +140,7 @@ function catalogForm(
   data.append("is_active", payload.isActive ? "1" : "0");
   if (payload.descriptionEn != null) data.append("translations[en][description]", payload.descriptionEn);
   if (payload.descriptionAr != null) data.append("translations[ar][description]", payload.descriptionAr);
+  if (payload.minQuantity?.trim()) data.append("min_quantity", payload.minQuantity);
   if (payload.sku != null) data.append("sku", payload.sku);
   if (payload.barcode != null) data.append("barcode", payload.barcode);
   if (payload.brandId) data.append("brand_id", payload.brandId);

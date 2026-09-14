@@ -9,15 +9,14 @@ export interface CreateTaskServiceParams { payload: CreateTaskPayload; companySl
 export function toTaskFormData(payload: CreateTaskPayload) {
   const formData = new FormData();
   formData.append("date", payload.date);
-  formData.append("location[latitude]", String(payload.location.latitude));
-  formData.append("location[longitude]", String(payload.location.longitude));
-  if (payload.location.location_name != null) formData.append("location[location_name]", payload.location.location_name);
-  if (payload.location.address != null) formData.append("location[address]", payload.location.address);
+  formData.append("store_id", String(payload.store_id));
+  formData.append("execution_window[from]", payload.execution_window.from);
+  formData.append("execution_window[to]", payload.execution_window.to);
+  if (payload.repeat_task_id != null) formData.append("repeat_task_id", String(payload.repeat_task_id));
+  payload.keep_attachment_ids?.forEach(id => formData.append("keep_attachment_ids[]", String(id)));
   if (payload.notes != null) formData.append("notes", payload.notes);
   payload.services.forEach((service, serviceIndex) => {
     formData.append(`services[${serviceIndex}][service_key]`, service.service_key);
-    formData.append(`services[${serviceIndex}][price]`, String(service.price));
-    formData.append(`services[${serviceIndex}][execution_time_minutes]`, String(service.execution_time_minutes));
     if (service.execution_instructions != null) formData.append(`services[${serviceIndex}][execution_instructions]`, service.execution_instructions);
     service.products.forEach((product, productIndex) => {
       formData.append(`services[${serviceIndex}][products][${productIndex}][product_id]`, String(product.product_id));

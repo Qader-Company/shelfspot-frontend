@@ -38,7 +38,7 @@ function toStatusBadge(status: string): StatusBadgeStatus {
   if (status === "in_review")   return "inReview";
   if (status === "worker_cancelled" || status === "company_cancelled") return "canceled";
   if (status === "started")     return "inProgress";
-  if (status === "draft")       return "pending";
+  if (status === "draft")       return "draft";
   const known: StatusBadgeStatus[] = [
     "pending","accepted","completed","failed","rejected","canceled","reopened",
     "active","inactive","refunded","inProgress","inReview",
@@ -92,10 +92,10 @@ function RequestDetailsView({ task, id }: { task: CompanyTask; id: string | numb
   const locale = useLocale();
   const router = useRouter();
   const { act, pay, update } = useTaskMutations();
+  const canCreateTask = usePermission("create_task");
   const canEditTask = usePermission("edit_task");
   const canDeleteTask = usePermission("delete_task");
   const [showCancel, setShowCancel] = useState(false);
-  const [showReject, setShowReject] = useState(false);
   const [showPay, setShowPay] = useState(false);
   const [showReschedule, setShowReschedule] = useState(false);
   const [editDate, setEditDate] = useState(task.date.slice(0, 10));
@@ -113,8 +113,11 @@ function RequestDetailsView({ task, id }: { task: CompanyTask; id: string | numb
   const isDraft = task.status === "draft";
   const canCancel = task.status === "pending" || task.status === "failed";
   const canReschedule = task.status === "failed";
-  const canReject = task.status === "completed";
-  const isRejected = task.status === "rejected";
+  const hasCompletedActions = ["completed", "accepted", "rejected"].includes(task.status);
+  const isReopened = task.status === "reopened";
+  const statusLabel = task.status === "completed"
+    ? t("requestDetails.status.completed")
+    : task.status_label;
 
   const serviceLabels = {
     productHeading:      t("requestDetails.services.productHeading"),
@@ -164,7 +167,7 @@ function RequestDetailsView({ task, id }: { task: CompanyTask; id: string | numb
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="flex flex-wrap items-center gap-3">
             <span className="text-2xl font-bold text-foreground">REQ-{task.id}</span>
-            <StatusBadge status={badgeStatus} label={task.status_label} />
+            <StatusBadge status={badgeStatus} label={statusLabel} />
           </div>
           <div className="text-end">
             <p className="text-xs text-muted-foreground">{t("requestDetails.createdOn")}</p>
@@ -295,7 +298,7 @@ function RequestDetailsView({ task, id }: { task: CompanyTask; id: string | numb
       )}
       {((canDeleteTask && canCancel) || (canEditTask && canReschedule)) && (
         <div className={`grid gap-3 ${canEditTask && canReschedule && canDeleteTask && canCancel ? "sm:grid-cols-2" : "grid-cols-1"}`}>
-        {canEditTask && canReschedule ? <Button type="button" variant="outline" className="h-12 gap-2 rounded-xl" onClick={() => setShowReschedule(true)}><CalendarIcon className="size-4" />{t("requestDetails.actions.reschedule")}</Button> : null}
+        {canEditTask && canReschedule ? <Button type="button" className="h-12 gap-2 rounded-xl text-white hover:text-white" onClick={() => setShowReschedule(true)}><CalendarIcon className="size-4" />{t("requestDetails.actions.reschedule")}</Button> : null}
         {canDeleteTask && canCancel ? (
         <Button
           type="button"
@@ -308,38 +311,54 @@ function RequestDetailsView({ task, id }: { task: CompanyTask; id: string | numb
         ) : null}
         </div>
       )}
-      {canEditTask && canReject ? (
-        <Button
-          type="button"
-          variant="outline"
-          className="h-12 w-full gap-2 rounded-xl border-destructive text-sm font-semibold text-destructive hover:bg-destructive/10 hover:text-destructive"
-          onClick={() => setShowReject(true)}
-        >
-          <CloseIcon className="size-4" />
-          {t("requestDetails.actions.reject")}
-        </Button>
-      ) : null}
-
-      {isRejected ? (
-        <div className="grid gap-3 sm:grid-cols-2">
-          <Button
+      {hasCompletedActions ? (
+        <div className={`grid gap-3 ${canCreateTask ? "sm:grid-cols-2" : "grid-cols-1"}`}>
+          {canCreateTask ? <Button
             type="button"
             className="h-12 gap-2 rounded-xl text-sm font-semibold text-white hover:text-white"
             onClick={() => router.push(`/dashboard/requests/create?repeat=${task.id}`)}
           >
             <RepeatIcon className="size-4" />
             {t("requestDetails.actions.repeatRequest")}
-          </Button>
+          </Button> : null}
           <Button
             type="button"
             variant="outline"
             className="h-12 gap-2 rounded-xl text-sm font-semibold"
-            onClick={() => executionDetailsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })}
+            onClick={() => router.push(`/dashboard/requests/${task.id}/execution`)}
           >
             <ViewIcon className="size-4" />
             {t("requestDetails.actions.viewExecution")}
           </Button>
         </div>
+      ) : null}
+
+      {isReopened ? (
+        <div className={`grid gap-3 ${canEditTask ? "sm:grid-cols-2" : "grid-cols-1"}`}>
+          {canEditTask ? <Button
+            type="button"
+            className="h-12 gap-2 rounded-xl bg-destructive text-sm font-semibold text-white hover:bg-destructive/90"
+            disabled={act.isPending}
+            onClick={() => act.mutate({ id, action: "accept" })}
+          >
+            <CloseIcon className="size-4" />
+            {t("requestDetails.actions.cancelReopening")}
+          </Button> : null}
+          <Button
+            type="button"
+            variant="outline"
+            className="h-12 gap-2 rounded-xl text-sm font-semibold"
+            onClick={() => router.push(`/dashboard/requests/${task.id}/execution`)}
+          >
+            <ViewIcon className="size-4" />
+            {t("requestDetails.actions.viewExecution")}
+          </Button>
+        </div>
+      ) : null}
+      {isReopened && act.isError ? (
+        <p role="alert" className="rounded-xl border border-destructive/20 bg-destructive/10 p-3 text-sm text-destructive">
+          {normalizeApiError(act.error).message || t("requestDetails.actions.reopenError")}
+        </p>
       ) : null}
 
       {/* Services section */}
@@ -378,29 +397,6 @@ function RequestDetailsView({ task, id }: { task: CompanyTask; id: string | numb
           act.mutate(
             { id, action: "cancel" },
             { onSuccess: () => { setShowCancel(false); router.back(); } },
-          )
-        }
-      />
-
-      <DeleteConfirmDialog
-        isOpen={showReject}
-        title={t("requestDetails.rejectDialog.title")}
-        descriptionLine1={t("requestDetails.rejectDialog.description")}
-        descriptionLine2=""
-        cancelLabel={t("requestDetails.rejectDialog.cancel")}
-        confirmLabel={t("requestDetails.rejectDialog.confirm")}
-        isPending={act.isPending}
-        errorMessage={
-          act.isError
-            ? normalizeApiError(act.error).message ||
-              t("requestDetails.rejectDialog.error")
-            : undefined
-        }
-        onClose={() => setShowReject(false)}
-        onConfirm={() =>
-          act.mutate(
-            { id, action: "reject" },
-            { onSuccess: () => setShowReject(false) },
           )
         }
       />

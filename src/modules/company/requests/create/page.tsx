@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import "leaflet/dist/leaflet.css";
+import { SelectedProductsDialog, type SelectedProduct } from "./selected-products-dialog";
+import { StorePicker } from "@/modules/company/stores/picker";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useLocale, useTranslations } from "next-intl";
 import { useForm, useWatch } from "react-hook-form";
@@ -52,20 +53,27 @@ import {
 import { Input } from "@/shared/ui/input";
 
 type DashboardTranslate = ReturnType<typeof useTranslations<"dashboard">>;
-type DialogName = "date" | "time" | "location" | "payment" | "success" | null;
+type DialogName = "date" | "time" | "timeEnd" | "location" | "payment" | "success" | null;
 
 // ─── Schema — location only ───────────────────────────────────────────────────
+
+function isAllowedRequestDate(value: string) {
+  const today = new Date();
+  const tomorrow = new Date(today); tomorrow.setDate(today.getDate() + 1);
+  const localDate = (date: Date) => `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+  return value === localDate(today) || value === localDate(tomorrow);
+}
 
 function createRequestSchema(t: DashboardTranslate) {
   return z.object({
     executionDate: z.string().min(1, t("createRequest.validation.executionDateRequired")),
-    executionDateIso: z.string().min(1, t("createRequest.validation.executionDateRequired")),
+    executionDateIso: z.string().min(1, t("createRequest.validation.executionDateRequired")).refine(isAllowedRequestDate, t("createRequest.location.scheduleHint")),
     executionTime: z.string().min(1, t("createRequest.validation.executionTimeRequired")),
-    storeName: z.string().min(1, t("createRequest.validation.storeRequired")),
-    streetAddress: z.string().min(1, t("createRequest.validation.streetAddressRequired")),
-    latitude: z.number({ error: t("createRequest.validation.storeRequired") }).min(-90).max(90),
-    longitude: z.number({ error: t("createRequest.validation.storeRequired") }).min(-180).max(180),
-  });
+    storeId: z.string().min(1, t("createRequest.validation.storeRequired")),
+    executionTimeEnd: z.string().min(1, t("createRequest.validation.executionTimeRequired")),
+    storeName: z.string(),
+    streetAddress: z.string(),
+  }).refine(values => Boolean(parseDisplayTime(values.executionTime)) && Boolean(parseDisplayTime(values.executionTimeEnd)) && parseDisplayTime(values.executionTimeEnd) > parseDisplayTime(values.executionTime), { message: t("stores.invalidWindow"), path: ["executionTimeEnd"] });
 }
 
 // ─── Per-service entry ────────────────────────────────────────────────────────
@@ -77,6 +85,7 @@ interface ServiceEntry {
   executionTimeMins: number;
   brand: string; subBrand: string; category: string; subCategory: string; search: string;
   productIds: number[];
+  selectedProducts: Record<number, SelectedProduct>;
   productDetails: Record<number, Record<string, string>>;
   planogramFiles: File[]; jobOrderFiles: File[];
   instructions: string;
@@ -89,21 +98,17 @@ function makeEmptyEntry(): ServiceEntry {
     id: Math.random().toString(36).slice(2),
     serviceKey: "", price: 0, executionTimeMins: 0,
     brand: "", subBrand: "", category: "", subCategory: "", search: "",
-    productIds: [], productDetails: {},
+    productIds: [], selectedProducts: {}, productDetails: {},
     planogramFiles: [], jobOrderFiles: [],
     instructions: "", page: 1, isExpanded: true,
   };
 }
 
 type CreateRequestFormValues = z.infer<ReturnType<typeof createRequestSchema>>;
-type LocationFormValues = Pick<CreateRequestFormValues,
-  "storeName" | "streetAddress" | "latitude" | "longitude"
->;
 
 const defaultValues: CreateRequestFormValues = {
   executionDate: "", executionDateIso: "", executionTime: "",
-  storeName: "", streetAddress: "",
-  latitude: 0, longitude: 0,
+  storeId: "", storeName: "", streetAddress: "", executionTimeEnd: "",
 };
 
 // ─── Main component ───────────────────────────────────────────────────────────
@@ -141,17 +146,19 @@ export function CreateRequestPage({ taskId, repeatTaskId }: { taskId?: string | 
     const task = taskQuery.data?.data;
     if (!sourceTaskId || !task || (taskId && task.status !== "draft") || hydratedTaskId.current === task.id) return;
     hydratedTaskId.current = task.id;
-    const address = task.location.address ?? "";
+    const address = task.store?.address ?? task.location?.address ?? "";
     form.reset({
       executionDate: repeatTaskId ? "" : task.date.slice(0, 10),
       executionDateIso: repeatTaskId ? "" : task.date.slice(0, 10),
-      executionTime: "09:00 AM",
-      storeName: task.location.location_name ?? address, streetAddress: address,
-      latitude: Number(task.location.latitude), longitude: Number(task.location.longitude),
+      executionTime: task.execution_window?.from ? formatTimeValue(task.execution_window.from) : "",
+      executionTimeEnd: task.execution_window?.to ? formatTimeValue(task.execution_window.to) : "",
+      storeId: task.store_id != null ? String(task.store_id) : task.store?.id != null ? String(task.store.id) : "",
+      storeName: task.store?.name ?? task.location?.location_name ?? address, streetAddress: address,
     });
     setServiceEntries(task.services.map((item) => ({
       ...makeEmptyEntry(), id: String(item.id), serviceKey: item.service.key,
       price: Number(item.unit_price), executionTimeMins: item.service.minimum_execution_time ?? 0,
+      selectedProducts: Object.fromEntries(item.products.map(({ product }) => [product.id, { id: product.id, name: product.name, sku: product.sku, imageUrl: product.image }])),
       instructions: item.execution_instructions ?? "", productIds: item.products.map((product) => product.product.id),
       productDetails: Object.fromEntries(item.products.map((product) => [product.product.id, Array.isArray(product.product_details) ? {} : Object.fromEntries(Object.entries(product.product_details).map(([key, value]) => [key, value == null ? "" : String(value)]))])),
     })));
@@ -186,26 +193,22 @@ export function CreateRequestPage({ taskId, repeatTaskId }: { taskId?: string | 
     window.requestAnimationFrame(() => { sectionRefs[index]?.current?.scrollIntoView({ behavior: "smooth", block: "start" }); });
   }
 
-  function saveLocation(locationValues: LocationFormValues) {
-    Object.entries(locationValues).forEach(([key, val]) => {
-      form.setValue(key as keyof LocationFormValues, val as string & number, { shouldDirty: true, shouldValidate: true });
-    });
-    setOpenDialog(null);
-  }
-
   function updateEntry(id: string, patch: Partial<ServiceEntry>) {
     setServiceEntries((prev) => prev.map((e) => e.id === id ? { ...e, ...patch } : e));
   }
   function addService() { setServiceEntries((prev) => [...prev, makeEmptyEntry()]); }
   function removeEntry(id: string) { setServiceEntries((prev) => prev.length > 1 ? prev.filter((e) => e.id !== id) : prev); }
-  function submitForPayment() { setOpenDialog("payment"); }
+  function submitForPayment() { if (serviceEntries.some(entry => !entry.serviceKey)) { form.setError("root", { message: t("stores.serviceRequired") }); return; } form.clearErrors("root"); setOpenDialog("payment"); }
 
   async function confirmPayment() {
     const vals = form.getValues();
     try {
       const payload = {
           date: vals.executionDateIso,
-          location: { latitude: vals.latitude, longitude: vals.longitude, location_name: vals.storeName || null, address: vals.streetAddress || null },
+          store_id: vals.storeId,
+          execution_window: { from: parseDisplayTime(vals.executionTime), to: parseDisplayTime(vals.executionTimeEnd) },
+          repeat_task_id: repeatTaskId,
+          keep_attachment_ids: taskId ? taskQuery.data?.data.services.filter(service => serviceEntries.some(entry => entry.id === String(service.id))).flatMap(service => (service.attachments ?? []).map(file => file.id)) : undefined,
           notes: serviceEntries[0]?.instructions || null,
           services: serviceEntries.map((entry) => ({
             service_key: entry.serviceKey, price: entry.price, execution_time_minutes: entry.executionTimeMins,
@@ -260,15 +263,16 @@ export function CreateRequestPage({ taskId, repeatTaskId }: { taskId?: string | 
               <div className="space-y-5">
                 <div>
                   <h3 className="text-lg font-bold text-foreground">{t("createRequest.location.executionDateTime")}<RequiredMark /></h3>
-                  <div className="mt-3 grid gap-4 md:grid-cols-2">
+                  <div className="mt-3">
                     <PickerField label={t("createRequest.fields.executionDate.label")} icon="calendar" value={values.executionDate || t("createRequest.fields.executionDate.placeholder")} onClick={() => setOpenDialog("date")} />
-                    <PickerField label={t("createRequest.fields.executionTime.label")} icon="clock" value={values.executionTime || t("createRequest.fields.executionTime.placeholder")} onClick={() => setOpenDialog("time")} />
+                    <HiddenFieldMessage name="executionDateIso" />
                   </div>
-                  <div className="grid gap-1 md:grid-cols-2">
-                    <HiddenFieldMessage name="executionDate" />
-                    <HiddenFieldMessage name="executionTime" />
+                  <p className="mt-2 text-center text-xs font-semibold text-primary">{t("createRequest.location.scheduleHint")}</p>
+                  <p className="mb-2 mt-5 text-sm text-muted-foreground">{t("createRequest.fields.executionTime.label")}</p>
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <div><PickerField label={t("stores.windowFrom")} icon="clock" value={values.executionTime || t("stores.windowFrom")} onClick={() => setOpenDialog("time")} /><HiddenFieldMessage name="executionTime" /></div>
+                    <div><PickerField label={t("stores.windowTo")} icon="clock" value={values.executionTimeEnd || t("stores.windowTo")} onClick={() => setOpenDialog("timeEnd")} /><HiddenFieldMessage name="executionTimeEnd" /></div>
                   </div>
-                  <p className="mt-2 text-xs font-semibold text-primary">{t("createRequest.location.scheduleHint")}</p>
                 </div>
                 <div>
                   <h3 className="text-lg font-bold text-foreground">{t("createRequest.location.storeLocation")}</h3>
@@ -280,7 +284,7 @@ export function CreateRequestPage({ taskId, repeatTaskId }: { taskId?: string | 
                       <span className="mt-1 block text-xs font-medium leading-5 text-muted-foreground">{hasLocation ? values.streetAddress : t("createRequest.location.addLocationDescription")}</span>
                     </span>
                   </button>
-                  <HiddenFieldMessage name="storeName" />
+                  <HiddenFieldMessage name="storeId" />
                 </div>
               </div>
             </SectionCard>
@@ -336,9 +340,8 @@ export function CreateRequestPage({ taskId, repeatTaskId }: { taskId?: string | 
       {openDialog === "time" ? (
         <TimeDialog t={t} isOpen onClose={() => setOpenDialog(null)} value={values.executionTime ?? ""} onSelect={(time) => { form.setValue("executionTime", time, { shouldDirty: true, shouldValidate: true }); }} />
       ) : null}
-      {openDialog === "location" ? (
-        <LocationDialog t={t} isOpen initialValues={{ storeName: values.storeName ?? "", streetAddress: values.streetAddress ?? "", latitude: values.latitude ?? 0, longitude: values.longitude ?? 0 }} onClose={() => setOpenDialog(null)} onSave={saveLocation} />
-      ) : null}
+      {openDialog === "timeEnd" ? <TimeDialog t={t} isOpen onClose={() => setOpenDialog(null)} value={values.executionTimeEnd ?? ""} onSelect={time => form.setValue("executionTimeEnd", time, { shouldDirty: true, shouldValidate: true })} /> : null}
+      {openDialog === "location" ? <StorePicker value={values.storeId ?? ""} onClose={() => setOpenDialog(null)} onSelect={store => { form.setValue("storeId", store.id, { shouldDirty: true, shouldValidate: true }); form.setValue("storeName", store.name); form.setValue("streetAddress", store.address); setOpenDialog(null); }} /> : null}
       <PaymentConfirmDialog
         isOpen={openDialog === "payment"}
         isPending={createTaskMutation.isPending || updateTaskMutation.isPending}
@@ -371,6 +374,7 @@ function ServiceEntryCard({
   onUpdate: (patch: Partial<ServiceEntry>) => void;
   onRemove: () => void;
 }) {
+  const [reviewOpen, setReviewOpen] = useState(false);
   const selectedService = allServices.find((s) => s.key === entry.serviceKey) ?? null;
 
   const subBrandsQuery = useSubBrandsQuery({ per_page: 100, page: 1, brand_id: entry.brand || undefined });
@@ -414,7 +418,7 @@ function ServiceEntryCard({
       serviceKey: key,
       price: Number(service?.price ?? service?.minimum_price ?? 0),
       executionTimeMins: Number(service?.minimum_execution_time ?? 0),
-      productIds: [], productDetails: {},
+      productIds: [], selectedProducts: {}, productDetails: {},
       brand: "", subBrand: "", category: "", subCategory: "", search: "", page: 1,
     });
   }
@@ -422,7 +426,11 @@ function ServiceEntryCard({
     const next = entry.productIds.includes(productId)
       ? entry.productIds.filter((id) => id !== productId)
       : [...entry.productIds, productId];
-    onUpdate({ productIds: next });
+    const product = products.find(item => item.id === productId);
+    const selectedProducts = { ...entry.selectedProducts };
+    if (product && next.includes(productId)) selectedProducts[productId] = { id: product.id, name: product.name, sku: product.sku, imageUrl: product.image_url ?? product.image ?? product.logo_url ?? product.logo };
+    else delete selectedProducts[productId];
+    onUpdate({ productIds: next, selectedProducts });
   }
 
   return (
@@ -475,6 +483,8 @@ function ServiceEntryCard({
             ))}
           </div>
 
+          <div className="flex justify-end"><Button type="button" variant="outline" onClick={() => setReviewOpen(true)}>{t("stores.reviewProducts", { count: entry.productIds.length })}</Button></div>
+          {reviewOpen ? <SelectedProductsDialog ids={entry.productIds} products={entry.selectedProducts} onClose={() => setReviewOpen(false)} onConfirm={ids => { onUpdate({ productIds: ids, selectedProducts: Object.fromEntries(ids.map(id => [id, entry.selectedProducts[id]])), productDetails: Object.fromEntries(ids.map(id => [id, entry.productDetails[id] ?? {}])) }); setReviewOpen(false); }} /> : null}
           {/* Product table */}
           <ProductTable
             t={t}
@@ -752,125 +762,6 @@ function PaymentDialog({ t, isOpen, isPending, onClose, onConfirm }: { t: Dashbo
   );
 }
 
-function LocationDialog({ t, isOpen, initialValues, onClose, onSave }: {
-  t: DashboardTranslate; isOpen: boolean;
-  initialValues: LocationFormValues;
-  onClose: () => void; onSave: (values: typeof initialValues) => void;
-}) {
-  const [activeTab, setActiveTab] = useState<"map" | "manual">("manual");
-  const [locationValues, setLocationValues] = useState(initialValues);
-  function updateField(key: keyof typeof initialValues, val: string) { setLocationValues((prev) => ({ ...prev, [key]: val })); }
-  return (
-    <FlowDialog title={t("createRequest.locationDialog.title")} closeLabel={t("createRequest.actions.closeDialog")} isOpen={isOpen} onClose={onClose} footer={<Button type="button" className="h-12 w-full rounded-lg text-sm font-semibold" onClick={() => onSave(locationValues)}>{t("createRequest.actions.save")}</Button>}>
-      <div className="mb-4 flex gap-6 border-b border-border">
-        {(["map", "manual"] as const).map((tab) => (
-          <button key={tab} type="button" className={cn("pb-3 text-sm font-semibold", activeTab === tab ? "border-b-2 border-primary text-primary" : "text-muted-foreground")} onClick={() => setActiveTab(tab)}>{t(`createRequest.locationDialog.tabs.${tab}`)}</button>
-        ))}
-      </div>
-      {activeTab === "map" ? (
-        <div className="space-y-4">
-          <LocationMap
-            latitude={locationValues.latitude}
-            longitude={locationValues.longitude}
-            label={t("createRequest.locationDialog.mapLabel")}
-            hint={t("createRequest.locationDialog.mapHint")}
-            onSelect={(latitude, longitude) => setLocationValues((prev) => ({ ...prev, latitude, longitude }))}
-          />
-          <DialogInput label={t("createRequest.locationDialog.fields.storeName.label")} placeholder={t("createRequest.locationDialog.fields.storeName.placeholder")} value={locationValues.storeName} onChange={(v) => updateField("storeName", v)} />
-          <DialogInput label={t("createRequest.locationDialog.fields.streetAddress.label")} placeholder={t("createRequest.locationDialog.fields.streetAddress.placeholder")} value={locationValues.streetAddress} onChange={(v) => updateField("streetAddress", v)} />
-        </div>
-      ) : (
-        <div className="grid gap-4">
-          <DialogInput label={t("createRequest.locationDialog.fields.storeName.label")} placeholder={t("createRequest.locationDialog.fields.storeName.placeholder")} value={locationValues.storeName} onChange={(v) => updateField("storeName", v)} />
-          <DialogInput label={t("createRequest.locationDialog.fields.streetAddress.label")} placeholder={t("createRequest.locationDialog.fields.streetAddress.placeholder")} value={locationValues.streetAddress} onChange={(v) => updateField("streetAddress", v)} />
-        </div>
-      )}
-    </FlowDialog>
-  );
-}
-
-function LocationMap({ latitude, longitude, label, hint, onSelect }: {
-  latitude: number;
-  longitude: number;
-  label: string;
-  hint: string;
-  onSelect: (latitude: number, longitude: number) => void;
-}) {
-  const containerRef = useRef<HTMLDivElement | null>(null);
-  const onSelectRef = useRef(onSelect);
-  onSelectRef.current = onSelect;
-
-  useEffect(() => {
-    let disposed = false;
-    let map: import("leaflet").Map | undefined;
-
-    async function initializeMap() {
-      if (!containerRef.current) return;
-      const leaflet = await import("leaflet");
-      if (disposed || !containerRef.current) return;
-
-      const hasSelection = latitude !== 0 || longitude !== 0;
-      const initialPosition: import("leaflet").LatLngExpression = hasSelection
-        ? [latitude, longitude]
-        : [23.8859, 45.0792];
-      map = leaflet.map(containerRef.current, {
-        center: initialPosition,
-        zoom: hasSelection ? 13 : 5,
-        zoomControl: true,
-      });
-      leaflet.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        maxZoom: 19,
-        attribution: "&copy; OpenStreetMap contributors",
-      }).addTo(map);
-
-      const markerStyle = {
-        radius: 9,
-        color: "var(--background)",
-        weight: 3,
-        fillColor: "var(--primary)",
-        fillOpacity: 1,
-      };
-      let marker: import("leaflet").CircleMarker | null = hasSelection
-        ? leaflet.circleMarker(initialPosition, markerStyle).addTo(map)
-        : null;
-      map.on("click", ({ latlng }: import("leaflet").LeafletMouseEvent) => {
-        marker?.remove();
-        marker = leaflet.circleMarker(latlng, markerStyle).addTo(map!);
-        onSelectRef.current(
-          Math.round(latlng.lat * 1_000_000) / 1_000_000,
-          Math.round(latlng.lng * 1_000_000) / 1_000_000,
-        );
-      });
-
-      window.requestAnimationFrame(() => map?.invalidateSize());
-    }
-
-    void initializeMap();
-    return () => {
-      disposed = true;
-      map?.remove();
-    };
-  }, [latitude, longitude]);
-
-  return (
-    <div className="relative overflow-hidden rounded-lg border border-border">
-      <div ref={containerRef} className="h-72 w-full" role="application" aria-label={label} />
-      <span className="pointer-events-none absolute bottom-3 start-3 z-[500] rounded-full bg-background/90 px-3 py-1 text-xs font-semibold text-muted-foreground shadow-sm">
-        {hint}
-      </span>
-    </div>
-  );
-}
-
-function DialogInput({ label, placeholder, value, className, onChange }: { label: string; placeholder: string; value: string; className?: string; onChange: (v: string) => void }) {
-  return (
-    <label className={cn("grid gap-2", className)}>
-      <span className="text-sm font-bold text-foreground">{label}<RequiredMark /></span>
-      <Input className="h-11 rounded-lg" placeholder={placeholder} value={value} onChange={(e) => onChange(e.target.value)} />
-    </label>
-  );
-}
-
 function DateDialog({ t, isOpen, onClose, onSelect }: { t: DashboardTranslate; isOpen: boolean; onClose: () => void; onSelect: (display: string, iso: string) => void }) {
   const locale = useLocale();
   const [visibleDate, setVisibleDate] = useState(() => new Date());
@@ -914,8 +805,9 @@ function DateDialog({ t, isOpen, onClose, onSelect }: { t: DashboardTranslate; i
           {(["mon","tue","wed","thu","fri","sat","sun"] as const).map((d) => (<span key={d} className="text-base font-medium text-muted-foreground">{t(`createRequest.dateDialog.days.${d}`)}</span>))}
           {fullDays.map(({ date, isCurrentMonth }) => {
             const isSel = selectedDate?.toDateString() === date.toDateString();
+            const allowed = isAllowedRequestDate(`${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,"0")}-${String(date.getDate()).padStart(2,"0")}`);
             return (
-              <button key={date.toISOString()} type="button" className={cn("rounded-lg py-1 text-2xl font-medium text-muted-foreground transition hover:bg-primary/10 hover:text-foreground", isCurrentMonth && "text-foreground", isSel && "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground")} onClick={() => selectDate(date)}>{date.getDate()}</button>
+              <button key={date.toISOString()} type="button" disabled={!allowed} className={cn("disabled:cursor-not-allowed disabled:opacity-30 rounded-lg py-1 text-2xl font-medium text-muted-foreground transition hover:bg-primary/10 hover:text-foreground", isCurrentMonth && "text-foreground", isSel && "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground")} onClick={() => selectDate(date)}>{date.getDate()}</button>
             );
           })}
         </div>
@@ -926,7 +818,7 @@ function DateDialog({ t, isOpen, onClose, onSelect }: { t: DashboardTranslate; i
 
 interface TimeParts { hour: number; minute: number; period: "AM" | "PM" }
 function formatTimeValue(value: string) { const [h = "0", m = "0"] = value.split(":"); const hour = Number(h); const minute = Number(m); const period = hour >= 12 ? "PM" : "AM"; const displayHour = hour % 12 || 12; return `${displayHour}:${String(minute).padStart(2, "0")} ${period}`; }
-function parseDisplayTime(value: string) { const match = value.match(/^(\d{1,2}):(\d{2})\s?(AM|PM)$/i); if (!match) return ""; const [, hText, mText, pText] = match; const h = Number(hText); const normalized = pText.toUpperCase() === "PM" ? (h === 12 ? 12 : h + 12) : h === 12 ? 0 : h; return `${String(normalized).padStart(2, "0")}:${mText}`; }
+function parseDisplayTime(value: string) { const match = value.match(/^(\d{1,2}):(\d{2})\s?(AM|PM)$/i); if (!match) return ""; const [, hText, mText, pText] = match; const h = Number(hText); if (h < 1 || h > 12 || Number(mText) > 59) return ""; const normalized = pText.toUpperCase() === "PM" ? (h === 12 ? 12 : h + 12) : h === 12 ? 0 : h; return `${String(normalized).padStart(2, "0")}:${mText}`; }
 function getTimePartsFromInput(value: string): TimeParts { const [h = "9", m = "0"] = value.split(":"); const h24 = Number(h); const minute = Number(m); return { hour: h24 % 12 || 12, minute: Number.isNaN(minute) ? 0 : minute, period: h24 >= 12 ? "PM" : "AM" }; }
 function getInputFromTimeParts({ hour, minute, period }: TimeParts) { const h24 = period === "PM" ? (hour === 12 ? 12 : hour + 12) : hour === 12 ? 0 : hour; return `${String(h24).padStart(2, "0")}:${String(minute).padStart(2, "0")}`; }
 function getHourRotation({ hour, minute }: TimeParts) { return ((hour % 12) + minute / 60) * 30; }

@@ -21,6 +21,7 @@ export const ROUTES = {
   dashboardCatalogCategory:    "/dashboard/catalog/category",
   dashboardCatalogSubCategory: "/dashboard/catalog/sub-category",
   dashboardCatalogProduct:     "/dashboard/catalog/product",
+  dashboardStores: "/dashboard/stores",
   dashboardAdmins: "/dashboard/admins",
   dashboardTrash: "/dashboard/trash",
   adminDashboard: "/admin",

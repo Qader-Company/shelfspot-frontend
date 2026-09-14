@@ -24,6 +24,18 @@ export interface CompanyTaskProduct {
   };
 }
 
+export interface CompanyTaskSubmission {
+  id: number;
+  task_service_id: number;
+  worker_id: number;
+  form_data: Record<string, unknown>;
+  status: string;
+  completed_at?: string | null;
+  attachments: CompanyTaskAttachment[];
+  created_at?: string | null;
+  updated_at?: string | null;
+}
+
 export interface CompanyTaskService {
   id: number;
   execution_instructions?: string | null;
@@ -41,11 +53,16 @@ export interface CompanyTaskService {
     is_active: boolean;
   };
   products: CompanyTaskProduct[];
-  submission: unknown | null;
+  submission: CompanyTaskSubmission | null;
+  started_at?: string | null;
+  completed_at?: string | null;
   attachments: CompanyTaskAttachment[];
 }
 
 export interface CompanyTask {
+  store_id?: string | number;
+  store?: { id: string | number; name: string; address?: string; latitude?: string | number; longitude?: string | number };
+  execution_window?: { from: string; to: string };
   id: number;
   company_id: number;
   company?: { id: number; name: string; email: string; phone: string } | null;

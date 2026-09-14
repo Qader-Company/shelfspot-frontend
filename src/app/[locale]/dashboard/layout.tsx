@@ -59,6 +59,12 @@ export default async function Layout({
       icon: "admins",
     },
     {
+      key: "stores",
+      label: t("stores.title"),
+      href: ROUTES.dashboardStores,
+      icon: "stores",
+    },
+    {
       key: "trash",
       label: t("navigation.trash"),
       href: ROUTES.dashboardTrash,

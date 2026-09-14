@@ -25,6 +25,7 @@ interface CatalogProductTableLabels {
   products: string;
   family: string;
   sku: string;
+  minQuantity: string;
   barcode: string;
   description: string;
   status: string;
@@ -98,6 +99,9 @@ export function CatalogProductTable({
                 {labels.sku}
               </th>
               <th className="border-b border-e border-border px-5 py-3 text-start">
+                {labels.minQuantity}
+              </th>
+              <th className="border-b border-e border-border px-5 py-3 text-start">
                 {labels.barcode}
               </th>
               <th className="border-b border-e border-border px-5 py-3 text-start">
@@ -118,7 +122,7 @@ export function CatalogProductTable({
             {isLoading || rows.length === 0 ? (
               <tr>
                 <td
-                  colSpan={9}
+                  colSpan={10}
                   className="h-40 border-b border-border px-5 text-center text-sm text-muted-foreground"
                   role="status"
                 >
@@ -153,6 +157,10 @@ export function CatalogProductTable({
 
                 <td className="border-b border-border px-5 py-4 text-muted-foreground">
                   {row.sku}
+                </td>
+
+                <td className="border-b border-border px-5 py-4 text-muted-foreground">
+                  {row.minQuantity ?? "-"}
                 </td>
 
                 <td className="border-b border-border px-5 py-4 text-muted-foreground">

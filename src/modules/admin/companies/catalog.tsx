@@ -77,6 +77,7 @@ function initialForm(item?: AdminCatalogItem): AdminCatalogPayload {
     descriptionEn: field(english, "description") || item?.description || "",
     descriptionAr: field(arabic, "description") || item?.description || "",
     sku: item?.sku ?? "",
+    minQuantity: item?.min_quantity != null ? String(item.min_quantity) : "",
     barcode: item?.barcode ?? "",
     brandId: item?.brand_id != null ? String(item.brand_id) : "",
     subBrandId: item?.sub_brand_id != null ? String(item.sub_brand_id) : "",
@@ -197,7 +198,7 @@ function Catalog({ companyId, resource }: { companyId: string; resource: AdminCa
         ? [t(`${key}.table.columns.category`), t(`${key}.table.columns.brand`), t(`${key}.table.columns.subBrand`)]
         : resource === "sub-category"
           ? [t(`${key}.table.columns.subCategory`), t(`${key}.table.columns.brand`), t(`${key}.table.columns.subBrand`), t(`${key}.table.columns.category`)]
-          : [t(`${key}.table.columns.products`), t(`${key}.table.columns.family`), t(`${key}.table.columns.sku`), t("fields.barcode"), t(`${key}.table.columns.description`)];
+          : [t(`${key}.table.columns.products`), t(`${key}.table.columns.family`), t(`${key}.table.columns.sku`), t("product.table.columns.minQuantity"), t("fields.barcode"), t(`${key}.table.columns.description`)];
 
   return (
     <div className="space-y-6 px-4 py-8 lg:px-8">
@@ -276,6 +277,7 @@ function Catalog({ companyId, resource }: { companyId: string; resource: AdminCa
                         relationName(item.sub_category, item.sub_category_name),
                       ].join(" › ")}</td>
                       <td className="p-4">{item.sku ?? "—"}</td>
+                      <td className="p-4">{item.min_quantity ?? "—"}</td>
                       <td className="p-4">{item.barcode ?? "—"}</td>
                       <td className="max-w-64 truncate p-4">{translated(item, locale, "description") ?? item.description ?? "—"}</td>
                     </>
@@ -355,6 +357,7 @@ function CatalogForm({ resource, item, brands, subBrands, categories, subCategor
       && (!(resource === "sub-category" || resource === "product") || form.categoryId)
       && (resource !== "product" || form.subCategoryId && form.sku?.trim());
     if (!valid) { setError(t("feedback.required")); return; }
+    if (resource === "product" && form.minQuantity?.trim() && (!Number.isSafeInteger(Number(form.minQuantity)) || Number(form.minQuantity) < 0)) { setError(t("product.dialog.invalidMinQuantity")); return; }
     await onSubmit(form);
   };
   const select = (label: string, field: "brandId" | "subBrandId" | "categoryId" | "subCategoryId", values: AdminCatalogItem[]) => (
@@ -387,7 +390,7 @@ function CatalogForm({ resource, item, brands, subBrands, categories, subCategor
         <div className="space-y-2"><Label>{t(`${key}.dialog.nameLabel`)} ({t("fields.arabic")})</Label><Input dir="rtl" value={form.nameAr} onChange={(event) => setForm({ ...form, nameAr: event.target.value })} /></div>
       </div>
       {resource === "product" ? <>
-        <div className="space-y-2"><Label>{t(`${key}.dialog.skuLabel`)}</Label><Input value={form.sku} onChange={(event) => setForm({ ...form, sku: event.target.value })} /></div>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2"><div className="space-y-2"><Label>{t(`${key}.dialog.skuLabel`)}</Label><Input value={form.sku} onChange={(event) => setForm({ ...form, sku: event.target.value })} /></div><div className="space-y-2"><Label htmlFor="admin-product-min-quantity">{t("product.table.columns.minQuantity")}</Label><Input id="admin-product-min-quantity" name="min_quantity" type="number" min={0} step={1} value={form.minQuantity} placeholder={t("product.dialog.minQuantityPlaceholder")} onChange={(event) => setForm({ ...form, minQuantity: event.target.value })} /></div></div>
         <div className="space-y-2"><Label>{t("fields.barcode")}</Label><Input value={form.barcode} onChange={(event) => setForm({ ...form, barcode: event.target.value })} /></div>
         <div className="grid gap-4">
           <div className="space-y-2"><Label>{t(`${key}.dialog.descriptionLabel`)} ({t("fields.english")})</Label><textarea className="min-h-28 w-full rounded-lg border border-border bg-background p-3" value={form.descriptionEn} onChange={(event) => setForm({ ...form, descriptionEn: event.target.value })} /></div>

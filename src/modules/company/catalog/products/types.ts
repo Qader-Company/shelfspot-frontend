@@ -2,6 +2,7 @@ export interface CompanyProduct {
   id: number;
   name: string;
   sku: string;
+  min_quantity?: number | string | null;
   description?: string | null;
   translations?: Array<{ locale?: string; name?: string; description?: string }> | Record<string, string | { name?: string; description?: string } | undefined>;
   barcode?: string | null;

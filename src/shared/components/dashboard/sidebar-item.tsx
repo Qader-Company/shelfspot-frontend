@@ -5,6 +5,7 @@ import type { ComponentType } from "react";
 import { Link } from "@/i18n/navigation";
 import {
   AdminsIcon,
+  StoresIcon,
   BoxIcon,
   CatalogIcon,
   DashboardGridIcon,
@@ -37,6 +38,7 @@ const iconComponents = {
   payment: PaymentIcon,
   catalog: CatalogIcon,
   admins: AdminsIcon,
+  stores: StoresIcon,
   trash: TrashIcon,
   logout: LogoutIcon,
   chevron: SidebarChevronIcon,

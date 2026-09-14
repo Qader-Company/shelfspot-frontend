@@ -203,6 +203,72 @@
   "adminServices":{"title":"الخدمات","subtitle":"إدارة جميع الخدمات المتاحة وإعداداتها","searchLabel":"البحث عن الخدمات","searchPlaceholder":"البحث عن خدمة","statusLabel":"تصفية الخدمات حسب الحالة","statuses":{"all":"كل الحالات","active":"نشط","inactive":"غير نشط"},"loading":"جارٍ تحميل الخدمات…","error":"تعذر تحميل الخدمات","retry":"إعادة المحاولة","empty":"لا توجد خدمات","emptyDescription":"جرّب تغيير البحث أو تصفية الحالة.","minutes":"دقيقة","toggle":"تغيير حالة {name}","edit":"تعديل {name}","columns":{"name":"اسم الخدمة","description":"الوصف","price":"الحد الأدنى للسعر","time":"الحد الأدنى للوقت","status":"الحالة","action":"الإجراء"},"pagination":{"previous":"السابق","next":"التالي","page":"الصفحة {page} من {pages}"},"dialog":{"title":"تعديل الخدمة","close":"إغلاق محرر الخدمة","name":"اسم الخدمة","description":"الوصف","price":"الحد الأدنى للسعر","time":"الحد الأدنى للوقت","activeDescription":"الخدمة متاحة وظاهرة","cancel":"إلغاء","save":"حفظ"}},
   "adminTrash":{"title":"سلة المحذوفات","subtitle":"استعادة العناصر المحذوفة أو إزالتها نهائيًا","tabsLabel":"أنواع العناصر المحذوفة","tabs":{"brands":"العلامات التجارية","sub-brands":"العلامات الفرعية","categories":"الفئات","sub-categories":"الفئات الفرعية","products":"المنتجات","requests":"الطلبات","freelancers":"المستقلون","companies":"الشركات"},"searchLabel":"البحث في المحذوفات","searchPlaceholder":"البحث في {entity}","statusLabel":"تصفية حسب الحالة","statuses":{"all":"كل الحالات","active":"نشط","inactive":"غير نشط"},"loading":"جارٍ تحميل المحذوفات…","error":"تعذر تحميل المحذوفات","retry":"إعادة المحاولة","empty":"سلة المحذوفات فارغة","emptyDescription":"لا توجد عناصر محذوفة تطابق عوامل التصفية.","select":"تحديد","selectItem":"تحديد {name}","deleteItem":"حذف {name} نهائيًا","restoreItem":"استعادة {name}","columns":{"name":"الاسم","brand":"العلامة التجارية","subBrand":"العلامة الفرعية","category":"الفئة","family":"التصنيف","sku":"رمز SKU","description":"الوصف","status":"الحالة","deletedAt":"تاريخ الحذف","company":"اسم الشركة","store":"اسم المتجر","price":"السعر","requestStatus":"حالة الطلب","phone":"رقم الهاتف","email":"البريد الإلكتروني","completed":"المهام المكتملة","industry":"المجال","crNumber":"رقم السجل التجاري","action":"الإجراء"},"pagination":{"previous":"السابق","next":"التالي","page":"الصفحة {page} من {pages}"},"dialog":{"close":"إغلاق التأكيد","deleteTitle":"هل أنت متأكد من حذف هذا العنصر؟","deleteDescription":"حذف {name} نهائيًا؟ لا يمكن التراجع عن هذا الإجراء.","restoreTitle":"هل أنت متأكد من استعادة هذا العنصر؟","restoreDescription":"استعادة {name} إلى قائمته الأصلية؟","keep":"لا، احتفظ به","delete":"نعم، احذف!","restore":"نعم، استعد"}},
   "dashboard": {
+    "stores": {
+      "riyadh": "الرياض",
+      "jeddah": "جدة",
+      "saudiOverview": "عرض المملكة العربية السعودية",
+      "chooseOnMap": "اختر الموقع على الخريطة",
+      "changeMapLocation": "تغيير الموقع على الخريطة",
+      "mapHint": "كبّر الخريطة واضغط لتحديد موقع المتجر.",
+      "mapSelected": "تم تحديد موقع المتجر",
+      "confirmLocation": "تأكيد الموقع",
+      "mapError": "تعذر تحميل الخريطة. تحقق من اتصالك وحاول مرة أخرى.",
+      "latitude": "خط العرض",
+      "longitude": "خط الطول",
+      "invalidCoordinates": "أدخل خط عرض صحيحًا بين ‎-90 و90 وخط طول بين ‎-180 و180.",
+      "bulkDelete": "حذف المحدد ({count})",
+      "selectAll": "تحديد جميع متاجر الصفحة",
+      "selectName": "تحديد {name}",
+      "selectedCount": "{count} متاجر محددة",
+      "storeNumber": "المتجر #{number}",
+      "confirmStore": "تأكيد المتجر",
+      "windowFrom": "فترة التنفيذ — من",
+      "windowTo": "فترة التنفيذ — إلى",
+      "invalidWindow": "اختر وقت انتهاء بعد وقت البدء.",
+      "selectedProducts": "المنتجات المحددة",
+      "productsCount": "تم تحديد {count} منتجات",
+      "reviewProducts": "المنتجات المحددة ({count})",
+      "removeProduct": "إزالة {name}",
+      "noProducts": "لم يتم تحديد منتجات.",
+      "serviceRequired": "اختر خدمة لكل قسم خدمات.",
+      "title": "المتاجر",
+      "search": "ابحث عن متجر",
+      "allStatuses": "جميع الحالات",
+      "active": "نشط",
+      "inactive": "غير نشط",
+      "add": "إضافة متجر",
+      "name": "اسم المتجر",
+      "number": "رقم المتجر",
+      "location": "موقع المتجر",
+      "address": "عنوان المتجر",
+      "status": "الحالة",
+      "action": "الإجراء",
+      "retry": "حاول مرة أخرى",
+      "loading": "جارٍ تحميل المتاجر…",
+      "empty": "لا توجد متاجر.",
+      "toggle": "تغيير حالة {name}",
+      "deleteName": "حذف {name}",
+      "editName": "تعديل {name}",
+      "previous": "السابق",
+      "next": "التالي",
+      "page": "{current} من {total}",
+      "deleteTitle": "حذف المتجر؟",
+      "deleteDescription": "هل أنت متأكد من حذف {name}؟ لا يمكن التراجع عن هذا الإجراء.",
+      "keep": "لا، احتفظ به",
+      "deleteConfirm": "نعم، احذف!",
+      "addTitle": "إضافة متجر جديد",
+      "editTitle": "تحديث تفاصيل المتجر",
+      "close": "إغلاق",
+      "activation": "التفعيل",
+      "selectLocation": "اختر الموقع",
+      "required": "أدخل اسم المتجر ورقمه وموقعه وعنوانه.",
+      "cancel": "إلغاء",
+      "confirm": "تأكيد",
+      "saving": "جارٍ الحفظ…",
+      "selectStore": "اختر متجرًا",
+      "noActiveStores": "لا توجد متاجر نشطة متاحة.",
+      "manageStores": "إدارة المتاجر"
+    },
     "navigation": {
       "label": "تنقل لوحة التحكم",
       "logo": "الانتقال إلى الصفحة الرئيسية",
@@ -244,65 +310,73 @@
         "description": "لديك إشعار جديد."
       },
       "events": {
-        "task.published": {
-          "title": "مهمة جديدة متاحة",
-          "description": "تم نشر المهمة #{taskId}"
+        "task": {
+          "published": {
+            "title": "مهمة جديدة متاحة",
+            "description": "تم نشر المهمة #{taskId}"
+          },
+          "reassigned": {
+            "title": "تم إعادة تعيين المهمة",
+            "description": "تم إعادة تعيين المهمة #{taskId}"
+          },
+          "reopened": {
+            "title": "تم إعادة فتح المهمة",
+            "description": "تم إعادة فتح المهمة #{taskId}"
+          },
+          "completed": {
+            "title": "تم إكمال المهمة",
+            "description": "تم إكمال المهمة #{taskId}"
+          },
+          "failed": {
+            "title": "فشلت المهمة",
+            "description": "فشلت المهمة #{taskId}"
+          },
+          "worker_cancelled": {
+            "title": "ألغى العامل المهمة",
+            "description": "ألغى العامل المهمة #{taskId}"
+          },
+          "rejected": {
+            "title": "تم رفض المهمة",
+            "description": "تم رفض المهمة #{taskId}"
+          }
         },
-        "task.reassigned": {
-          "title": "تم إعادة تعيين المهمة",
-          "description": "تم إعادة تعيين المهمة #{taskId}"
+        "payment": {
+          "completed": {
+            "title": "تم الدفع",
+            "description": "تم إتمام الدفعة #{paymentId} بمبلغ {amount} {currency}"
+          },
+          "pending": {
+            "title": "دفعة قيد الانتظار",
+            "description": "الدفعة #{paymentId} قيد الانتظار"
+          },
+          "failed": {
+            "title": "فشل الدفع",
+            "description": "فشلت الدفعة #{paymentId}"
+          },
+          "refunded": {
+            "title": "تم استرجاع المبلغ",
+            "description": "تم استرجاع مبلغ الدفعة #{paymentId}"
+          }
         },
-        "task.reopened": {
-          "title": "تم إعادة فتح المهمة",
-          "description": "تم إعادة فتح المهمة #{taskId}"
+        "system": {
+          "maintenance": {
+            "title": "صيانة النظام",
+            "description": "صيانة مجدولة قيد التنفيذ"
+          },
+          "update": {
+            "title": "تحديث النظام",
+            "description": "تم تحديث النظام"
+          }
         },
-        "task.completed": {
-          "title": "تم إكمال المهمة",
-          "description": "تم إكمال المهمة #{taskId}"
-        },
-        "task.failed": {
-          "title": "فشلت المهمة",
-          "description": "فشلت المهمة #{taskId}"
-        },
-        "task.worker_cancelled": {
-          "title": "ألغى العامل المهمة",
-          "description": "ألغى العامل المهمة #{taskId}"
-        },
-        "task.rejected": {
-          "title": "تم رفض المهمة",
-          "description": "تم رفض المهمة #{taskId}"
-        },
-        "payment.completed": {
-          "title": "تم الدفع",
-          "description": "تم إتمام الدفعة #{paymentId} بمبلغ {amount} {currency}"
-        },
-        "payment.pending": {
-          "title": "دفعة قيد الانتظار",
-          "description": "الدفعة #{paymentId} قيد الانتظار"
-        },
-        "payment.failed": {
-          "title": "فشل الدفع",
-          "description": "فشلت الدفعة #{paymentId}"
-        },
-        "payment.refunded": {
-          "title": "تم استرجاع المبلغ",
-          "description": "تم استرجاع مبلغ الدفعة #{paymentId}"
-        },
-        "system.maintenance": {
-          "title": "صيانة النظام",
-          "description": "صيانة مجدولة قيد التنفيذ"
-        },
-        "system.update": {
-          "title": "تحديث النظام",
-          "description": "تم تحديث النظام"
-        },
-        "account.verified": {
-          "title": "تم التحقق من الحساب",
-          "description": "تم التحقق من حسابك"
-        },
-        "account.suspended": {
-          "title": "تم تعليق الحساب",
-          "description": "تم تعليق حسابك"
+        "account": {
+          "verified": {
+            "title": "تم التحقق من الحساب",
+            "description": "تم التحقق من حسابك"
+          },
+          "suspended": {
+            "title": "تم تعليق الحساب",
+            "description": "تم تعليق حسابك"
+          }
         }
       },
       "items": {
@@ -454,9 +528,9 @@
         "executionDateTime": "تاريخ ووقت التنفيذ",
         "scheduleHint": "يمكن جدولة طلبات التنفيذ لليوم الحالي أو اليوم التالي فقط.",
         "storeLocation": "موقع المتجر",
-        "storeDescription": "اختر المتجر الذي سيتم تنفيذ المهمة فيه.",
-        "addLocation": "إضافة موقع",
-        "addLocationDescription": "أضف المتجر يدويًا أو اختره من الخريطة."
+        "storeDescription": "اختر المتجر المحفوظ الذي سيتم تنفيذ الطلب فيه.",
+        "addLocation": "اختر المتجر",
+        "addLocationDescription": "اختر متجرًا من متاجرك المحفوظة."
       },
       "services": {
         "title": "الخدمات",
@@ -818,8 +892,8 @@
       "product": {
         "title": "المنتجات", "subtitle": "إدارة علاماتك ومنتجاتك هنا",
         "actions": { "add": "إضافة منتج" },
-          "table": { "columns": { "products": "المنتجات", "family": "العائلة", "sku": "رمز SKU", "barcode": "الباركود", "description": "الوصف" } },
-        "dialog": { "title": "إضافة منتج جديد", "editTitle": "تحديث المنتج", "uploadLabel": "رفع صورة المنتج", "nameLabel": "اسم المنتج", "namePlaceholder": "أدخل اسم المنتج", "skuLabel": "رمز SKU", "skuPlaceholder": "أدخل رمز SKU", "descriptionLabel": "الوصف", "descriptionPlaceholder": "أدخل وصف المنتج", "categoryLabel": "الفئة", "selectCategory": "اختر فئة", "subCategoryLabel": "الفئة الفرعية", "selectSubCategory": "اختر فئة فرعية", "requiredFields": "حدد التسلسل الكامل وأدخل الاسم ورمز SKU وارفع صورة.", "importFileRequired": "حدد ملف CSV أو XLSX للاستيراد.", "statusDescription": "المنتج متاح وظاهر" },
+          "table": { "columns": { "products": "المنتجات", "family": "العائلة", "sku": "رمز SKU", "minQuantity": "الحد الأدنى للكمية", "barcode": "الباركود", "description": "الوصف" } },
+        "dialog": { "title": "إضافة منتج جديد", "editTitle": "تحديث المنتج", "uploadLabel": "رفع صورة المنتج", "nameLabel": "اسم المنتج", "namePlaceholder": "أدخل اسم المنتج", "minQuantityPlaceholder": "مثال: 12", "invalidMinQuantity": "يجب أن يكون الحد الأدنى للكمية عددًا صحيحًا غير سالب.", "skuLabel": "رمز SKU", "skuPlaceholder": "أدخل رمز SKU", "descriptionLabel": "الوصف", "descriptionPlaceholder": "أدخل وصف المنتج", "categoryLabel": "الفئة", "selectCategory": "اختر فئة", "subCategoryLabel": "الفئة الفرعية", "selectSubCategory": "اختر فئة فرعية", "requiredFields": "حدد التسلسل الكامل وأدخل الاسم ورمز SKU وارفع صورة.", "importFileRequired": "حدد ملف CSV أو XLSX للاستيراد.", "statusDescription": "المنتج متاح وظاهر" },
         "deleteDialog": { "title": "حذف المنتج؟", "descriptionLine1": "هل أنت متأكد من حذف هذا المنتج؟", "descriptionLine2": "لا يمكن التراجع عن هذا الإجراء.", "cancel": "لا، احتفظ به", "confirm": "نعم، احذفه!" }
       }
     },
@@ -1230,10 +1304,11 @@
         "reschedule": "إعادة جدولة الطلب",
         "cancelRequest": "إلغاء الطلب",
         "reject": "رفض المهمة المكتملة",
-        "pay": "ادفع الآن",
+        "pay": "دفع",
         "repeatRequest": "تكرار الطلب",
         "viewExecution": "عرض تفاصيل التنفيذ",
-        "cancelReopening": "إلغاء إعادة الفتح"
+        "cancelReopening": "إلغاء إعادة الفتح وقبول المهمة",
+        "reopenError": "تعذر قبول المهمة المعاد فتحها. يرجى المحاولة مرة أخرى."
       },
       "editDialog": {
         "title": "تعديل مسودة الطلب",
@@ -1292,6 +1367,61 @@
         "dateTitle": "اختر تاريخ التنفيذ",
         "timeTitle": "اختر وقت التنفيذ",
         "close": "إغلاق"
+      }
+    },
+    "executionDetails": {
+      "title": "تفاصيل التنفيذ — {id}",
+      "subtitle": "كيفية إكمال مسؤول العرض لهذا الطلب",
+      "executedBy": "تم التنفيذ بواسطة",
+      "startedAt": "بدأ في",
+      "finishedAt": "اكتمل في",
+      "duration": "المدة الإجمالية",
+      "servicesDone": "الخدمات المكتملة",
+      "services": "تفاصيل الخدمات ({count})",
+      "serviceNumber": "الخدمة رقم {number}",
+      "completedAt": "اكتملت في",
+      "merchandiserNote": "ملاحظة مسؤول العرض",
+      "photos": "صور قبل وبعد",
+      "before": "قبل",
+      "after": "بعد",
+      "proof": "إثبات العمل",
+      "product": "المنتجات",
+      "sku": "رمز SKU",
+      "noEvidence": "لم يتم إرسال أدلة تنفيذ لهذه الخدمة.",
+      "errorTitle": "تعذر تحميل تفاصيل التنفيذ",
+      "errorDescription": "تعذر تحميل بيانات تنفيذ الطلب.",
+      "retry": "إعادة المحاولة",
+      "statuses": { "completed": "مكتمل" },
+      "actions": {
+        "reject": "رفض",
+        "accept": "قبول",
+        "reverseAccept": "التراجع وقبول المهمة",
+        "contact": "التواصل مع المنصة"
+      },
+      "feedback": {
+        "title": "اترك تقييمك",
+        "subtitle": "يساعدنا تقييمك على تحسين شيلف سبوت والفريق الميداني.",
+        "platform": "منصة شيلف سبوت",
+        "worker": "مسؤول العرض",
+        "comments": "تعليقات إضافية (اختياري)",
+        "cancel": "إلغاء",
+        "submit": "إرسال التقييم"
+      },
+      "reject": {
+        "title": "رفض الطلب",
+        "reason": "سبب الرفض",
+        "hint": "اختر سببًا سريعًا أو اكتب السبب أدناه.",
+        "details": "أضف تفاصيل أخرى (اختياري)...",
+        "cancel": "إلغاء",
+        "confirm": "تأكيد الرفض",
+        "reasons": {
+          "poorExecution": "جودة تنفيذ ضعيفة",
+          "planogram": "لم يتم اتباع مخطط العرض",
+          "photosMissing": "صور قبل/بعد غير موجودة",
+          "products": "المنتجات غير مرتبة بشكل صحيح",
+          "late": "لم يتم العمل في الوقت المحدد",
+          "other": "أخرى"
+        }
       }
     }
   },

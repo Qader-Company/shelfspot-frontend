@@ -105,6 +105,7 @@ export interface AdminCatalogItem {
   category_name?: string | null;
   sub_category_name?: string | null;
   sku?: string | null;
+  min_quantity?: number | string | null;
   barcode?: string | null;
   logo?: string | null;
   logo_url?: string | null;
@@ -137,6 +138,7 @@ export interface AdminCatalogPayload {
   descriptionEn?: string;
   descriptionAr?: string;
   sku?: string;
+  minQuantity?: string;
   barcode?: string;
   brandId?: string;
   subBrandId?: string;
