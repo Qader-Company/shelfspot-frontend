@@ -16,7 +16,7 @@ export function LoadingState({ label, className }: LoadingStateProps) {
       )}
       role="status"
     >
-      <LoaderCircle className="size-6 animate-spin" aria-hidden="true" />
+      <span className="flex size-14 items-center justify-center rounded-2xl border border-primary/15 bg-primary/10"><LoaderCircle className="shelfspot-loader size-7 animate-spin text-primary" aria-hidden="true" /></span>
       <span className="text-sm">{label}</span>
     </div>
   );

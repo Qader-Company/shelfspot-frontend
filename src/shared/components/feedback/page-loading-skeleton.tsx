@@ -15,7 +15,7 @@ function SkeletonBlock({ className }: { className?: string }) {
   return (
     <span
       aria-hidden="true"
-      className={cn("block animate-pulse rounded-md bg-muted", className)}
+      className={cn("shelfspot-skeleton block rounded-md", className)}
     />
   );
 }

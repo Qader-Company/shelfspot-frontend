@@ -1,17 +1,15 @@
 "use client";
 
-import axios from "axios";
-import { useTranslations } from "next-intl";
+import { useState } from "react";
+import { PeriodFilter, getPeriodRange, type DashboardPeriod } from "./period-filter";
+import { useLocale, useTranslations } from "next-intl";
 
 import { ROUTES } from "@/config/routes";
 import { Link } from "@/i18n/navigation";
-import {
-  requestRows,
-  type RequestStatus,
-} from "@/modules/company/dashboard/components/dashboard-overview.seed";
-import { RequestsTable } from "@/modules/company/dashboard/components/requests-table";
-import { useDashboardReportQuery } from "@/modules/company/dashboard/hooks/use-dashboard-report-query";
-import { AddIcon, SidebarChevronIcon } from "@/shared/components/dashboard/dashboard-icons";
+import { LiveRequests } from "./live-requests";
+import { usePeriodTasks } from "../hooks/use-period-tasks";
+
+import { AddIcon } from "@/shared/components/dashboard/dashboard-icons";
 import { ChartCard } from "@/shared/components/dashboard/widgets/chart-card";
 import { DashboardStatCard } from "@/shared/components/dashboard/widgets/dashboard-stat-card";
 import { RequestsChart } from "@/shared/components/dashboard/widgets/requests-chart";
@@ -25,66 +23,64 @@ import { Button } from "@/shared/ui/button";
 
 export function DashboardOverview() {
   const t = useTranslations("dashboard");
-  const reportQuery = useDashboardReportQuery();
-  const isReportForbidden =
-    axios.isAxiosError(reportQuery.error) &&
-    reportQuery.error.response?.status === 403;
-  const report = reportQuery.data;
-  const cards = report?.cards;
+  const [period, setPeriod] = useState<DashboardPeriod>("week");
+  const range = getPeriodRange(period);
+  const locale = useLocale();
+  const tasksQuery = usePeriodTasks(range);
+  const tasks = tasksQuery.data ?? [];
+  const pending = tasks.filter(task => ["draft", "pending"].includes(task.status)).length;
+  const active = tasks.filter(task => ["pending", "accepted", "started", "in_progress", "reopened"].includes(task.status));
+  const completed = tasks.filter(task => task.status === "completed").length;
+  const today = getPeriodRange("today").date_from;
+  const delayed = active.filter(task => task.date && task.date.slice(0, 10) < today).length;
   const dashboardStats: DashboardStatItem[] = [
+    {
+      key: "total",
+      titleKey: "requestsPage.stats.total.title",
+      value: tasksQuery.isSuccess ? String(tasks.length) : "\u2014",
+      trendKey: "requestsPage.stats.total.trend",
+      tone: "purple",
+      iconSrc: "/company/folders.svg",
+    },
     {
       key: "active",
       titleKey: "overview.stats.active.title",
-      value: String(cards?.active_requests.value ?? 0),
+      value: tasksQuery.isSuccess ? String(active.length) : "\u2014",
       trendKey: "overview.stats.active.trend",
-      changePercentage: cards?.active_requests.change_percentage ?? 0,
       tone: "info",
       iconSrc: "/company/folders.svg",
     },
     {
       key: "completed",
-      titleKey: "overview.stats.completed.title",
-      value: String(cards?.completed_this_period.value ?? 0),
+      titleKey: "overview.periods.completed",
+      value: tasksQuery.isSuccess ? String(completed) : "\u2014",
       trendKey: "overview.stats.completed.trend",
-      changePercentage: cards?.completed_this_period.change_percentage ?? 0,
       tone: "success",
       iconSrc: "/company/rightsign.svg",
     },
     {
       key: "delayed",
       titleKey: "overview.stats.delayed.title",
-      value: String(cards?.delayed_requests.value ?? 0),
+      value: tasksQuery.isSuccess ? String(delayed) : "\u2014",
       trendKey: "overview.stats.delayed.trend",
-      changePercentage: cards?.delayed_requests.change_percentage ?? 0,
       tone: "danger",
       iconSrc: "/company/alert.svg",
     },
-    {
-      key: "acceptance",
-      titleKey: "overview.stats.acceptance.title",
-      value: `${cards?.acceptance_rate.value ?? 0}%`,
-      trendKey: "overview.stats.acceptance.trend",
-      changePercentage: cards?.acceptance_rate.change_percentage ?? 0,
-      tone: "purple",
-      iconSrc: "/company/star.svg",
-    },
   ];
-  const monthKeys = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"] as const;
-  const requestsOverTimeData: RequestsChartPoint[] = (report?.charts.requests_over_time ?? []).map((item) => ({
-    key: String(item.month),
-    monthKey: `overview.months.${monthKeys[item.month - 1] ?? "jan"}`,
-    value: item.total,
-  }));
-  const totals = new Map(
-    (report?.charts.status_distribution ?? []).map((item) => [item.status, item.total]),
-  );
-  const sumStatuses = (...statuses: string[]) =>
-    statuses.reduce((sum, status) => sum + (totals.get(status) ?? 0), 0);
+  const bucketDates: Date[] = [];
+  const cursor = new Date(range.date_from + "T00:00:00");
+  const end = new Date(range.date_to + "T00:00:00");
+  while (cursor <= end) { bucketDates.push(new Date(cursor)); if (period === "year") cursor.setMonth(cursor.getMonth() + 1); else cursor.setDate(cursor.getDate() + 1); }
+  const requestsOverTimeData: RequestsChartPoint[] = bucketDates.map((date, index) => {
+    const key = getPeriodRange("today", date).date_from;
+    const label = new Intl.DateTimeFormat(locale, period === "year" ? { month: "short" } : { month: "short", day: "numeric" }).format(date);
+    return { key, monthKey: period === "month" && index % 5 !== 0 && index !== bucketDates.length - 1 ? "" : label, value: tasks.filter(task => (task.date || task.created_at || "").slice(0, period === "year" ? 7 : 10) === key.slice(0, period === "year" ? 7 : 10)).length };
+  });
   const statusDonutData: StatusDonutItem[] = [
-    { key: "pending", labelKey: "overview.status.pending", value: sumStatuses("draft", "pending"), tone: "warning" },
-    { key: "inProgress", labelKey: "overview.status.inProgress", value: sumStatuses("started", "in_progress", "reopened"), tone: "info" },
-    { key: "completed", labelKey: "overview.status.completed", value: sumStatuses("completed", "accepted"), tone: "success" },
-    { key: "failed", labelKey: "overview.status.failed", value: sumStatuses("worker_cancelled", "company_cancelled", "rejected", "failed"), tone: "danger" },
+    { key: "pending", labelKey: "overview.status.pending", value: pending, tone: "warning" },
+    { key: "inProgress", labelKey: "overview.status.inProgress", value: tasks.filter(task => ["accepted", "started", "in_progress", "reopened"].includes(task.status)).length, tone: "info" },
+    { key: "completed", labelKey: "overview.status.completed", value: completed, tone: "success" },
+    { key: "failed", labelKey: "overview.status.failed", value: tasks.filter(task => ["worker_cancelled", "company_cancelled", "rejected", "failed"].includes(task.status)).length, tone: "danger" },
   ];
   const statusItems = statusDonutData.map((item) => ({ ...item, label: t(item.labelKey) }));
 
@@ -96,48 +92,37 @@ export function DashboardOverview() {
           <p className="mt-1.5 text-[clamp(0.875rem,3vw,1.125rem)] leading-[1.5] font-medium text-muted-foreground sm:mt-2">{t("overview.subtitle")}</p>
         </div>
         <div className="grid w-full grid-cols-1 gap-3 min-[420px]:grid-cols-2 md:flex md:w-auto md:flex-wrap md:items-center">
-          <Button type="button" variant="outline" className="h-10 w-full gap-3 rounded-lg border-border bg-card px-4 text-sm font-medium text-muted-foreground shadow-none md:w-auto md:px-5">
-            {t("overview.filters.thisWeek")}<SidebarChevronIcon className="size-4" />
-          </Button>
+          <PeriodFilter value={period} onChange={setPeriod} />
           <Button asChild className="h-10 w-full rounded-lg px-4 text-sm font-semibold text-white hover:text-white md:w-auto md:px-5">
             <Link href={ROUTES.dashboardCreateRequest}><AddIcon className="size-4" />{t("overview.actions.createRequest")}</Link>
           </Button>
         </div>
       </div>
-      {reportQuery.isError ? (
+      {tasksQuery.isError ? (
         <p className="rounded-lg border border-destructive/20 bg-destructive/10 px-4 py-3 text-sm text-destructive">
-          {t(
-            isReportForbidden
-              ? "overview.errors.reportForbidden"
-              : "overview.errors.report",
-          )}
+          {t("overview.errors.report")}
         </p>
       ) : null}
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4" aria-busy={reportQuery.isPending}>
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4" aria-busy={tasksQuery.isPending}>
         {dashboardStats.map((item) => {
-          const changePercentage = item.changePercentage ?? 0;
+
           return (
             <DashboardStatCard
               key={item.key}
               item={item}
               title={t(item.titleKey)}
-              trend={t("overview.stats.change", {
-                value:
-                  changePercentage > 0
-                    ? `+${changePercentage}`
-                    : changePercentage,
-              })}
+              trend=""
             />
           );
         })}
       </div>
       <div className="grid gap-4 xl:grid-cols-[minmax(0,1.5fr)_minmax(20rem,1fr)]">
-        <ChartCard title={t("overview.charts.requestsOverTime")} action={<Button type="button" variant="outline" className="h-9 gap-3 rounded-lg border-border bg-card px-4 text-xs font-medium text-muted-foreground shadow-none">{t("overview.filters.thisWeek")}<SidebarChevronIcon className="size-3.5" /></Button>}>
-          <RequestsChart data={requestsOverTimeData} months={requestsOverTimeData.map((item) => t(item.monthKey))} />
+        <ChartCard title={t("overview.charts.requestsOverTime")} action={<PeriodFilter value={period} onChange={setPeriod} />}>
+          <RequestsChart data={requestsOverTimeData} months={requestsOverTimeData.map((item) => item.monthKey)} />
         </ChartCard>
         <ChartCard><StatusDonutChart items={statusItems} /></ChartCard>
       </div>
-      <RequestsTable rows={requestRows} labels={{ title: t("overview.table.title"), requestId: t("overview.table.columns.requestId"), location: t("overview.table.columns.location"), assignedBy: t("overview.table.columns.assignedBy"), time: t("overview.table.columns.time"), status: t("overview.table.columns.status"), action: t("overview.table.columns.action"), delete: t("overview.table.actions.delete"), edit: t("overview.table.actions.edit") }} resolveText={(key) => t(key)} resolveStatus={(status: RequestStatus) => t(`overview.status.${status}`)} />
+      <LiveRequests range={range} />
     </div>
   );
 }

@@ -683,3 +683,84 @@ html[dir="ltr"] {
     @apply text-[clamp(0.875rem,1.2vw,1rem)] leading-[1.7] font-regular text-foreground/80;
   }
 }
+
+/* ShelfSpot interaction identity. Base styles yield to component utilities. */
+@layer base {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: color-mix(in srgb, var(--primary) 55%, var(--muted)) transparent;
+  }
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb {
+    background: color-mix(in srgb, var(--primary) 55%, var(--muted));
+    border: 2px solid var(--background);
+    border-radius: 999px;
+  }
+  ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+  ::-webkit-scrollbar-corner { background: transparent; }
+  ::selection { background: color-mix(in srgb, var(--primary) 25%, transparent); color: var(--foreground); }
+
+  select:not([multiple]):not([size]) {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%234fc9ec' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.875rem center;
+    padding-inline-end: 2.5rem;
+    cursor: pointer;
+  }
+  select:not([multiple]):not([size]):dir(rtl) { background-position: left 0.875rem center; }
+  select {
+    min-width: 0;
+    border-radius: var(--radius);
+    border: 1px solid var(--input);
+    background-color: var(--card);
+    color: var(--foreground);
+    transition: border-color 160ms ease, box-shadow 160ms ease, background-color 160ms ease;
+  }
+  select:hover:not(:disabled) { border-color: color-mix(in srgb, var(--primary) 65%, var(--border)); }
+  select:focus-visible, [role="combobox"]:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+  select:disabled { cursor: not-allowed; opacity: 0.5; }
+  select option, select optgroup { background: var(--popover); color: var(--popover-foreground); }
+  select[aria-invalid="true"] { border-color: var(--destructive); }
+  [role="menu"], [role="listbox"] {
+    border-radius: calc(var(--radius) + 4px);
+    border: 1px solid var(--border);
+    background-color: var(--popover);
+    color: var(--popover-foreground);
+    box-shadow: 0 8px 28px color-mix(in srgb, var(--foreground) 10%, transparent);
+  }
+  [role="option"][aria-selected="true"], [role="menuitem"][data-highlighted], [role="option"][data-highlighted] {
+    background-color: color-mix(in srgb, var(--primary) 12%, var(--popover));
+    color: var(--foreground);
+  }
+}
+
+@layer components {
+  .shelfspot-skeleton {
+    position: relative;
+    overflow: hidden;
+    background: color-mix(in srgb, var(--primary) 5%, var(--muted));
+  }
+  .shelfspot-skeleton::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--primary) 12%, var(--card)), transparent);
+    animation: shelfspot-shimmer 1.8s ease-in-out infinite;
+  }
+  @keyframes shelfspot-shimmer { to { transform: translateX(100%); } }
+}
+@media (prefers-reduced-motion: reduce) {
+  .shelfspot-skeleton::after { animation: none; display: none; }
+  .shelfspot-loader { animation: none; }
+  select { transition: none; }
+}
+@media (forced-colors: active) {
+  select:not([multiple]):not([size]) { appearance: auto; background-image: none; }
+  * { scrollbar-color: auto; }
+}

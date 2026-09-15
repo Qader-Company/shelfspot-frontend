@@ -430,7 +430,11 @@ function ServiceEntryCard({
     const selectedProducts = { ...entry.selectedProducts };
     if (product && next.includes(productId)) selectedProducts[productId] = { id: product.id, name: product.name, sku: product.sku, imageUrl: product.image_url ?? product.image ?? product.logo_url ?? product.logo };
     else delete selectedProducts[productId];
-    onUpdate({ productIds: next, selectedProducts });
+    const productDetails = { ...entry.productDetails };
+    if (next.includes(productId) && product?.min_quantity != null && extraColumn && ["minimum_quantity", "min_quantity"].includes(extraColumn.key)) {
+      productDetails[productId] = { [extraColumn.key]: String(product.min_quantity), ...productDetails[productId] };
+    }
+    onUpdate({ productIds: next, selectedProducts, productDetails });
   }
 
   return (
@@ -608,7 +612,7 @@ function ProductTable({
   const [editingId, setEditingId] = useState<number | null>(null);
   const totalPages = meta?.last_page ?? 1;
   const extraColumnLabel = extraColumn
-    ? extraColumn.key === "minimum_quantity" ? t("createRequest.productTable.columns.minQuantity")
+    ? (extraColumn.key === "minimum_quantity" || extraColumn.key === "min_quantity") ? t("createRequest.productTable.columns.minQuantity")
       : extraColumn.key === "expected_expiry_date" ? t("createRequest.productTable.columns.expiryDate")
       : extraColumn.key.replace(/_/g, " ")
     : null;
@@ -620,9 +624,9 @@ function ProductTable({
         <Input className="h-11 flex-1 rounded-lg px-4 text-sm" placeholder={t("createRequest.productTable.searchPlaceholder")} value={search} onChange={(e) => onSearchChange(e.target.value)} />
         <span className="text-sm font-bold text-primary">{meta ? `${meta.total} ` : ""}{t("createRequest.productTable.showProducts")}</span>
       </div>
-      <div className="mt-3 overflow-hidden rounded-lg border border-border">
+      <div className="mt-3 max-h-80 max-w-full overflow-auto rounded-lg border border-border">
         <table className="w-full min-w-[640px] border-collapse text-sm">
-          <thead className="bg-muted/30 text-xs font-semibold text-muted-foreground">
+          <thead className="sticky top-0 z-10 bg-card text-xs font-semibold text-muted-foreground">
             <tr>
               <th className="w-12 border-b border-e border-border px-4 py-3 text-start"><input type="checkbox" className="size-4 accent-primary" readOnly /></th>
               <th className="border-b border-e border-border px-4 py-3 text-start">{t("createRequest.productTable.columns.products")}</th>
@@ -640,7 +644,7 @@ function ProductTable({
               <tr><td colSpan={totalCols} className="px-4 py-8 text-center text-sm text-muted-foreground">{t("createRequest.productTable.noProducts")}</td></tr>
             ) : products.map((product) => {
               const isSelected = selectedProductIds.includes(product.id);
-              const detailValue = productDetails[product.id]?.[extraColumn?.key ?? ""] ?? "";
+              const detailValue = productDetails[product.id]?.[extraColumn?.key ?? ""] ?? ((extraColumn?.key === "minimum_quantity" || extraColumn?.key === "min_quantity") && product.min_quantity != null ? String(product.min_quantity) : "");
               const isEditing = editingId === product.id;
               return (
                 <tr key={product.id} className="border-b border-border last:border-b-0">

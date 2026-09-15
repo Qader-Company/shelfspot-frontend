@@ -17,7 +17,7 @@ export interface CompanyTaskListItem {
   payment_status: string;
   payment_status_label: string;
   created_by: string;
-  created_at: string;
+  created_at?: string | null;
   updated_at: string;
   assigned_worker?: { id: number; name: string } | null;
 }
@@ -26,6 +26,7 @@ export interface TaskListParams {
   company_id?: number;
   status?: string;
   payment_status?: string;
+  store_id?: string;
   date_from?: string;
   date_to?: string;
   page?: number;
