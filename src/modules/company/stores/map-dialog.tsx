@@ -27,7 +27,7 @@ export function StoreMapDialog({ initial, onClose, onConfirm }: { initial: Point
         const point = selectedPoint.current ?? initialPoint.current;
         map = L.map(container.current).setView(point ? [point.latitude, point.longitude] : [24.7136, 46.6753], point ? 12 : 11);
         mapRef.current = map;
-        L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 19, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' }).on("tileerror", () => { if (!disposed) setFailed(true); }).addTo(map);
+        L.tileLayer("https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png", { maxZoom: 20, attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' }).on("tileerror", () => { if (!disposed) setFailed(true); }).addTo(map);
         let marker: import("leaflet").CircleMarker | undefined;
         const place = (latitude: number, longitude: number) => {
           const next = { latitude: Number(latitude.toFixed(6)), longitude: Number(longitude.toFixed(6)) };
