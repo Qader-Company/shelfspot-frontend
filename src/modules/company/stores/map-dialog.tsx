@@ -40,7 +40,7 @@ export function StoreMapDialog({ initial, onClose, onConfirm }: { initial: Point
     setSearching(true);
     try {
       const res = await fetch(
-        `https://api.maptiler.com/geocoding/${encodeURIComponent(value)}.json?key=${MAPTILER_KEY}&bbox=34.5,16.3,55.7,32.2&language=en`
+        `https://api.maptiler.com/geocoding/${encodeURIComponent(value)}.json?key=${MAPTILER_KEY}&language=en`
       );
       const data = await res.json() as { features: GeocodingFeature[] };
       setSuggestions(data.features ?? []);
