@@ -208,6 +208,7 @@
       "jeddah": "Jeddah",
       "saudiOverview": "Saudi Arabia overview",
       "chooseOnMap": "Choose location on map",
+      "searchLocation": "Search for a place or address...",
       "changeMapLocation": "Change location on map",
       "mapHint": "Zoom in and click the map to place the store marker.",
       "mapSelected": "Store location selected",
