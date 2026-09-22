@@ -78,6 +78,7 @@ export function DeleteConfirmDialog({
             type="button"
             variant="destructive"
             className="h-11 flex-1 rounded-xl text-sm font-semibold text-white"
+            style={{ backgroundColor: "#ef4444" }}
             onClick={onConfirm ?? onClose}
             disabled={isPending}
           >
