@@ -27,7 +27,8 @@ export function StoreMapDialog({ initial, onClose, onConfirm }: { initial: Point
         const point = selectedPoint.current ?? initialPoint.current;
         map = L.map(container.current).setView(point ? [point.latitude, point.longitude] : [24.7136, 46.6753], point ? 12 : 11);
         mapRef.current = map;
-        L.tileLayer(`https://api.maptiler.com/maps/streets-v2/{z}/{x}/{y}.png?key=${process.env.NEXT_PUBLIC_MAPTILER_KEY}`, { maxZoom: 20, attribution: '&copy; <a href="https://www.maptiler.com/copyright/">MapTiler</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' }).on("tileerror", () => { if (!disposed) setFailed(true); }).addTo(map);
+        const maptilerKey = process.env.NEXT_PUBLIC_MAPTILER_KEY ?? "bbI10Owy2KDLrwZ3jlvb";
+        L.tileLayer(`https://api.maptiler.com/maps/streets-v2/{z}/{x}/{y}.png?key=${maptilerKey}`, { maxZoom: 20, attribution: '&copy; <a href="https://www.maptiler.com/copyright/">MapTiler</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' }).on("tileerror", () => { if (!disposed) setFailed(true); }).addTo(map);
         let marker: import("leaflet").CircleMarker | undefined;
         const place = (latitude: number, longitude: number) => {
           const next = { latitude: Number(latitude.toFixed(6)), longitude: Number(longitude.toFixed(6)) };
