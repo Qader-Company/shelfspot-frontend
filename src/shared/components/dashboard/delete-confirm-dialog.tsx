@@ -76,7 +76,8 @@ export function DeleteConfirmDialog({
           </Button>
           <Button
             type="button"
-            className="h-11 flex-1 rounded-xl bg-destructive text-sm font-semibold text-white hover:bg-destructive/90"
+            variant="destructive"
+            className="h-11 flex-1 rounded-xl text-sm font-semibold text-white"
             onClick={onConfirm ?? onClose}
             disabled={isPending}
           >
