@@ -80,3 +80,81 @@ export interface PaymentResponse {
   message?: string;
   data: PaymentTransaction;
 }
+
+// ─── Withdrawals (Merchandiser / Workers tab) ─────────────────────────────────
+
+export type WithdrawalStatus = "pending" | "approved" | "rejected";
+
+export interface WithdrawalMerchandiser {
+  id: number;
+  name: string;
+  email?: string | null;
+  phone?: string | null;
+}
+
+export interface Withdrawal {
+  id: number;
+  merchandiser_id?: number | null;
+  merchandiser: WithdrawalMerchandiser;
+  amount: number;
+  iban?: string | null;
+  status: WithdrawalStatus;
+  status_label?: string | null;
+  date: string;
+  created_at?: string | null;
+  updated_at?: string | null;
+}
+
+export interface WithdrawalSummary {
+  total_withdraw_requests: number;
+  pending_withdraw_requests: number;
+  total_withdraw: number;
+}
+
+export interface WithdrawalMeta {
+  current_page: number;
+  last_page: number;
+  per_page: number;
+  total: number;
+  from?: number | null;
+  to?: number | null;
+}
+
+export interface WithdrawalsParams {
+  page?: number;
+  per_page?: number;
+  search?: string;
+  status?: WithdrawalStatus | "all";
+  sort?: "newest" | "oldest";
+}
+
+export interface WithdrawalsApiResponse {
+  success: boolean;
+  message?: string;
+  data: {
+    summary?: WithdrawalSummary;
+    withdrawals: {
+      data: Withdrawal[];
+      current_page?: number;
+      last_page?: number;
+      per_page?: number;
+      total?: number;
+      links?: unknown;
+      meta?: WithdrawalMeta;
+    };
+  };
+}
+
+export interface WithdrawalsResponse {
+  success: boolean;
+  message?: string;
+  summary: WithdrawalSummary;
+  data: Withdrawal[];
+  meta?: WithdrawalMeta;
+}
+
+export interface WithdrawalResponse {
+  success: boolean;
+  message?: string;
+  data: Withdrawal;
+}

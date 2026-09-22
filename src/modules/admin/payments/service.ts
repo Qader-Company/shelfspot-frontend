@@ -5,6 +5,10 @@ import type {
   PaymentsApiResponse,
   PaymentsParams,
   PaymentsResponse,
+  WithdrawalResponse,
+  WithdrawalsApiResponse,
+  WithdrawalsParams,
+  WithdrawalsResponse,
 } from "./types";
 
 /**
@@ -71,6 +75,83 @@ export async function getPayments(params?: PaymentsParams): Promise<PaymentsResp
 export async function getPayment(id: string): Promise<PaymentResponse["data"]> {
   const { data } = await apiClient.get<PaymentResponse>(
     `/api/admin/payments/${encodeURIComponent(id)}`,
+  );
+  return data.data;
+}
+
+// ─── Withdrawals (Merchandiser / Workers tab) ─────────────────────────────────
+
+/**
+ * Fetch a paginated list of admin withdrawal requests.
+ * Backend: GET /admin/withdrawals
+ */
+export async function getWithdrawals(params?: WithdrawalsParams): Promise<WithdrawalsResponse> {
+  const { data: response } = await apiClient.get<WithdrawalsApiResponse>(
+    "/api/admin/withdrawals",
+    { params },
+  );
+
+  if (!response?.data) {
+    return {
+      success: false,
+      message: "Invalid response from server",
+      summary: { total_withdraw_requests: 0, pending_withdraw_requests: 0, total_withdraw: 0 },
+      data: [],
+      meta: { current_page: 1, last_page: 1, per_page: 10, total: 0 },
+    };
+  }
+
+  const { summary, withdrawals } = response.data;
+
+  if (!withdrawals || !Array.isArray(withdrawals.data)) {
+    return {
+      success: response.success ?? false,
+      message: response.message,
+      summary: summary ?? { total_withdraw_requests: 0, pending_withdraw_requests: 0, total_withdraw: 0 },
+      data: [],
+      meta: {
+        current_page: 1,
+        last_page: 1,
+        per_page: params?.per_page ?? 10,
+        total: 0,
+      },
+    };
+  }
+
+  const { data: rows, meta: nestedMeta, ...spread } = withdrawals;
+
+  const current_page = nestedMeta?.current_page ?? spread.current_page ?? 1;
+  const last_page    = nestedMeta?.last_page     ?? spread.last_page    ?? 1;
+  const per_page     = nestedMeta?.per_page      ?? spread.per_page     ?? params?.per_page ?? 10;
+  const total        = nestedMeta?.total         ?? spread.total        ?? rows.length;
+
+  return {
+    success: response.success,
+    message: response.message,
+    summary: summary ?? { total_withdraw_requests: 0, pending_withdraw_requests: 0, total_withdraw: 0 },
+    data: rows,
+    meta: { current_page, last_page, per_page, total },
+  };
+}
+
+/**
+ * Fetch a single withdrawal request by ID.
+ * Backend: GET /admin/withdrawals/:id
+ */
+export async function getWithdrawal(id: string): Promise<WithdrawalResponse["data"]> {
+  const { data } = await apiClient.get<WithdrawalResponse>(
+    `/api/admin/withdrawals/${encodeURIComponent(id)}`,
+  );
+  return data.data;
+}
+
+/**
+ * Approve a withdrawal request.
+ * Backend: POST /admin/withdrawals/:id/approve
+ */
+export async function approveWithdrawal(id: string): Promise<WithdrawalResponse["data"]> {
+  const { data } = await apiClient.post<WithdrawalResponse>(
+    `/api/admin/withdrawals/${encodeURIComponent(id)}/approve`,
   );
   return data.data;
 }
