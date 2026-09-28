@@ -47,7 +47,7 @@ export function DashboardRequestsTable({
           <thead>
             <tr className="text-xs font-medium text-foreground">
               <th className="w-12 border-b border-e border-border px-5 py-3 text-start">
-                {canDelete && onSelectionChange ? <input type="checkbox" aria-label={labels.selectAll} className="size-4 accent-primary" disabled={disabled} checked={allSelected} ref={(input) => { if (input) input.indeterminate = someSelected && !allSelected; }} onChange={() => onSelectionChange(allSelected ? selectedIds.filter((id) => !ids.includes(id)) : Array.from(new Set([...selectedIds, ...ids])))} /> : null}
+                {canDelete && onSelectionChange ? <input type="checkbox" aria-label={labels.selectAll} className="size-[18px] accent-primary" disabled={disabled} checked={allSelected} ref={(input) => { if (input) input.indeterminate = someSelected && !allSelected; }} onChange={() => onSelectionChange(allSelected ? selectedIds.filter((id) => !ids.includes(id)) : Array.from(new Set([...selectedIds, ...ids])))} /> : null}
               </th>
               <th className="border-b border-e border-border px-5 py-3 text-start">
                 {labels.requestId}
@@ -71,9 +71,9 @@ export function DashboardRequestsTable({
           </thead>
           <tbody>
             {rows.map((row, index) => (
-              <tr key={`${row.id}-${row.status}-${index}`} className="text-sm">
+              <tr key={`${row.id}-${row.status}-${index}`} className="text-sm transition-colors hover:bg-muted/40 data-[selected=true]:bg-primary/5" data-selected={selectedIds.includes(String(row.taskId ?? row.id))}>
                 <td className="border-b border-border px-5 py-4">
-                  {canDelete && onSelectionChange ? <input type="checkbox" aria-label={`${labels.selectRow} ${row.id}`} className="size-4 accent-primary" disabled={disabled} checked={selectedIds.includes(String(row.taskId ?? row.id))} onChange={(event) => { const id = String(row.taskId ?? row.id); onSelectionChange(event.target.checked ? [...selectedIds, id] : selectedIds.filter((selected) => selected !== id)); }} /> : null}
+                  {canDelete && onSelectionChange ? <input type="checkbox" aria-label={`${labels.selectRow} ${row.id}`} className="size-[18px] accent-primary" disabled={disabled} checked={selectedIds.includes(String(row.taskId ?? row.id))} onChange={(event) => { const id = String(row.taskId ?? row.id); onSelectionChange(event.target.checked ? [...selectedIds, id] : selectedIds.filter((selected) => selected !== id)); }} /> : null}
                 </td>
                 <td className="border-b border-border px-5 py-4 font-semibold text-foreground">
                   <Link
