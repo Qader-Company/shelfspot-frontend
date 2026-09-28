@@ -42,7 +42,7 @@ export function DashboardRequestsTable({
   const someSelected = ids.some((id) => selectedIds.includes(id));
   return (
     <div className="overflow-hidden rounded-lg border border-border bg-card shadow-sm">
-      <div className="overflow-x-auto">
+      <div className="table-scroll" tabIndex={0}>
         <table className="w-full min-w-[900px] border-separate border-spacing-0 text-start">
           <thead>
             <tr className="text-xs font-medium text-foreground">

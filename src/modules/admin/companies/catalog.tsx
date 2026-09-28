@@ -252,7 +252,7 @@ function Catalog({ companyId, resource }: { companyId: string; resource: AdminCa
       </div>
       {notice ? <p role="status" className={notice.tone === "error" ? "rounded-lg bg-destructive/10 p-3 text-destructive" : "rounded-lg bg-success/10 p-3 text-success"}>{notice.text}</p> : null}
       {catalog.isLoading ? <PageLoadingSkeleton showHeader={false} tableRows={8} tableColumns={columns.length + 3} label={t("feedback.loading")} className="p-0" /> : catalog.isError ? <ErrorState title={t("feedback.error")} description={normalizeApiError(catalog.error).message} retryLabel={t("feedback.retry")} onRetry={() => catalog.refetch()} /> : rows.length === 0 ? <EmptyState title={t("feedback.empty")} /> : (
-        <div className="overflow-x-auto rounded-xl border border-border bg-card">
+        <div className="table-scroll rounded-xl border border-border bg-card" tabIndex={0}>
           <table className="w-full min-w-[900px] text-sm">
             <thead>
               <tr className="border-b border-border">

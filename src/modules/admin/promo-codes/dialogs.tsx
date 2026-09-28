@@ -268,7 +268,7 @@ export function PromoDetailsDialog({
           label={t("expiry")}
           value={new Date(record.expiresAt).toLocaleDateString()}
         />
-        <div className="overflow-x-auto rounded-lg border border-border">
+        <div className="table-scroll rounded-lg border border-border" tabIndex={0}>
           <table className="w-full min-w-[520px] text-sm">
             <thead>
               <tr className="border-b">

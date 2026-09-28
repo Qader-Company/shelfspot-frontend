@@ -783,6 +783,25 @@ html[dir="ltr"] {
 }
 
 @layer components {
+  .table-scroll {
+    max-height: min(var(--table-scroll-height, 32rem), 65dvh);
+    overflow: auto;
+    overscroll-behavior: contain;
+  }
+
+  .table-scroll:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: -2px;
+  }
+
+  .table-scroll > table > thead {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: var(--card);
+    box-shadow: 0 1px 0 var(--border);
+  }
+
   .shelfspot-skeleton {
     position: relative;
     overflow: hidden;

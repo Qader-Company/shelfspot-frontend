@@ -128,7 +128,7 @@ export function CatalogItemsTable({
     <div className="space-y-3">
       {statusError ? <p className="rounded-xl border border-destructive/20 bg-destructive/10 px-4 py-3 text-sm text-destructive" role="alert">{statusError}</p> : null}
     <div className="overflow-hidden rounded-lg border border-border bg-card shadow-sm">
-      <div className="overflow-x-auto">
+      <div className="table-scroll" tabIndex={0}>
         <table className="w-full min-w-[700px] border-separate border-spacing-0 text-start">
           <thead>
             <tr className="text-xs font-medium text-foreground">

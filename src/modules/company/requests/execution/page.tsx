@@ -168,7 +168,7 @@ function ProductEvidence({ products }: { products: CompanyTaskProduct[] }) {
   return (
     <section className="space-y-3">
       <h4 className="text-lg font-semibold">{t("proof")}</h4>
-      <div className="overflow-x-auto rounded-xl border">
+      <div className="table-scroll rounded-xl border" tabIndex={0}>
         <table className="w-full min-w-[42rem] text-sm">
           <thead className="bg-muted/50 text-muted-foreground">
             <tr>

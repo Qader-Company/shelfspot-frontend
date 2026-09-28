@@ -433,7 +433,7 @@ function Table({
       : ["role", "users", "status", "action"];
 
   return (
-    <div className="overflow-x-auto rounded-xl border bg-card">
+    <div className="table-scroll rounded-xl border bg-card" tabIndex={0}>
       <table className="w-full min-w-[720px] text-sm">
         <thead>
           <tr>

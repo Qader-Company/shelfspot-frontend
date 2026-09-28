@@ -36,7 +36,7 @@ export function RequestsTable({
           {labels.title}
         </h2>
       </div>
-      <div className="overflow-x-auto">
+      <div className="table-scroll" tabIndex={0}>
         <table className="w-full min-w-[760px] border-separate border-spacing-0 text-start">
           <thead>
             <tr className="text-xs font-medium text-foreground">

@@ -18,9 +18,9 @@ export function PaymentsTable({
 }: PaymentsTableProps) {
   return (
     <div className="overflow-hidden rounded-lg border border-border bg-card shadow-sm">
-      <div className="overflow-x-auto">
+      <div tabIndex={0} className="max-h-[min(32rem,65dvh)] overflow-auto overscroll-contain focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-primary">
           <table className="w-full min-w-[640px] border-separate border-spacing-0 text-start">
-          <thead>
+          <thead className="sticky top-0 z-10 bg-card">
             <tr className="text-xs font-medium text-foreground">
               <th className="border-b border-e border-border px-5 py-3 text-start">
                 {labels.types}

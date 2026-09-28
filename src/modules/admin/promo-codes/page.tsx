@@ -324,7 +324,7 @@ export function PromoCodesPage() {
           onRetry={() => query.refetch()}
         />
       ) : rows.length ? (
-        <div className="overflow-x-auto rounded-xl border border-border bg-card">
+        <div className="table-scroll rounded-xl border border-border bg-card" tabIndex={0}>
           <table className="w-full min-w-[780px] text-sm">
             <thead>
               <tr className="border-b">

@@ -149,7 +149,7 @@ export function ServiceDetailCard({
             {service.products.length === 0 ? (
               <p className="text-sm text-muted-foreground">{labels.noProducts}</p>
             ) : (
-              <div className="overflow-hidden rounded-lg border border-border">
+              <div className="table-scroll rounded-lg border border-border" tabIndex={0}>
                 <table className="w-full border-separate border-spacing-0 text-sm">
                   <thead>
                     <tr className="text-xs font-medium text-muted-foreground">
