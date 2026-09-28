@@ -1,3 +1,7 @@
+"use client";
+
+import { Portal } from "radix-ui";
+
 import { WarningIcon } from "@/shared/components/dashboard/dashboard-icons";
 import { Button } from "@/shared/ui/button";
 
@@ -29,6 +33,7 @@ export function DeleteConfirmDialog({
   if (!isOpen) return null;
 
   return (
+    <Portal.Root>
     <div
       role="presentation"
       className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/40 p-4"
@@ -37,7 +42,7 @@ export function DeleteConfirmDialog({
         role="dialog"
         aria-modal="true"
         aria-label={title}
-        className="w-full max-w-sm rounded-2xl border border-border bg-card p-8 shadow-xl"
+        className="max-h-[calc(100dvh-2rem)] w-full max-w-sm overflow-y-auto rounded-2xl border border-border bg-card p-8 shadow-xl"
       >
         <div className="flex justify-center">
           <span className="flex size-14 items-center justify-center rounded-full bg-destructive/10">
@@ -87,5 +92,6 @@ export function DeleteConfirmDialog({
         </div>
       </section>
     </div>
+    </Portal.Root>
   );
 }
