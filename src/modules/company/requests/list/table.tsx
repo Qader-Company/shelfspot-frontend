@@ -21,6 +21,9 @@ interface DashboardRequestsTableProps {
   };
   resolveStatus: (status: DashboardRequestRow["status"]) => string;
   onDelete?: (id: string) => void;
+  selectedIds?: string[];
+  onSelectionChange?: (ids: string[]) => void;
+  disabled?: boolean;
 }
 
 export function DashboardRequestsTable({
@@ -28,9 +31,15 @@ export function DashboardRequestsTable({
   labels,
   resolveStatus,
   onDelete,
+  selectedIds = [],
+  onSelectionChange,
+  disabled = false,
 }: DashboardRequestsTableProps) {
   const canEdit = usePermission("edit_task");
   const canDelete = usePermission("delete_task");
+  const ids = rows.map((row) => String(row.taskId ?? row.id));
+  const allSelected = ids.length > 0 && ids.every((id) => selectedIds.includes(id));
+  const someSelected = ids.some((id) => selectedIds.includes(id));
   return (
     <div className="overflow-hidden rounded-lg border border-border bg-card shadow-sm">
       <div className="overflow-x-auto">
@@ -38,8 +47,7 @@ export function DashboardRequestsTable({
           <thead>
             <tr className="text-xs font-medium text-foreground">
               <th className="w-12 border-b border-e border-border px-5 py-3 text-start">
-                <span className="sr-only">{labels.selectAll}</span>
-                <span className="block size-4 rounded border border-border bg-card" />
+                {canDelete && onSelectionChange ? <input type="checkbox" aria-label={labels.selectAll} className="size-4 accent-primary" disabled={disabled} checked={allSelected} ref={(input) => { if (input) input.indeterminate = someSelected && !allSelected; }} onChange={() => onSelectionChange(allSelected ? selectedIds.filter((id) => !ids.includes(id)) : Array.from(new Set([...selectedIds, ...ids])))} /> : null}
               </th>
               <th className="border-b border-e border-border px-5 py-3 text-start">
                 {labels.requestId}
@@ -65,8 +73,7 @@ export function DashboardRequestsTable({
             {rows.map((row, index) => (
               <tr key={`${row.id}-${row.status}-${index}`} className="text-sm">
                 <td className="border-b border-border px-5 py-4">
-                  <span className="sr-only">{labels.selectRow}</span>
-                  <span className="block size-4 rounded border border-border bg-card" />
+                  {canDelete && onSelectionChange ? <input type="checkbox" aria-label={`${labels.selectRow} ${row.id}`} className="size-4 accent-primary" disabled={disabled} checked={selectedIds.includes(String(row.taskId ?? row.id))} onChange={(event) => { const id = String(row.taskId ?? row.id); onSelectionChange(event.target.checked ? [...selectedIds, id] : selectedIds.filter((selected) => selected !== id)); }} /> : null}
                 </td>
                 <td className="border-b border-border px-5 py-4 font-semibold text-foreground">
                   <Link
@@ -92,6 +99,7 @@ export function DashboardRequestsTable({
                   <div className="flex items-center gap-3">
                     {canDelete ? <Button
                       aria-label={labels.delete}
+                      disabled={disabled}
                       type="button"
                       variant="ghost"
                       size="icon-xs"

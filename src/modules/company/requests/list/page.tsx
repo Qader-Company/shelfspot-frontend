@@ -5,7 +5,7 @@ import { useLocale, useTranslations } from "next-intl";
 
 import { ROUTES } from "@/config/routes";
 import { Link } from "@/i18n/navigation";
-import { useDeleteTaskMutation } from "@/modules/company/requests/delete/use-mutation";
+import { useBulkDeleteTasksMutation, useDeleteTaskMutation } from "@/modules/company/requests/delete/use-mutation";
 import type { CompanyTaskListItem, DashboardRequestRow } from "@/modules/company/requests/list/types";
 import { useTasksQuery } from "@/modules/company/requests/list/use-query";
 import { useStoreOptionsQuery } from "@/modules/company/stores/hooks";
@@ -48,9 +48,14 @@ export function DashboardRequestsPage() {
   const updateFilter = (key: keyof typeof filters, value: string) => { setFilters((previous) => ({ ...previous, [key]: value })); setPage(1); };
   const hasFilters = Boolean(status || Object.values(filters).some(Boolean));
   const [deleteTarget, setDeleteTarget] = useState("");
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [bulkTargets, setBulkTargets] = useState<string[]>([]);
+  const [bulkError, setBulkError] = useState("");
+  const bulkMutation = useBulkDeleteTasksMutation();
   const tasksQuery = useTasksQuery({ page, status: status || undefined, date_from: filters.from || undefined, date_to: filters.to || undefined, store_id: filters.storeId || undefined });
   const storesQuery = useStoreOptionsQuery();
   const deleteMutation = useDeleteTaskMutation();
+  const busy = deleteMutation.isPending || bulkMutation.isPending;
   const tasks = useMemo(() => tasksQuery.data?.data ?? [], [tasksQuery.data?.data]);
 
   const lastPage = tasksQuery.data?.meta?.last_page ?? 1;
@@ -89,9 +94,21 @@ export function DashboardRequestsPage() {
         </div>
       </section>
 
-      {rows.length ? <DashboardRequestsTable rows={rows} labels={{ requestId: t("requestsPage.table.columns.requestId"), location: t("requestsPage.table.columns.location"), assignedBy: t("requestsPage.table.columns.assignedBy"), time: t("requestsPage.table.columns.time"), status: t("requestsPage.table.columns.status"), action: t("requestsPage.table.columns.action"), selectAll: t("requestsPage.table.actions.selectAll"), selectRow: t("requestsPage.table.actions.selectRow"), delete: t("requestsPage.table.actions.delete"), edit: t("requestsPage.table.actions.edit") }} resolveStatus={(value) => t(`requestsPage.status.${value}`)} onDelete={setDeleteTarget} /> : <EmptyState title={t("requestsPage.states.emptyTitle")} description={t("requestsPage.states.emptyDescription")} />}
+      {selectedIds.length ? <PermissionGate permission="delete_task"><div className="flex flex-wrap items-center justify-between gap-3" aria-live="polite"><span>{t("requestsPage.bulk.selected", { count: selectedIds.length })}</span><div className="flex gap-2"><Button variant="outline" disabled={busy} onClick={() => setSelectedIds([])}>{t("requestsPage.bulk.clear")}</Button><Button variant="destructive" disabled={busy} onClick={() => { setBulkError(""); setBulkTargets([...selectedIds]); }}>{t("requestsPage.bulk.delete", { count: selectedIds.length })}</Button></div></div></PermissionGate> : null}
 
-      <DeleteConfirmDialog isOpen={Boolean(deleteTarget)} title={t("requestsPage.deleteDialog.title")} descriptionLine1={t("requestsPage.deleteDialog.description", { id: `REQ-${deleteTarget}` })} descriptionLine2="" cancelLabel={t("requestsPage.deleteDialog.cancel")} confirmLabel={t("requestsPage.deleteDialog.confirm")} onClose={() => setDeleteTarget("")} isPending={deleteMutation.isPending} errorMessage={deleteMutation.isError ? normalizeApiError(deleteMutation.error).message || t("requestsPage.deleteDialog.error") : undefined} onConfirm={() => deleteMutation.mutate(deleteTarget, { onSuccess: () => setDeleteTarget("") })} />
+      {rows.length ? <DashboardRequestsTable rows={rows} selectedIds={selectedIds} onSelectionChange={setSelectedIds} disabled={busy || tasksQuery.isFetching} labels={{ requestId: t("requestsPage.table.columns.requestId"), location: t("requestsPage.table.columns.location"), assignedBy: t("requestsPage.table.columns.assignedBy"), time: t("requestsPage.table.columns.time"), status: t("requestsPage.table.columns.status"), action: t("requestsPage.table.columns.action"), selectAll: t("requestsPage.table.actions.selectAll"), selectRow: t("requestsPage.table.actions.selectRow"), delete: t("requestsPage.table.actions.delete"), edit: t("requestsPage.table.actions.edit") }} resolveStatus={(value) => t(`requestsPage.status.${value}`)} onDelete={(id) => { deleteMutation.reset(); setDeleteTarget(id); }} /> : <EmptyState title={t("requestsPage.states.emptyTitle")} description={t("requestsPage.states.emptyDescription")} />}
+
+      <DeleteConfirmDialog isOpen={Boolean(deleteTarget)} title={t("requestsPage.deleteDialog.title")} descriptionLine1={t("requestsPage.deleteDialog.description", { id: `REQ-${deleteTarget}` })} descriptionLine2="" cancelLabel={t("requestsPage.deleteDialog.cancel")} confirmLabel={t("requestsPage.deleteDialog.confirm")} onClose={() => setDeleteTarget("")} isPending={deleteMutation.isPending} errorMessage={deleteMutation.isError ? normalizeApiError(deleteMutation.error).message || t("requestsPage.deleteDialog.error") : undefined} onConfirm={() => deleteMutation.mutate(deleteTarget, { onSuccess: () => { setSelectedIds((ids) => ids.filter((id) => id !== deleteTarget)); setDeleteTarget(""); } })} />
+
+      <DeleteConfirmDialog isOpen={bulkTargets.length > 0} title={t("requestsPage.bulk.title")} descriptionLine1={t("requestsPage.bulk.description", { count: bulkTargets.length })} descriptionLine2="" cancelLabel={t("requestsPage.deleteDialog.cancel")} confirmLabel={t("requestsPage.deleteDialog.confirm")} onClose={() => { if (!busy) setBulkTargets([]); }} isPending={bulkMutation.isPending} errorMessage={bulkError} onConfirm={() => {
+        if (busy) return;
+        setBulkError("");
+        bulkMutation.mutate(bulkTargets, { onSuccess: ({ failed }) => {
+          setSelectedIds((ids) => ids.filter((id) => !bulkTargets.includes(id) || failed.includes(id)));
+          setBulkTargets(failed);
+          if (failed.length) setBulkError(t("requestsPage.bulk.error", { count: failed.length }));
+        } });
+      }} />
 
       {lastPage > 1 ? <div className="flex items-center justify-between gap-4"><Button variant="outline" disabled={tasksQuery.isFetching || currentPage <= 1} onClick={() => setPage(currentPage - 1)}><PaginationPreviousIcon className="size-4 rtl:rotate-180" />{t("requestsPage.pagination.previous")}</Button><span className="text-sm text-muted-foreground">{currentPage} / {lastPage}</span><Button variant="outline" disabled={tasksQuery.isFetching || currentPage >= lastPage} onClick={() => setPage(currentPage + 1)}>{t("requestsPage.pagination.next")}<PaginationNextIcon className="size-4 rtl:rotate-180" /></Button></div> : null}
     </div>

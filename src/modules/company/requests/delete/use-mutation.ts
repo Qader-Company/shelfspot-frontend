@@ -11,3 +11,22 @@ export function useDeleteTaskMutation() {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: taskKeys.all }),
   });
 }
+
+export function useBulkDeleteTasksMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (ids: string[]) => {
+      const failed: string[] = [];
+      // Keep API traffic bounded and retain failed IDs for a safe retry.
+      for (const id of ids) {
+        try {
+          await deleteTask(id);
+        } catch {
+          failed.push(id);
+        }
+      }
+      return { failed };
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: taskKeys.all }),
+  });
+}

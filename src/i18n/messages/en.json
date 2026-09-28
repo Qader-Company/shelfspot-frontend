@@ -1271,6 +1271,14 @@
           "mohamedAli": "Mohamed Ali"
         }
       },
+      "bulk": {
+        "selected": "{count} requests selected",
+        "clear": "Clear selection",
+        "delete": "Delete selected ({count})",
+        "title": "Delete selected requests?",
+        "description": "Delete {count} selected requests? This action cannot be undone.",
+        "error": "{count} requests could not be deleted. Retry to delete only the remaining requests."
+      },
       "deleteDialog": {
         "title": "Delete Request?",
         "description": "Are you sure you want to delete request #{id}? This action cannot be undone.",
