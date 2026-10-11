@@ -1,4 +1,5 @@
 "use client";
+import { ShelfSelect } from "@/shared/ui/shelf-select";
 
 import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
@@ -27,7 +28,7 @@ export function PaymentsPage() {
   return <div className="space-y-6 px-4 py-8 lg:px-8">
     <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between"><div><h1 className="text-3xl font-bold">{t("paymentPage.title")}</h1><p className="mt-2 text-lg font-medium text-muted-foreground">{t("paymentPage.subtitle")}</p></div><PermissionGate permission="recharge_wallet"><Button className="h-12 px-6 text-white" onClick={() => setOpen(true)}><AddIcon className="size-5"/>{t("paymentPage.actions.addFund")}</Button></PermissionGate></div>
     <PaymentSummaryCard data={{ balance: money(wallet.data?.balance ?? wallet.data?.current_balance) }}/>
-    <div className="flex justify-end"><select value={type} onChange={e => setType(e.target.value)} className="h-10 rounded-lg border bg-card px-4 text-sm"><option value="">{t("paymentPage.filters.allStatuses")}</option>{types.data?.map(option => <option key={option.value} value={option.value}>{option.label}</option>)}</select></div>
+    <div className="flex justify-end"><ShelfSelect value={type} onChange={e => setType(e.target.value)} className="h-10 rounded-lg border bg-card px-4 text-sm"><option value="">{t("paymentPage.filters.allStatuses")}</option>{types.data?.map(option => <option key={option.value} value={option.value}>{option.label}</option>)}</ShelfSelect></div>
     {error && <p className="rounded-xl border border-destructive/20 bg-destructive/10 p-4 text-destructive">{normalizeApiError(error).message}</p>}
     <PaymentsTable rows={rows} labels={{ types:t("paymentPage.table.columns.types"), totalSpending:t("paymentPage.table.columns.totalSpending"), date:t("paymentPage.table.columns.date"), performedBy:t("paymentPage.table.columns.performedBy") }}/>
     <PermissionGate permission="recharge_wallet"><AddFundDialog isOpen={open} onClose={() => setOpen(false)} onRedeem={code => redeemCoupon.mutateAsync({ code })}/></PermissionGate>

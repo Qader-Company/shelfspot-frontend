@@ -1,4 +1,5 @@
 "use client";
+import { ShelfSelect } from "@/shared/ui/shelf-select";
 
 import { ScrollableTable } from "@/shared/components/scrollable-table";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -464,10 +465,10 @@ function ServiceEntryCard({
           {/* Service type */}
           <div>
             <label className="mb-1.5 block text-base font-bold text-foreground">{t("createRequest.fields.serviceType.label")}</label>
-            <select value={entry.serviceKey} disabled={isLoadingServices} className="h-12 w-full rounded-lg border border-input bg-background px-4 text-sm outline-none transition focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:opacity-50" onChange={(e) => handleServiceKeyChange(e.target.value)}>
+            <ShelfSelect value={entry.serviceKey} disabled={isLoadingServices} className="h-12 w-full rounded-lg border border-input bg-background px-4 text-sm outline-none transition focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:opacity-50" onChange={(e) => handleServiceKeyChange(e.target.value)}>
               <option value="">{isLoadingServices ? t("createRequest.states.loading") : t("createRequest.fields.serviceType.placeholder")}</option>
               {allServices.map((svc) => <option key={svc.key} value={svc.key}>{svc.name}</option>)}
-            </select>
+            </ShelfSelect>
           </div>
 
           {/* Brand / SubBrand / Category / SubCategory */}
@@ -480,10 +481,10 @@ function ServiceEntryCard({
             ].map(({ label, value, options, disabled, onChange }) => (
               <div key={label}>
                 <label className="mb-1.5 block text-base font-bold text-foreground">{label}</label>
-                <select value={value} disabled={disabled} className="h-12 w-full rounded-lg border border-border bg-card px-3 text-sm disabled:cursor-not-allowed disabled:opacity-50" onChange={(e) => onChange(e.target.value)}>
+                <ShelfSelect value={value} disabled={disabled} className="h-12 w-full rounded-lg border border-border bg-card px-3 text-sm disabled:cursor-not-allowed disabled:opacity-50" onChange={(e) => onChange(e.target.value)}>
                   <option value="">—</option>
                   {options.map((o) => <option key={o.id} value={String(o.id)}>{o.name ?? `#${o.id}`}</option>)}
-                </select>
+                </ShelfSelect>
               </div>
             ))}
           </div>

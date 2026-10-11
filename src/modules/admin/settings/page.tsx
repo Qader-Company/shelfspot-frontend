@@ -73,7 +73,7 @@ function GeneralTab({
   const mutation = useUpdatePlatformSettings();
   const locale = useLocale();
   const labels = locale === "ar" ? { phone: "رقم الهاتف", address: "العنوان", addressPlaceholder: "أدخل عنوان المنصة", description: "الوصف", descriptionPlaceholder: "أدخل وصف المنصة", success: "تم تحديث إعدادات المنصة بنجاح.", error: "تعذر تحديث إعدادات المنصة.", loadError: "تعذر تحميل إعدادات المنصة." } : { phone: "Phone Number", address: "Address", addressPlaceholder: "Enter the platform address", description: "Description", descriptionPlaceholder: "Enter the platform description", success: "Platform settings updated successfully.", error: "Unable to update platform settings.", loadError: "Unable to load platform settings." };
-  const [draft, setDraft] = useState<{ email: string; phone: string; address: string; description: string } | null>(null);
+  const [draft, setDraft] = useState<{ email: string; phone: string; address: string; description_ar: string; description_en: string } | null>(null);
   const [successMsg, setSuccessMsg] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
 
@@ -81,7 +81,8 @@ function GeneralTab({
     email: settings.data?.email ?? "",
     phone: settings.data?.phone ?? "",
     address: settings.data?.address ?? "",
-    description: settings.data?.description ?? "",
+    description_ar: settings.data?.description_ar ?? "",
+    description_en: settings.data?.description_en ?? "",
   };
   const set = (field: keyof typeof form, value: string) => setDraft({ ...form, [field]: value });
 
@@ -94,7 +95,8 @@ function GeneralTab({
         email: response.data.email ?? "",
         phone: response.data.phone ?? "",
         address: response.data.address ?? "",
-        description: response.data.description ?? "",
+        description_ar: response.data.description_ar ?? "",
+        description_en: response.data.description_en ?? "",
       });
       setSuccessMsg(response.message || labels.success);
     } catch (error) {
@@ -109,7 +111,8 @@ function GeneralTab({
         <Field label={t("general.email")}><Input type="email" value={form.email} onChange={(event) => set("email", event.target.value)} placeholder="info@shelfspot.com" disabled={mutation.isPending} /></Field>
         <Field label={labels.phone}><Input value={form.phone} onChange={(event) => set("phone", event.target.value)} placeholder="+966434**" dir="ltr" disabled={mutation.isPending} /></Field>
         <Field label={labels.address}><Input value={form.address} onChange={(event) => set("address", event.target.value)} placeholder={labels.addressPlaceholder} disabled={mutation.isPending} /></Field>
-        <Field label={labels.description}><textarea value={form.description} onChange={(event) => set("description", event.target.value)} placeholder={labels.descriptionPlaceholder} disabled={mutation.isPending} rows={5} className="w-full resize-y rounded-lg border border-input bg-transparent px-3 py-2 text-sm outline-none placeholder:text-muted-foreground focus:border-primary disabled:opacity-50" /></Field>
+        <Field label={t("general.descriptionAr")}><textarea value={form.description_ar} onChange={(event) => set("description_ar", event.target.value)} placeholder={t("general.descriptionArPlaceholder")} dir="rtl" lang="ar" disabled={mutation.isPending} rows={5} maxLength={5000} className="w-full resize-y rounded-lg border border-input bg-transparent px-3 py-2 text-sm outline-none placeholder:text-muted-foreground focus:border-primary disabled:opacity-50" /></Field>
+        <Field label={t("general.descriptionEn")}><textarea value={form.description_en} onChange={(event) => set("description_en", event.target.value)} placeholder={t("general.descriptionEnPlaceholder")} dir="ltr" lang="en" disabled={mutation.isPending} rows={5} maxLength={5000} className="w-full resize-y rounded-lg border border-input bg-transparent px-3 py-2 text-sm outline-none placeholder:text-muted-foreground focus:border-primary disabled:opacity-50" /></Field>
       </>}
       {successMsg && <p role="status" className="rounded-lg border border-success/30 bg-success/10 p-3 text-sm text-success">{successMsg}</p>}
       {errorMsg && <p role="alert" className="rounded-lg border border-destructive/20 bg-destructive/10 p-3 text-sm text-destructive">{errorMsg}</p>}

@@ -1,4 +1,5 @@
 "use client";
+import { ShelfSelect } from "@/shared/ui/shelf-select";
 
 import { ScrollableTable } from "@/shared/components/scrollable-table";
 import { StoreMapDialog } from "./map-dialog";
@@ -48,7 +49,7 @@ export function StoresView({ stores, loading, error, onRetry, onSave, onDelete, 
     <h1 className="text-3xl font-bold">{t("title")}</h1>
     <div className="flex flex-wrap items-center justify-between gap-4">
       <div className="relative w-full max-w-md"><Search className="absolute start-3 top-3 size-5 text-muted-foreground" /><Input className="h-11 ps-10" aria-label={t("search")} placeholder={t("search")} value={search} onChange={event => { setSearch(event.target.value); setPage(1); }} /></div>
-      <div className="flex gap-3"><select className="h-11 rounded-lg border bg-card px-3" aria-label={t("allStatuses")} value={status} onChange={event => { setStatus(event.target.value); setPage(1); }}>{["all", "active", "inactive"].map(value => <option key={value} value={value}>{t(value === "all" ? "allStatuses" : value)}</option>)}</select><Button onClick={() => setEditing(null)}><Plus className="size-4" />{t("add")}</Button></div>
+      <div className="flex gap-3"><ShelfSelect className="h-11 rounded-lg border bg-card px-3" aria-label={t("allStatuses")} value={status} onChange={event => { setStatus(event.target.value); setPage(1); }}>{["all", "active", "inactive"].map(value => <option key={value} value={value}>{t(value === "all" ? "allStatuses" : value)}</option>)}</ShelfSelect><Button onClick={() => setEditing(null)}><Plus className="size-4" />{t("add")}</Button></div>
     </div>
     {selected.length ? <Button variant="destructive" disabled={busy} onClick={() => { setMutationError(""); setBulk(true); }}>{t("bulkDelete", { count: selected.length })}</Button> : null}
     {mutationError && !deleting ? <p role="alert" className="text-destructive">{mutationError}</p> : null}

@@ -1,4 +1,5 @@
 "use client";
+import { ShelfSelect } from "@/shared/ui/shelf-select";
 
 import { useState, useEffect } from "react";
 import { useSession } from "@/shared/hooks/use-session";
@@ -159,14 +160,14 @@ export default function NotificationsTestPage() {
             {/* Portal Selection */}
             <div>
               <label className="mb-2 block text-sm font-medium">Portal</label>
-              <select
+              <ShelfSelect
                 value={portal}
                 onChange={(e) => setPortal(e.target.value as Portal)}
                 className="w-full rounded border border-gray-300 px-3 py-2"
               >
                 <option value="admin">Admin</option>
                 <option value="company">Company</option>
-              </select>
+              </ShelfSelect>
             </div>
 
             {/* User ID */}

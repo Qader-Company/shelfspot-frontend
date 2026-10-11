@@ -1,4 +1,5 @@
 "use client";
+import { ShelfSelect } from "@/shared/ui/shelf-select";
 
 import { ScrollableTable } from "@/shared/components/scrollable-table";
 import { useDeferredValue, useMemo, useState } from "react";
@@ -237,7 +238,7 @@ function Catalog({ companyId, resource }: { companyId: string; resource: AdminCa
           }}
           className="max-w-sm"
         />
-        <select
+        <ShelfSelect
           value={status}
           onChange={(event) => {
             setStatus(event.target.value as typeof status);
@@ -249,7 +250,7 @@ function Catalog({ companyId, resource }: { companyId: string; resource: AdminCa
           <option value="all">{t("filters.allStatuses")}</option>
           <option value="active">{t("status.active")}</option>
           <option value="inactive">{t("status.inactive")}</option>
-        </select>
+        </ShelfSelect>
       </div>
       {notice ? <p role="status" className={notice.tone === "error" ? "rounded-lg bg-destructive/10 p-3 text-destructive" : "rounded-lg bg-success/10 p-3 text-success"}>{notice.text}</p> : null}
       {catalog.isLoading ? <PageLoadingSkeleton showHeader={false} tableRows={8} tableColumns={columns.length + 3} label={t("feedback.loading")} className="p-0" /> : catalog.isError ? <ErrorState title={t("feedback.error")} description={normalizeApiError(catalog.error).message} retryLabel={t("feedback.retry")} onRetry={() => catalog.refetch()} /> : rows.length === 0 ? <EmptyState title={t("feedback.empty")} /> : (
@@ -362,7 +363,7 @@ function CatalogForm({ resource, item, brands, subBrands, categories, subCategor
     await onSubmit(form);
   };
   const select = (label: string, field: "brandId" | "subBrandId" | "categoryId" | "subCategoryId", values: AdminCatalogItem[]) => (
-    <div className="space-y-2"><Label>{label}</Label><select value={form[field]} onChange={(event) => setForm({ ...form, [field]: event.target.value })} className="h-11 w-full rounded-lg border border-border bg-background px-3"><option value="">{label}</option>{values.map((value) => <option key={value.id} value={value.id}>{value.name ?? translated(value, "en")}</option>)}</select></div>
+    <div className="space-y-2"><Label>{label}</Label><ShelfSelect value={form[field]} onChange={(event) => setForm({ ...form, [field]: event.target.value })} className="h-11 w-full rounded-lg border border-border bg-background px-3"><option value="">{label}</option>{values.map((value) => <option key={value.id} value={value.id}>{value.name ?? translated(value, "en")}</option>)}</ShelfSelect></div>
   );
   return (
     <CatalogFormDialog

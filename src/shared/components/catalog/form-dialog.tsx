@@ -1,3 +1,4 @@
+import { ShelfSelect } from "@/shared/ui/shelf-select";
 import type { ReactNode } from "react";
 
 import { CloseIcon } from "@/shared/components/dashboard/dashboard-icons";
@@ -65,7 +66,7 @@ export function CatalogFormDialog({
             else onClose();
           }}
         >
-          <div className="mt-5 space-y-5 [&_.grid]:grid-cols-1 sm:[&_.grid]:grid-cols-2 [&_input]:min-h-12 [&_select]:min-h-12 [&_select]:w-full [&_select]:min-w-0 [&_select]:rounded-xl [&_select]:border-border [&_select]:px-4 [&_textarea]:min-h-24">
+          <div className="mt-5 space-y-5 [&_.grid]:grid-cols-1 sm:[&_.grid]:grid-cols-2 [&_input]:min-h-12 [&_[data-slot=shelf-select]]:min-h-12 [&_[data-slot=shelf-select]]:w-full [&_[data-slot=shelf-select]]:min-w-0 [&_[data-slot=shelf-select]]:rounded-xl [&_[data-slot=shelf-select]]:border-border [&_[data-slot=shelf-select]]:px-4 [&_textarea]:min-h-24">
             {children}
           </div>
 
@@ -152,7 +153,7 @@ export function CatalogSelectField({
     <div className="space-y-1.5">
       <label className="text-sm font-semibold text-foreground">{label}</label>
       <div className="relative">
-        <select
+        <ShelfSelect
           defaultValue=""
           className="h-11 w-full appearance-none rounded-lg border border-border bg-secondary pe-8 ps-4 text-sm text-foreground shadow-none focus:outline-none focus:ring-2 focus:ring-primary/30"
         >
@@ -164,18 +165,7 @@ export function CatalogSelectField({
               {opt}
             </option>
           ))}
-        </select>
-        <svg
-          className="pointer-events-none absolute end-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
-          viewBox="0 0 20 20"
-          fill="currentColor"
-        >
-          <path
-            fillRule="evenodd"
-            d="M5.23 7.21a.75.75 0 011.06.02L10 11.17l3.71-3.94a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
-            clipRule="evenodd"
-          />
-        </svg>
+        </ShelfSelect>
       </div>
     </div>
   );

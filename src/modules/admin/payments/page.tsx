@@ -1,4 +1,5 @@
 "use client";
+import { ShelfSelect } from "@/shared/ui/shelf-select";
 
 import { ScrollableTable } from "@/shared/components/scrollable-table";
 import {
@@ -115,7 +116,7 @@ function CompaniesTab() {
           onChange={(e) => { setSearch(e.target.value); setPage(1); }}
           className="max-w-md"
         />
-        <select
+        <ShelfSelect
           value={sort}
           onChange={(e) => setSort(e.target.value as typeof sort)}
           aria-label={t("dateFilter")}
@@ -123,8 +124,8 @@ function CompaniesTab() {
         >
           <option value="newest">{t("dates.newest")}</option>
           <option value="oldest">{t("dates.oldest")}</option>
-        </select>
-        <select
+        </ShelfSelect>
+        <ShelfSelect
           value={status}
           onChange={(e) => { setStatus(e.target.value as typeof status); setPage(1); }}
           aria-label={t("statusFilter")}
@@ -134,7 +135,7 @@ function CompaniesTab() {
           {(["completed", "failed", "refunded"] as PaymentStatus[]).map((x) => (
             <option key={x} value={x}>{t(`statuses.${x}`)}</option>
           ))}
-        </select>
+        </ShelfSelect>
       </div>
 
       <ScrollableTable className="rounded-xl border bg-card">
@@ -283,7 +284,7 @@ function MerchandiserTab() {
           onChange={(e) => { setSearch(e.target.value); setPage(1); }}
           className="max-w-md"
         />
-        <select
+        <ShelfSelect
           value={sort}
           onChange={(e) => setSort(e.target.value as typeof sort)}
           aria-label={t("dateFilter")}
@@ -291,8 +292,8 @@ function MerchandiserTab() {
         >
           <option value="newest">{t("dates.newest")}</option>
           <option value="oldest">{t("dates.oldest")}</option>
-        </select>
-        <select
+        </ShelfSelect>
+        <ShelfSelect
           value={status}
           onChange={(e) => { setStatus(e.target.value as typeof status); setPage(1); }}
           aria-label={t("statusFilter")}
@@ -302,7 +303,7 @@ function MerchandiserTab() {
           {(["pending", "approved", "rejected"] as WithdrawalStatus[]).map((x) => (
             <option key={x} value={x}>{tw(`statuses.${x}`)}</option>
           ))}
-        </select>
+        </ShelfSelect>
       </div>
 
       <ScrollableTable className="rounded-xl border bg-card">

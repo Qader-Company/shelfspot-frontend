@@ -1,4 +1,5 @@
 "use client";
+import { ShelfSelect } from "@/shared/ui/shelf-select";
 
 import { ScrollableTable } from "@/shared/components/scrollable-table";
 import { useDeferredValue, useState } from "react";
@@ -119,7 +120,7 @@ export function MerchandisersPage() {
         <SearchInput label={t("searchLabel")} placeholder={t("searchPlaceholder")} value={search} onChange={(event) => { setSearch(event.target.value); setPage(1); }} className="max-w-md" />
         <div className="ms-auto flex gap-3">
           {selectedIds.size ? <Button variant="destructive" onClick={() => setBulkDeleteOpen(true)}><Trash2 className="size-4" />{locale === "ar" ? `حذف المحدد (${selectedIds.size})` : `Delete selected (${selectedIds.size})`}</Button> : null}
-          <select aria-label={t("statusFilterLabel")} value={status} onChange={(event) => { setStatus(event.target.value as typeof status); setPage(1); }} className="h-11 rounded-lg border border-border bg-card px-4"><option value="all">{t("statuses.all")}</option><option value="active">{t("statuses.active")}</option><option value="inactive">{t("statuses.inactive")}</option></select>
+          <ShelfSelect aria-label={t("statusFilterLabel")} value={status} onChange={(event) => { setStatus(event.target.value as typeof status); setPage(1); }} className="h-11 rounded-lg border border-border bg-card px-4"><option value="all">{t("statuses.all")}</option><option value="active">{t("statuses.active")}</option><option value="inactive">{t("statuses.inactive")}</option></ShelfSelect>
           <Button asChild><Link href="/admin/merchandisers/create"><UserRoundPlus className="size-4" />{t("add")}</Link></Button>
         </div>
       </div>

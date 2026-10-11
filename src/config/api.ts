@@ -6,6 +6,9 @@ const serverBaseUrl =
 export const API_CONFIG = {
   browserBaseUrl: publicEnv.NEXT_PUBLIC_API_BASE_URL,
   serverBaseUrl,
+  platformSettingsReadUrl: serverBaseUrl
+    ? new URL("/api/admin/platform-settings/", serverBaseUrl).toString()
+    : "/api/admin/platform-settings/",
   browserApiKey: publicEnv.NEXT_PUBLIC_API_KEY,
   serverApiKey: serverEnv.API_KEY ?? serverEnv.NEXT_PUBLIC_API_KEY,
   adminApiKey: serverEnv.ADMIN_API_KEY ?? serverEnv.API_KEY ?? serverEnv.NEXT_PUBLIC_API_KEY,

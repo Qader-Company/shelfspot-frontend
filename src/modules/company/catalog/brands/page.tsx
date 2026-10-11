@@ -1,4 +1,5 @@
 "use client";
+import { ShelfSelect } from "@/shared/ui/shelf-select";
 
 import { useQueryClient } from "@tanstack/react-query";
 import { useDeferredValue, useMemo, useState } from "react";
@@ -438,7 +439,7 @@ export function BrandPage() {
             {t("catalogPage.filters.allStatuses")}
           </span>
           <FilterIcon className="pointer-events-none absolute start-4 top-1/2 size-4 -translate-y-1/2" />
-          <select
+          <ShelfSelect
             value={activeFilter}
             onChange={(event) => {
               setActiveFilter(event.target.value as "all" | "1" | "0");
@@ -449,7 +450,7 @@ export function BrandPage() {
             <option value="all">{t("catalogPage.filters.allStatuses")}</option>
             <option value="1">{t("catalogPage.status.active")}</option>
             <option value="0">{t("catalogPage.status.inactive")}</option>
-          </select>
+          </ShelfSelect>
         </label>
       </div>
 

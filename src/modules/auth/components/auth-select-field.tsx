@@ -1,4 +1,5 @@
 "use client";
+import { ShelfSelect } from "@/shared/ui/shelf-select";
 
 import type { ReactNode } from "react";
 import type { Control, FieldPath, FieldValues } from "react-hook-form";
@@ -48,7 +49,7 @@ export function AuthSelectField<TFieldValues extends FieldValues>({
               <span className="shrink-0 text-muted-foreground">{icon}</span>
             ) : null}
             <FormControl>
-              <select
+              <ShelfSelect
                 {...field}
                 value={typeof field.value === "string" ? field.value : ""}
                 className={cn(
@@ -64,7 +65,7 @@ export function AuthSelectField<TFieldValues extends FieldValues>({
                     {option.label}
                   </option>
                 ))}
-              </select>
+              </ShelfSelect>
             </FormControl>
           </div>
           <FormMessage className="text-xs leading-5" />

@@ -1,4 +1,5 @@
 "use client";
+import { ShelfSelect } from "@/shared/ui/shelf-select";
 
 import { ScrollableTable } from "@/shared/components/scrollable-table";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -223,7 +224,7 @@ export function AdminsPage() {
           className="max-w-md"
         />
         <div className="flex gap-3">
-          <select
+          <ShelfSelect
             aria-label={t("statusLabel")}
             value={status}
             onChange={(e) => {
@@ -235,7 +236,7 @@ export function AdminsPage() {
             <option value="all">{t("statuses.all")}</option>
             <option value="active">{t("statuses.active")}</option>
             <option value="inactive">{t("statuses.inactive")}</option>
-          </select>
+          </ShelfSelect>
           <Button
             className="h-11"
             onClick={() => {
@@ -602,8 +603,8 @@ function AdminDialog({
           <Input {...f.register("name")} placeholder="Omnia Arafat" />
         </Field>
         <Field label={t("adminForm.role")} error={f.formState.errors.role?.message}>
-          <select
-            {...f.register("role")}
+          <ShelfSelect
+            {...f.register("role")} value={f.watch("role") ?? ""}
             className="h-11 w-full rounded-lg border bg-muted px-3"
           >
             <option value="">{t("adminForm.selectRole")}</option>
@@ -612,7 +613,7 @@ function AdminDialog({
                 {r.name}
               </option>
             ))}
-          </select>
+          </ShelfSelect>
         </Field>
         <Field label={t("adminForm.email")} error={f.formState.errors.email?.message}>
           <Input {...f.register("email")} type="email" placeholder="ex@gmail.com" />

@@ -1,4 +1,5 @@
 "use client";
+import { ShelfSelect } from "@/shared/ui/shelf-select";
 
 import { ScrollableTable } from "@/shared/components/scrollable-table";
 import { useState } from "react";
@@ -50,8 +51,8 @@ export function CompanyUsersView({ company, users, roles, filters, onFilter, loa
     <CompanySummary item={company} />
     <div className="grid min-w-0 grid-cols-1 items-center gap-3 @min-[28rem]:grid-cols-3 @min-[48rem]:grid-cols-[minmax(0,1fr)_minmax(0,9rem)_minmax(0,9rem)_auto]">
       <label className="relative min-w-0 @min-[28rem]:col-span-3 @min-[48rem]:col-span-1"><Search className="absolute start-3 top-3 size-5 text-muted-foreground" /><Input aria-label={t("search")} placeholder={t("search")} value={filters.search} onChange={e => { onFilter("search", e.target.value); setPage(1); }} className="h-11 ps-10" /></label>
-      <select aria-label={t("status")} value={filters.is_active} onChange={e => { onFilter("is_active", e.target.value); setPage(1); }} className="h-11 w-full min-w-0 rounded-lg border border-border bg-card px-3"><option value="">{t("allStatuses")}</option><option value="1">{t("active")}</option><option value="0">{t("inactive")}</option></select>
-      <select aria-label={t("role")} value={filters.role} onChange={e => { onFilter("role", e.target.value); setPage(1); }} className="h-11 w-full min-w-0 rounded-lg border border-border bg-card px-3"><option value="">{t("allRoles")}</option>{roles.map(role => <option key={role.id} value={role.name}>{role.name}</option>)}</select>
+      <ShelfSelect aria-label={t("status")} value={filters.is_active} onChange={e => { onFilter("is_active", e.target.value); setPage(1); }} className="h-11 w-full min-w-0 rounded-lg border border-border bg-card px-3"><option value="">{t("allStatuses")}</option><option value="1">{t("active")}</option><option value="0">{t("inactive")}</option></ShelfSelect>
+      <ShelfSelect aria-label={t("role")} value={filters.role} onChange={e => { onFilter("role", e.target.value); setPage(1); }} className="h-11 w-full min-w-0 rounded-lg border border-border bg-card px-3"><option value="">{t("allRoles")}</option>{roles.map(role => <option key={role.id} value={role.name}>{role.name}</option>)}</ShelfSelect>
       <Button className="h-11 w-full whitespace-nowrap px-4" disabled={pending} onClick={() => setEditing(null)}><Plus className="size-4" />{t("add")}</Button>
     </div>
     {error ? <p role="alert" className="text-sm text-destructive">{error}</p> : null}
@@ -75,7 +76,7 @@ function UserForm({ user, roles, onClose, onSave }: { user: CompanyUser | null; 
       <fieldset disabled={pending} className="space-y-5"><div className="flex items-center gap-3"><button type="button" role="switch" aria-checked={form.active} aria-label={t("status")} onClick={() => setForm({ ...form, active: !form.active })} className={"relative h-6 w-10 rounded-full " + (form.active ? "bg-primary" : "bg-muted")}><span className={"absolute top-1 size-4 rounded-full bg-white " + (form.active ? "end-1" : "start-1")} /></button><span>{t(form.active ? "active" : "inactive")}</span></div>
       {(["name", "email"] as const).map(key => <label key={key} className="block space-y-2 text-sm font-medium"><span>{t(key)}</span><Input required type={key === "email" ? "email" : "text"} value={form[key]} onChange={e => setForm({ ...form, [key]: e.target.value })} className="h-12 border-0 bg-muted/60" /></label>)}
       {!user ? <label className="block space-y-2 text-sm font-medium"><span>{t("password")}</span><Input required minLength={8} autoComplete="new-password" type="password" value={form.password} onChange={e => setForm({ ...form, password: e.target.value })} className="h-12 border-0 bg-muted/60" /></label> : null}
-      <label className="block space-y-2 text-sm font-medium"><span>{t("role")}</span><select required value={form.roleId} onChange={e => setForm({ ...form, roleId: e.target.value })} className="h-12 w-full rounded-lg bg-muted/60 px-3"><option value="">{t("selectRole")}</option>{roles.map(role => <option key={role.id} value={role.name}>{role.name}</option>)}</select></label></fieldset>
+      <label className="block space-y-2 text-sm font-medium"><span>{t("role")}</span><ShelfSelect required value={form.roleId} onChange={e => setForm({ ...form, roleId: e.target.value })} className="h-12 w-full rounded-lg bg-muted/60 px-3"><option value="">{t("selectRole")}</option>{roles.map(role => <option key={role.id} value={role.name}>{role.name}</option>)}</ShelfSelect></label></fieldset>
       {error ? <p role="alert" className="text-sm text-destructive">{error}</p> : null}<div className="grid grid-cols-2 gap-4"><Button type="button" variant="outline" disabled={pending} onClick={onClose} className="h-12 border-primary text-primary">{t("cancel")}</Button><Button type="submit" disabled={pending || !roles.length || !form.name.trim()} className="h-12">{t("confirm")}</Button></div>
     </form>
   </Dialog.Content></Dialog.Portal></Dialog.Root>;

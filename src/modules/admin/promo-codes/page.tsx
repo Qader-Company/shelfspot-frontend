@@ -1,4 +1,5 @@
 "use client";
+import { ShelfSelect } from "@/shared/ui/shelf-select";
 
 import { ScrollableTable } from "@/shared/components/scrollable-table";
 import { useDeferredValue, useState } from "react";
@@ -284,7 +285,7 @@ export function PromoCodesPage() {
           }}
           className="max-w-md"
         />
-        <select
+        <ShelfSelect
           aria-label={t("filterLabel")}
           value={filter}
           onChange={(event) => {
@@ -297,7 +298,7 @@ export function PromoCodesPage() {
           <option value="active">{t("statuses.active")}</option>
           <option value="inactive">{t("statuses.inactive")}</option>
           <option value="expired">{t("statuses.expired")}</option>
-        </select>
+        </ShelfSelect>
       </div>
 
       {actionError ? (

@@ -1,4 +1,5 @@
 "use client";
+import { ShelfSelect } from "@/shared/ui/shelf-select";
 import { useTranslations } from "next-intl";
 export type DashboardPeriod = "today" | "week" | "month" | "year";
 export function getPeriodRange(period: DashboardPeriod, now = new Date()) {
@@ -12,5 +13,5 @@ export function getPeriodRange(period: DashboardPeriod, now = new Date()) {
 }
 export function PeriodFilter({ value, onChange }: { value: DashboardPeriod; onChange: (period: DashboardPeriod) => void }) {
   const t = useTranslations("dashboard.overview.periods");
-  return <select aria-label={t("label")} value={value} onChange={event => onChange(event.target.value as DashboardPeriod)} className="h-10 w-full rounded-lg border border-border bg-card px-4 text-sm font-medium text-muted-foreground outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 md:w-auto">{(["today", "week", "month", "year"] as const).map(period => <option key={period} value={period}>{t(period)}</option>)}</select>;
+  return <ShelfSelect aria-label={t("label")} value={value} onChange={event => onChange(event.target.value as DashboardPeriod)} className="h-10 w-full rounded-lg border border-border bg-card px-4 text-sm font-medium text-muted-foreground outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 md:w-auto">{(["today", "week", "month", "year"] as const).map(period => <option key={period} value={period}>{t(period)}</option>)}</ShelfSelect>;
 }

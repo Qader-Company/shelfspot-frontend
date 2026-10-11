@@ -4,7 +4,8 @@ export interface PlatformSettings {
   email: string | null;
   phone: string | null;
   address: string | null;
-  description: string | null;
+  description_ar: string | null;
+  description_en: string | null;
 }
 
 export interface PlatformSettingsResponse {
@@ -17,7 +18,8 @@ export type UpdatePlatformSettingsPayload = {
   email: string;
   phone: string;
   address: string;
-  description: string;
+  description_ar: string;
+  description_en: string;
 };
 
 export async function getPlatformSettings(): Promise<PlatformSettings> {
