@@ -111,6 +111,22 @@ export interface WithdrawalSummary {
   total_withdraw: number;
 }
 
+// Backend resources use worker terminology and mark approved transfers as paid.
+export interface WithdrawalApiRecord extends Omit<Withdrawal, "merchandiser" | "status" | "date"> {
+  worker_id?: number | null;
+  worker?: WithdrawalMerchandiser | null;
+  merchandiser?: WithdrawalMerchandiser | null;
+  status: WithdrawalStatus | "paid";
+  date?: string | null;
+  payout_details?: { iban?: string | null; wallet_number?: string | null } | null;
+}
+
+export interface WithdrawalApiSummary extends Partial<WithdrawalSummary> {
+  total_requests_count?: number;
+  pending_requests_count?: number;
+  paid_amount?: number;
+}
+
 export interface WithdrawalMeta {
   current_page: number;
   last_page: number;
@@ -132,9 +148,9 @@ export interface WithdrawalsApiResponse {
   success: boolean;
   message?: string;
   data: {
-    summary?: WithdrawalSummary;
+    summary?: WithdrawalApiSummary;
     withdrawals: {
-      data: Withdrawal[];
+      data: WithdrawalApiRecord[];
       current_page?: number;
       last_page?: number;
       per_page?: number;
@@ -156,5 +172,5 @@ export interface WithdrawalsResponse {
 export interface WithdrawalResponse {
   success: boolean;
   message?: string;
-  data: Withdrawal;
+  data: WithdrawalApiRecord;
 }

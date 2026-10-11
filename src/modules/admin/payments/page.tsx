@@ -1,5 +1,6 @@
 "use client";
 
+import { ScrollableTable } from "@/shared/components/scrollable-table";
 import {
   ArrowDownRight,
   ArrowUpRight,
@@ -136,7 +137,7 @@ function CompaniesTab() {
         </select>
       </div>
 
-      <div className="table-scroll rounded-xl border bg-card" tabIndex={0}>
+      <ScrollableTable className="rounded-xl border bg-card">
         <table className="w-full min-w-[760px] text-sm">
           <thead>
             <tr>
@@ -229,7 +230,7 @@ function CompaniesTab() {
             )}
           </tbody>
         </table>
-      </div>
+      </ScrollableTable>
 
       <Pagination page={page} pages={pages} loading={isLoading} onPage={setPage} />
     </div>
@@ -304,7 +305,7 @@ function MerchandiserTab() {
         </select>
       </div>
 
-      <div className="table-scroll rounded-xl border bg-card" tabIndex={0}>
+      <ScrollableTable className="rounded-xl border bg-card">
         <table className="w-full min-w-[760px] text-sm">
           <thead>
             <tr>
@@ -407,7 +408,7 @@ function MerchandiserTab() {
             )}
           </tbody>
         </table>
-      </div>
+      </ScrollableTable>
 
       <Pagination page={page} pages={pages} loading={isLoading} onPage={setPage} />
     </div>

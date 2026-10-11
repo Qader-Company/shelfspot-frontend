@@ -1,5 +1,6 @@
 "use client";
 
+import { ScrollableTable } from "@/shared/components/scrollable-table";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   CheckCircle2,
@@ -433,7 +434,7 @@ function Table({
       : ["role", "users", "status", "action"];
 
   return (
-    <div className="table-scroll rounded-xl border bg-card" tabIndex={0}>
+    <ScrollableTable className="rounded-xl border bg-card">
       <table className="w-full min-w-[720px] text-sm">
         <thead>
           <tr>
@@ -500,7 +501,7 @@ function Table({
           ))}
         </tbody>
       </table>
-    </div>
+    </ScrollableTable>
   );
 }
 

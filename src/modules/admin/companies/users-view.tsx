@@ -1,5 +1,6 @@
 "use client";
 
+import { ScrollableTable } from "@/shared/components/scrollable-table";
 import { useState } from "react";
 import { Dialog } from "radix-ui";
 import { Pencil, Plus, Search, Trash2, X } from "lucide-react";
@@ -54,10 +55,10 @@ export function CompanyUsersView({ company, users, roles, filters, onFilter, loa
       <Button className="h-11 w-full whitespace-nowrap px-4" disabled={pending} onClick={() => setEditing(null)}><Plus className="size-4" />{t("add")}</Button>
     </div>
     {error ? <p role="alert" className="text-sm text-destructive">{error}</p> : null}
-    <div className="min-w-0 max-w-full table-scroll rounded-xl border border-border bg-card" tabIndex={0}><table className="w-full min-w-[760px] text-sm"><thead><tr className="border-b border-border">{["name", "phone", "email", "role", "status", "actions"].map(key => <th key={key} className="whitespace-nowrap px-6 py-4 text-start font-medium text-muted-foreground">{t(key)}</th>)}</tr></thead><tbody>
+    <ScrollableTable className="min-w-0 max-w-full rounded-xl border border-border bg-card"><table className="w-full min-w-[760px] text-sm"><thead><tr className="border-b border-border">{["name", "phone", "email", "role", "status", "actions"].map(key => <th key={key} className="whitespace-nowrap px-6 py-4 text-start font-medium text-muted-foreground">{t(key)}</th>)}</tr></thead><tbody>
       {filtered.slice((current - 1) * 10, current * 10).map(user => <tr key={user.id} className="border-b border-border last:border-0"><td className="px-6 py-6 font-medium">{user.name}</td><td className="px-6 py-6"><bdi>{user.phone || "\u2014"}</bdi></td><td className="px-6 py-6"><bdi>{user.email}</bdi></td><td className="px-6 py-6">{user.roleName}</td><td className="px-6 py-6"><button type="button" role="switch" aria-checked={user.active} aria-label={t("toggle", { name: user.name })} disabled={pending} onClick={() => void mutate(() => onToggle(user))} className={"relative h-5 w-9 rounded-full disabled:opacity-50 " + (user.active ? "bg-success" : "bg-muted")}><span className={"absolute top-0.5 size-4 rounded-full bg-white " + (user.active ? "end-0.5" : "start-0.5")} /></button></td><td className="px-6 py-6"><div className="flex gap-2"><Button variant="ghost" size="icon-sm" disabled={pending} aria-label={t("delete")} onClick={() => { setError(""); setDeleting(user); }}><Trash2 className="size-4" /></Button><Button variant="ghost" size="icon-sm" disabled={pending} aria-label={t("edit")} onClick={() => void mutate(async () => setEditing(await onLoad(user.id)))}><Pencil className="size-4" /></Button></div></td></tr>)}
       {!filtered.length ? <tr><td colSpan={6} className="p-12 text-center text-muted-foreground">{t(loading ? "loading" : "empty")}</td></tr> : null}
-    </tbody></table></div>
+    </tbody></table></ScrollableTable>
     {lastPage > 1 ? <nav aria-label={t("pagination")} className="flex items-center justify-between"><Button variant="outline" disabled={current === 1} onClick={() => setPage(current - 1)}>{t("previous")}</Button><span className="rounded-lg bg-primary/10 px-4 py-2 text-primary">{current} / {lastPage}</span><Button variant="outline" disabled={current === lastPage} onClick={() => setPage(current + 1)}>{t("next")}</Button></nav> : null}
     {editing !== undefined ? <UserForm key={editing?.id ?? "new"} user={editing} roles={roles} onClose={() => setEditing(undefined)} onSave={onSave} /> : null}
     <DeleteConfirmDialog isOpen={Boolean(deleting)} title={t("deleteTitle")} descriptionLine1={t("deleteDescription", { name: deleting?.name ?? "" })} descriptionLine2={t("warning")} cancelLabel={t("keep")} confirmLabel={t("deleteConfirm")} isPending={pending} errorMessage={error || undefined} onClose={() => { if (!pending) setDeleting(null); }} onConfirm={() => { if (deleting) void mutate(async () => { await onDelete(deleting.id); setDeleting(null); }); }} />

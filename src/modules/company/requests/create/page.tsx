@@ -1,5 +1,6 @@
 "use client";
 
+import { ScrollableTable } from "@/shared/components/scrollable-table";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { SelectedProductsDialog, type SelectedProduct } from "./selected-products-dialog";
 import { StorePicker } from "@/modules/company/stores/picker";
@@ -624,7 +625,7 @@ function ProductTable({
         <Input className="h-11 flex-1 rounded-lg px-4 text-sm" placeholder={t("createRequest.productTable.searchPlaceholder")} value={search} onChange={(e) => onSearchChange(e.target.value)} />
         <span className="text-sm font-bold text-primary">{meta ? `${meta.total} ` : ""}{t("createRequest.productTable.showProducts")}</span>
       </div>
-      <div className="mt-3 max-h-80 max-w-full overflow-auto rounded-lg border border-border">
+      <ScrollableTable className="mt-3 max-w-full rounded-lg border border-border" maxHeight="20rem">
         <table className="w-full min-w-[640px] border-collapse text-sm">
           <thead className="sticky top-0 z-10 bg-card text-xs font-semibold text-muted-foreground">
             <tr>
@@ -674,7 +675,7 @@ function ProductTable({
             })}
           </tbody>
         </table>
-      </div>
+      </ScrollableTable>
       {totalPages > 1 ? (
         <div className="mt-3 flex items-center justify-between gap-4">
           <Button type="button" variant="outline" className="h-10 rounded-lg border-border bg-card px-4 text-sm font-semibold shadow-none" disabled={page <= 1} onClick={() => onPageChange(page - 1)}>

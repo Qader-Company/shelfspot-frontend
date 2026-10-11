@@ -1,3 +1,4 @@
+import { ScrollableTable } from "@/shared/components/scrollable-table";
 import { StatusToggle } from "@/shared/components/dashboard/status-toggle";
 import {
   EditIcon,
@@ -37,7 +38,7 @@ export function AdminsTable({
   const canDelete = usePermission("delete_admin");
   return (
     <div className="overflow-hidden rounded-lg border border-border bg-card shadow-sm">
-      <div className="table-scroll" tabIndex={0}>
+      <ScrollableTable>
         <table className="w-full min-w-[700px] border-separate border-spacing-0 text-start">
           <thead>
             <tr className="text-xs font-medium text-foreground">
@@ -110,7 +111,7 @@ export function AdminsTable({
             ))}
           </tbody>
         </table>
-      </div>
+      </ScrollableTable>
     </div>
   );
 }

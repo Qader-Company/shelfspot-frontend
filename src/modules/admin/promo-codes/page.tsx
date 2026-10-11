@@ -1,5 +1,6 @@
 "use client";
 
+import { ScrollableTable } from "@/shared/components/scrollable-table";
 import { useDeferredValue, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
@@ -324,7 +325,7 @@ export function PromoCodesPage() {
           onRetry={() => query.refetch()}
         />
       ) : rows.length ? (
-        <div className="table-scroll rounded-xl border border-border bg-card" tabIndex={0}>
+        <ScrollableTable className="rounded-xl border border-border bg-card">
           <table className="w-full min-w-[780px] text-sm">
             <thead>
               <tr className="border-b">
@@ -407,7 +408,7 @@ export function PromoCodesPage() {
               })}
             </tbody>
           </table>
-        </div>
+        </ScrollableTable>
       ) : (
         <EmptyState title={t("empty")} description={t("emptyDescription")} />
       )}

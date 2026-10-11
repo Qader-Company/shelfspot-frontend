@@ -1,5 +1,6 @@
 "use client";
 
+import { ScrollableTable } from "@/shared/components/scrollable-table";
 import {
   Boxes,
   ArrowLeft,
@@ -80,7 +81,7 @@ export function CompanyDetailsPage({ companyId }: { companyId: string }) {
         {(item.latest_tasks ?? []).length === 0 ? (
           <EmptyState title={t("history.empty")} variant="plain" />
         ) : (
-          <div className="mt-4 max-h-80 overflow-auto rounded-lg border border-border">
+          <ScrollableTable className="mt-4 rounded-lg border border-border" maxHeight="20rem">
             <table className="w-full min-w-[440px] text-sm">
               <thead className="sticky top-0 z-10 bg-card"><tr className="border-b border-border"><th className="p-4 text-start">{t("history.requestId")}</th><th className="p-4 text-start">{t("history.location")}</th><th className="p-4 text-start">{t("history.time")}</th><th className="p-4 text-start">{t("history.status")}</th></tr></thead>
               <tbody>{(item.latest_tasks ?? []).map((task) => {
@@ -88,7 +89,7 @@ export function CompanyDetailsPage({ companyId }: { companyId: string }) {
                 return <tr key={task.id} className="border-b border-border last:border-0"><td className="p-4">{t("history.requestNumber", { id: task.id })}</td><td className="p-4">{task.location?.location_name ?? task.location?.address ?? "—"}</td><td className="p-4">{taskDate ? new Intl.DateTimeFormat(locale, { dateStyle: "medium", timeStyle: task.created_at ? "short" : undefined }).format(new Date(taskDate)) : "—"}</td><td className="p-4"><StatusBadge status={badgeStatuses[task.status] ?? "pending"} label={statusLabels[task.status] ?? task.status_label ?? task.status} /></td></tr>;
               })}</tbody>
             </table>
-          </div>
+          </ScrollableTable>
         )}
       </section>
       <CompanyUsersPreview companyId={companyId} />

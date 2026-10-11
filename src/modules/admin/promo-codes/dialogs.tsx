@@ -1,5 +1,6 @@
 "use client";
 
+import { ScrollableTable } from "@/shared/components/scrollable-table";
 import { useEffect, useMemo } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
@@ -268,7 +269,7 @@ export function PromoDetailsDialog({
           label={t("expiry")}
           value={new Date(record.expiresAt).toLocaleDateString()}
         />
-        <div className="table-scroll rounded-lg border border-border" tabIndex={0}>
+        <ScrollableTable className="rounded-lg border border-border">
           <table className="w-full min-w-[520px] text-sm">
             <thead>
               <tr className="border-b">
@@ -302,7 +303,7 @@ export function PromoDetailsDialog({
               </tr>
             </tfoot>
           </table>
-        </div>
+        </ScrollableTable>
       </div>
     </FlowDialog>
   );

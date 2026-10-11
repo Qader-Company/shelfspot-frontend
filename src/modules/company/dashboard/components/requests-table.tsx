@@ -1,3 +1,4 @@
+import { ScrollableTable } from "@/shared/components/scrollable-table";
 import type { RequestTableRow } from "@/modules/company/dashboard/components/dashboard-overview.seed";
 import { requestActions } from "@/modules/company/dashboard/components/dashboard-overview.seed";
 import { StatusBadge } from "@/shared/components/dashboard/status-badge";
@@ -36,7 +37,7 @@ export function RequestsTable({
           {labels.title}
         </h2>
       </div>
-      <div className="table-scroll" tabIndex={0}>
+      <ScrollableTable>
         <table className="w-full min-w-[760px] border-separate border-spacing-0 text-start">
           <thead>
             <tr className="text-xs font-medium text-foreground">
@@ -104,7 +105,7 @@ export function RequestsTable({
             ))}
           </tbody>
         </table>
-      </div>
+      </ScrollableTable>
     </section>
   );
 }

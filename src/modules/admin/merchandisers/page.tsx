@@ -1,5 +1,6 @@
 "use client";
 
+import { ScrollableTable } from "@/shared/components/scrollable-table";
 import { useDeferredValue, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { CircleOff, Pencil, Trash2, UserRoundPlus, UsersRound } from "lucide-react";
@@ -124,12 +125,12 @@ export function MerchandisersPage() {
       </div>
       {actionError ? <p role="alert" className="rounded-lg bg-destructive/10 p-3 text-destructive">{actionError}</p> : null}
       {query.isLoading ? <PageLoadingSkeleton showHeader={false} cardCount={0} tableRows={8} tableColumns={7} label={t("loading")} className="px-0 py-0" /> : query.isError ? <ErrorState title={t("errors.load")} description={t("errors.loadDescription")} retryLabel={t("retry")} onRetry={() => query.refetch()} /> : !records.length ? <EmptyState title={t("emptyTitle")} description={t("emptyDescription")} /> : (
-        <div className="table-scroll rounded-xl border border-border bg-card" tabIndex={0}>
+        <ScrollableTable className="rounded-xl border border-border bg-card">
           <table className="w-full min-w-[900px] text-sm">
             <thead><tr className="border-b border-border"><th className="w-12 p-4"><input type="checkbox" checked={allPageSelected} onChange={togglePageSelection} aria-label={locale === "ar" ? "تحديد جميع مسؤولي العرض" : "Select all merchandisers"} className="size-4 accent-primary" /></th><th className="p-4 text-start">{t("columns.name")}</th><th className="p-4 text-start">{t("columns.phone")}</th><th className="p-4 text-start">{t("columns.email")}</th><th className="p-4 text-center">{t("columns.completed")}</th><th className="p-4 text-center">{t("columns.status")}</th><th className="p-4 text-center">{t("columns.action")}</th></tr></thead>
             <tbody>{records.map((record) => <tr key={record.id} className="border-b border-border last:border-0"><td className="p-4 text-center"><input type="checkbox" checked={selectedIds.has(record.id)} onChange={() => toggleSelection(record.id)} aria-label={locale === "ar" ? `تحديد ${record.fullName}` : `Select ${record.fullName}`} className="size-4 accent-primary" /></td><td className="p-4 font-medium"><Link href={`/admin/merchandisers/${record.id}`} className="hover:text-primary">{record.fullName}</Link></td><td className="p-4" dir="ltr">{record.phone}</td><td className="p-4">{record.email}</td><td className="p-4 text-center">{record.completedTasks}</td><td className="p-4 text-center"><button type="button" onClick={() => toggle(record)} disabled={statusMutation.isPending}><StatusToggle isActive={record.active} ariaLabel={t("toggleStatus", { name: record.fullName })} /></button></td><td className="p-4"><div className="flex justify-center gap-1"><Button asChild variant="ghost" size="icon-sm"><Link href={`/admin/merchandisers/${record.id}/edit`} aria-label={t("edit", { name: record.fullName })}><Pencil className="size-4" /></Link></Button><Button variant="ghost" size="icon-sm" aria-label={t("delete", { name: record.fullName })} onClick={() => setDeleteTarget(record)}><Trash2 className="size-4" /></Button></div></td></tr>)}</tbody>
           </table>
-        </div>
+        </ScrollableTable>
       )}
       <div className="flex items-center justify-between"><Button variant="outline" disabled={(meta?.currentPage ?? 1) <= 1} onClick={() => setPage((value) => value - 1)}>{t("pagination.previous")}</Button><span className="rounded-lg bg-primary/10 px-4 py-2 text-primary">{meta?.currentPage ?? 1}</span><Button variant="outline" disabled={(meta?.currentPage ?? 1) >= (meta?.lastPage ?? 1)} onClick={() => setPage((value) => value + 1)}>{t("pagination.next")}</Button></div>
       <DeleteConfirmDialog isOpen={Boolean(deleteTarget)} title={t("deleteDialog.title")} descriptionLine1={t("deleteDialog.description", { name: deleteTarget?.fullName ?? "" })} descriptionLine2={t("deleteDialog.warning")} cancelLabel={t("deleteDialog.cancel")} confirmLabel={t("deleteDialog.confirm")} onClose={() => setDeleteTarget(null)} onConfirm={remove} isPending={deleteMutation.isPending} errorMessage={actionError} />

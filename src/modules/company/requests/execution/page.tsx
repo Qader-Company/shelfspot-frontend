@@ -1,5 +1,6 @@
 "use client";
 
+import { ScrollableTable } from "@/shared/components/scrollable-table";
 import { useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 
@@ -168,7 +169,7 @@ function ProductEvidence({ products }: { products: CompanyTaskProduct[] }) {
   return (
     <section className="space-y-3">
       <h4 className="text-lg font-semibold">{t("proof")}</h4>
-      <div className="table-scroll rounded-xl border" tabIndex={0}>
+      <ScrollableTable className="rounded-xl border">
         <table className="w-full min-w-[42rem] text-sm">
           <thead className="bg-muted/50 text-muted-foreground">
             <tr>
@@ -201,7 +202,7 @@ function ProductEvidence({ products }: { products: CompanyTaskProduct[] }) {
             ))}
           </tbody>
         </table>
-      </div>
+      </ScrollableTable>
     </section>
   );
 }

@@ -9,6 +9,8 @@ import type {
   WithdrawalsApiResponse,
   WithdrawalsParams,
   WithdrawalsResponse,
+  Withdrawal,
+  WithdrawalApiRecord,
 } from "./types";
 
 /**
@@ -81,6 +83,20 @@ export async function getPayment(id: string): Promise<PaymentResponse["data"]> {
 
 // ─── Withdrawals (Merchandiser / Workers tab) ─────────────────────────────────
 
+function normalizeWithdrawal(record: WithdrawalApiRecord): Withdrawal {
+  return {
+    ...record,
+    merchandiser_id: record.worker_id ?? record.merchandiser_id,
+    merchandiser: record.worker ?? record.merchandiser ?? {
+      id: record.worker_id ?? record.merchandiser_id ?? 0,
+      name: "—",
+    },
+    iban: record.payout_details?.iban ?? record.iban,
+    date: record.created_at ?? record.date ?? "",
+    status: record.status === "paid" ? "approved" : record.status,
+  };
+}
+
 /**
  * Fetch a paginated list of admin withdrawal requests.
  * Backend: GET /admin/withdrawals
@@ -88,7 +104,7 @@ export async function getPayment(id: string): Promise<PaymentResponse["data"]> {
 export async function getWithdrawals(params?: WithdrawalsParams): Promise<WithdrawalsResponse> {
   const { data: response } = await apiClient.get<WithdrawalsApiResponse>(
     "/api/admin/withdrawals",
-    { params },
+    { params: { ...params, status: params?.status === "approved" ? "paid" : params?.status } },
   );
 
   if (!response?.data) {
@@ -107,7 +123,11 @@ export async function getWithdrawals(params?: WithdrawalsParams): Promise<Withdr
     return {
       success: response.success ?? false,
       message: response.message,
-      summary: summary ?? { total_withdraw_requests: 0, pending_withdraw_requests: 0, total_withdraw: 0 },
+      summary: {
+        total_withdraw_requests: summary?.total_requests_count ?? summary?.total_withdraw_requests ?? 0,
+        pending_withdraw_requests: summary?.pending_requests_count ?? summary?.pending_withdraw_requests ?? 0,
+        total_withdraw: summary?.paid_amount ?? summary?.total_withdraw ?? 0,
+      },
       data: [],
       meta: {
         current_page: 1,
@@ -128,8 +148,12 @@ export async function getWithdrawals(params?: WithdrawalsParams): Promise<Withdr
   return {
     success: response.success,
     message: response.message,
-    summary: summary ?? { total_withdraw_requests: 0, pending_withdraw_requests: 0, total_withdraw: 0 },
-    data: rows,
+    summary: {
+      total_withdraw_requests: summary?.total_requests_count ?? summary?.total_withdraw_requests ?? 0,
+      pending_withdraw_requests: summary?.pending_requests_count ?? summary?.pending_withdraw_requests ?? 0,
+      total_withdraw: summary?.paid_amount ?? summary?.total_withdraw ?? 0,
+    },
+    data: rows.map(normalizeWithdrawal),
     meta: { current_page, last_page, per_page, total },
   };
 }
@@ -138,20 +162,20 @@ export async function getWithdrawals(params?: WithdrawalsParams): Promise<Withdr
  * Fetch a single withdrawal request by ID.
  * Backend: GET /admin/withdrawals/:id
  */
-export async function getWithdrawal(id: string): Promise<WithdrawalResponse["data"]> {
+export async function getWithdrawal(id: string): Promise<Withdrawal> {
   const { data } = await apiClient.get<WithdrawalResponse>(
     `/api/admin/withdrawals/${encodeURIComponent(id)}`,
   );
-  return data.data;
+  return normalizeWithdrawal(data.data);
 }
 
 /**
  * Approve a withdrawal request.
  * Backend: POST /admin/withdrawals/:id/approve
  */
-export async function approveWithdrawal(id: string): Promise<WithdrawalResponse["data"]> {
+export async function approveWithdrawal(id: string): Promise<Withdrawal> {
   const { data } = await apiClient.post<WithdrawalResponse>(
     `/api/admin/withdrawals/${encodeURIComponent(id)}/approve`,
   );
-  return data.data;
+  return normalizeWithdrawal(data.data);
 }
