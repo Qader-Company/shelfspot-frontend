@@ -2,6 +2,7 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
+import { useLocale } from "next-intl";
 import { getService, getServices, updateService } from "./service";
 import type { AdminService, ServicePayload } from "./types";
 
@@ -27,10 +28,11 @@ export function useService(key: string) {
 }
 
 export function useUpdateService() {
+  const locale = useLocale();
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (v: { id: AdminService["id"]; payload: ServicePayload }) =>
-      updateService(v),
+      updateService({ ...v, locale }),
     onSuccess: () =>
       queryClient.invalidateQueries({ queryKey: serviceKeys.all }),
   });

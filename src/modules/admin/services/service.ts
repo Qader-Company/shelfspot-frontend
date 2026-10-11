@@ -52,16 +52,17 @@ export async function getService(key: string): Promise<AdminService> {
 export async function updateService({
   id,
   payload,
+  locale = "en",
 }: {
   id: AdminService["id"];
   payload: ServicePayload;
+  locale?: string;
 }): Promise<unknown> {
   const { data } = await apiClient.put(
     `/api/admin/services/${encodeURIComponent(String(id))}`,
     {
-      "translations[en][description]": payload.description,
-      minimum_price: payload.minimum_price,
-      minimum_execution_time: payload.minimum_execution_time,
+      ...(payload.description !== undefined ? { translations: { [locale]: { description: payload.description } } } : {}),
+      ...(payload.price !== undefined ? { price: payload.price } : {}),
       is_active: payload.is_active,
     },
   );

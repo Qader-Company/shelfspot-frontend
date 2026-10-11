@@ -174,7 +174,7 @@ export function CreateRequestPage({ taskId, repeatTaskId }: { taskId?: string | 
         const idx = Number((visible.target as HTMLElement).dataset.stepIndex);
         if (!Number.isNaN(idx)) setActiveStepIndex(idx);
       },
-      { root: null, rootMargin: "-20% 0px -55% 0px", threshold: [0.2, 0.4, 0.6, 0.8] },
+      { root: null, rootMargin: "-20% 0px -55% 0px", threshold: 0 },
     );
     sectionRefs.forEach((r) => { if (r.current) observer.observe(r.current); });
     return () => observer.disconnect();
@@ -192,7 +192,7 @@ export function CreateRequestPage({ taskId, repeatTaskId }: { taskId?: string | 
     setActiveStepIndex(index);
     if (index === 0) setIsLocationExpanded(true);
     if (index === 1) setIsServiceExpanded(true);
-    window.requestAnimationFrame(() => { sectionRefs[index]?.current?.scrollIntoView({ behavior: "smooth", block: "start" }); });
+    window.requestAnimationFrame(() => { sectionRefs[index]?.current?.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth", block: "start" }); });
   }
 
   function updateEntry(id: string, patch: Partial<ServiceEntry>) {
@@ -579,7 +579,7 @@ function SectionCard({ sectionRef, stepIndex, title, description, action, isExpa
   action?: React.ReactNode; isExpanded: boolean; toggleLabel: string; children: React.ReactNode; onToggle: () => void;
 }) {
   return (
-    <section ref={sectionRef} data-step-index={stepIndex} className="scroll-mt-28 rounded-xl border border-border bg-card p-5 shadow-sm">
+    <section ref={sectionRef} data-step-index={stepIndex} className="scroll-mt-48 rounded-xl border border-border bg-card p-5 shadow-sm">
       <div className="flex items-start justify-between gap-4">
         <div>
           <h2 className="text-xl font-bold text-foreground">{title}</h2>

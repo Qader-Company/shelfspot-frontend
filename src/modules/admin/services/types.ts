@@ -4,16 +4,15 @@ export interface AdminService {
   name?: string;
   title?: string;
   description?: string;
-  minimum_price?: number | string;
-  minimum_execution_time?: number | string;
+  price?: number | string;
+  request_form?: { fields?: Record<string, { required?: boolean; min_items?: number }> };
   is_active?: boolean | number;
   active?: boolean;
 }
 
 export interface ServicePayload {
-  description: string;
-  minimum_price: number;
-  minimum_execution_time: number;
+  description?: string;
+  price?: number;
   is_active: 0 | 1;
 }
 
