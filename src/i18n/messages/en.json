@@ -1457,18 +1457,6 @@
         "success":{"close":"Close success dialog","done":"Done","created":{"title":"Promo Code Created","description":"The promo code was created successfully."},"updated":{"title":"Promo Code Updated","description":"The promo code was updated successfully."},"deleted":{"title":"Promo Code Deleted","description":"The promo code was deleted successfully."}},
         "details":{"title":"Promo Code Details","close":"Close promo code details","code":"Code","amount":"Amount","used":"Used Count","limit":"Max Redemptions","remaining":"Remaining","expiry":"Expiry Date","company":"Company Name","usedDate":"Used Date","saved":"Amount Saved","total":"Total Discount Given"}
     },
-    "requests": {
-      "title": "Requests Monitoring", "subtitle": "Real-time tracking of all platform requests", "searchLabel": "Search requests", "searchPlaceholder": "Search for requests", "statusFilter": "Filter requests by status", "loading": "Loading requests…", "error": "Unable to load requests", "errorDescription": "The requests could not be loaded.", "retry": "Try again", "empty": "No requests found", "emptyDescription": "Try changing the search or filters.", "previous": "Previous", "next": "Next",
-      "stats": { "total": "Total Requests", "pending": "Pending Requests", "inProgress": "In Progress Requests", "rejected": "Rejected Requests", "completed": "Completed This Week", "commission": "Total Commission" },
-      "tabs": { "all": "All", "deleted": " Deleted By Company" },
-      "columns": { "id": "Request ID", "company": "Company Name", "created": "Created at", "store": "Store Name", "price": "Price", "status": "Status" },
-      "statuses": { "all": "All Statuses", "draft": "Draft", "pending": "Pending", "failed": "Failed", "in_progress": "In Progress", "canceled": "Canceled", "in_review": "In Review", "accepted": "Accepted", "rejected": "Rejected", "reopened": "Reopened" },
-      "details": {
-        "title": "Request Details", "subtitle": "Complete information about execution request {id}", "loading": "Loading request details…", "error": "Unable to load request", "errorDescription": "The request details could not be loaded.", "retry": "Try again", "notFound": "Request not found", "notFoundDescription": "This request is unavailable or has been removed.", "created": "Created on", "location": "Location", "assignedBy": "Assigned By", "executionDate": "Execution Date", "timeWindow": "Time Window", "worker": "Merchandiser", "totalCost": "Total Cost", "totalProducts": "Total Products", "timeRemaining": "Time Remaining", "calculatedTime": "Calculated from deadline", "assign": "Assign Merchandiser", "reassign": "Reassign Merchandiser", "services": "Services Details ({count})", "serviceNumber": "Service #{number}", "brand": "Brand", "subBrand": "Sub-Brand", "category": "Category", "subCategory": "Sub-Category", "product": "Products", "sku": "SKU Code", "quantity": "Quantity", "expiry": "Expiry Date", "guidelines": "Execution Guidelines",
-        "statuses": { "draft": "Draft", "pending": "Pending", "failed": "Failed", "in_progress": "In Progress", "canceled": "Canceled", "in_review": "In Review", "accepted": "Accepted", "rejected": "Rejected", "reopened": "Reopened" },
-        "assignDialog": { "title": "Reassign Nearby Merchandiser", "subtitle": "Showing merchandisers within the selected coverage area", "close": "Close dialog", "search": "Search by merchandiser", "available": "Available", "busy": "Busy", "tasks": "tasks", "assign": "Assign Merchandiser", "selectRequired": "Select an available merchandiser.", "unverified": "The reassign request could not be completed." }
-      }
-    },
     "merchandisers": {
       "title": "Merchandiser Management",
       "subtitle": "Monitor and manage platform merchandisers",
@@ -1491,7 +1479,8 @@
       "deleteDialog": { "title": "Delete Merchandiser?", "description": "Are you sure you want to delete {name}?", "warning": "This action cannot be undone.", "cancel": "No, keep it", "confirm": "Yes, delete" },
       "form": {
         "createTitle": "Add New Merchandiser", "createSubtitle": "Fill in the information below to add a new team member", "editTitle": "Update Merchandiser Info", "editSubtitle": "Fill in the information below to update merchandiser information", "back": "Back to merchandisers", "personalInfo": "Personal Info", "uploadPhoto": "Upload Photo", "optional": "(Optional)", "fullName": "Full Name", "fullNamePlaceholder": "Enter full name", "email": "Email Address", "emailPlaceholder": "name@company.com", "phone": "Phone Number", "phonePlaceholder": "+966 XX XXX XXXX", "jobDetails": "Job Details", "jobTitle": "Job Title", "merchandiser": "Merchandiser", "startDate": "Start Date", "systemPermissions": "System Permissions", "credentials": "System Login Credentials", "credentialsDescription": "Configure access permissions for this employee", "enabled": "Enabled", "temporaryPassword": "Temporary Password", "copyPassword": "Copy temporary password", "credentialsNotice": "Login credentials will be automatically sent to the employee's email upon account creation.", "cancel": "Cancel", "save": "Save", "saving": "Saving…", "saveError": "Unable to save the merchandiser.",
-        "validation": { "name": "Enter at least two characters.", "email": "Enter a valid email address.", "phone": "Enter a valid phone number.", "startDate": "Select a start date.", "password": "The password must contain at least eight characters." }
+        "validation": { "name": "Enter at least two characters.", "email": "Enter a valid email address.", "phone": "Enter a valid phone number.", "startDate": "Select a start date.", "password": "The password must contain at least eight characters." },
+        "errors": {"emailExists":"This email address is already registered. Use a different email.","phoneExists":"This phone number is already registered. Use a different number.","fullName":"Enter a valid full name (2–255 characters).","email":"Enter a valid email address.","phone":"Enter a valid phone number, including the country code.","loginEnabled":"Choose whether login is enabled.","temporaryPassword":"Enter a valid password with at least eight characters.","confirmPassword":"Make sure the passwords match.","validation":"Please review the form and correct the highlighted fields.","session":"Your session has expired. Sign in again and retry.","permission":"You do not have permission to save this merchandiser.","notFound":"This merchandiser is no longer available. Refresh the list and try again.","conflict":"These details conflict with an existing account. Check the email and phone number.","rateLimit":"Too many attempts. Please wait a moment and try again.","server":"We could not save your changes right now. Please try again shortly.","network":"Unable to connect. Check your internet connection and try again."}
       },
       "details": {
         "title": "Merchandiser Management", "subtitle": "Monitor and manage platform merchandisers", "back": "Back to merchandisers", "loading": "Loading merchandiser details…", "error": "Unable to load merchandiser", "errorDescription": "The merchandiser details could not be loaded.", "retry": "Try again", "notFound": "Merchandiser not found", "notFoundDescription": "This merchandiser is unavailable or has been removed.", "active": "Active", "inactive": "Inactive", "email": "Email", "phone": "Phone Number", "inProgress": "In Progress", "due": "Due: {date}", "filterDate": "Filter by date", "history": "Request History", "emptyHistory": "No requests found", "emptyHistoryDescription": "No requests match the selected filters.", "editRequest": "Edit request", "deleteRequest": "Delete request", "requestApiMissing": "The Admin Requests API was not provided.",
@@ -1538,14 +1527,15 @@
       "subtitle": "Monitor and manage all platform requests",
       "searchLabel": "Search requests",
       "searchPlaceholder": "Search for requests",
+      "statusFilter": "Filter requests by status",
       "loading": "Loading requests…",
+      "error": "Unable to load requests",
+      "errorDescription": "The requests could not be loaded.",
       "retry": "Try again",
       "empty": "No requests found",
       "emptyDescription": "Try changing the search or status filter.",
-      "tabs": {
-        "all": "All Requests",
-        "deleted": "Deleted Requests"
-      },
+      "previous": "Previous",
+      "next": "Next",
       "stats": {
         "total": "Total Requests",
         "pending": "Pending",
@@ -1554,16 +1544,9 @@
         "completed": "Completed",
         "commission": "Commission"
       },
-      "statuses": {
-        "all": "All Statuses",
-        "draft": "Draft",
-        "pending": "Pending",
-        "inProgress": "In Progress",
-        "in_progress": "In Progress",
-        "completed": "Completed",
-        "failed": "Failed",
-        "cancelled": "Cancelled",
-        "rejected": "Rejected"
+      "tabs": {
+        "all": "All Requests",
+        "deleted": "Deleted Requests"
       },
       "columns": {
         "id": "Request ID",
@@ -1573,6 +1556,78 @@
         "price": "Price",
         "status": "Status",
         "action": "Action"
+      },
+      "statuses": {
+        "all": "All Statuses",
+        "draft": "Draft",
+        "pending": "Pending",
+        "failed": "Failed",
+        "in_progress": "In Progress",
+        "canceled": "Canceled",
+        "in_review": "In Review",
+        "accepted": "Accepted",
+        "rejected": "Rejected",
+        "reopened": "Reopened",
+        "inProgress": "In Progress",
+        "completed": "Completed",
+        "cancelled": "Cancelled"
+      },
+      "details": {
+        "title": "Request Details",
+        "subtitle": "Complete information about execution request {id}",
+        "loading": "Loading request details…",
+        "error": "Unable to load request",
+        "errorDescription": "The request details could not be loaded.",
+        "retry": "Try again",
+        "notFound": "Request not found",
+        "notFoundDescription": "This request is unavailable or has been removed.",
+        "created": "Created on",
+        "location": "Location",
+        "assignedBy": "Assigned By",
+        "executionDate": "Execution Date",
+        "timeWindow": "Time Window",
+        "worker": "Merchandiser",
+        "totalCost": "Total Cost",
+        "totalProducts": "Total Products",
+        "timeRemaining": "Time Remaining",
+        "calculatedTime": "Calculated from deadline",
+        "assign": "Assign Merchandiser",
+        "reassign": "Reassign Merchandiser",
+        "services": "Services Details ({count})",
+        "serviceNumber": "Service #{number}",
+        "brand": "Brand",
+        "subBrand": "Sub-Brand",
+        "category": "Category",
+        "subCategory": "Sub-Category",
+        "product": "Products",
+        "sku": "SKU Code",
+        "quantity": "Quantity",
+        "expiry": "Expiry Date",
+        "guidelines": "Execution Guidelines",
+        "statuses": {
+          "draft": "Draft",
+          "pending": "Pending",
+          "failed": "Failed",
+          "in_progress": "In Progress",
+          "canceled": "Canceled",
+          "in_review": "In Review",
+          "accepted": "Accepted",
+          "rejected": "Rejected",
+          "reopened": "Reopened",
+          "completed": "Completed"
+        },
+        "assignDialog": {
+          "title": "Reassign Nearby Merchandiser",
+          "subtitle": "Showing merchandisers within the selected coverage area",
+          "close": "Close dialog",
+          "search": "Search by merchandiser",
+          "available": "Available",
+          "busy": "Busy",
+          "tasks": "tasks",
+          "assign": "Assign Merchandiser",
+          "selectRequired": "Select an available merchandiser.",
+          "unverified": "The reassign request could not be completed."
+        }
       },
       "pagination": {
         "previous": "Previous",

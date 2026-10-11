@@ -12,6 +12,7 @@ import { Link, useRouter } from "@/i18n/navigation";
 import { Button } from "@/shared/ui/button";
 import { useCreateMerchandiser, useMerchandiser, useUpdateMerchandiser } from "./hooks";
 import type { MerchandiserPayload } from "./types";
+import { merchandiserFormErrors } from "./form-errors";
 
 interface MerchandiserFormProps { merchandiserId?: string }
 type MerchandiserFormValues = MerchandiserPayload & { confirmPassword: string };
@@ -63,6 +64,7 @@ export function MerchandiserForm({ merchandiserId }: MerchandiserFormProps) {
   async function submit({ confirmPassword: _confirmPassword, ...payload }: MerchandiserFormValues) {
     void _confirmPassword;
     setSubmitError("");
+    form.clearErrors();
     try {
       if (merchandiserId) {
         await updateMutation.mutateAsync({ id: merchandiserId, payload });
@@ -74,7 +76,14 @@ export function MerchandiserForm({ merchandiserId }: MerchandiserFormProps) {
           password: payload.temporaryPassword,
         });
       }
-    } catch (error) { setSubmitError(error instanceof Error ? error.message : t("saveError")); }
+    } catch (error) {
+      const { fieldErrors, message } = merchandiserFormErrors(error, t);
+      const entries = Object.entries(fieldErrors) as [keyof MerchandiserFormValues, string][];
+      for (const [index, [field, fieldMessage]] of entries.entries()) {
+        form.setError(field, { type: "server", message: fieldMessage }, { shouldFocus: index === 0 });
+      }
+      setSubmitError(message);
+    }
   }
 
   async function finishCreation() {
@@ -98,7 +107,7 @@ export function MerchandiserForm({ merchandiserId }: MerchandiserFormProps) {
               <Field label={t("phone")} error={form.formState.errors.phone?.message}><Phone className="absolute start-3 top-3.5 size-5 text-muted-foreground" /><input {...form.register("phone")} className={fieldClass} placeholder="+966434**" dir="ltr" /></Field>
             </div>
           </section>
-          <section className="border-s-2 border-border ps-8"><h2 className="font-semibold text-muted-foreground">2. {t("systemPermissions")}</h2><div className="mt-6 space-y-4 lg:ms-48"><div className="flex items-center justify-between"><div><h3 className="font-semibold">{t("credentials")}</h3><p className="text-sm text-muted-foreground">{t("credentialsDescription")}</p></div><label className="flex items-center gap-2"><input type="checkbox" {...form.register("loginEnabled")} className="size-5 accent-primary" />{t("enabled")}</label></div><Field label={t("temporaryPassword")} error={form.formState.errors.temporaryPassword?.message}><input {...form.register("temporaryPassword")} type={isPasswordVisible ? "text" : "password"} className="h-12 w-full rounded-lg bg-muted px-3 pe-12" placeholder={t("temporaryPassword")} dir="ltr" /><PasswordVisibilityButton visible={isPasswordVisible} onToggle={() => setIsPasswordVisible((value) => !value)} showLabel={authT("actions.showPassword")} hideLabel={authT("actions.hidePassword")} /></Field><Field label={adminT("adminForm.confirmPassword")} error={form.formState.errors.confirmPassword?.message}><input {...form.register("confirmPassword")} type={isConfirmPasswordVisible ? "text" : "password"} className="h-12 w-full rounded-lg bg-muted px-3 pe-12" placeholder={adminT("adminForm.confirmPassword")} dir="ltr" /><PasswordVisibilityButton visible={isConfirmPasswordVisible} onToggle={() => setIsConfirmPasswordVisible((value) => !value)} showLabel={authT("actions.showPassword")} hideLabel={authT("actions.hidePassword")} /></Field><p className="rounded-lg border border-primary/30 bg-primary/10 p-3 text-sm text-foreground">ⓘ {t("credentialsNotice")}</p></div></section>
+          <section className="border-s-2 border-border ps-8"><h2 className="font-semibold text-muted-foreground">2. {t("systemPermissions")}</h2><div className="mt-6 space-y-4 lg:ms-48"><div className="flex items-center justify-between"><div><h3 className="font-semibold">{t("credentials")}</h3><p className="text-sm text-muted-foreground">{t("credentialsDescription")}</p></div><label className="flex items-center gap-2"><input type="checkbox" {...form.register("loginEnabled")} className="size-5 accent-primary" />{t("enabled")}</label></div>{form.formState.errors.loginEnabled?.message ? <p role="alert" className="text-sm text-destructive">{form.formState.errors.loginEnabled.message}</p> : null}<Field label={t("temporaryPassword")} error={form.formState.errors.temporaryPassword?.message}><input {...form.register("temporaryPassword")} type={isPasswordVisible ? "text" : "password"} className="h-12 w-full rounded-lg bg-muted px-3 pe-12" placeholder={t("temporaryPassword")} dir="ltr" /><PasswordVisibilityButton visible={isPasswordVisible} onToggle={() => setIsPasswordVisible((value) => !value)} showLabel={authT("actions.showPassword")} hideLabel={authT("actions.hidePassword")} /></Field><Field label={adminT("adminForm.confirmPassword")} error={form.formState.errors.confirmPassword?.message}><input {...form.register("confirmPassword")} type={isConfirmPasswordVisible ? "text" : "password"} className="h-12 w-full rounded-lg bg-muted px-3 pe-12" placeholder={adminT("adminForm.confirmPassword")} dir="ltr" /><PasswordVisibilityButton visible={isConfirmPasswordVisible} onToggle={() => setIsConfirmPasswordVisible((value) => !value)} showLabel={authT("actions.showPassword")} hideLabel={authT("actions.hidePassword")} /></Field><p className="rounded-lg border border-primary/30 bg-primary/10 p-3 text-sm text-foreground">ⓘ {t("credentialsNotice")}</p></div></section>
           {submitError ? <p role="alert" className="rounded-lg bg-destructive/10 p-3 text-destructive">{submitError}</p> : null}
           <div className="flex justify-end gap-3"><Button asChild variant="outline" className="min-w-32"><Link href="/admin/merchandisers">{t("cancel")}</Link></Button><Button type="submit" className="min-w-32" disabled={pending}>{pending ? t("saving") : t("save")}</Button></div>
         </form>
@@ -109,7 +118,7 @@ export function MerchandiserForm({ merchandiserId }: MerchandiserFormProps) {
 }
 
 function Field({ label, required, error, children }: { label: string; required?: boolean; error?: string; children: React.ReactNode }) {
-  return <label className="block"><span className="mb-2 block font-semibold">{label}{required ? <span className="text-destructive">*</span> : null}</span><span className="relative block">{children}</span>{error ? <span className="mt-1 block text-xs text-destructive">{error}</span> : null}</label>;
+  return <label className="block"><span className="mb-2 block font-semibold">{label}{required ? <span className="text-destructive">*</span> : null}</span><span className="relative block">{children}</span>{error ? <span role="alert" className="mt-1 block text-xs text-destructive">{error}</span> : null}</label>;
 }
 
 function PasswordVisibilityButton({ visible, onToggle, showLabel, hideLabel }: { visible: boolean; onToggle: () => void; showLabel: string; hideLabel: string }) {
