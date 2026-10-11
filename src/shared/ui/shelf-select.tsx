@@ -6,7 +6,7 @@ import { Check, ChevronDown, ChevronUp } from "lucide-react";
 import { useLocale } from "next-intl";
 import { cn } from "@/shared/lib/utils";
 
-type SelectChange = { target: { value: string; name: string; type: "select-one" }; currentTarget: { value: string; name: string }; type: "change" };
+type SelectChange = { target: { value: string; name: string }; currentTarget: { value: string; name: string }; type: "change" };
 type Props = Omit<ComponentPropsWithoutRef<"button">, "value" | "defaultValue" | "onChange" | "children"> & {
   value?: string | number;
   defaultValue?: string | number;
@@ -37,7 +37,7 @@ export const ShelfSelect = forwardRef<HTMLButtonElement, Props>(function ShelfSe
   return <SelectPrimitive.Root value={selected} name={name} required={required} disabled={disabled} dir={direction} onValueChange={(next) => {
     const nextValue = next === EMPTY_OPTION ? "" : next;
     setInternalValue(nextValue);
-    onChange?.({ target: { value: nextValue, name: name ?? "", type: "select-one" }, currentTarget: { value: nextValue, name: name ?? "" }, type: "change" });
+    onChange?.({ target: { value: nextValue, name: name ?? "" }, currentTarget: { value: nextValue, name: name ?? "" }, type: "change" });
   }}>
     <SelectPrimitive.Trigger ref={ref} {...props} data-slot="shelf-select" className={cn("group inline-flex h-11 min-w-36 items-center justify-between gap-3 rounded-xl border border-border bg-card px-4 text-start text-sm text-foreground shadow-sm outline-none transition-[border-color,box-shadow,background-color] duration-200 hover:border-primary/50 focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary/20 data-[state=open]:border-primary data-[state=open]:ring-2 data-[state=open]:ring-primary/15 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive motion-reduce:transition-none", className)}>
       <span className="min-w-0 flex-1 truncate"><SelectPrimitive.Value placeholder={empty?.label} /></span>
