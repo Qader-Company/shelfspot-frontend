@@ -6,8 +6,9 @@ import type {
   AdminRequestProduct,
   AdminRequestService,
   AdminRequestStatus,
-  NearbyMerchandiser,
+  ReassignmentWorkerList,
 } from "./types";
+import type { CompanyTaskAttachment, CompanyTaskProduct, CompanyTaskSubmission } from "@/modules/company/requests/details/types";
 
 type ApiRecord = Record<string, unknown>;
 type ApiResponse<T> = { success?: boolean; message?: string; data: T; meta?: ApiRecord };
@@ -37,7 +38,41 @@ function number(value: unknown) {
 function status(value: unknown): AdminRequestStatus {
   const normalized = text(value, "pending").toLowerCase().replaceAll("-", "_").replaceAll(" ", "_")
     .replace("cancelled", "canceled").replace("worker_canceled", "canceled").replace("company_canceled", "canceled");
+  if (normalized === "cancel" || normalized === "worker_cancel" || normalized === "company_cancel") return "canceled";
   return knownStatuses.has(normalized as AdminRequestStatus) ? normalized as AdminRequestStatus : "pending";
+}
+
+function normalizeAttachments(value: unknown): CompanyTaskAttachment[] {
+  return array(value).map((item, index) => {
+    const source = record(item);
+    return {
+      id: number(source.id) || index + 1, field: text(source.field, ""), collection: text(source.collection, ""),
+      name: text(source.name ?? source.file_name), file_name: text(source.file_name ?? source.name),
+      mime_type: text(source.mime_type, "application/octet-stream"), size: number(source.size), url: text(source.url, ""),
+    };
+  }).filter((item) => item.url);
+}
+
+function normalizeExecutionProducts(value: unknown): CompanyTaskProduct[] {
+  return array(value).map((item, index) => {
+    const source = record(item);
+    const product = record(source.product);
+    return {
+      id: number(source.id) || index + 1,
+      product_details: record(source.product_details) as CompanyTaskProduct["product_details"],
+      product: { id: number(product.id), name: text(product.name ?? source.name), sku: text(product.sku ?? source.sku), image: text(product.image ?? source.image, "") || null },
+    };
+  });
+}
+
+function normalizeSubmission(value: unknown): CompanyTaskSubmission | null {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return null;
+  const source = record(value);
+  return {
+    id: number(source.id), task_service_id: number(source.task_service_id), worker_id: number(source.worker_id),
+    form_data: record(source.form_data), status: text(source.status, ""), completed_at: text(source.completed_at, "") || null,
+    attachments: normalizeAttachments(source.attachments),
+  };
 }
 
 function normalizeProduct(value: unknown): AdminRequestProduct {
@@ -69,6 +104,11 @@ function normalizeService(value: unknown): AdminRequestService {
     subCategory: text(record(firstProduct.sub_category).name ?? source.sub_category_name, "") || undefined,
     products: array(source.products).map(normalizeProduct),
     guideline: text(source.execution_instructions ?? source.guideline, "") || undefined,
+    execution: {
+      service: { name: text(service.name ?? source.name) },
+      products: normalizeExecutionProducts(source.products), submission: normalizeSubmission(source.submission),
+      attachments: normalizeAttachments(source.attachments), completed_at: text(source.completed_at, "") || null,
+    },
   };
 }
 
@@ -91,9 +131,13 @@ function normalizeRequest(value: unknown, companyDeleted = false): AdminRequest 
     location: text(location.location_name ?? location.address ?? source.location_name ?? source.store_name),
     assignedBy: text(creator.name ?? source.created_by, "") || undefined,
     worker: text(worker.name ?? source.worker_name, "") || undefined,
+    workerId: text(source.assigned_worker_id ?? source.worker_id ?? worker.id, "") || undefined,
     executionDate: text(source.date ?? source.execution_date, "") || undefined,
     timeWindow: text(source.time_window ?? source.execution_time, "") || undefined,
     expiresAt: text(source.expires_at, "") || undefined,
+    startedAt: text(source.started_at, "") || undefined,
+    completedAt: text(source.completed_at, "") || undefined,
+    rejectionReason: text(source.rejection_reason, "") || undefined,
     services: array(source.services).map(normalizeService),
   };
 }
@@ -142,25 +186,22 @@ export async function getAdminRequest(id: string) {
   return normalizeRequest(data.data);
 }
 
-export async function getNearbyMerchandisers(requestId: string, radiusKm: number): Promise<NearbyMerchandiser[]> {
-  const { data } = await apiClient.get<ApiResponse<unknown>>(
-    `/api/admin/tasks/${encodeURIComponent(requestId)}/available-workers`,
-    { params: { radius_km: radiusKm } },
-  );
-  const rows = Array.isArray(data.data) ? data.data : array(record(data.data).data);
-  return rows.map((value) => {
+export async function getReassignmentWorkers(page: number, search: string): Promise<ReassignmentWorkerList> {
+  // The existing /index proxy forwards to the supplied /admin/workers endpoint.
+  const { data } = await apiClient.get<ApiResponse<unknown>>("/api/admin/workers/index", { params: { page, per_page: 20, search: search || undefined } });
+  const { rows, meta } = pagePayload(data);
+  return { lastPage: number(meta.last_page) || 1, data: rows.map((value) => {
     const source = record(value);
     const worker = record(source.worker);
     return {
       id: text(worker.id ?? source.id),
-      name: text(worker.name ?? source.name),
+      name: text(worker.name ?? source.name ?? source.full_name),
       phone: text(worker.phone ?? source.phone),
-      distanceKm: number(source.distance_km ?? source.distance),
       tasks: number(source.tasks_count ?? source.completed_tasks ?? source.tasks),
       rating: number(source.rating),
-      available: Boolean(source.available ?? source.is_available ?? true),
+      available: ![false, 0, "0"].includes((source.available ?? source.is_available ?? true) as boolean | number | string),
     };
-  });
+  }) };
 }
 
 export async function assignAdminRequest(input: { requestId: string; merchandiserId: string }) {

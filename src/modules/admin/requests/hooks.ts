@@ -6,7 +6,7 @@ import {
   deleteCompanyDeletedRequest,
   getAdminRequest,
   getAdminRequests,
-  getNearbyMerchandisers,
+  getReassignmentWorkers,
   reopenAdminRequest,
 } from "./service";
 import type { AdminRequestParams } from "./types";
@@ -28,10 +28,10 @@ export function useAdminRequest(id: string) {
   });
 }
 
-export function useNearbyMerchandisers(requestId: string, radiusKm: number, enabled: boolean) {
+export function useReassignmentWorkers(page: number, search: string, enabled: boolean) {
   return useQuery({
-    queryKey: [...requestsKey, "details", requestId, "available-workers", radiusKm],
-    queryFn: () => getNearbyMerchandisers(requestId, radiusKm),
+    queryKey: ["admin", "workers", "reassignment", page, search],
+    queryFn: () => getReassignmentWorkers(page, search),
     enabled,
   });
 }
