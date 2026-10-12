@@ -56,7 +56,7 @@ export function useReopenAdminRequest() {
   const refresh = useRefreshRequests();
   return useMutation({
     mutationFn: reopenAdminRequest,
-    onSuccess: (_, requestId) => refresh(requestId),
+    onSuccess: (_, input) => refresh(input.requestId),
   });
 }
 

@@ -205,14 +205,19 @@ export async function getReassignmentWorkers(page: number, search: string): Prom
 }
 
 export async function assignAdminRequest(input: { requestId: string; merchandiserId: string }) {
-  const body = new URLSearchParams({ worker_id: input.merchandiserId });
-  return (await apiClient.post(`/api/admin/tasks/${encodeURIComponent(input.requestId)}/reassign`, body, {
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+  const workerId = Number(input.merchandiserId);
+  if (!Number.isSafeInteger(workerId) || workerId <= 0) throw new Error("A valid worker id is required.");
+  return (await apiClient.patch(`/api/admin/tasks/${encodeURIComponent(input.requestId)}/reassign`, { worker_id: workerId }, {
+    headers: { "Content-Type": "application/json" },
   })).data;
 }
 
-export async function reopenAdminRequest(requestId: string) {
-  return (await apiClient.post(`/api/admin/tasks/${encodeURIComponent(requestId)}/reopen`)).data;
+export async function reopenAdminRequest(input: { requestId: string; workerId: string; reason?: string }) {
+  if (!input.workerId.trim()) throw new Error("The worker id field is required.");
+  const body = new URLSearchParams({ worker_id: input.workerId, reason: input.reason?.trim() ?? "" });
+  return (await apiClient.post(`/api/admin/tasks/${encodeURIComponent(input.requestId)}/reopen`, body, {
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+  })).data;
 }
 
 export async function deleteCompanyDeletedRequest(requestId: string) {

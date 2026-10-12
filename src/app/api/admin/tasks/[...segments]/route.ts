@@ -14,4 +14,6 @@ async function forward(
 
 export const GET = forward;
 export const POST = forward;
+export const PATCH = forward;
 export const DELETE = forward;
+

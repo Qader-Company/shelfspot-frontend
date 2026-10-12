@@ -1599,6 +1599,13 @@
         "reopening": "Reopening…",
         "reopenedSuccess": "Request reopened successfully.",
         "reopenError": "The request could not be reopened. Please try again.",
+        "reopenDialog": {
+          "description": "Return this request to the assigned merchandiser to continue execution.",
+          "reason": "Reason (optional)",
+          "placeholder": "Explain why this request needs to be reopened…",
+          "missingWorker": "This request has no assigned worker ID. Reopening requires an assigned merchandiser.",
+          "cancel": "Cancel"
+        },
         "services": "Services Details ({count})",
         "serviceNumber": "Service #{number}",
         "brand": "Brand",

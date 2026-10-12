@@ -1,9 +1,11 @@
 "use client";
 
 import { useLocale, useTranslations } from "next-intl";
+import { useState } from "react";
+import { Dialog } from "radix-ui";
 import { toast } from "sonner";
 import { Link } from "@/i18n/navigation";
-import { BackChevronIcon, CalendarIcon, RepeatIcon, WarningIcon } from "@/shared/components/dashboard/dashboard-icons";
+import { BackChevronIcon, CalendarIcon, CloseIcon, RepeatIcon, WarningIcon } from "@/shared/components/dashboard/dashboard-icons";
 import { ExecutionServiceCard } from "@/shared/components/dashboard/execution-service-card";
 import { StatusBadge, type StatusBadgeStatus } from "@/shared/components/dashboard/status-badge";
 import { EmptyState, ErrorState, PageLoadingSkeleton } from "@/shared/components/feedback";
@@ -24,6 +26,8 @@ export function AdminRequestExecution({ requestId }: { requestId: string }) {
   const locale = useLocale();
   const query = useAdminRequest(requestId);
   const reopen = useReopenAdminRequest();
+  const [reopenOpen, setReopenOpen] = useState(false);
+  const [reason, setReason] = useState("");
 
   function formatDate(value?: string | null) {
     if (!value) return "—";
@@ -59,8 +63,33 @@ export function AdminRequestExecution({ requestId }: { requestId: string }) {
         <h2 className="text-xl font-bold">{t("services", { count: item.services.length })}</h2>
         {item.services.map((service, index) => <ExecutionServiceCard key={service.id} service={service.execution} index={index} />)}
       </section>
-      {item.status === "rejected" ? <Button className="h-12 w-full rounded-xl text-sm font-semibold" disabled={reopen.isPending} onClick={() => reopen.mutate(requestId, { onSuccess: () => toast.success(admin("reopenedSuccess")) })}><RepeatIcon className="size-4" />{admin(reopen.isPending ? "reopening" : "reopen")}</Button> : null}
-      {reopen.isError ? <p role="alert" className="rounded-xl border border-destructive/20 bg-destructive/10 p-4 text-sm text-destructive">{normalizeApiError(reopen.error).message || admin("reopenError")}</p> : null}
+      {item.status === "rejected" ? <>
+        <Button className="h-12 w-full rounded-xl text-sm font-semibold" disabled={reopen.isPending} onClick={() => { reopen.reset(); setReason(""); setReopenOpen(true); }}><RepeatIcon className="size-4" />{admin("reopen")}</Button>
+        <Dialog.Root open={reopenOpen} onOpenChange={(open) => { if (!reopen.isPending) setReopenOpen(open); }}>
+          <Dialog.Portal>
+            <Dialog.Overlay className="fixed inset-0 z-50 bg-foreground/30" />
+            <Dialog.Content className="fixed start-1/2 top-1/2 z-50 max-h-[90dvh] w-[calc(100%_-_2rem)] max-w-md -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-2xl border border-border bg-card p-5 shadow-xl rtl:translate-x-1/2">
+              <div className="flex items-start justify-between gap-4">
+                <Dialog.Title className="text-lg font-bold">{admin("reopen")}</Dialog.Title>
+                <Dialog.Close asChild><Button variant="ghost" size="icon-sm" aria-label={admin("assignDialog.close")} disabled={reopen.isPending} className="rounded-full"><CloseIcon className="size-4" /></Button></Dialog.Close>
+              </div>
+              <Dialog.Description className="mt-2 text-sm text-muted-foreground">{admin("reopenDialog.description")}</Dialog.Description>
+              <div className="mt-4 rounded-lg border border-border bg-muted/20 p-3"><p className="text-xs text-muted-foreground">{admin("worker")}</p><p className="mt-1 text-sm font-semibold">{item.worker ?? (item.workerId ? `#${item.workerId}` : "—")}</p></div>
+              <label className="mt-4 block text-sm font-medium" htmlFor="admin-reopen-reason">{admin("reopenDialog.reason")}</label>
+              <textarea id="admin-reopen-reason" value={reason} disabled={reopen.isPending} onChange={(event) => setReason(event.target.value)} placeholder={admin("reopenDialog.placeholder")} className="mt-2 min-h-24 w-full rounded-lg border border-border bg-background p-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring" />
+              {!item.workerId ? <p role="alert" className="mt-3 text-sm text-destructive">{admin("reopenDialog.missingWorker")}</p> : null}
+              {reopen.isError ? <p role="alert" className="mt-3 text-sm text-destructive">{normalizeApiError(reopen.error).message || admin("reopenError")}</p> : null}
+              <div className="mt-5 flex gap-3">
+                <Dialog.Close asChild><Button variant="outline" className="flex-1" disabled={reopen.isPending}>{admin("reopenDialog.cancel")}</Button></Dialog.Close>
+                <Button className="flex-1" disabled={reopen.isPending || !item.workerId} onClick={() => {
+                  if (!item.workerId || reopen.isPending) return;
+                  reopen.mutate({ requestId, workerId: item.workerId, reason }, { onSuccess: () => { setReopenOpen(false); toast.success(admin("reopenedSuccess")); } });
+                }}>{admin(reopen.isPending ? "reopening" : "reopen")}</Button>
+              </div>
+            </Dialog.Content>
+          </Dialog.Portal>
+        </Dialog.Root>
+      </> : null}
     </div>
   );
 }
