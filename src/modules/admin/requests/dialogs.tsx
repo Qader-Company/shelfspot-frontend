@@ -1,7 +1,7 @@
 "use client";
 
 import { useDeferredValue, useEffect, useState } from "react";
-import { Star } from "lucide-react";
+import { LoaderCircle, Star } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Dialog } from "radix-ui";
 import { CloseIcon, PaginationNextIcon, PaginationPreviousIcon } from "@/shared/components/dashboard/dashboard-icons";
@@ -68,7 +68,7 @@ export function AssignMerchandiserDialog({ requestId, workerId, workerName, onCl
             </>}
           </div>
           {mutation.isError ? <p role="alert" className="mt-3 text-sm text-destructive">{normalizeApiError(mutation.error).message || t("unverified")}</p> : null}
-          <Button className={cn(styles.action, "mt-4 h-11 w-full rounded-lg text-sm font-semibold")} onClick={submit} disabled={!selectedId || mutation.isPending || (mode === "new" && (query.isFetching || query.isError))}>{mutation.isPending ? t("assigning") : t("assign")}</Button>
+          <Button className={cn(styles.action, "mt-4 h-11 w-full rounded-lg text-sm font-semibold")} aria-busy={mutation.isPending} onClick={submit} disabled={!selectedId || mutation.isPending || (mode === "new" && (query.isFetching || query.isError))}>{mutation.isPending ? <LoaderCircle aria-hidden="true" className="size-4 motion-safe:animate-spin" /> : null}{mutation.isPending ? t("assigning") : t("assign")}</Button>
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>

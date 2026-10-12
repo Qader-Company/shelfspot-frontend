@@ -3,6 +3,7 @@
 import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
 import { Dialog } from "radix-ui";
+import { LoaderCircle } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { BackChevronIcon, CalendarIcon, CloseIcon, RepeatIcon, WarningIcon } from "@/shared/components/dashboard/dashboard-icons";
 import { ExecutionServiceCard } from "@/shared/components/dashboard/execution-service-card";
@@ -84,10 +85,10 @@ export function AdminRequestExecution({ requestId }: { requestId: string }) {
               {reopen.isError ? <p role="alert" className="mt-3 text-sm text-destructive">{normalizeApiError(reopen.error).message || admin("reopenError")}</p> : null}
               <div className="mt-5 flex gap-3">
                 <Dialog.Close asChild><Button variant="outline" className="flex-1" disabled={reopen.isPending}>{admin("reopenDialog.cancel")}</Button></Dialog.Close>
-                <Button className={`${styles.action} flex-1`} disabled={reopen.isPending || !selectedWorkerId} onClick={() => {
+                <Button className={`${styles.action} flex-1`} aria-busy={reopen.isPending} disabled={reopen.isPending || !selectedWorkerId} onClick={() => {
                   if (!selectedWorkerId || reopen.isPending) return;
                   reopen.mutate({ requestId, workerId: selectedWorkerId, reason }, { onSuccess: () => { setReopenOpen(false); showRequestActionSuccess(admin("reopenedSuccess"), requestId, admin("assignDialog.close")); } });
-                }}>{admin(reopen.isPending ? "reopening" : "reopen")}</Button>
+                }}>{reopen.isPending ? <LoaderCircle aria-hidden="true" className="size-4 motion-safe:animate-spin" /> : null}{admin(reopen.isPending ? "reopening" : "reopen")}</Button>
               </div>
             </Dialog.Content>
           </Dialog.Portal>
