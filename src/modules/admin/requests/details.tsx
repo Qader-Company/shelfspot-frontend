@@ -13,6 +13,7 @@ import { Button } from "@/shared/ui/button";
 import { useAdminRequest } from "./hooks";
 import { AssignMerchandiserDialog } from "./dialogs";
 import type { AdminRequestService, AdminRequestStatus } from "./types";
+import styles from "./request-motion.module.css";
 
 const badge: Record<AdminRequestStatus, StatusBadgeStatus> = {
   draft: "draft", pending: "pending", completed: "completed", failed: "failed",
@@ -50,7 +51,7 @@ export function AdminRequestDetails({ requestId }: { requestId: string }) {
 
       <section className="rounded-xl border border-border bg-card p-5 shadow-sm">
         <div className="flex flex-wrap items-start justify-between gap-4">
-          <div className="flex flex-wrap items-center gap-3"><h2 className="text-2xl font-bold text-foreground">REQ-{item.id}</h2><StatusBadge status={badge[item.status]} label={t(`statuses.${item.status}`)} /></div>
+          <div className="flex flex-wrap items-center gap-3"><h2 className="text-2xl font-bold text-foreground">REQ-{item.id}</h2><span key={item.status} className={styles.status}><StatusBadge status={badge[item.status]} label={t(`statuses.${item.status}`)} /></span></div>
           <div className="text-end"><p className="text-xs text-muted-foreground">{t("created")}</p><p className="text-sm font-semibold text-foreground">{new Date(item.createdAt).toLocaleString()}</p></div>
         </div>
         <div className="mt-4 grid grid-cols-1 gap-4 rounded-lg border border-border bg-muted/20 p-4 sm:grid-cols-2 xl:grid-cols-5">
@@ -67,7 +68,7 @@ export function AdminRequestDetails({ requestId }: { requestId: string }) {
         <Metric icon={BoxIcon} label={t("totalProducts")} value={String(products)} tone="bg-primary/15 text-primary" />
         <Metric icon={ClockIcon} label={t("timeRemaining")} value={item.expiresAt ? t("calculatedTime") : "—"} tone="bg-destructive/15 text-destructive" />
       </div>
-      {showAssign ? <Button className="h-12 w-full rounded-xl text-sm font-semibold" onClick={() => setAssignOpen(true)}><RepeatIcon className="size-4" />{t("reassign")}</Button> : null}
+      {showAssign ? <Button className={cn(styles.action, "h-12 w-full rounded-xl text-sm font-semibold")} onClick={() => setAssignOpen(true)}><RepeatIcon className="size-4" />{t("reassign")}</Button> : null}
       {["rejected", "completed", "accepted", "reopened"].includes(item.status) ? <Button asChild variant="outline" className="h-12 w-full rounded-xl text-sm font-semibold"><Link href={`/admin/requests/${item.id}/execution`}><ViewIcon className="size-4" />{t("viewExecution")}</Link></Button> : null}
 
       <section className="space-y-4">

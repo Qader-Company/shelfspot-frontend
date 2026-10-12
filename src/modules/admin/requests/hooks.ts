@@ -28,10 +28,10 @@ export function useAdminRequest(id: string) {
   });
 }
 
-export function useReassignmentWorkers(page: number, search: string, enabled: boolean) {
+export function useReassignmentWorkers(requestId: string, radiusKm: number, page: number, search: string, enabled: boolean) {
   return useQuery({
-    queryKey: ["admin", "workers", "reassignment", page, search],
-    queryFn: () => getReassignmentWorkers(page, search),
+    queryKey: [...requestsKey, "details", requestId, "available-workers", radiusKm, page, search],
+    queryFn: () => getReassignmentWorkers(requestId, radiusKm, page, search),
     enabled,
   });
 }

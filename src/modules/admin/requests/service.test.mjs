@@ -48,19 +48,33 @@ test("same-worker and new-worker reassignments both send worker_id to the task e
   }
 });
 
-test("worker selection reads the paginated workers list and handles availability flags", async () => {
-  const { service, requests } = loadService({ data: { data: [
-    { id: 7, full_name: "Available", is_available: "1" },
-    { id: 8, name: "Busy", is_available: "0" },
-  ], last_page: 3 } });
-  const result = await service.getReassignmentWorkers(2, "Worker");
-  assert.equal(requests[0].args[0], "/api/admin/workers/index");
+test("both worker pickers read nested available workers for the current task and radius", async () => {
+  const { service, requests } = loadService({ data: { radius_km: 100, workers: { data: [
+    { id: 7, full_name: "Available Worker", is_available: "1", distance_km: 2.3 },
+    { id: 8, name: "Busy Worker", is_available: "0" },
+  ], last_page: 3 } } });
+  const result = await service.getReassignmentWorkers("160", 100, 2, "Worker");
+  assert.equal(requests[0].args[0], "/api/admin/tasks/160/available-workers");
+  assert.equal(requests[0].args[1].params.radius_km, 100);
   assert.equal(requests[0].args[1].params.page, 2);
   assert.equal(requests[0].args[1].params.search, "Worker");
   assert.equal(result.lastPage, 3);
-  assert.equal(result.data[0].name, "Available");
+  assert.equal(result.data[0].name, "Available Worker");
+  assert.equal(result.data[0].distanceKm, 2.3);
   assert.equal(result.data[0].available, true);
   assert.equal(result.data[1].available, false);
+  await service.getReassignmentWorkers("161", 10, 1, "");
+  assert.equal(requests[1].args[0], "/api/admin/tasks/161/available-workers");
+  assert.equal(requests[1].args[1].params.radius_km, 10);
+});
+
+test("available worker search filters names and phones when the server returns unfiltered rows", async () => {
+  const { service } = loadService({ data: { workers: { data: [{ id: 1, name: "Ahmed", phone: "123" }, { id: 2, name: "Sara", phone: "456" }] } } });
+  const byName = await service.getReassignmentWorkers("160", 5, 1, "ahmed");
+  assert.equal(byName.data.length, 1);
+  assert.equal(byName.data[0].id, "1");
+  const byPhone = await service.getReassignmentWorkers("160", 5, 1, "456");
+  assert.equal(byPhone.data[0].id, "2");
 });
 
 test("rejected request execution preserves submitted fields, photos and product proof", async () => {

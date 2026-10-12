@@ -186,22 +186,25 @@ export async function getAdminRequest(id: string) {
   return normalizeRequest(data.data);
 }
 
-export async function getReassignmentWorkers(page: number, search: string): Promise<ReassignmentWorkerList> {
-  // The existing /index proxy forwards to the supplied /admin/workers endpoint.
-  const { data } = await apiClient.get<ApiResponse<unknown>>("/api/admin/workers/index", { params: { page, per_page: 20, search: search || undefined } });
-  const { rows, meta } = pagePayload(data);
-  return { lastPage: number(meta.last_page) || 1, data: rows.map((value) => {
+export async function getReassignmentWorkers(requestId: string, radiusKm: number, page: number, search: string): Promise<ReassignmentWorkerList> {
+  const { data } = await apiClient.get<ApiResponse<unknown>>(`/api/admin/tasks/${encodeURIComponent(requestId)}/available-workers`, { params: { radius_km: radiusKm, page, per_page: 20, search: search || undefined } });
+  const nested = record(data.data);
+  const { rows, meta } = pagePayload(nested.workers !== undefined ? { ...data, data: nested.workers } : data);
+  const normalized = rows.map((value) => {
     const source = record(value);
     const worker = record(source.worker);
     return {
       id: text(worker.id ?? source.id),
       name: text(worker.name ?? source.name ?? source.full_name),
       phone: text(worker.phone ?? source.phone),
+      distanceKm: source.distance_km == null ? undefined : number(source.distance_km),
       tasks: number(source.tasks_count ?? source.completed_tasks ?? source.tasks),
       rating: number(source.rating),
       available: ![false, 0, "0"].includes((source.available ?? source.is_available ?? true) as boolean | number | string),
     };
-  }) };
+  });
+  const term = search.trim().toLowerCase();
+  return { lastPage: number(meta.last_page) || 1, data: normalized.filter((worker) => !term || [worker.name, worker.phone].some((value) => value.toLowerCase().includes(term))) };
 }
 
 export async function assignAdminRequest(input: { requestId: string; merchandiserId: string }) {

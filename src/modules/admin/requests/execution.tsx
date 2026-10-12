@@ -3,7 +3,6 @@
 import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
 import { Dialog } from "radix-ui";
-import { toast } from "sonner";
 import { Link } from "@/i18n/navigation";
 import { BackChevronIcon, CalendarIcon, CloseIcon, RepeatIcon, WarningIcon } from "@/shared/components/dashboard/dashboard-icons";
 import { ExecutionServiceCard } from "@/shared/components/dashboard/execution-service-card";
@@ -13,6 +12,9 @@ import { normalizeApiError } from "@/shared/lib/api/errors";
 import { Button } from "@/shared/ui/button";
 import { useAdminRequest, useReopenAdminRequest } from "./hooks";
 import type { AdminRequestStatus } from "./types";
+import { ReopenWorkerPicker } from "./reopen-worker-picker";
+import { showRequestActionSuccess } from "./action-success";
+import styles from "./request-motion.module.css";
 
 const badge: Record<AdminRequestStatus, StatusBadgeStatus> = {
   draft: "draft", pending: "pending", completed: "completed", failed: "failed",
@@ -28,6 +30,7 @@ export function AdminRequestExecution({ requestId }: { requestId: string }) {
   const reopen = useReopenAdminRequest();
   const [reopenOpen, setReopenOpen] = useState(false);
   const [reason, setReason] = useState("");
+  const [selectedWorkerId, setSelectedWorkerId] = useState("");
 
   function formatDate(value?: string | null) {
     if (!value) return "—";
@@ -49,7 +52,7 @@ export function AdminRequestExecution({ requestId }: { requestId: string }) {
       </header>
 
       <section className="rounded-xl border border-border bg-card p-5 shadow-sm">
-        <div className="flex flex-wrap items-center gap-3"><strong className="text-2xl">REQ-{item.id}</strong><StatusBadge status={badge[item.status]} label={admin(`statuses.${item.status}`)} /></div>
+        <div className="flex flex-wrap items-center gap-3"><strong className="text-2xl">REQ-{item.id}</strong><span key={item.status} className={styles.status}><StatusBadge status={badge[item.status]} label={admin(`statuses.${item.status}`)} /></span></div>
         <div className="mt-5 grid gap-4 sm:grid-cols-3">
           {[
             { icon: WarningIcon, label: t("executedBy"), value: item.worker ?? "—" },
@@ -63,33 +66,33 @@ export function AdminRequestExecution({ requestId }: { requestId: string }) {
         <h2 className="text-xl font-bold">{t("services", { count: item.services.length })}</h2>
         {item.services.map((service, index) => <ExecutionServiceCard key={service.id} service={service.execution} index={index} />)}
       </section>
-      {item.status === "rejected" ? <>
-        <Button className="h-12 w-full rounded-xl text-sm font-semibold" disabled={reopen.isPending} onClick={() => { reopen.reset(); setReason(""); setReopenOpen(true); }}><RepeatIcon className="size-4" />{admin("reopen")}</Button>
+      <>
+        {item.status === "rejected" ? <Button className={`${styles.action} h-12 w-full rounded-xl text-sm font-semibold`} disabled={reopen.isPending} onClick={() => { reopen.reset(); setReason(""); setSelectedWorkerId(item.workerId ?? ""); setReopenOpen(true); }}><RepeatIcon className="size-4" />{admin("reopen")}</Button> : null}
         <Dialog.Root open={reopenOpen} onOpenChange={(open) => { if (!reopen.isPending) setReopenOpen(open); }}>
           <Dialog.Portal>
-            <Dialog.Overlay className="fixed inset-0 z-50 bg-foreground/30" />
-            <Dialog.Content className="fixed start-1/2 top-1/2 z-50 max-h-[90dvh] w-[calc(100%_-_2rem)] max-w-md -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-2xl border border-border bg-card p-5 shadow-xl rtl:translate-x-1/2">
+            <Dialog.Overlay className={`${styles.overlay} fixed inset-0 z-50 bg-foreground/30`} />
+            <Dialog.Content className={`${styles.panel} fixed start-1/2 top-1/2 z-50 max-h-[90dvh] w-[calc(100%_-_2rem)] max-w-md -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-2xl border border-border bg-card p-5 shadow-xl rtl:translate-x-1/2`}>
               <div className="flex items-start justify-between gap-4">
                 <Dialog.Title className="text-lg font-bold">{admin("reopen")}</Dialog.Title>
                 <Dialog.Close asChild><Button variant="ghost" size="icon-sm" aria-label={admin("assignDialog.close")} disabled={reopen.isPending} className="rounded-full"><CloseIcon className="size-4" /></Button></Dialog.Close>
               </div>
               <Dialog.Description className="mt-2 text-sm text-muted-foreground">{admin("reopenDialog.description")}</Dialog.Description>
-              <div className="mt-4 rounded-lg border border-border bg-muted/20 p-3"><p className="text-xs text-muted-foreground">{admin("worker")}</p><p className="mt-1 text-sm font-semibold">{item.worker ?? (item.workerId ? `#${item.workerId}` : "—")}</p></div>
+              <ReopenWorkerPicker requestId={requestId} currentWorkerId={item.workerId} currentWorkerName={item.worker} selectedId={selectedWorkerId} disabled={reopen.isPending} onSelect={(workerId) => { setSelectedWorkerId(workerId); reopen.reset(); }} />
               <label className="mt-4 block text-sm font-medium" htmlFor="admin-reopen-reason">{admin("reopenDialog.reason")}</label>
               <textarea id="admin-reopen-reason" value={reason} disabled={reopen.isPending} onChange={(event) => setReason(event.target.value)} placeholder={admin("reopenDialog.placeholder")} className="mt-2 min-h-24 w-full rounded-lg border border-border bg-background p-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring" />
-              {!item.workerId ? <p role="alert" className="mt-3 text-sm text-destructive">{admin("reopenDialog.missingWorker")}</p> : null}
+
               {reopen.isError ? <p role="alert" className="mt-3 text-sm text-destructive">{normalizeApiError(reopen.error).message || admin("reopenError")}</p> : null}
               <div className="mt-5 flex gap-3">
                 <Dialog.Close asChild><Button variant="outline" className="flex-1" disabled={reopen.isPending}>{admin("reopenDialog.cancel")}</Button></Dialog.Close>
-                <Button className="flex-1" disabled={reopen.isPending || !item.workerId} onClick={() => {
-                  if (!item.workerId || reopen.isPending) return;
-                  reopen.mutate({ requestId, workerId: item.workerId, reason }, { onSuccess: () => { setReopenOpen(false); toast.success(admin("reopenedSuccess")); } });
+                <Button className={`${styles.action} flex-1`} disabled={reopen.isPending || !selectedWorkerId} onClick={() => {
+                  if (!selectedWorkerId || reopen.isPending) return;
+                  reopen.mutate({ requestId, workerId: selectedWorkerId, reason }, { onSuccess: () => { setReopenOpen(false); showRequestActionSuccess(admin("reopenedSuccess"), requestId, admin("assignDialog.close")); } });
                 }}>{admin(reopen.isPending ? "reopening" : "reopen")}</Button>
               </div>
             </Dialog.Content>
           </Dialog.Portal>
         </Dialog.Root>
-      </> : null}
+      </>
     </div>
   );
 }
